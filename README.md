@@ -1,23 +1,22 @@
+# reQuest2 web frontend
 
-# reQuest2
+## Development
 
-## Development info
-
-Quick run:
-
+init: install node+npm, then run:
 ```
-mkdir data
-cat > config.cfg << ENDCONF
-[server]
-data_dir=data
-listen_port=9080
-db_path=data/database.sqlite
-ENDCONF
-cabal run request2 -- config.cfg
+npm install
 ```
 
-Quick test (when the server is running):
+run the dev server:
 ```
-curl localhost:9080/capability
+node_modules/webpack-dev-server/bin/webpack-dev-server.js
 ```
-(should reply `["request2"]`)
+
+build the javascript (in `public/js`):
+```
+node_modules/webpack-cli/bin/cli.js
+```
+(also accepts `--help`)
+
+## Deployment
+(todo)
