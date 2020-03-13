@@ -18,14 +18,18 @@ import {
 
 
 class App extends Component{
-  render(){
-    return(
-      <div className="App">
+	render(){
+		return(
+			<div className="App">
 				<Navbar bg="dark" variant="dark" className="navbar-expand-md">
-					<Navbar.Brand href="#">reQuest2</Navbar.Brand>
+					<Navbar.Brand href="#">
+						<span style={{fontVariant: "small-caps"}}>re</span>Quest<sup>2</sup>
+					</Navbar.Brand>
+
 					<Nav className="mr-auto">
 						<Nav.Link href="#/news"><Icon info wBold/> News</Nav.Link>
 					</Nav>
+
 					<Nav className="ml-auto">
 						<Nav.Link href="#/login"><Icon signin wBold/> Login</Nav.Link>
 						<Nav.Link href="#/register"><Icon user wBold/> Register</Nav.Link>
@@ -69,9 +73,9 @@ class App extends Component{
 						</Row>
 					</Container>
 				</footer>
-      </div>
-    );
-  }
+			</div>
+		);
+	}
 }
 
 function AnnouncementFromHash() {
