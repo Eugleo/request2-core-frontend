@@ -20,7 +20,7 @@ export class Announcements extends React.Component {
 
 	render() {
 		return <div>
-			<h2>News</h2>
+			<h1>News</h1>
 			<ul>
 			{ this.state.announcements
 			  .map((a) =>
