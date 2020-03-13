@@ -1,6 +1,9 @@
 import React from "react";
 
+import {Link} from 'react-router-dom';
+
 import {api_endpoint} from "./Api.js";
+import {Icon} from "./Icon.js";
 
 export class Announcements extends React.Component {
 	constructor(props) {
@@ -20,8 +23,20 @@ export class Announcements extends React.Component {
 			<h2>News</h2>
 			<ul>
 			{ this.state.announcements
-			  .map((a) => <li>{a.id}: {a.data.title}</li>) }
+			  .map((a) =>
+					<li key={a.id}>
+						<Link to={"/news/"+a.id}>{a.data.title}</Link>
+						({a.data.created})
+					</li>) }
 			</ul>
 		</div>;
+	}
+}
+
+export class Announcement extends React.Component {
+	render() {
+		return <>
+		<h1><Link to="/news"><Icon chevronLeft sEm/></Link> Announcement id {this.props.id}</h1>
+		</>;
 	}
 }
