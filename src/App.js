@@ -5,12 +5,14 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import {Announcement, Announcements} from "./Announcements.js";
 import {Icon} from './Icon.js';
+import {api_get} from './Api.js';
 
 import Container from 'react-bootstrap/Container';
 import Navbar from 'react-bootstrap/Navbar';
 import Nav from 'react-bootstrap/Nav';
 import Row from 'react-bootstrap/Row';
 import Col from 'react-bootstrap/Col';
+import Spinner from 'react-bootstrap/Spinner';
 
 import {
 	HashRouter as Router,
@@ -18,6 +20,21 @@ import {
 
 
 class App extends Component{
+	constructor(props) {
+		super(props)
+		this.state = {backendAvailable: "unknown"};
+	}
+
+	componentDidMount() {
+		api_get("capability")
+		.then((js) => {
+			if(js.includes("request2"))
+				this.setState({backendAvailable: "yes"});
+			else throw("Unsupported backend");
+		})
+		.catch(error => this.setState({backendAvailable: "no"}));
+	}
+
 	render(){
 		return(
 			<div className="App">
@@ -35,8 +52,21 @@ class App extends Component{
 						<Nav.Link href="#/register"><Icon user wBold/> Register</Nav.Link>
 					</Nav>
 				</Navbar>
-
 				<Container className="mt-3">
+				{ this.state.backendAvailable=="unknown" &&
+					<center>
+						<Spinner
+							animation='border'
+							variant='secondary'
+							style={ {width: '4em', height:'4em', display: 'block'} } />
+					</center>
+				}
+				{ this.state.backendAvailable=="no" && <>
+					<h1>Error</h1>
+					<p>Something seems to be wrong with the server. Try again later.</p>
+					</>
+				}
+				{ this.state.backendAvailable=="yes" &&
 					<Router><Switch>
 
 						<Route path='/news/:id'>
@@ -59,6 +89,7 @@ class App extends Component{
 							<Redirect to='/login'/>
 						</Route>
 					</Switch></Router>
+				}
 				</Container>
 
 				<footer className="footer">
