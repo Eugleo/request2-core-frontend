@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import * as Icon from "react-feather";
-import "./App.css";
+
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Api from "./Api.js";
 
@@ -11,6 +11,8 @@ import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
+
+import { LinkContainer } from "react-router-bootstrap";
 
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 
@@ -26,46 +28,46 @@ function App() {
         if (js.includes("request2")) {
           setBackendAvailable(true);
         } else {
-          throw "Unsupported backend";
+          throw Error("Unsupported backend");
         }
       })
       .catch(e => {
         console.log(e);
         setBackendAvailable(false);
       });
-  }, [backendAvailable]);
+  }, []);
 
   // TODO Replace the footer
-  // TODO Correctly set `active` on the active nav item
   return (
     <div className="App">
       <Navbar bg="dark" variant="dark" className="navbar-expand-md">
         <Navbar.Brand>
-          <Link to="/" className="no-style">
-            <span style={{ fontVariant: "small-caps" }}>re</span>
-            Quest<sup>2</sup>
-          </Link>
+          <LinkContainer to="/">
+            <Nav.Link active={false} className="no-style">
+              <span style={{ fontVariant: "small-caps" }}>re</span>
+              Quest<sup>2</sup>
+            </Nav.Link>
+          </LinkContainer>
         </Navbar.Brand>
 
         <Nav className="mr-auto">
-          <Nav.Link active>
-            <Link to="/announcements" className="no-style">
-              Announcements
-            </Link>
-          </Nav.Link>
+          <LinkContainer to="/announcements" className="no-style">
+            <Nav.Link active={false}>Announcements</Nav.Link>
+          </LinkContainer>
         </Nav>
 
         <Nav>
-          <Nav.Link>
-            <Link to="/login" className="no-style">
-              <Icon.LogIn className="inline-icon" />
-            </Link>
-          </Nav.Link>
-          <Nav.Link>
-            <Link to="/register" className="no-style">
-              <Icon.UserPlus className="inline-icon" />
-            </Link>
-          </Nav.Link>
+          <LinkContainer to="/login" className="no-style">
+            <Nav.Link active={false}>
+              <Icon.LogIn className="inline-icon" color="white" />
+            </Nav.Link>
+          </LinkContainer>
+
+          <LinkContainer to="/register" className="no-style">
+            <Nav.Link active={false}>
+              <Icon.UserPlus className="inline-icon" color="white" />
+            </Nav.Link>
+          </LinkContainer>
         </Nav>
       </Navbar>
       <Container className="mt-3">
@@ -85,6 +87,7 @@ function App() {
 
 function AppBody(props) {
   switch (props.backendAvailable) {
+    // TODO Replace with something else maybe?
     case null:
       return (
         <center>
@@ -100,7 +103,6 @@ function AppBody(props) {
           <Route path="/announcements">
             <Announcements />
           </Route>
-          // TODO Replace with something else maybe?
           <Route path="/login">Login page.</Route>
           <Route path="/register">Registration page.</Route>
           <Route path="/">
@@ -108,8 +110,7 @@ function AppBody(props) {
           </Route>
         </Switch>
       );
-
-    case false:
+    default:
       return (
         <>
           <h1>Error</h1>

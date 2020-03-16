@@ -11,7 +11,7 @@ export function Announcements() {
     Api.get("/announcements")
       .then(r => r.json())
       .then(json => setAnns(json));
-  });
+  }, []);
 
   return (
     // TODO Replace with real Announcement element
@@ -20,8 +20,7 @@ export function Announcements() {
       <ul>
         {anns.map(ann => (
           <li key={ann.id}>
-            <Link to={`${match.path}/${ann.id}`}>{ann.data.title}</Link>
-            from: {ann.data.created}
+            <Link to={`${match.path}/${ann.id}`}>{ann.data.title}</Link> (id: {ann.data.created})
           </li>
         ))}
       </ul>
@@ -39,7 +38,7 @@ function Announcement(props) {
     <>
       <h1>
         <Link to="/announcements">
-          <Icon name="chevronLeft" size="1em" />
+          <Icon.ChevronLeft className="inline-icon" color="black" />
         </Link>
         Announcement id: {props.id}
       </h1>
