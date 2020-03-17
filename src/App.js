@@ -4,7 +4,7 @@ import * as Icon from "react-feather";
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Api from "./Api.js";
 
-import { Link, Route, Switch, Redirect } from "react-router-dom";
+import { Route, Switch, Redirect } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
 import Navbar from "react-bootstrap/Navbar";
