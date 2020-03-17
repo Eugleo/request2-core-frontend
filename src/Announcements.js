@@ -20,8 +20,7 @@ export function Announcements() {
       <ul>
         {anns.map(ann => (
           <li key={ann.id}>
-            <Link to={`${match.path}/${ann.id}`}>{ann.data.title}</Link> (created:{" "}
-            {ann.data.created})
+            <Link to={`${match.path}/${ann.id}`}>{ann.data.title}</Link> (time: {ann.data.created})
           </li>
         ))}
       </ul>
