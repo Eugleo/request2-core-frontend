@@ -41,17 +41,31 @@ function validate(values) {
   return errors;
 }
 
-export function Login(props) {
+function verifyLogin(email, password) {
+  console.log(JSON.stringify({ email, password }));
+  return Api.post("/login", { email, password })
+    .then(r => {
+      console.log(r);
+      if (r.ok) {
+        return r.json();
+      } else {
+        throw new Error("Incorrect email+password combination");
+      }
+    })
+    .then(js => {
+      console.log(js);
+    })
+    .catch(error => console.log(error));
+}
+
+export default function Login(props) {
   let formik = useFormik({
     initialValues: {
       email: "",
       password: ""
     },
     validate,
-    onSubmit: values => {
-      console.log("Hey!");
-      alert(`User: ${values.email}, password: ${values.password}`);
-    }
+    onSubmit: values => verifyLogin(values.email, values.password)
   });
 
   return (

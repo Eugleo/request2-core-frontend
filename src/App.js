@@ -17,7 +17,7 @@ import { LinkContainer } from "react-router-bootstrap";
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 
 import { AtomSpinner } from "react-epic-spinners";
-import { Login } from "./Login.js";
+import Login from "./Login.js";
 
 function App() {
   let [backendAvailable, setBackendAvailable] = useState(null);
