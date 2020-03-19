@@ -1,26 +1,46 @@
-import React, { useState, useEffect } from "react";
-import * as Icon from "react-feather";
+import React, { useState, useEffect, useReducer, useContext } from "react";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 import * as Api from "./Api.js";
+import NavBar from "./Navbar.js";
+import Footer from "./Footer.js";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 
 import Container from "react-bootstrap/Container";
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
-import { LinkContainer } from "react-router-bootstrap";
 
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
-
 import { AtomSpinner } from "react-epic-spinners";
 import Login from "./Login.js";
 
+import AuthContext from "./AuthContext.js";
+
+function reducer(state, action) {
+  switch (action.type) {
+    case "LOGIN":
+      return {
+        loggedIn: true,
+        user: action.payload
+      };
+    case "LOGOUT":
+      Api.post("/logout", { api_key: state.user.apiKey }, { Authorization: state.user.apiKey });
+      return {
+        loggedIn: false,
+        user: null
+      };
+    default:
+      return state;
+  }
+}
+
 function App() {
+  let initialAuth = {
+    loggedIn: false,
+    user: null
+  };
+
   let [backendAvailable, setBackendAvailable] = useState(null);
+  let [auth, dispatch] = useReducer(reducer, initialAuth);
 
   useEffect(() => {
     Api.get("/capability")
@@ -40,55 +60,21 @@ function App() {
 
   // TODO Replace the footer
   return (
-    <div className="App">
-      <Navbar bg="dark" variant="dark" className="navbar-expand-md">
-        <Navbar.Brand>
-          <LinkContainer to="/">
-            <Nav.Link active={false} className="no-style">
-              <span style={{ fontVariant: "small-caps" }}>re</span>
-              Quest<sup>2</sup>
-            </Nav.Link>
-          </LinkContainer>
-        </Navbar.Brand>
-
-        <Nav className="mr-auto">
-          <LinkContainer to="/announcements" className="no-style">
-            <Nav.Link active={false}>Announcements</Nav.Link>
-          </LinkContainer>
-        </Nav>
-
-        <Nav>
-          <LinkContainer to="/login" className="no-style">
-            <Nav.Link active={false}>
-              <Icon.LogIn className="inline-icon" color="white" />
-            </Nav.Link>
-          </LinkContainer>
-
-          <LinkContainer to="/register" className="no-style">
-            <Nav.Link active={false}>
-              <Icon.UserPlus className="inline-icon" color="white" />
-            </Nav.Link>
-          </LinkContainer>
-        </Nav>
-      </Navbar>
-      <Container className="mt-3">
-        <AppBody backendAvailable={backendAvailable} />
-      </Container>
-      <footer className="footer">
-        <Container>
-          <Row>
-            <Col>Neco vlevo</Col>
-            <Col>Neco vpravo, asi loga</Col>
-          </Row>
+    <AuthContext.Provider value={{ state: auth, dispatch }}>
+      <div className="App">
+        <NavBar />
+        <Container className="mt-5">
+          <AppBody backendAvailable={backendAvailable} />
         </Container>
-      </footer>
-    </div>
+        <Footer />
+      </div>
+    </AuthContext.Provider>
   );
 }
 
 function AppBody(props) {
+  // TODO Add timeout
   switch (props.backendAvailable) {
-    // TODO Replace with something else maybe?
     case null:
       return (
         <center>
