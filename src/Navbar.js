@@ -1,19 +1,16 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React from "react";
 
-import AuthContext from "./AuthContext.js";
+import { Authentized } from "./Auth.js";
 
 import Navbar from "react-bootstrap/Navbar";
 import Nav from "react-bootstrap/Nav";
-import Button from "react-bootstrap/Button";
-import * as Icon from "react-feather";
 
 import { LinkContainer } from "react-router-bootstrap";
 import LogoutButton from "./LogoutButton.js";
+import LoginNavLinks from "./LoginNavLinks.js";
 
 // TODO Show current user
 export default function NavBar() {
-  let { state } = useContext(AuthContext);
-
   return (
     <Navbar bg="dark" variant="dark" className="navbar-expand-md">
       <Navbar.Brand>
@@ -28,19 +25,11 @@ export default function NavBar() {
       <Nav className="mr-auto">
         <Link to="/announcements">Announcements</Link>
       </Nav>
+
       <Nav>
-        {!state.loggedIn ? (
-          <>
-            <Link to="/login">
-              <Icon.LogIn className="inline-icon" color="white" />
-            </Link>
-            <Link to="/register">
-              <Icon.UserPlus className="inline-icon" color="white" />
-            </Link>
-          </>
-        ) : (
+        <Authentized or={<LoginNavLinks />}>
           <LogoutButton />
-        )}
+        </Authentized>
       </Nav>
     </Navbar>
   );

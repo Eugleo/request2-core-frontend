@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 
 import * as Icon from "react-feather";
-import AuthContext from "./AuthContext.js";
+import AuthContext from "./Auth.js";
 
 import Button from "react-bootstrap/Button";
 

@@ -13,7 +13,7 @@ import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 import { AtomSpinner } from "react-epic-spinners";
 import Login from "./Login.js";
 
-import AuthContext from "./AuthContext.js";
+import AuthContext from "./Auth.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -60,7 +60,7 @@ function App() {
 
   // TODO Replace the footer
   return (
-    <AuthContext.Provider value={{ state: auth, dispatch }}>
+    <AuthContext.Provider value={{ auth, dispatch }}>
       <div className="App">
         <NavBar />
         <Container className="mt-5">

@@ -5,12 +5,12 @@ import * as Icon from "react-feather";
 import { Form, Button, Container, Row, Col, InputGroup } from "react-bootstrap";
 
 import { useFormik } from "formik";
-import AuthContext from "./AuthContext.js";
+import AuthContext from "./Auth.js";
 import { Redirect } from "react-router-dom";
 
 export default function Login(props) {
   let [loginFailed, setLoginFailed] = useState(false);
-  let { state, dispatch } = useContext(AuthContext);
+  let { auth, dispatch } = useContext(AuthContext);
 
   let formik = useFormik({
     initialValues: {
@@ -21,7 +21,7 @@ export default function Login(props) {
     onSubmit: values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)
   });
 
-  if (state.loggedIn) {
+  if (auth.loggedIn) {
     return <Redirect to="/announcements" />;
   }
 
