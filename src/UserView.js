@@ -7,15 +7,23 @@ export default function UserView() {
   let [showDetails, setShowDetails] = useState(false);
 
   return (
-    <div className="h-full w-full relative">
-      <button
-        className="p-2 bg-gray-400 text-white rounded-full hover:text-gray-200 focus:outline-none"
-        onClick={() => setShowDetails(!showDetails)}
-      >
-        <Icon.User className="h-5 w-5" />
-      </button>
-      {showDetails ? <UserDetails /> : null}
-    </div>
+    <>
+      {showDetails ? (
+        <div
+          className="cursor-default w-screen h-screen absolute left-0 top-0"
+          onClick={() => setShowDetails(!showDetails)}
+        />
+      ) : null}
+      <div className="h-full w-full relative">
+        <button
+          className="p-2 bg-gray-400 text-white rounded-full hover:text-gray-200 focus:outline-none"
+          onClick={() => setShowDetails(!showDetails)}
+        >
+          <Icon.User className="h-5 w-5" />
+        </button>
+        {showDetails ? <UserDetails /> : null}
+      </div>
+    </>
   );
 }
 
@@ -32,8 +40,9 @@ function UserDetails() {
     >
       <div className="font-semibold px-4 py-2 mb-2 border-b border-gray-300">{user.name}</div>
       <div className="px-4 mb-4">
-        <Section title="Team">{user.team}</Section>
+        <Section title="Team">{user.team.name}</Section>
         <Section title="Roles">{user.roles.join(", ")}</Section>
+        <Section title="Joined">{formatDate(user.created)}</Section>
         <button
           className="p-2 mt-4 border border-gray-300 shadow-sm rounded-lg w-full text-red-700 hover:bg-red-100 hover:border-red-200 focus:outline-none"
           onClick={() => dispatch({ type: "LOGOUT" })}
@@ -43,6 +52,11 @@ function UserDetails() {
       </div>
     </div>
   );
+}
+
+function formatDate(unixTime) {
+  let d = new Date(unixTime * 1000);
+  return `${d.getDay()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
 }
 
 function Section(props) {

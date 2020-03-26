@@ -114,10 +114,26 @@ async function verifyLogin(email, password, authDispatch, setFailed) {
       }
     })
     .then(js => {
-      authDispatch({
-        type: "LOGIN",
-        payload: js
+      getUserInfo(js.apiKey).then(userDetails => {
+        console.log({ ...js, user: userDetails });
+        authDispatch({
+          type: "LOGIN",
+          payload: { ...js, ...userDetails }
+        });
       });
     })
+    .catch(error => console.log(error));
+}
+
+async function getUserInfo(apiKey) {
+  return await Api.get("/me", { headers: { Authorization: apiKey } })
+    .then(r => {
+      if (r.ok) {
+        return r.json();
+      } else {
+        throw new Error("Failed to retrieve user by api key");
+      }
+    })
+    .then(js => js)
     .catch(error => console.log(error));
 }

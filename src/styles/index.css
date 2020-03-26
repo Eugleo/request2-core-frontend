@@ -2,20 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-.details-dropdown:before {
-  top: -16px;
-  right: 9px;
-  left: auto;
-}
-
-.details-dropdown:before {
-  border: 8px solid transparent;
-  border-bottom-color: rgba(27, 31, 35, 0.15);
-}
-
-.details-dropdown:after,
-.dropdown-menu:before {
-  position: absolute;
-  display: inline-block;
-  content: "";
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
+    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
