@@ -1,17 +1,16 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, { useState, useEffect, useReducer } from "react";
 
-import "bootstrap/dist/css/bootstrap.min.css";
 import * as Api from "./Api.js";
-import NavBar from "./Navbar.js";
+import Navbar from "./Navbar.js";
 import Footer from "./Footer.js";
 
 import { Route, Switch, Redirect } from "react-router-dom";
 
-import Container from "react-bootstrap/Container";
-
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 import { AtomSpinner } from "react-epic-spinners";
-import Login from "./Login.js";
+import LoginPage from "./LoginPage.js";
+
+import Page from "./Page.js";
 
 import AuthContext from "./Auth.js";
 
@@ -61,12 +60,12 @@ function App() {
   // TODO Replace the footer
   return (
     <AuthContext.Provider value={{ auth, dispatch }}>
-      <div className="App">
-        <NavBar />
-        <Container className="mt-5">
-          <AppBody backendAvailable={backendAvailable} />
-        </Container>
-        <Footer />
+      <div className="App bg-gray-100 min-h-screen flex flex-col">
+        <Navbar />
+        <AppBody backendAvailable={backendAvailable} />
+        <div className="flex-none">
+          <Footer />
+        </div>
       </div>
     </AuthContext.Provider>
   );
@@ -91,7 +90,7 @@ function AppBody(props) {
             <Announcements />
           </Route>
           <Route path="/login">
-            <Login />
+            <LoginPage />
           </Route>
           <Route path="/register">Registration page.</Route>
           <Route path="/">
@@ -101,10 +100,11 @@ function AppBody(props) {
       );
     default:
       return (
-        <>
-          <h1>Error</h1>
-          <p>Something seems to be wrong with the server. Try again later.</p>
-        </>
+        <Page title="Error" width="lg">
+          <p className="text-gray-800">
+            Something seems to be wrong with the server. Try again later.
+          </p>
+        </Page>
       );
   }
 }

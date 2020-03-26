@@ -2,43 +2,44 @@ import React from "react";
 
 import { Authentized } from "./Auth.js";
 
-import Navbar from "react-bootstrap/Navbar";
-import Nav from "react-bootstrap/Nav";
+import "./styles/tailwind.css";
+import { NavLink as RouterNavLink } from "react-router-dom";
 
-import { LinkContainer } from "react-router-bootstrap";
-import LogoutButton from "./LogoutButton.js";
-import LoginNavLinks from "./LoginNavLinks.js";
+import UserView from "./UserView.js";
 
 // TODO Show current user
-export default function NavBar() {
+
+export default function Navbar() {
   return (
-    <Navbar bg="dark" variant="dark" className="navbar-expand-md">
-      <Navbar.Brand>
-        <LinkContainer to="/">
-          <Nav.Link active={false} className="no-style">
-            <span style={{ fontVariant: "small-caps" }}>re</span>
-            Quest<sup>2</sup>
-          </Nav.Link>
-        </LinkContainer>
-      </Navbar.Brand>
-
-      <Nav className="mr-auto">
-        <Link to="/announcements">Announcements</Link>
-      </Nav>
-
-      <Nav>
-        <Authentized or={<LoginNavLinks />}>
-          <LogoutButton />
-        </Authentized>
-      </Nav>
-    </Navbar>
+    <nav className="w-full bg-white sticky border-gray-300 border-b top-0 p-4">
+      <div className="max-w-full mx-auto">
+        <div className="flex items-center justify-between h-full">
+          <div className="flex items-center justify-left">
+            <span className="text-green-600 font-extrabold text-xl mr-6">
+              rQ<sup>2</sup>
+            </span>
+            <NavLink to="/announcements">Announcements</NavLink>
+            <NavLink to="/teams">Teams</NavLink>
+          </div>
+          <div className="flex items-center justify-right">
+            <Authentized or={<NavLink to="/login">Log in</NavLink>}>
+              <UserView />
+            </Authentized>
+          </div>
+        </div>
+      </div>
+    </nav>
   );
 }
 
-function Link(props) {
+function NavLink(props) {
   return (
-    <LinkContainer to={props.to} className="no-style">
-      <Nav.Link active={false}>{props.children}</Nav.Link>
-    </LinkContainer>
+    <RouterNavLink
+      to={props.to}
+      className={props.className || "ml-2 px-3 py-2 rounded-md text-sm hover:bg-gray-200"}
+      activeClassName="bg-gray-200"
+    >
+      {props.children}
+    </RouterNavLink>
   );
 }

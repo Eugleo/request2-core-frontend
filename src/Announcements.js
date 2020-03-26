@@ -3,12 +3,9 @@ import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import { Link, useRouteMatch, useParams } from "react-router-dom";
 
-import Card from "react-bootstrap/Card";
-import Container from "react-bootstrap/Container";
-import Row from "react-bootstrap/Row";
-import Col from "react-bootstrap/Col";
-
 import AuthContext, { Authentized } from "./Auth.js";
+
+import Page from "./Page.js";
 
 export function Announcements() {
   let match = useRouteMatch();
@@ -32,33 +29,38 @@ export function Announcements() {
   }, [auth.loggedIn, apiKey]);
 
   return (
-    <Authentized or={<div>You need to be logged in to view announcements.</div>}>
-      <h1>Announcements</h1>
-      <Container fluid>
-        {anns.map(ann => (
-          <AnnouncementCard key={ann.id} link={`${match.path}/${ann.id}`} {...ann.data} />
-        ))}
-      </Container>
-    </Authentized>
+    <Page title="Announcements">
+      <Authentized or={<div>You need to be logged in to view announcements.</div>}>
+        <div className="flex flex-col">
+          {anns.map(ann => (
+            <AnnouncementCard key={ann.id} link={`${match.path}/${ann.id}`} {...ann.data} />
+          ))}
+        </div>
+      </Authentized>
+    </Page>
   );
 }
 
 function AnnouncementCard(props) {
-  // TODO Show ann upon click
+  // TODO Show ann on click, show edit button only for admins & authors
   return (
-    <Row className="mb-4">
-      <Col>
-        <Link to={props.link} className="no-style">
-          <Card>
-            <Card.Body>
-              <Card.Title>{props.title}</Card.Title>
-              <Card.Text>{props.body}</Card.Text>
-              <Card.Footer className="text-muted">{formatDate(props.created)}</Card.Footer>
-            </Card.Body>
-          </Card>
-        </Link>
-      </Col>
-    </Row>
+    <div className="mb-6 w-full bg-white rounded-lg shadow-md flex-col">
+      <div className="flex px-6 py-3 items-center border-b border-gray-200">
+        <div className="flex flex-col flex-grow not-sr-onlyitems-center">
+          <h2 className="flex-grow text-xl font-medium text-black">{props.title}</h2>
+          <p className="text-gray-500 text-sm">{formatDate(props.created)}</p>
+        </div>
+        <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300 mr-2">
+          <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
+          Edit
+        </button>
+        <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300">
+          <Icon.Eye className="mr-1 text-gray-700 h-4 stroke-2" />
+          View
+        </button>
+      </div>
+      <div className="px-6 py-3 text-gray-800 text-md">{props.body}</div>
+    </div>
   );
 }
 

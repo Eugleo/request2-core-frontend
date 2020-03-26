@@ -14,15 +14,6 @@ nav.bg-dark {
   background-color: #175 !important;
 }
 
-.inline-icon {
-  position: relative;
-  stroke-width: 1.5px;
-  width: 1.1em;
-  height: 1.1em;
-  margin-right: 5px;
-  bottom: 2px;
-}
-
 a.no-style {
   font-style: inherit;
   text-decoration: none;
