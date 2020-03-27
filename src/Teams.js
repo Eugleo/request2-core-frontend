@@ -47,7 +47,7 @@ export function Teams() {
 function Team(props) {
   // TODO Show team on click, show edit button only for admins & authors
   return (
-    <div className="flex px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
+    <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-grow">
         <h2 className="text-black font-medium">{props.name}</h2>
       </div>

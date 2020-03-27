@@ -10917,6 +10917,10 @@ body {
     "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
 }
 
+.list-item:last-child {
+  border-bottom: none;
+}
+
 @media (min-width: 640px) {
   .sm\:sr-only {
     position: absolute;
