@@ -7,8 +7,6 @@ import { NavLink as RouterNavLink } from "react-router-dom";
 
 import UserView from "./UserView.js";
 
-// TODO Show current user
-
 export default function Navbar() {
   return (
     <nav className="w-full bg-white sticky border-gray-300 border-b top-0 p-4">

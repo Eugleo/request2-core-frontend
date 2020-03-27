@@ -11,3 +11,8 @@ export async function post(url, data, headers = {}) {
     body: JSON.stringify(data)
   });
 }
+
+export function urlWithParams(url, params) {
+  let strParams = Object.keys(params).map(k => `${k}=${params[k]}`);
+  return `${url}?${strParams.join("&")}`;
+}

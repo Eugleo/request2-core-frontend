@@ -13,6 +13,7 @@ import LoginPage from "./LoginPage.js";
 import Page from "./Page.js";
 
 import AuthContext from "./Auth.js";
+import { Teams } from "./Teams.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -34,9 +35,21 @@ function reducer(state, action) {
 
 function App() {
   let initialAuth = {
-    loggedIn: false,
-    user: null
+    loggedIn: true,
+    userID: 1,
+    user: {
+      apiKey: "GrbWg.iK/xNONYNfKtRhTmnmaOd91kT2248/5daqKc6",
+      name: "Evžen",
+      roles: ["Admin", "Client", "Operator"],
+      team: { name: "Evženův supertým" },
+      created: 115151
+    }
   };
+
+  // let initialAuth = {
+  //   loggedIn: false,
+  //   user: null
+  // };
 
   let [backendAvailable, setBackendAvailable] = useState(null);
   let [auth, dispatch] = useReducer(reducer, initialAuth);
@@ -88,6 +101,9 @@ function AppBody(props) {
           </Route>
           <Route path="/announcements">
             <Announcements />
+          </Route>
+          <Route path="/teams">
+            <Teams />
           </Route>
           <Route path="/login">
             <LoginPage />
