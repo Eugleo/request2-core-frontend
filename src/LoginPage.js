@@ -1,7 +1,9 @@
 import React, { useContext, useState } from "react";
 import * as Api from "./Api.js";
 
-import { useFormik } from "formik";
+import { Formik, Form } from "formik";
+import { CenteredPage } from "./Page.js";
+import { InputField } from "./Forms.js";
 import AuthContext from "./Auth.js";
 import { Redirect } from "react-router-dom";
 
@@ -9,35 +11,26 @@ export default function LoginPage() {
   let [loginFailed, setLoginFailed] = useState(false);
   let { auth, dispatch } = useContext(AuthContext);
 
-  let formik = useFormik({
-    initialValues: {
-      email: "",
-      password: ""
-    },
-    validate,
-    onSubmit: values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)
-  });
-
   if (auth.loggedIn) {
     return <Redirect to="/announcements" />;
   }
 
   return (
-    <div className="max-w-sm w-full mx-auto flex-grow flex flex-col justify-center">
-      <h1 className="text-3xl text-black font-bold text-center">Sign in to your account</h1>
-      <p className="text-center text-gray-600 mb-6">
-        Or{" "}
-        <a href="#" className="text-green-700 text-sm hover:text-green-600">
-          create a new account
-        </a>
-      </p>
-      <div className="rounded-lg shadow-md bg-white p-6">
-        <form onSubmit={formik.handleSubmit} className="flex flex-col">
+    <CenteredPage title="Log in to your account" width="max-w-md">
+      <Formik
+        initialValues={{
+          email: "",
+          password: ""
+        }}
+        validate={validate}
+        onSubmit={values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)}
+      >
+        <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
           {loginFailed ? (
             <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
           ) : null}
-          <InputField name="email" label="Email address" formik={formik} />
-          <InputField type="password" name="password" label="Password" formik={formik} />
+          <InputField name="email" label="Email address" />
+          <InputField type="password" name="password" label="Password" />
           <a href="#" className="text-green-700 text-sm hover:text-green-600 mb-6">
             Forgot you password?
           </a>
@@ -47,46 +40,10 @@ export default function LoginPage() {
           >
             Log in
           </button>
-        </form>
-      </div>
-    </div>
+        </Form>
+      </Formik>
+    </CenteredPage>
   );
-}
-
-function InputField(props) {
-  let formikConfig = {
-    value: props.formik.values[props.name],
-    onChange: props.formik.handleChange,
-    onBlur: props.formik.handleBlur
-  };
-
-  return (
-    <div className="flex flex-col mb-6">
-      <label htmlFor={props.name} className="text-sm font-medium text-gray-700 mb-1">
-        {props.label}
-      </label>
-      <input
-        type={props.type || "text"}
-        id={props.name}
-        name={props.name}
-        placeholder={props.placeholder}
-        {...formikConfig}
-        className={
-          "shadow-sm border text-sm border-gray-300 text-gray-900 rounded-md py-1 px-2 " +
-          "focus:outline-none focus:shadow-outline-blue focus:border-blue-600 focus:z-10 font-normal"
-        }
-      />
-      <ErrorMessage name="email" name={props.name} formik={props.formik} />
-    </div>
-  );
-}
-
-function ErrorMessage(props) {
-  if (props.formik.errors[props.name] && props.formik.touched[props.name]) {
-    return <p className="mt-1 text-red-600 text-xs">{props.formik.errors[props.name]}</p>;
-  } else {
-    return null;
-  }
 }
 
 function validate(values) {

@@ -39,7 +39,7 @@ function App() {
     loggedIn: true,
     userID: 1,
     user: {
-      apiKey: "GrbWg.iK/xNONYNfKtRhTmnmaOd91kT2248/5daqKc6",
+      apiKey: "0CZ6LZC/IIJoLJl8PYpVyzVETnytc1D5X4vxr6bjVk8",
       name: "Evžen",
       roles: ["Admin", "Client", "Operator"],
       team: { name: "Evženův supertým" },

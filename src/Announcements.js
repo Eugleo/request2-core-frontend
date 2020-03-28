@@ -11,7 +11,7 @@ export function Announcements() {
   let match = useRouteMatch();
   let [anns, setAnns] = useState([]);
   let { auth } = useContext(AuthContext);
-  let apiKey = auth.user == null ? null : auth.user.apiKey;
+  let apiKey = auth.user ? auth.user.apiKey : null;
 
   useEffect(() => {
     if (auth.loggedIn) {
