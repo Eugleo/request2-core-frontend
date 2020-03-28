@@ -52,7 +52,12 @@ export default function EditTeam() {
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Team leader"
             />
-            <InputField name="code" initValue={team.code || ""} label="Institutional code" />
+            <InputField
+              name="code"
+              initValue={team.code || ""}
+              onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
+              label="Institutional code"
+            />
             <div className="flex justify-between w-full items-stretch pt-3">
               <button
                 type="submit"
