@@ -20,3 +20,11 @@ export function urlWithParams(url, params) {
 export async function del(url, data = {}) {
   return await fetch(hostname + url, { method: "DELETE", ...data });
 }
+
+export async function put(url, data, headers = {}) {
+  return await fetch(hostname + url, {
+    method: "PUT",
+    headers: { "Content-Type": "application/json", ...headers },
+    body: JSON.stringify(data)
+  });
+}

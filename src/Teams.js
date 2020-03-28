@@ -48,7 +48,11 @@ function Team(props) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-grow">
-        <h2 className="text-black font-medium">{props.name}</h2>
+        {props.active ? (
+          <h2 className="text-gray-900 font-medium">{props.name}</h2>
+        ) : (
+          <h2 className="text-gray-400 font-medium">{props.name}</h2>
+        )}
       </div>
       <Authorized roles={["Admin"]}>
         <Link

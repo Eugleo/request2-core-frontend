@@ -13,10 +13,11 @@ export default function EditTeam() {
   let match = useRouteMatch();
   let id = match.params["id"];
   let { auth } = useContext(AuthContext);
+  let [shouldRedirect, setShouldRedirect] = useState(false);
   let [team, setTeam] = useState({ name: "", code: "" });
 
   useEffect(() => {
-    Api.get("/teams/" + id, { headers: { Authorization: auth.user.apiKey } })
+    Api.get(`/teams/${id}`, { headers: { Authorization: auth.user.apiKey } })
       .then(r => {
         if (r.ok) {
           return r.json();
@@ -30,6 +31,10 @@ export default function EditTeam() {
 
   if (team === null) {
     return <Redirect to="/404" />;
+  }
+
+  if (shouldRedirect) {
+    return <Redirect to="/teams" />;
   }
 
   return (
@@ -55,19 +60,59 @@ export default function EditTeam() {
               >
                 Save changes
               </button>
-              <button
-                onClick={() =>
-                  Api.del(`${match.path}/${id}`, { headers: { Authorization: auth.user.apiKey } })
-                }
-                className="text-red-600 border-red-400 border text-white rounded-md shadow-md px-2 py-2 text-sm hover:text-red-400 flex focus:outline-none items-center"
-              >
-                <Icon.Trash2 className="text-red-400 mr-1 h-5 stroke-2" /> Deactivate
-              </button>
+              {team.active ? (
+                <DeactivateButton
+                  id={id}
+                  apiKey={auth.user.apiKey}
+                  setShouldRedirect={setShouldRedirect}
+                />
+              ) : (
+                <ReactivateButton
+                  id={id}
+                  apiKey={auth.user.apiKey}
+                  team={team}
+                  setShouldRedirect={setShouldRedirect}
+                />
+              )}
             </div>
           </Form>
         </Formik>
       </div>
     </Page>
+  );
+}
+
+function ReactivateButton(props) {
+  return (
+    <button
+      onClick={() => {
+        // TODO Add error handling
+        Api.put(
+          `/teams/${props.id}`,
+          { ...props.team, active: true },
+          { Authorization: props.apiKey }
+        );
+        props.setShouldRedirect(true);
+      }}
+      className="text-green-600 border-green-400 border rounded-md shadow-sm p-2 text-sm hover:text-green-400 flex focus:outline-none items-center"
+    >
+      <Icon.RotateCw className="text-green-400 mr-1 h-5 stroke-2" /> Reactivate
+    </button>
+  );
+}
+
+function DeactivateButton(props) {
+  return (
+    <button
+      onClick={() => {
+        // TODO Add error handling
+        Api.del(`/teams/${props.id}`, { headers: { Authorization: props.apiKey } });
+        props.setShouldRedirect(true);
+      }}
+      className="text-red-600 border-red-400 border rounded-md shadow-sm p-2 text-sm hover:text-red-400 flex focus:outline-none items-center"
+    >
+      <Icon.Trash2 className="text-red-400 mr-1 h-5 stroke-2" /> Deactivate
+    </button>
   );
 }
 
