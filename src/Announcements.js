@@ -29,7 +29,7 @@ export function Announcements() {
   }, [auth.loggedIn, apiKey]);
 
   return (
-    <Page title="Announcements">
+    <Page title="Announcements" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
           {anns.map(ann => (
@@ -44,7 +44,7 @@ export function Announcements() {
 function AnnouncementCard(props) {
   // TODO Show ann on click, show edit button only for admins & authors
   return (
-    <div className="mb-6 w-full bg-white rounded-lg shadow-md flex-col">
+    <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col flex-grow not-sr-onlyitems-center">
           <h2 className="flex-grow text-xl font-medium text-black">{props.title}</h2>
@@ -55,8 +55,8 @@ function AnnouncementCard(props) {
           Edit
         </button>
         <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300">
-          <Icon.Eye className="mr-1 text-gray-700 h-4 stroke-2" />
-          View
+          <Icon.MessageSquare className="mr-1 text-gray-700 h-4 stroke-2" />
+          Comment
         </button>
       </div>
       <div className="px-6 py-3 text-gray-800 text-md">{props.body}</div>

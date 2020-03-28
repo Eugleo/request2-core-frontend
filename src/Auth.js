@@ -21,8 +21,8 @@ export function Authorized(props) {
 
   let roles = props.roles || [];
 
-  if (!roles.every(auth.user.roles.includes)) {
-    return props.forbidden || <div>You don't have enough privileges to view this content</div>;
+  if (!roles.every(r => auth.user.roles.includes(r))) {
+    return props.or || null;
   } else {
     return props.children;
   }

@@ -14,6 +14,7 @@ import Page from "./Page.js";
 
 import AuthContext from "./Auth.js";
 import { Teams } from "./Teams.js";
+import EditTeam from "./EditTeam.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -101,6 +102,9 @@ function AppBody(props) {
           </Route>
           <Route path="/announcements">
             <Announcements />
+          </Route>
+          <Route path="/teams/:id/edit">
+            <EditTeam />
           </Route>
           <Route path="/teams">
             <Teams />

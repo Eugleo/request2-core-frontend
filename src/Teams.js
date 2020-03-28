@@ -3,7 +3,7 @@ import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import { Link, useRouteMatch, useParams } from "react-router-dom";
 
-import AuthContext, { Authentized } from "./Auth.js";
+import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
 import Page from "./Page.js";
 
@@ -32,11 +32,11 @@ export function Teams() {
   }, [auth.loggedIn, apiKey, limit, offset]);
 
   return (
-    <Page title="Teams">
+    <Page title="Teams" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
         <div className="flex flex-col bg-white rounded-lg shadow-sm">
           {teams.map(team => (
-            <Team key={team.id} link={`${match.path}/${team.id}`} {...team.data} />
+            <Team key={team.id} editLink={`${match.path}/${team.id}/edit`} {...team.data} />
           ))}
         </div>
       </Authentized>
@@ -45,43 +45,21 @@ export function Teams() {
 }
 
 function Team(props) {
-  // TODO Show team on click, show edit button only for admins & authors
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-grow">
         <h2 className="text-black font-medium">{props.name}</h2>
       </div>
-      <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300 mr-2">
-        <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
-        Edit
-      </button>
-      <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300">
-        <Icon.Eye className="mr-1 text-gray-700 h-4 stroke-2" />
-        View
-      </button>
-    </div>
-  );
-}
-
-function formatDate(unixTime) {
-  let d = new Date(unixTime * 1000);
-  return `${d.getDay()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
-}
-
-export function AnnouncementFromUrl() {
-  var { id } = useParams();
-  return <Announcement id={id} />;
-}
-
-function Announcement(props) {
-  return (
-    <>
-      <h1>
-        <Link to="/announcements">
-          <Icon.ChevronLeft className="inline-icon" color="black" />
+      <Authorized roles={["Admin"]}>
+        <Link
+          to={props.editLink}
+          className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300"
+        >
+          <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
+          Edit
         </Link>
-        Announcement id: {props.id}
-      </h1>
-    </>
+        <button></button>
+      </Authorized>
+    </div>
   );
 }
