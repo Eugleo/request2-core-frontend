@@ -24,6 +24,7 @@ function reducer(state, action) {
         user: action.payload
       };
     case "LOGOUT":
+      //TODO check that the logout succeeded
       Api.post("/logout", { api_key: state.user.apiKey }, { Authorization: state.user.apiKey });
       return {
         loggedIn: false,
