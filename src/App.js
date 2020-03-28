@@ -4,7 +4,7 @@ import * as Api from "./Api.js";
 import Navbar from "./Navbar.js";
 import Footer from "./Footer.js";
 
-import { Route, Switch, Redirect } from "react-router-dom";
+import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 import { AtomSpinner } from "react-epic-spinners";
@@ -75,8 +75,10 @@ function App() {
   return (
     <AuthContext.Provider value={{ auth, dispatch }}>
       <div className="App bg-gray-100 min-h-screen flex flex-col">
-        <Navbar />
-        <AppBody backendAvailable={backendAvailable} />
+        <Router>
+          <Navbar />
+          <AppBody backendAvailable={backendAvailable} />
+        </Router>
         <div className="flex-none">
           <Footer />
         </div>
