@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
+import * as Button from "./Buttons.js";
 import { Link, useRouteMatch, useParams } from "react-router-dom";
 
 import AuthContext, { Authentized } from "./Auth.js";
@@ -8,7 +9,6 @@ import AuthContext, { Authentized } from "./Auth.js";
 import Page from "./Page.js";
 
 export function Announcements() {
-  let match = useRouteMatch();
   let [anns, setAnns] = useState([]);
   let { auth } = useContext(AuthContext);
   let apiKey = auth.user ? auth.user.apiKey : null;
@@ -33,7 +33,7 @@ export function Announcements() {
       <Authentized or={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
           {anns.map(ann => (
-            <AnnouncementCard key={ann.id} link={`${match.path}/${ann.id}`} {...ann.data} />
+            <AnnouncementCard key={ann.id} id={ann.id} {...ann.data} />
           ))}
         </div>
       </Authentized>
@@ -46,18 +46,20 @@ function AnnouncementCard(props) {
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
-        <div className="flex flex-col flex-grow not-sr-onlyitems-center">
-          <h2 className="flex-grow text-xl font-medium text-black">{props.title}</h2>
+        <div className="flex flex-col not-sr-onlyitems-center">
+          <Link
+            to={`announcements/${props.id}`}
+            className="text-xl font-medium text-black hover:text-green-700"
+          >
+            {props.title}
+          </Link>
           <p className="text-gray-500 text-sm">{formatDate(props.created)}</p>
         </div>
-        <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300 mr-2">
+        <div className="flex-grow" />
+        <Button.NormalLinked to={`announcements/${props.id}/edit`} className="pl-2 pr-3">
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit
-        </button>
-        <button className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300">
-          <Icon.MessageSquare className="mr-1 text-gray-700 h-4 stroke-2" />
-          Comment
-        </button>
+        </Button.NormalLinked>
       </div>
       <div className="px-6 py-3 text-gray-800 text-md">{props.body}</div>
     </div>

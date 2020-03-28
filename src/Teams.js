@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
+import * as Button from "./Buttons.js";
 import { Link, useRouteMatch, useParams } from "react-router-dom";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
@@ -34,13 +35,27 @@ export function Teams() {
   return (
     <Page title="Teams" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
-        <div className="flex flex-col bg-white rounded-lg shadow-sm">
-          {teams.map(team => (
-            <Team key={team.id} editLink={`${match.path}/${team.id}/edit`} {...team.data} />
-          ))}
+        <div className="flex flex-col">
+          <AddTeamButton />
+          <div className="flex flex-col bg-white rounded-lg shadow-sm">
+            {teams.map(team => (
+              <Team key={team.id} editLink={`/teams/${team.id}/edit`} {...team.data} />
+            ))}
+          </div>
         </div>
       </Authentized>
     </Page>
+  );
+}
+
+function AddTeamButton() {
+  return (
+    <Link
+      to="/teams/new"
+      className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
+    >
+      <Icon.Plus className="stroke-2 mr-1" /> Add new team
+    </Link>
   );
 }
 
@@ -55,14 +70,10 @@ function Team(props) {
         )}
       </div>
       <Authorized roles={["Admin"]}>
-        <Link
-          to={props.editLink}
-          className="inline-flex items-center rounded-md text-sm shadow-sm pl-2 pr-3 py-2 text-gray-800 border border-gray-300"
-        >
+        <Button.NormalLinked to={props.editLink} className="pl-2 pr-3">
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit
-        </Link>
-        <button></button>
+        </Button.NormalLinked>
       </Authorized>
     </div>
   );

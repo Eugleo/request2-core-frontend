@@ -3,10 +3,10 @@ import { Formik, Form } from "formik";
 import { InputField } from "./Forms.js";
 import Page from "./Page";
 
-import * as Icon from "react-feather";
 import AuthContext from "./Auth";
 import { useRouteMatch, Redirect } from "react-router-dom";
 import * as Api from "./Api.js";
+import * as Button from "./Buttons.js";
 
 // TODO Change submit to Api.put
 export default function EditTeam() {
@@ -59,65 +59,40 @@ export default function EditTeam() {
               label="Institutional code"
             />
             <div className="flex justify-between w-full items-stretch pt-3">
-              <button
-                type="submit"
-                className="bg-green-600 text-white shadow-md rounded-md px-4 py-2 text-sm hover:bg-green-500 focus:outline-none"
-              >
-                Save changes
-              </button>
-              {team.active ? (
-                <DeactivateButton
-                  id={id}
-                  apiKey={auth.user.apiKey}
-                  setShouldRedirect={setShouldRedirect}
-                />
-              ) : (
-                <ReactivateButton
-                  id={id}
-                  apiKey={auth.user.apiKey}
-                  team={team}
-                  setShouldRedirect={setShouldRedirect}
-                />
-              )}
+              <Button.Primary type="submit" title="Save changes" />
+              <div className="flex">
+                {team.active ? (
+                  <Button.Danger
+                    title="Deactivate"
+                    onClick={() => {
+                      // TODO Add error handling
+                      Api.del(`/teams/${id}`, { headers: { Authorization: auth.user.apiKey } });
+                      setShouldRedirect(true);
+                    }}
+                    className="mr-2"
+                  />
+                ) : (
+                  <Button.Secondary
+                    title="Reactivate"
+                    onClick={() => {
+                      // TODO Add error handling
+                      Api.put(
+                        `/teams/${id}`,
+                        { ...team, active: true },
+                        { Authorization: auth.user.apiKey }
+                      );
+                      setShouldRedirect(true);
+                    }}
+                    className="mr-2"
+                  />
+                )}
+                <Button.Normal title="Cancel" onClick={setShouldRedirect} />
+              </div>
             </div>
           </Form>
         </Formik>
       </div>
     </Page>
-  );
-}
-
-function ReactivateButton(props) {
-  return (
-    <button
-      onClick={() => {
-        // TODO Add error handling
-        Api.put(
-          `/teams/${props.id}`,
-          { ...props.team, active: true },
-          { Authorization: props.apiKey }
-        );
-        props.setShouldRedirect(true);
-      }}
-      className="text-green-600 border-green-400 border rounded-md shadow-sm p-2 text-sm hover:text-green-400 flex focus:outline-none items-center"
-    >
-      <Icon.RotateCw className="text-green-400 mr-1 h-5 stroke-2" /> Reactivate
-    </button>
-  );
-}
-
-function DeactivateButton(props) {
-  return (
-    <button
-      onClick={() => {
-        // TODO Add error handling
-        Api.del(`/teams/${props.id}`, { headers: { Authorization: props.apiKey } });
-        props.setShouldRedirect(true);
-      }}
-      className="text-red-600 border-red-400 border rounded-md shadow-sm p-2 text-sm hover:text-red-400 flex focus:outline-none items-center"
-    >
-      <Icon.Trash2 className="text-red-400 mr-1 h-5 stroke-2" /> Deactivate
-    </button>
   );
 }
 

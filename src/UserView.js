@@ -1,6 +1,7 @@
 import React, { useContext, useState } from "react";
 
 import * as Icon from "react-feather";
+import * as Button from "./Buttons.js";
 import AuthContext from "./Auth.js";
 
 export default function UserView() {
@@ -43,12 +44,11 @@ function UserDetails() {
         <Section title="Team">{user.team.name}</Section>
         <Section title="Roles">{user.roles.join(", ")}</Section>
         <Section title="Joined">{formatDate(user.created)}</Section>
-        <button
-          className="text-red-600 border-red-400 border text-white rounded-md mt-4 shadow-md px-2 py-2 text-sm w-full hover:text-red-400 focus:outline-none items-center"
+        <Button.Danger
+          title="Log out"
           onClick={() => dispatch({ type: "LOGOUT" })}
-        >
-          Log out
-        </button>
+          className="mt-2 w-full flex justify-center"
+        />
       </div>
     </div>
   );

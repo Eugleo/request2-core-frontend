@@ -7,6 +7,8 @@ import { InputField } from "./Forms.js";
 import AuthContext from "./Auth.js";
 import { Redirect } from "react-router-dom";
 
+import * as Button from "./Buttons.js";
+
 export default function LoginPage() {
   let [loginFailed, setLoginFailed] = useState(false);
   let { auth, dispatch } = useContext(AuthContext);
@@ -34,12 +36,7 @@ export default function LoginPage() {
           <a href="#" className="text-green-700 text-sm hover:text-green-600 mb-6">
             Forgot you password?
           </a>
-          <button
-            type="submit"
-            className="bg-green-600 text-white rounded-md py-2 text-sm hover:bg-green-500"
-          >
-            Log in
-          </button>
+          <Button.Primary title="Log in" type="submit" />
         </Form>
       </Formik>
     </CenteredPage>
