@@ -16,3 +16,7 @@ export function urlWithParams(url, params) {
   let strParams = Object.keys(params).map(k => `${k}=${params[k]}`);
   return `${url}?${strParams.join("&")}`;
 }
+
+export async function del(url, data = {}) {
+  return await fetch(hostname + url, { method: "DELETE", ...data });
+}

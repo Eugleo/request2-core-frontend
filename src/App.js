@@ -9,6 +9,7 @@ import { Route, Switch, Redirect } from "react-router-dom";
 import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
 import { AtomSpinner } from "react-epic-spinners";
 import LoginPage from "./LoginPage.js";
+import NotFound404 from "./NotFound404.js";
 
 import Page from "./Page.js";
 
@@ -113,6 +114,9 @@ function AppBody(props) {
             <LoginPage />
           </Route>
           <Route path="/register">Registration page.</Route>
+          <Route path="/404">
+            <NotFound404 />
+          </Route>
           <Route path="/">
             <Redirect to="/login" />
           </Route>
