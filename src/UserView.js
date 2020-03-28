@@ -44,7 +44,7 @@ function UserDetails() {
         <Section title="Roles">{user.roles.join(", ")}</Section>
         <Section title="Joined">{formatDate(user.created)}</Section>
         <button
-          className="p-2 mt-4 border border-gray-300 shadow-sm rounded-lg w-full text-red-700 hover:bg-red-100 hover:border-red-200 focus:outline-none"
+          className="text-red-600 border-red-400 border text-white rounded-md mt-4 shadow-md px-2 py-2 text-sm w-full hover:text-red-400 focus:outline-none items-center"
           onClick={() => dispatch({ type: "LOGOUT" })}
         >
           Log out

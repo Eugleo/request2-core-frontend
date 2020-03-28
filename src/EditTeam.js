@@ -67,7 +67,7 @@ function TeamForm(props) {
           >
             Save changes
           </button>
-          <button className="text-red-600 border-red-400 border-2 text-white rounded-md shadow-md px-2 py-2 text-sm hover:text-red-400 flex focus:outline-none items-center">
+          <button className="text-red-600 border-red-400 border text-white rounded-md shadow-md px-2 py-2 text-sm hover:text-red-400 flex focus:outline-none items-center">
             <Icon.Trash2 className="text-red-400 mr-1 h-5 stroke-2" /> Deactivate
           </button>
         </div>
