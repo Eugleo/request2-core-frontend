@@ -2,14 +2,14 @@ import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
-import { Link, useRouteMatch, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
 import Page from "./Page.js";
 
 export function Teams() {
-  let match = useRouteMatch();
+  // TODO Add paging
   let [limit, setLimit] = useState(20);
   let [offset, setOffset] = useState(0);
   let [teams, setTeams] = useState([]);

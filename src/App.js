@@ -74,7 +74,6 @@ function App() {
       });
   }, []);
 
-  // TODO Replace the footer
   return (
     <AuthContext.Provider value={{ auth, dispatch }}>
       <div className="App bg-gray-100 min-h-screen flex flex-col">

@@ -8,7 +8,6 @@ import { useRouteMatch, Redirect } from "react-router-dom";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
 
-// TODO Change submit to Api.put
 export default function EditTeam() {
   let match = useRouteMatch();
   let id = match.params["id"];
@@ -43,7 +42,11 @@ export default function EditTeam() {
         <Formik
           initialValues={{ name: "", code: "" }}
           validate={validate}
-          onSubmit={values => console.log(values)}
+          onSubmit={values => {
+            // TODO Add error handling
+            Api.put(`/teams/${id}`, { ...team, ...values }, { Authorization: auth.user.apiKey });
+            setShouldRedirect(true);
+          }}
         >
           <Form className="flex flex-col items-start">
             <InputField
@@ -86,7 +89,7 @@ export default function EditTeam() {
                     className="mr-2"
                   />
                 )}
-                <Button.Normal title="Cancel" onClick={setShouldRedirect} />
+                <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
               </div>
             </div>
           </Form>

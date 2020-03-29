@@ -2,9 +2,9 @@ import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
-import { Link, useRouteMatch, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
-import AuthContext, { Authentized } from "./Auth.js";
+import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
 import Page from "./Page.js";
 
@@ -32,17 +32,30 @@ export function Announcements() {
     <Page title="Announcements" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
-          {anns.map(ann => (
-            <AnnouncementCard key={ann.id} id={ann.id} {...ann.data} />
-          ))}
+          <AddAnnButton />
+          <div className="flex flex-col">
+            {anns.map(ann => (
+              <AnnouncementCard key={ann.id} id={ann.id} {...ann.data} />
+            ))}
+          </div>
         </div>
       </Authentized>
     </Page>
   );
 }
 
+function AddAnnButton() {
+  return (
+    <Link
+      to="/announcements/new"
+      className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
+    >
+      <Icon.Plus className="stroke-2 mr-1" /> Add new announcement
+    </Link>
+  );
+}
+
 function AnnouncementCard(props) {
-  // TODO Show ann on click, show edit button only for admins & authors
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
@@ -56,10 +69,12 @@ function AnnouncementCard(props) {
           <p className="text-gray-500 text-sm">{formatDate(props.created)}</p>
         </div>
         <div className="flex-grow" />
-        <Button.NormalLinked to={`announcements/${props.id}/edit`} className="pl-2 pr-3">
-          <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
-          Edit
-        </Button.NormalLinked>
+        <Authorized roles={["Admin"]}>
+          <Button.NormalLinked to={`announcements/${props.id}/edit`} className="pl-2 pr-3">
+            <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
+            Edit
+          </Button.NormalLinked>
+        </Authorized>
       </div>
       <div className="px-6 py-3 text-gray-800 text-md">{props.body}</div>
     </div>

@@ -8,7 +8,6 @@ import { Redirect } from "react-router-dom";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
 
-// TODO Change submit to Api.put
 export default function NewTeam() {
   let { auth } = useContext(AuthContext);
   let [shouldRedirect, setShouldRedirect] = useState(false);
