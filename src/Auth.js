@@ -12,6 +12,12 @@ export function Authentized(props) {
   );
 }
 
+export function NotAuthentized(props) {
+  let { auth } = useContext(AuthContext);
+
+  return auth.loggedIn ? null : props.children;
+}
+
 export function Authorized(props) {
   let { auth } = useContext(AuthContext);
 

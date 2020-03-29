@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
-import { Link, useRouteMatch, useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 
 import AuthContext, { Authentized } from "./Auth.js";
 

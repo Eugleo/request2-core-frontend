@@ -27,7 +27,7 @@ export default function EditTeam() {
       })
       .then(js => setTeam(js.data))
       .catch(() => setTeam(null));
-  }, [id]);
+  }, [auth.user.apiKey, id]);
 
   if (team === null) {
     return <Redirect to="/404" />;

@@ -9,7 +9,7 @@ export function InputField({ label, initValue, ...props }) {
       helpers.setValue(initValue);
       return;
     }
-  }, [initValue]);
+  }, [helpers, initValue]);
 
   return (
     <div className="flex flex-col mb-6 w-full">

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { Authentized } from "./Auth.js";
+import { Authentized, NotAuthentized } from "./Auth.js";
 
 import "./styles/tailwind.css";
 import { NavLink as RouterNavLink } from "react-router-dom";
@@ -16,13 +16,19 @@ export default function Navbar() {
             <span className="text-green-600 font-extrabold text-xl mr-6">
               rQ<sup>2</sup>
             </span>
-            <NavLink to="/announcements">Announcements</NavLink>
-            <NavLink to="/teams">Teams</NavLink>
+            <Authentized>
+              <NavLink to="/announcements">Announcements</NavLink>
+              <NavLink to="/teams">Teams</NavLink>
+            </Authentized>
           </div>
           <div className="flex items-center justify-right">
-            <Authentized or={<NavLink to="/login">Log in</NavLink>}>
+            <Authentized>
               <UserView />
             </Authentized>
+            <NotAuthentized>
+              <NavLink to="/register/new">Register</NavLink>
+              <NavLink to="/login">Log in</NavLink>
+            </NotAuthentized>
           </div>
         </div>
       </div>

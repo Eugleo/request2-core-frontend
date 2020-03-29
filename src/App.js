@@ -3,17 +3,18 @@ import React, { useState, useEffect, useReducer } from "react";
 import * as Api from "./Api.js";
 import Navbar from "./Navbar.js";
 import Footer from "./Footer.js";
+import { AtomSpinner } from "react-epic-spinners";
 
 import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
 
-import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
-import { AtomSpinner } from "react-epic-spinners";
-import LoginPage from "./LoginPage.js";
+import Page from "./Page.js";
+import AuthContext from "./Auth.js";
 import NotFound404 from "./NotFound404.js";
 
-import Page from "./Page.js";
+import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
+import { NewRegistrationPage, RegisterPage} from './Registration.js';
+import LoginPage from "./LoginPage.js";
 
-import AuthContext from "./Auth.js";
 import { Teams } from "./Teams.js";
 import EditTeam from "./EditTeam.js";
 import NewTeam from "./NewTeam.js";
@@ -39,21 +40,9 @@ function reducer(state, action) {
 
 function App() {
   let initialAuth = {
-    loggedIn: true,
-    userID: 1,
-    user: {
-      apiKey: "0CZ6LZC/IIJoLJl8PYpVyzVETnytc1D5X4vxr6bjVk8",
-      name: "Evžen",
-      roles: ["Admin", "Client", "Operator"],
-      team: { name: "Evženův supertým" },
-      created: 115151
-    }
+    loggedIn: false,
+    user: null
   };
-
-  // let initialAuth = {
-  //   loggedIn: false,
-  //   user: null
-  // };
 
   let [backendAvailable, setBackendAvailable] = useState(null);
   let [auth, dispatch] = useReducer(reducer, initialAuth);
@@ -120,7 +109,12 @@ function AppBody(props) {
           <Route path="/login">
             <LoginPage />
           </Route>
-          <Route path="/register">Registration page.</Route>
+          <Route path="/register/new">
+            <NewRegistrationPage />
+          </Route>
+          <Route path="/register/:email/:token">
+            <RegisterPage />
+          </Route>
           <Route path="/404">
             <NotFound404 />
           </Route>
