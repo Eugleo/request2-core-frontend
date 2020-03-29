@@ -1,12 +1,11 @@
 
-import React, { useContext, useState } from "react";
+import React, { useState } from "react";
 import { AtomSpinner } from "react-epic-spinners";
 import * as Api from "./Api.js";
 
 import { Formik, Form, Field } from "formik";
 import { CenteredPage } from "./Page.js";
 import { InputField } from "./Forms.js";
-import AuthContext from "./Auth.js";
 import { Link, useParams } from "react-router-dom";
 
 import * as Button from "./Buttons.js";
@@ -32,7 +31,7 @@ export function NewRegistrationPage() {
         Api.post('/register-init', {email:values.email})
         .then(r => {
           if(r.ok) setState('success');
-          else throw("register-init failed");
+          else throw new Error("register-init failed");
         })
         .catch(e => {
           setState('problem');
@@ -40,16 +39,16 @@ export function NewRegistrationPage() {
         });
       }}>
       <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
-        {regState == 'success'
+        {regState === 'success'
         ? <p className="text-green-600 mb-5">
             Registration started correctly! Please check your mailbox for an activation e-mail.
           </p>
         : <>
           <InputField name="email" label="Email address" />
-          { regState == 'loading'
+          { regState === 'loading'
           ? <center><AtomSpinner /></center>
           : <Button.Primary title="Register" type="submit" /> }
-          { regState == 'problem'
+          { regState === 'problem'
           && <p className="text-red-600 mb-5">
                Something went wrong.
                If the problem persists, contact the administrator.
@@ -81,7 +80,8 @@ export function RegisterPage() {
           errors.password = "Password is required";
         else if(values.password.length < 8)
           errors.password = "Please use a reasonably long password";
-        if (values.password && values.passwordCheck && values.password!=values.passwordCheck)
+        if (values.password &&  values.passwordCheck &&
+            values.password !== values.passwordCheck)
           errors.passwordCheck = "Passwords do not match";
 
         if (!values.name)
@@ -95,7 +95,7 @@ export function RegisterPage() {
         Api.post('/register', values)
         .then(r => {
           if(r.ok) setState('success');
-          else throw("register failed");
+          else throw new Error("register failed");
         })
         .catch(e => {
           setState('problem');
@@ -103,7 +103,7 @@ export function RegisterPage() {
         })
       }}>
       <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
-        { regState == 'success'
+        { regState === 'success'
         ? <p className="text-green-600 mb-5">
             Registration finished correctly!
             You can now <Link to="/login">log in</Link>.
@@ -115,10 +115,10 @@ export function RegisterPage() {
           <InputField name="team" label="Team ID" disabled={true} />
           <InputField name="password" type="password" label="Password" />
           <InputField name="passwordCheck" type="password" label="Password (again)" />
-          { regState == 'loading'
+          { regState === 'loading'
           ? <center><AtomSpinner /></center>
           : <Button.Primary title="Finish registration" type="submit" /> }
-          { regState == 'problem'
+          { regState === 'problem'
           && <p className="text-red-600 mb-5">
                Something went wrong.
                If the problem persists, contact the administrator.
