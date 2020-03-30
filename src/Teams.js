@@ -78,17 +78,16 @@ function PageCounter(props) {
   let totalPages = Math.floor(props.total / props.limit);
 
   let start = [0, 1];
-  let middle = [...Array(props.around * 2).keys()]
+  let middle = [...Array(props.around * 2 + 1).keys()]
     .map(n => page + n - props.around)
-    .filter(n => n > 2 && n < totalPages - 3);
+    .filter(n => n > 1 && n < totalPages - 2);
   let end = [totalPages - 2, totalPages - 1].filter(n => n > 2);
 
   let buttons = [start, middle, end].reduce((acc, a) => {
     if (a.length > 0) {
-      if (a[0] - acc[acc.length - 1] > 2) {
+      let dif = a[0] - acc[acc.length - 1];
+      if (dif > 1) {
         acc.push("...");
-      } else {
-        acc.push(a[0] - 1);
       }
     }
 
