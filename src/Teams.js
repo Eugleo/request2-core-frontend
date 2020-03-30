@@ -86,8 +86,10 @@ function PageCounter(props) {
   let buttons = [start, middle, end].reduce((acc, a) => {
     if (a.length > 0) {
       let dif = a[0] - acc[acc.length - 1];
-      if (dif > 1) {
+      if (dif > 2) {
         acc.push("...");
+      } else if (dif === 2) {
+        acc.push(a[0] - 1);
       }
     }
 
