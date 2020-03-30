@@ -22,9 +22,10 @@ export default function NewTeam() {
         <Formik
           initialValues={{ name: "", code: "" }}
           validate={validate}
-          onSubmit={values =>
-            Api.post("/teams", { ...values, active: true }, { Authorization: auth.user.apiKey })
-          }
+          onSubmit={values => {
+            Api.post("/teams", { ...values, active: true }, { Authorization: auth.user.apiKey });
+            setShouldRedirect(true);
+          }}
         >
           <Form className="flex flex-col items-start">
             <InputField name="name" label="Team leader" />
