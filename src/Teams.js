@@ -10,7 +10,8 @@ import Page from "./Page.js";
 
 export function Teams() {
   // TODO Add paging
-  let [limit, setLimit] = useState(20);
+  let [total, setTotal] = useState(null);
+  let [limit, setLimit] = useState(1);
   let [offset, setOffset] = useState(0);
   let [teams, setTeams] = useState([]);
   let { auth } = useContext(AuthContext);
@@ -27,7 +28,10 @@ export function Teams() {
             throw new Error("Unable to retrieve the teams");
           }
         })
-        .then(json => setTeams(json.teams))
+        .then(json => {
+          setTotal(json.total);
+          setTeams(json.teams);
+        })
         .catch(console.log);
     }
   }, [auth.loggedIn, apiKey, limit, offset]);
@@ -37,11 +41,18 @@ export function Teams() {
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
         <div className="flex flex-col">
           <AddTeamButton />
-          <div className="flex flex-col bg-white rounded-lg shadow-sm">
+          <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
             {teams.map(team => (
               <Team key={team.id} editLink={`/teams/${team.id}/edit`} {...team.data} />
             ))}
           </div>
+          <PageCounter
+            offset={offset}
+            setOffset={setOffset}
+            limit={limit}
+            total={total}
+            around={1}
+          />
         </div>
       </Authentized>
     </Page>
@@ -57,6 +68,108 @@ function AddTeamButton() {
       <Icon.Plus className="stroke-2 mr-1" /> Add new team
     </Link>
   );
+}
+
+// TODO Refactor omg
+
+// Didn't want to think too much about this
+function PageCounter(props) {
+  let page = Math.floor(props.offset / props.limit);
+  let totalPages = Math.floor(props.total / props.limit);
+
+  let start = [0, 1];
+  let middle = [...Array(props.around * 2).keys()]
+    .map(n => page + n - props.around)
+    .filter(n => n > 2 && n < totalPages - 3);
+  let end = [totalPages - 2, totalPages - 1].filter(n => n > 2);
+
+  let buttons = [start, middle, end].reduce((acc, a) => {
+    if (a.length > 0) {
+      if (a[0] - acc[acc.length - 1] > 2) {
+        acc.push("...");
+      } else {
+        acc.push(a[0] - 1);
+      }
+    }
+
+    return acc.concat(a);
+  });
+  buttons = buttons.map((txt, i) => {
+    if (txt === page) {
+      return (
+        <NumberButton key={i} selected={true}>
+          {txt + 1}
+        </NumberButton>
+      );
+    } else if (txt === "...") {
+      return (
+        <NumberButton key={i} inactive={true}>
+          {txt}
+        </NumberButton>
+      );
+    } else {
+      return (
+        <NumberButton key={i} onClick={() => props.setOffset(txt * props.limit)}>
+          {txt + 1}
+        </NumberButton>
+      );
+    }
+  });
+
+  buttons = [
+    <NumberButton
+      greyedOut={page === 0}
+      key={-1}
+      onClick={() => props.setOffset(props.offset - props.limit)}
+    >
+      <Icon.ChevronLeft className="h-4" />
+    </NumberButton>,
+    ...buttons,
+    <NumberButton
+      greyedOut={page === totalPages - 1}
+      key={-2}
+      onClick={() => props.setOffset(props.offset + props.limit)}
+    >
+      <Icon.ChevronRight className="h-4" />
+    </NumberButton>
+  ];
+
+  return (
+    <div className="px-6 py-3 text-sm flex items-center justify-center">
+      {totalPages > 1 ? (
+        <div className="flex border border-gray-300 rounded-md ">{buttons}</div>
+      ) : (
+        <div className="text-sm tracking-wide text-gray-600">These are all the items</div>
+      )}
+    </div>
+  );
+}
+
+function NumberButton(props) {
+  let classes = "list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center";
+
+  if (props.greyedOut) {
+    classes += " text-gray-500";
+    return <div className={classes}>{props.children}</div>;
+  }
+
+  if (!props.inactive && !props.selected) {
+    classes += " hover:bg-gray-200 text-gray-800";
+
+    return (
+      <button onClick={props.onClick} to="/" className={classes}>
+        {props.children}
+      </button>
+    );
+  }
+
+  classes += " cursor-default text-gray-800";
+
+  if (props.selected) {
+    classes += " font-extrabold";
+  }
+
+  return <div className={classes}>{props.children}</div>;
 }
 
 function Team(props) {

@@ -15,8 +15,7 @@ export function Normal(props) {
     "border-gray-300",
     "focus:outline-none",
     "hover:border-gray-400",
-    "hover:shadow-inner",
-    props.className || ""
+    "hover:shadow-inner"
   ];
 
   return (
