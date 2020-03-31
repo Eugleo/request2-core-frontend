@@ -48,6 +48,7 @@ export function Teams() {
           </div>
           <PageCounter
             offset={offset}
+            bound={1}
             setOffset={setOffset}
             limit={limit}
             total={total}
@@ -77,11 +78,17 @@ function PageCounter(props) {
   let page = Math.floor(props.offset / props.limit);
   let totalPages = Math.floor(props.total / props.limit);
 
-  let start = [0, 1];
+  let start = [...Array(props.bound).keys()];
   let middle = [...Array(props.around * 2 + 1).keys()]
     .map(n => page + n - props.around)
-    .filter(n => n > 1 && n < totalPages - 2);
-  let end = [totalPages - 2, totalPages - 1].filter(n => n > 2);
+    .filter(n => n > props.bound - 1 && n < totalPages - props.bound);
+  let end = start
+    .slice()
+    .reverse()
+    .map(n => totalPages - 1 - n)
+    .filter(n => n > props.bound - 1);
+
+  console.log(start, middle, end);
 
   let buttons = [start, middle, end].reduce((acc, a) => {
     if (a.length > 0) {
