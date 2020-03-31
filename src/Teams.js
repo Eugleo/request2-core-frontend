@@ -3,6 +3,7 @@ import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
 import { Link } from "react-router-dom";
+import Pagination from "./Pagination.js";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
@@ -46,7 +47,7 @@ export function Teams() {
               <Team key={team.id} editLink={`/teams/${team.id}/edit`} {...team.data} />
             ))}
           </div>
-          <PageCounter
+          <Pagination
             offset={offset}
             bound={1}
             setOffset={setOffset}
@@ -69,115 +70,6 @@ function AddTeamButton() {
       <Icon.Plus className="stroke-2 mr-1" /> Add new team
     </Link>
   );
-}
-
-// TODO Refactor omg
-
-// Didn't want to think too much about this
-function PageCounter(props) {
-  let page = Math.floor(props.offset / props.limit);
-  let totalPages = Math.floor(props.total / props.limit);
-
-  let start = [...Array(props.bound).keys()];
-  let middle = [...Array(props.around * 2 + 1).keys()]
-    .map(n => page + n - props.around)
-    .filter(n => n > props.bound - 1 && n < totalPages - props.bound);
-  let end = start
-    .slice()
-    .reverse()
-    .map(n => totalPages - 1 - n)
-    .filter(n => n > props.bound - 1);
-
-  console.log(start, middle, end);
-
-  let buttons = [start, middle, end].reduce((acc, a) => {
-    if (a.length > 0) {
-      let dif = a[0] - acc[acc.length - 1];
-      if (dif > 2) {
-        acc.push("...");
-      } else if (dif === 2) {
-        acc.push(a[0] - 1);
-      }
-    }
-
-    return acc.concat(a);
-  });
-  buttons = buttons.map((txt, i) => {
-    if (txt === page) {
-      return (
-        <NumberButton key={i} selected={true}>
-          {txt + 1}
-        </NumberButton>
-      );
-    } else if (txt === "...") {
-      return (
-        <NumberButton key={i} inactive={true}>
-          {txt}
-        </NumberButton>
-      );
-    } else {
-      return (
-        <NumberButton key={i} onClick={() => props.setOffset(txt * props.limit)}>
-          {txt + 1}
-        </NumberButton>
-      );
-    }
-  });
-
-  buttons = [
-    <NumberButton
-      greyedOut={page === 0}
-      key={-1}
-      onClick={() => props.setOffset(props.offset - props.limit)}
-    >
-      <Icon.ChevronLeft className="h-4" />
-    </NumberButton>,
-    ...buttons,
-    <NumberButton
-      greyedOut={page === totalPages - 1}
-      key={-2}
-      onClick={() => props.setOffset(props.offset + props.limit)}
-    >
-      <Icon.ChevronRight className="h-4" />
-    </NumberButton>
-  ];
-
-  return (
-    <div className="px-6 py-3 text-sm flex items-center justify-center">
-      {totalPages > 1 ? (
-        <div className="flex border border-gray-300 rounded-md ">{buttons}</div>
-      ) : (
-        <div className="text-sm tracking-wide text-gray-600">These are all the items</div>
-      )}
-    </div>
-  );
-}
-
-function NumberButton(props) {
-  let classes = "list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center";
-
-  if (props.greyedOut) {
-    classes += " text-gray-500";
-    return <div className={classes}>{props.children}</div>;
-  }
-
-  if (!props.inactive && !props.selected) {
-    classes += " hover:bg-gray-200 text-gray-800";
-
-    return (
-      <button onClick={props.onClick} to="/" className={classes}>
-        {props.children}
-      </button>
-    );
-  }
-
-  classes += " cursor-default text-gray-800";
-
-  if (props.selected) {
-    classes += " font-extrabold";
-  }
-
-  return <div className={classes}>{props.children}</div>;
 }
 
 function Team(props) {

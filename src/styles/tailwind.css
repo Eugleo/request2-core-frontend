@@ -8077,6 +8077,378 @@ video {
   color: #702459;
 }
 
+.disabled\:text-transparent:disabled {
+  color: transparent;
+}
+
+.disabled\:text-black:disabled {
+  color: #000;
+}
+
+.disabled\:text-white:disabled {
+  color: #fff;
+}
+
+.disabled\:text-gray-100:disabled {
+  color: #f7fafc;
+}
+
+.disabled\:text-gray-200:disabled {
+  color: #edf2f7;
+}
+
+.disabled\:text-gray-300:disabled {
+  color: #e2e8f0;
+}
+
+.disabled\:text-gray-400:disabled {
+  color: #cbd5e0;
+}
+
+.disabled\:text-gray-500:disabled {
+  color: #a0aec0;
+}
+
+.disabled\:text-gray-600:disabled {
+  color: #718096;
+}
+
+.disabled\:text-gray-700:disabled {
+  color: #4a5568;
+}
+
+.disabled\:text-gray-800:disabled {
+  color: #2d3748;
+}
+
+.disabled\:text-gray-900:disabled {
+  color: #1a202c;
+}
+
+.disabled\:text-red-100:disabled {
+  color: #fff5f5;
+}
+
+.disabled\:text-red-200:disabled {
+  color: #fed7d7;
+}
+
+.disabled\:text-red-300:disabled {
+  color: #feb2b2;
+}
+
+.disabled\:text-red-400:disabled {
+  color: #fc8181;
+}
+
+.disabled\:text-red-500:disabled {
+  color: #f56565;
+}
+
+.disabled\:text-red-600:disabled {
+  color: #e53e3e;
+}
+
+.disabled\:text-red-700:disabled {
+  color: #c53030;
+}
+
+.disabled\:text-red-800:disabled {
+  color: #9b2c2c;
+}
+
+.disabled\:text-red-900:disabled {
+  color: #742a2a;
+}
+
+.disabled\:text-orange-100:disabled {
+  color: #fffaf0;
+}
+
+.disabled\:text-orange-200:disabled {
+  color: #feebc8;
+}
+
+.disabled\:text-orange-300:disabled {
+  color: #fbd38d;
+}
+
+.disabled\:text-orange-400:disabled {
+  color: #f6ad55;
+}
+
+.disabled\:text-orange-500:disabled {
+  color: #ed8936;
+}
+
+.disabled\:text-orange-600:disabled {
+  color: #dd6b20;
+}
+
+.disabled\:text-orange-700:disabled {
+  color: #c05621;
+}
+
+.disabled\:text-orange-800:disabled {
+  color: #9c4221;
+}
+
+.disabled\:text-orange-900:disabled {
+  color: #7b341e;
+}
+
+.disabled\:text-yellow-100:disabled {
+  color: #fffff0;
+}
+
+.disabled\:text-yellow-200:disabled {
+  color: #fefcbf;
+}
+
+.disabled\:text-yellow-300:disabled {
+  color: #faf089;
+}
+
+.disabled\:text-yellow-400:disabled {
+  color: #f6e05e;
+}
+
+.disabled\:text-yellow-500:disabled {
+  color: #ecc94b;
+}
+
+.disabled\:text-yellow-600:disabled {
+  color: #d69e2e;
+}
+
+.disabled\:text-yellow-700:disabled {
+  color: #b7791f;
+}
+
+.disabled\:text-yellow-800:disabled {
+  color: #975a16;
+}
+
+.disabled\:text-yellow-900:disabled {
+  color: #744210;
+}
+
+.disabled\:text-green-100:disabled {
+  color: #f0fff4;
+}
+
+.disabled\:text-green-200:disabled {
+  color: #c6f6d5;
+}
+
+.disabled\:text-green-300:disabled {
+  color: #9ae6b4;
+}
+
+.disabled\:text-green-400:disabled {
+  color: #68d391;
+}
+
+.disabled\:text-green-500:disabled {
+  color: #48bb78;
+}
+
+.disabled\:text-green-600:disabled {
+  color: #38a169;
+}
+
+.disabled\:text-green-700:disabled {
+  color: #2f855a;
+}
+
+.disabled\:text-green-800:disabled {
+  color: #276749;
+}
+
+.disabled\:text-green-900:disabled {
+  color: #22543d;
+}
+
+.disabled\:text-teal-100:disabled {
+  color: #e6fffa;
+}
+
+.disabled\:text-teal-200:disabled {
+  color: #b2f5ea;
+}
+
+.disabled\:text-teal-300:disabled {
+  color: #81e6d9;
+}
+
+.disabled\:text-teal-400:disabled {
+  color: #4fd1c5;
+}
+
+.disabled\:text-teal-500:disabled {
+  color: #38b2ac;
+}
+
+.disabled\:text-teal-600:disabled {
+  color: #319795;
+}
+
+.disabled\:text-teal-700:disabled {
+  color: #2c7a7b;
+}
+
+.disabled\:text-teal-800:disabled {
+  color: #285e61;
+}
+
+.disabled\:text-teal-900:disabled {
+  color: #234e52;
+}
+
+.disabled\:text-blue-100:disabled {
+  color: #ebf8ff;
+}
+
+.disabled\:text-blue-200:disabled {
+  color: #bee3f8;
+}
+
+.disabled\:text-blue-300:disabled {
+  color: #90cdf4;
+}
+
+.disabled\:text-blue-400:disabled {
+  color: #63b3ed;
+}
+
+.disabled\:text-blue-500:disabled {
+  color: #4299e1;
+}
+
+.disabled\:text-blue-600:disabled {
+  color: #3182ce;
+}
+
+.disabled\:text-blue-700:disabled {
+  color: #2b6cb0;
+}
+
+.disabled\:text-blue-800:disabled {
+  color: #2c5282;
+}
+
+.disabled\:text-blue-900:disabled {
+  color: #2a4365;
+}
+
+.disabled\:text-indigo-100:disabled {
+  color: #ebf4ff;
+}
+
+.disabled\:text-indigo-200:disabled {
+  color: #c3dafe;
+}
+
+.disabled\:text-indigo-300:disabled {
+  color: #a3bffa;
+}
+
+.disabled\:text-indigo-400:disabled {
+  color: #7f9cf5;
+}
+
+.disabled\:text-indigo-500:disabled {
+  color: #667eea;
+}
+
+.disabled\:text-indigo-600:disabled {
+  color: #5a67d8;
+}
+
+.disabled\:text-indigo-700:disabled {
+  color: #4c51bf;
+}
+
+.disabled\:text-indigo-800:disabled {
+  color: #434190;
+}
+
+.disabled\:text-indigo-900:disabled {
+  color: #3c366b;
+}
+
+.disabled\:text-purple-100:disabled {
+  color: #faf5ff;
+}
+
+.disabled\:text-purple-200:disabled {
+  color: #e9d8fd;
+}
+
+.disabled\:text-purple-300:disabled {
+  color: #d6bcfa;
+}
+
+.disabled\:text-purple-400:disabled {
+  color: #b794f4;
+}
+
+.disabled\:text-purple-500:disabled {
+  color: #9f7aea;
+}
+
+.disabled\:text-purple-600:disabled {
+  color: #805ad5;
+}
+
+.disabled\:text-purple-700:disabled {
+  color: #6b46c1;
+}
+
+.disabled\:text-purple-800:disabled {
+  color: #553c9a;
+}
+
+.disabled\:text-purple-900:disabled {
+  color: #44337a;
+}
+
+.disabled\:text-pink-100:disabled {
+  color: #fff5f7;
+}
+
+.disabled\:text-pink-200:disabled {
+  color: #fed7e2;
+}
+
+.disabled\:text-pink-300:disabled {
+  color: #fbb6ce;
+}
+
+.disabled\:text-pink-400:disabled {
+  color: #f687b3;
+}
+
+.disabled\:text-pink-500:disabled {
+  color: #ed64a6;
+}
+
+.disabled\:text-pink-600:disabled {
+  color: #d53f8c;
+}
+
+.disabled\:text-pink-700:disabled {
+  color: #b83280;
+}
+
+.disabled\:text-pink-800:disabled {
+  color: #97266d;
+}
+
+.disabled\:text-pink-900:disabled {
+  color: #702459;
+}
+
 .text-xs {
   font-size: 0.75rem;
 }
@@ -18393,6 +18765,378 @@ body {
     color: #702459;
   }
 
+  .sm\:disabled\:text-transparent:disabled {
+    color: transparent;
+  }
+
+  .sm\:disabled\:text-black:disabled {
+    color: #000;
+  }
+
+  .sm\:disabled\:text-white:disabled {
+    color: #fff;
+  }
+
+  .sm\:disabled\:text-gray-100:disabled {
+    color: #f7fafc;
+  }
+
+  .sm\:disabled\:text-gray-200:disabled {
+    color: #edf2f7;
+  }
+
+  .sm\:disabled\:text-gray-300:disabled {
+    color: #e2e8f0;
+  }
+
+  .sm\:disabled\:text-gray-400:disabled {
+    color: #cbd5e0;
+  }
+
+  .sm\:disabled\:text-gray-500:disabled {
+    color: #a0aec0;
+  }
+
+  .sm\:disabled\:text-gray-600:disabled {
+    color: #718096;
+  }
+
+  .sm\:disabled\:text-gray-700:disabled {
+    color: #4a5568;
+  }
+
+  .sm\:disabled\:text-gray-800:disabled {
+    color: #2d3748;
+  }
+
+  .sm\:disabled\:text-gray-900:disabled {
+    color: #1a202c;
+  }
+
+  .sm\:disabled\:text-red-100:disabled {
+    color: #fff5f5;
+  }
+
+  .sm\:disabled\:text-red-200:disabled {
+    color: #fed7d7;
+  }
+
+  .sm\:disabled\:text-red-300:disabled {
+    color: #feb2b2;
+  }
+
+  .sm\:disabled\:text-red-400:disabled {
+    color: #fc8181;
+  }
+
+  .sm\:disabled\:text-red-500:disabled {
+    color: #f56565;
+  }
+
+  .sm\:disabled\:text-red-600:disabled {
+    color: #e53e3e;
+  }
+
+  .sm\:disabled\:text-red-700:disabled {
+    color: #c53030;
+  }
+
+  .sm\:disabled\:text-red-800:disabled {
+    color: #9b2c2c;
+  }
+
+  .sm\:disabled\:text-red-900:disabled {
+    color: #742a2a;
+  }
+
+  .sm\:disabled\:text-orange-100:disabled {
+    color: #fffaf0;
+  }
+
+  .sm\:disabled\:text-orange-200:disabled {
+    color: #feebc8;
+  }
+
+  .sm\:disabled\:text-orange-300:disabled {
+    color: #fbd38d;
+  }
+
+  .sm\:disabled\:text-orange-400:disabled {
+    color: #f6ad55;
+  }
+
+  .sm\:disabled\:text-orange-500:disabled {
+    color: #ed8936;
+  }
+
+  .sm\:disabled\:text-orange-600:disabled {
+    color: #dd6b20;
+  }
+
+  .sm\:disabled\:text-orange-700:disabled {
+    color: #c05621;
+  }
+
+  .sm\:disabled\:text-orange-800:disabled {
+    color: #9c4221;
+  }
+
+  .sm\:disabled\:text-orange-900:disabled {
+    color: #7b341e;
+  }
+
+  .sm\:disabled\:text-yellow-100:disabled {
+    color: #fffff0;
+  }
+
+  .sm\:disabled\:text-yellow-200:disabled {
+    color: #fefcbf;
+  }
+
+  .sm\:disabled\:text-yellow-300:disabled {
+    color: #faf089;
+  }
+
+  .sm\:disabled\:text-yellow-400:disabled {
+    color: #f6e05e;
+  }
+
+  .sm\:disabled\:text-yellow-500:disabled {
+    color: #ecc94b;
+  }
+
+  .sm\:disabled\:text-yellow-600:disabled {
+    color: #d69e2e;
+  }
+
+  .sm\:disabled\:text-yellow-700:disabled {
+    color: #b7791f;
+  }
+
+  .sm\:disabled\:text-yellow-800:disabled {
+    color: #975a16;
+  }
+
+  .sm\:disabled\:text-yellow-900:disabled {
+    color: #744210;
+  }
+
+  .sm\:disabled\:text-green-100:disabled {
+    color: #f0fff4;
+  }
+
+  .sm\:disabled\:text-green-200:disabled {
+    color: #c6f6d5;
+  }
+
+  .sm\:disabled\:text-green-300:disabled {
+    color: #9ae6b4;
+  }
+
+  .sm\:disabled\:text-green-400:disabled {
+    color: #68d391;
+  }
+
+  .sm\:disabled\:text-green-500:disabled {
+    color: #48bb78;
+  }
+
+  .sm\:disabled\:text-green-600:disabled {
+    color: #38a169;
+  }
+
+  .sm\:disabled\:text-green-700:disabled {
+    color: #2f855a;
+  }
+
+  .sm\:disabled\:text-green-800:disabled {
+    color: #276749;
+  }
+
+  .sm\:disabled\:text-green-900:disabled {
+    color: #22543d;
+  }
+
+  .sm\:disabled\:text-teal-100:disabled {
+    color: #e6fffa;
+  }
+
+  .sm\:disabled\:text-teal-200:disabled {
+    color: #b2f5ea;
+  }
+
+  .sm\:disabled\:text-teal-300:disabled {
+    color: #81e6d9;
+  }
+
+  .sm\:disabled\:text-teal-400:disabled {
+    color: #4fd1c5;
+  }
+
+  .sm\:disabled\:text-teal-500:disabled {
+    color: #38b2ac;
+  }
+
+  .sm\:disabled\:text-teal-600:disabled {
+    color: #319795;
+  }
+
+  .sm\:disabled\:text-teal-700:disabled {
+    color: #2c7a7b;
+  }
+
+  .sm\:disabled\:text-teal-800:disabled {
+    color: #285e61;
+  }
+
+  .sm\:disabled\:text-teal-900:disabled {
+    color: #234e52;
+  }
+
+  .sm\:disabled\:text-blue-100:disabled {
+    color: #ebf8ff;
+  }
+
+  .sm\:disabled\:text-blue-200:disabled {
+    color: #bee3f8;
+  }
+
+  .sm\:disabled\:text-blue-300:disabled {
+    color: #90cdf4;
+  }
+
+  .sm\:disabled\:text-blue-400:disabled {
+    color: #63b3ed;
+  }
+
+  .sm\:disabled\:text-blue-500:disabled {
+    color: #4299e1;
+  }
+
+  .sm\:disabled\:text-blue-600:disabled {
+    color: #3182ce;
+  }
+
+  .sm\:disabled\:text-blue-700:disabled {
+    color: #2b6cb0;
+  }
+
+  .sm\:disabled\:text-blue-800:disabled {
+    color: #2c5282;
+  }
+
+  .sm\:disabled\:text-blue-900:disabled {
+    color: #2a4365;
+  }
+
+  .sm\:disabled\:text-indigo-100:disabled {
+    color: #ebf4ff;
+  }
+
+  .sm\:disabled\:text-indigo-200:disabled {
+    color: #c3dafe;
+  }
+
+  .sm\:disabled\:text-indigo-300:disabled {
+    color: #a3bffa;
+  }
+
+  .sm\:disabled\:text-indigo-400:disabled {
+    color: #7f9cf5;
+  }
+
+  .sm\:disabled\:text-indigo-500:disabled {
+    color: #667eea;
+  }
+
+  .sm\:disabled\:text-indigo-600:disabled {
+    color: #5a67d8;
+  }
+
+  .sm\:disabled\:text-indigo-700:disabled {
+    color: #4c51bf;
+  }
+
+  .sm\:disabled\:text-indigo-800:disabled {
+    color: #434190;
+  }
+
+  .sm\:disabled\:text-indigo-900:disabled {
+    color: #3c366b;
+  }
+
+  .sm\:disabled\:text-purple-100:disabled {
+    color: #faf5ff;
+  }
+
+  .sm\:disabled\:text-purple-200:disabled {
+    color: #e9d8fd;
+  }
+
+  .sm\:disabled\:text-purple-300:disabled {
+    color: #d6bcfa;
+  }
+
+  .sm\:disabled\:text-purple-400:disabled {
+    color: #b794f4;
+  }
+
+  .sm\:disabled\:text-purple-500:disabled {
+    color: #9f7aea;
+  }
+
+  .sm\:disabled\:text-purple-600:disabled {
+    color: #805ad5;
+  }
+
+  .sm\:disabled\:text-purple-700:disabled {
+    color: #6b46c1;
+  }
+
+  .sm\:disabled\:text-purple-800:disabled {
+    color: #553c9a;
+  }
+
+  .sm\:disabled\:text-purple-900:disabled {
+    color: #44337a;
+  }
+
+  .sm\:disabled\:text-pink-100:disabled {
+    color: #fff5f7;
+  }
+
+  .sm\:disabled\:text-pink-200:disabled {
+    color: #fed7e2;
+  }
+
+  .sm\:disabled\:text-pink-300:disabled {
+    color: #fbb6ce;
+  }
+
+  .sm\:disabled\:text-pink-400:disabled {
+    color: #f687b3;
+  }
+
+  .sm\:disabled\:text-pink-500:disabled {
+    color: #ed64a6;
+  }
+
+  .sm\:disabled\:text-pink-600:disabled {
+    color: #d53f8c;
+  }
+
+  .sm\:disabled\:text-pink-700:disabled {
+    color: #b83280;
+  }
+
+  .sm\:disabled\:text-pink-800:disabled {
+    color: #97266d;
+  }
+
+  .sm\:disabled\:text-pink-900:disabled {
+    color: #702459;
+  }
+
   .sm\:text-xs {
     font-size: 0.75rem;
   }
@@ -28698,6 +29442,378 @@ body {
   }
 
   .md\:focus\:text-pink-900:focus {
+    color: #702459;
+  }
+
+  .md\:disabled\:text-transparent:disabled {
+    color: transparent;
+  }
+
+  .md\:disabled\:text-black:disabled {
+    color: #000;
+  }
+
+  .md\:disabled\:text-white:disabled {
+    color: #fff;
+  }
+
+  .md\:disabled\:text-gray-100:disabled {
+    color: #f7fafc;
+  }
+
+  .md\:disabled\:text-gray-200:disabled {
+    color: #edf2f7;
+  }
+
+  .md\:disabled\:text-gray-300:disabled {
+    color: #e2e8f0;
+  }
+
+  .md\:disabled\:text-gray-400:disabled {
+    color: #cbd5e0;
+  }
+
+  .md\:disabled\:text-gray-500:disabled {
+    color: #a0aec0;
+  }
+
+  .md\:disabled\:text-gray-600:disabled {
+    color: #718096;
+  }
+
+  .md\:disabled\:text-gray-700:disabled {
+    color: #4a5568;
+  }
+
+  .md\:disabled\:text-gray-800:disabled {
+    color: #2d3748;
+  }
+
+  .md\:disabled\:text-gray-900:disabled {
+    color: #1a202c;
+  }
+
+  .md\:disabled\:text-red-100:disabled {
+    color: #fff5f5;
+  }
+
+  .md\:disabled\:text-red-200:disabled {
+    color: #fed7d7;
+  }
+
+  .md\:disabled\:text-red-300:disabled {
+    color: #feb2b2;
+  }
+
+  .md\:disabled\:text-red-400:disabled {
+    color: #fc8181;
+  }
+
+  .md\:disabled\:text-red-500:disabled {
+    color: #f56565;
+  }
+
+  .md\:disabled\:text-red-600:disabled {
+    color: #e53e3e;
+  }
+
+  .md\:disabled\:text-red-700:disabled {
+    color: #c53030;
+  }
+
+  .md\:disabled\:text-red-800:disabled {
+    color: #9b2c2c;
+  }
+
+  .md\:disabled\:text-red-900:disabled {
+    color: #742a2a;
+  }
+
+  .md\:disabled\:text-orange-100:disabled {
+    color: #fffaf0;
+  }
+
+  .md\:disabled\:text-orange-200:disabled {
+    color: #feebc8;
+  }
+
+  .md\:disabled\:text-orange-300:disabled {
+    color: #fbd38d;
+  }
+
+  .md\:disabled\:text-orange-400:disabled {
+    color: #f6ad55;
+  }
+
+  .md\:disabled\:text-orange-500:disabled {
+    color: #ed8936;
+  }
+
+  .md\:disabled\:text-orange-600:disabled {
+    color: #dd6b20;
+  }
+
+  .md\:disabled\:text-orange-700:disabled {
+    color: #c05621;
+  }
+
+  .md\:disabled\:text-orange-800:disabled {
+    color: #9c4221;
+  }
+
+  .md\:disabled\:text-orange-900:disabled {
+    color: #7b341e;
+  }
+
+  .md\:disabled\:text-yellow-100:disabled {
+    color: #fffff0;
+  }
+
+  .md\:disabled\:text-yellow-200:disabled {
+    color: #fefcbf;
+  }
+
+  .md\:disabled\:text-yellow-300:disabled {
+    color: #faf089;
+  }
+
+  .md\:disabled\:text-yellow-400:disabled {
+    color: #f6e05e;
+  }
+
+  .md\:disabled\:text-yellow-500:disabled {
+    color: #ecc94b;
+  }
+
+  .md\:disabled\:text-yellow-600:disabled {
+    color: #d69e2e;
+  }
+
+  .md\:disabled\:text-yellow-700:disabled {
+    color: #b7791f;
+  }
+
+  .md\:disabled\:text-yellow-800:disabled {
+    color: #975a16;
+  }
+
+  .md\:disabled\:text-yellow-900:disabled {
+    color: #744210;
+  }
+
+  .md\:disabled\:text-green-100:disabled {
+    color: #f0fff4;
+  }
+
+  .md\:disabled\:text-green-200:disabled {
+    color: #c6f6d5;
+  }
+
+  .md\:disabled\:text-green-300:disabled {
+    color: #9ae6b4;
+  }
+
+  .md\:disabled\:text-green-400:disabled {
+    color: #68d391;
+  }
+
+  .md\:disabled\:text-green-500:disabled {
+    color: #48bb78;
+  }
+
+  .md\:disabled\:text-green-600:disabled {
+    color: #38a169;
+  }
+
+  .md\:disabled\:text-green-700:disabled {
+    color: #2f855a;
+  }
+
+  .md\:disabled\:text-green-800:disabled {
+    color: #276749;
+  }
+
+  .md\:disabled\:text-green-900:disabled {
+    color: #22543d;
+  }
+
+  .md\:disabled\:text-teal-100:disabled {
+    color: #e6fffa;
+  }
+
+  .md\:disabled\:text-teal-200:disabled {
+    color: #b2f5ea;
+  }
+
+  .md\:disabled\:text-teal-300:disabled {
+    color: #81e6d9;
+  }
+
+  .md\:disabled\:text-teal-400:disabled {
+    color: #4fd1c5;
+  }
+
+  .md\:disabled\:text-teal-500:disabled {
+    color: #38b2ac;
+  }
+
+  .md\:disabled\:text-teal-600:disabled {
+    color: #319795;
+  }
+
+  .md\:disabled\:text-teal-700:disabled {
+    color: #2c7a7b;
+  }
+
+  .md\:disabled\:text-teal-800:disabled {
+    color: #285e61;
+  }
+
+  .md\:disabled\:text-teal-900:disabled {
+    color: #234e52;
+  }
+
+  .md\:disabled\:text-blue-100:disabled {
+    color: #ebf8ff;
+  }
+
+  .md\:disabled\:text-blue-200:disabled {
+    color: #bee3f8;
+  }
+
+  .md\:disabled\:text-blue-300:disabled {
+    color: #90cdf4;
+  }
+
+  .md\:disabled\:text-blue-400:disabled {
+    color: #63b3ed;
+  }
+
+  .md\:disabled\:text-blue-500:disabled {
+    color: #4299e1;
+  }
+
+  .md\:disabled\:text-blue-600:disabled {
+    color: #3182ce;
+  }
+
+  .md\:disabled\:text-blue-700:disabled {
+    color: #2b6cb0;
+  }
+
+  .md\:disabled\:text-blue-800:disabled {
+    color: #2c5282;
+  }
+
+  .md\:disabled\:text-blue-900:disabled {
+    color: #2a4365;
+  }
+
+  .md\:disabled\:text-indigo-100:disabled {
+    color: #ebf4ff;
+  }
+
+  .md\:disabled\:text-indigo-200:disabled {
+    color: #c3dafe;
+  }
+
+  .md\:disabled\:text-indigo-300:disabled {
+    color: #a3bffa;
+  }
+
+  .md\:disabled\:text-indigo-400:disabled {
+    color: #7f9cf5;
+  }
+
+  .md\:disabled\:text-indigo-500:disabled {
+    color: #667eea;
+  }
+
+  .md\:disabled\:text-indigo-600:disabled {
+    color: #5a67d8;
+  }
+
+  .md\:disabled\:text-indigo-700:disabled {
+    color: #4c51bf;
+  }
+
+  .md\:disabled\:text-indigo-800:disabled {
+    color: #434190;
+  }
+
+  .md\:disabled\:text-indigo-900:disabled {
+    color: #3c366b;
+  }
+
+  .md\:disabled\:text-purple-100:disabled {
+    color: #faf5ff;
+  }
+
+  .md\:disabled\:text-purple-200:disabled {
+    color: #e9d8fd;
+  }
+
+  .md\:disabled\:text-purple-300:disabled {
+    color: #d6bcfa;
+  }
+
+  .md\:disabled\:text-purple-400:disabled {
+    color: #b794f4;
+  }
+
+  .md\:disabled\:text-purple-500:disabled {
+    color: #9f7aea;
+  }
+
+  .md\:disabled\:text-purple-600:disabled {
+    color: #805ad5;
+  }
+
+  .md\:disabled\:text-purple-700:disabled {
+    color: #6b46c1;
+  }
+
+  .md\:disabled\:text-purple-800:disabled {
+    color: #553c9a;
+  }
+
+  .md\:disabled\:text-purple-900:disabled {
+    color: #44337a;
+  }
+
+  .md\:disabled\:text-pink-100:disabled {
+    color: #fff5f7;
+  }
+
+  .md\:disabled\:text-pink-200:disabled {
+    color: #fed7e2;
+  }
+
+  .md\:disabled\:text-pink-300:disabled {
+    color: #fbb6ce;
+  }
+
+  .md\:disabled\:text-pink-400:disabled {
+    color: #f687b3;
+  }
+
+  .md\:disabled\:text-pink-500:disabled {
+    color: #ed64a6;
+  }
+
+  .md\:disabled\:text-pink-600:disabled {
+    color: #d53f8c;
+  }
+
+  .md\:disabled\:text-pink-700:disabled {
+    color: #b83280;
+  }
+
+  .md\:disabled\:text-pink-800:disabled {
+    color: #97266d;
+  }
+
+  .md\:disabled\:text-pink-900:disabled {
     color: #702459;
   }
 
@@ -39009,6 +40125,378 @@ body {
     color: #702459;
   }
 
+  .lg\:disabled\:text-transparent:disabled {
+    color: transparent;
+  }
+
+  .lg\:disabled\:text-black:disabled {
+    color: #000;
+  }
+
+  .lg\:disabled\:text-white:disabled {
+    color: #fff;
+  }
+
+  .lg\:disabled\:text-gray-100:disabled {
+    color: #f7fafc;
+  }
+
+  .lg\:disabled\:text-gray-200:disabled {
+    color: #edf2f7;
+  }
+
+  .lg\:disabled\:text-gray-300:disabled {
+    color: #e2e8f0;
+  }
+
+  .lg\:disabled\:text-gray-400:disabled {
+    color: #cbd5e0;
+  }
+
+  .lg\:disabled\:text-gray-500:disabled {
+    color: #a0aec0;
+  }
+
+  .lg\:disabled\:text-gray-600:disabled {
+    color: #718096;
+  }
+
+  .lg\:disabled\:text-gray-700:disabled {
+    color: #4a5568;
+  }
+
+  .lg\:disabled\:text-gray-800:disabled {
+    color: #2d3748;
+  }
+
+  .lg\:disabled\:text-gray-900:disabled {
+    color: #1a202c;
+  }
+
+  .lg\:disabled\:text-red-100:disabled {
+    color: #fff5f5;
+  }
+
+  .lg\:disabled\:text-red-200:disabled {
+    color: #fed7d7;
+  }
+
+  .lg\:disabled\:text-red-300:disabled {
+    color: #feb2b2;
+  }
+
+  .lg\:disabled\:text-red-400:disabled {
+    color: #fc8181;
+  }
+
+  .lg\:disabled\:text-red-500:disabled {
+    color: #f56565;
+  }
+
+  .lg\:disabled\:text-red-600:disabled {
+    color: #e53e3e;
+  }
+
+  .lg\:disabled\:text-red-700:disabled {
+    color: #c53030;
+  }
+
+  .lg\:disabled\:text-red-800:disabled {
+    color: #9b2c2c;
+  }
+
+  .lg\:disabled\:text-red-900:disabled {
+    color: #742a2a;
+  }
+
+  .lg\:disabled\:text-orange-100:disabled {
+    color: #fffaf0;
+  }
+
+  .lg\:disabled\:text-orange-200:disabled {
+    color: #feebc8;
+  }
+
+  .lg\:disabled\:text-orange-300:disabled {
+    color: #fbd38d;
+  }
+
+  .lg\:disabled\:text-orange-400:disabled {
+    color: #f6ad55;
+  }
+
+  .lg\:disabled\:text-orange-500:disabled {
+    color: #ed8936;
+  }
+
+  .lg\:disabled\:text-orange-600:disabled {
+    color: #dd6b20;
+  }
+
+  .lg\:disabled\:text-orange-700:disabled {
+    color: #c05621;
+  }
+
+  .lg\:disabled\:text-orange-800:disabled {
+    color: #9c4221;
+  }
+
+  .lg\:disabled\:text-orange-900:disabled {
+    color: #7b341e;
+  }
+
+  .lg\:disabled\:text-yellow-100:disabled {
+    color: #fffff0;
+  }
+
+  .lg\:disabled\:text-yellow-200:disabled {
+    color: #fefcbf;
+  }
+
+  .lg\:disabled\:text-yellow-300:disabled {
+    color: #faf089;
+  }
+
+  .lg\:disabled\:text-yellow-400:disabled {
+    color: #f6e05e;
+  }
+
+  .lg\:disabled\:text-yellow-500:disabled {
+    color: #ecc94b;
+  }
+
+  .lg\:disabled\:text-yellow-600:disabled {
+    color: #d69e2e;
+  }
+
+  .lg\:disabled\:text-yellow-700:disabled {
+    color: #b7791f;
+  }
+
+  .lg\:disabled\:text-yellow-800:disabled {
+    color: #975a16;
+  }
+
+  .lg\:disabled\:text-yellow-900:disabled {
+    color: #744210;
+  }
+
+  .lg\:disabled\:text-green-100:disabled {
+    color: #f0fff4;
+  }
+
+  .lg\:disabled\:text-green-200:disabled {
+    color: #c6f6d5;
+  }
+
+  .lg\:disabled\:text-green-300:disabled {
+    color: #9ae6b4;
+  }
+
+  .lg\:disabled\:text-green-400:disabled {
+    color: #68d391;
+  }
+
+  .lg\:disabled\:text-green-500:disabled {
+    color: #48bb78;
+  }
+
+  .lg\:disabled\:text-green-600:disabled {
+    color: #38a169;
+  }
+
+  .lg\:disabled\:text-green-700:disabled {
+    color: #2f855a;
+  }
+
+  .lg\:disabled\:text-green-800:disabled {
+    color: #276749;
+  }
+
+  .lg\:disabled\:text-green-900:disabled {
+    color: #22543d;
+  }
+
+  .lg\:disabled\:text-teal-100:disabled {
+    color: #e6fffa;
+  }
+
+  .lg\:disabled\:text-teal-200:disabled {
+    color: #b2f5ea;
+  }
+
+  .lg\:disabled\:text-teal-300:disabled {
+    color: #81e6d9;
+  }
+
+  .lg\:disabled\:text-teal-400:disabled {
+    color: #4fd1c5;
+  }
+
+  .lg\:disabled\:text-teal-500:disabled {
+    color: #38b2ac;
+  }
+
+  .lg\:disabled\:text-teal-600:disabled {
+    color: #319795;
+  }
+
+  .lg\:disabled\:text-teal-700:disabled {
+    color: #2c7a7b;
+  }
+
+  .lg\:disabled\:text-teal-800:disabled {
+    color: #285e61;
+  }
+
+  .lg\:disabled\:text-teal-900:disabled {
+    color: #234e52;
+  }
+
+  .lg\:disabled\:text-blue-100:disabled {
+    color: #ebf8ff;
+  }
+
+  .lg\:disabled\:text-blue-200:disabled {
+    color: #bee3f8;
+  }
+
+  .lg\:disabled\:text-blue-300:disabled {
+    color: #90cdf4;
+  }
+
+  .lg\:disabled\:text-blue-400:disabled {
+    color: #63b3ed;
+  }
+
+  .lg\:disabled\:text-blue-500:disabled {
+    color: #4299e1;
+  }
+
+  .lg\:disabled\:text-blue-600:disabled {
+    color: #3182ce;
+  }
+
+  .lg\:disabled\:text-blue-700:disabled {
+    color: #2b6cb0;
+  }
+
+  .lg\:disabled\:text-blue-800:disabled {
+    color: #2c5282;
+  }
+
+  .lg\:disabled\:text-blue-900:disabled {
+    color: #2a4365;
+  }
+
+  .lg\:disabled\:text-indigo-100:disabled {
+    color: #ebf4ff;
+  }
+
+  .lg\:disabled\:text-indigo-200:disabled {
+    color: #c3dafe;
+  }
+
+  .lg\:disabled\:text-indigo-300:disabled {
+    color: #a3bffa;
+  }
+
+  .lg\:disabled\:text-indigo-400:disabled {
+    color: #7f9cf5;
+  }
+
+  .lg\:disabled\:text-indigo-500:disabled {
+    color: #667eea;
+  }
+
+  .lg\:disabled\:text-indigo-600:disabled {
+    color: #5a67d8;
+  }
+
+  .lg\:disabled\:text-indigo-700:disabled {
+    color: #4c51bf;
+  }
+
+  .lg\:disabled\:text-indigo-800:disabled {
+    color: #434190;
+  }
+
+  .lg\:disabled\:text-indigo-900:disabled {
+    color: #3c366b;
+  }
+
+  .lg\:disabled\:text-purple-100:disabled {
+    color: #faf5ff;
+  }
+
+  .lg\:disabled\:text-purple-200:disabled {
+    color: #e9d8fd;
+  }
+
+  .lg\:disabled\:text-purple-300:disabled {
+    color: #d6bcfa;
+  }
+
+  .lg\:disabled\:text-purple-400:disabled {
+    color: #b794f4;
+  }
+
+  .lg\:disabled\:text-purple-500:disabled {
+    color: #9f7aea;
+  }
+
+  .lg\:disabled\:text-purple-600:disabled {
+    color: #805ad5;
+  }
+
+  .lg\:disabled\:text-purple-700:disabled {
+    color: #6b46c1;
+  }
+
+  .lg\:disabled\:text-purple-800:disabled {
+    color: #553c9a;
+  }
+
+  .lg\:disabled\:text-purple-900:disabled {
+    color: #44337a;
+  }
+
+  .lg\:disabled\:text-pink-100:disabled {
+    color: #fff5f7;
+  }
+
+  .lg\:disabled\:text-pink-200:disabled {
+    color: #fed7e2;
+  }
+
+  .lg\:disabled\:text-pink-300:disabled {
+    color: #fbb6ce;
+  }
+
+  .lg\:disabled\:text-pink-400:disabled {
+    color: #f687b3;
+  }
+
+  .lg\:disabled\:text-pink-500:disabled {
+    color: #ed64a6;
+  }
+
+  .lg\:disabled\:text-pink-600:disabled {
+    color: #d53f8c;
+  }
+
+  .lg\:disabled\:text-pink-700:disabled {
+    color: #b83280;
+  }
+
+  .lg\:disabled\:text-pink-800:disabled {
+    color: #97266d;
+  }
+
+  .lg\:disabled\:text-pink-900:disabled {
+    color: #702459;
+  }
+
   .lg\:text-xs {
     font-size: 0.75rem;
   }
@@ -49314,6 +50802,378 @@ body {
   }
 
   .xl\:focus\:text-pink-900:focus {
+    color: #702459;
+  }
+
+  .xl\:disabled\:text-transparent:disabled {
+    color: transparent;
+  }
+
+  .xl\:disabled\:text-black:disabled {
+    color: #000;
+  }
+
+  .xl\:disabled\:text-white:disabled {
+    color: #fff;
+  }
+
+  .xl\:disabled\:text-gray-100:disabled {
+    color: #f7fafc;
+  }
+
+  .xl\:disabled\:text-gray-200:disabled {
+    color: #edf2f7;
+  }
+
+  .xl\:disabled\:text-gray-300:disabled {
+    color: #e2e8f0;
+  }
+
+  .xl\:disabled\:text-gray-400:disabled {
+    color: #cbd5e0;
+  }
+
+  .xl\:disabled\:text-gray-500:disabled {
+    color: #a0aec0;
+  }
+
+  .xl\:disabled\:text-gray-600:disabled {
+    color: #718096;
+  }
+
+  .xl\:disabled\:text-gray-700:disabled {
+    color: #4a5568;
+  }
+
+  .xl\:disabled\:text-gray-800:disabled {
+    color: #2d3748;
+  }
+
+  .xl\:disabled\:text-gray-900:disabled {
+    color: #1a202c;
+  }
+
+  .xl\:disabled\:text-red-100:disabled {
+    color: #fff5f5;
+  }
+
+  .xl\:disabled\:text-red-200:disabled {
+    color: #fed7d7;
+  }
+
+  .xl\:disabled\:text-red-300:disabled {
+    color: #feb2b2;
+  }
+
+  .xl\:disabled\:text-red-400:disabled {
+    color: #fc8181;
+  }
+
+  .xl\:disabled\:text-red-500:disabled {
+    color: #f56565;
+  }
+
+  .xl\:disabled\:text-red-600:disabled {
+    color: #e53e3e;
+  }
+
+  .xl\:disabled\:text-red-700:disabled {
+    color: #c53030;
+  }
+
+  .xl\:disabled\:text-red-800:disabled {
+    color: #9b2c2c;
+  }
+
+  .xl\:disabled\:text-red-900:disabled {
+    color: #742a2a;
+  }
+
+  .xl\:disabled\:text-orange-100:disabled {
+    color: #fffaf0;
+  }
+
+  .xl\:disabled\:text-orange-200:disabled {
+    color: #feebc8;
+  }
+
+  .xl\:disabled\:text-orange-300:disabled {
+    color: #fbd38d;
+  }
+
+  .xl\:disabled\:text-orange-400:disabled {
+    color: #f6ad55;
+  }
+
+  .xl\:disabled\:text-orange-500:disabled {
+    color: #ed8936;
+  }
+
+  .xl\:disabled\:text-orange-600:disabled {
+    color: #dd6b20;
+  }
+
+  .xl\:disabled\:text-orange-700:disabled {
+    color: #c05621;
+  }
+
+  .xl\:disabled\:text-orange-800:disabled {
+    color: #9c4221;
+  }
+
+  .xl\:disabled\:text-orange-900:disabled {
+    color: #7b341e;
+  }
+
+  .xl\:disabled\:text-yellow-100:disabled {
+    color: #fffff0;
+  }
+
+  .xl\:disabled\:text-yellow-200:disabled {
+    color: #fefcbf;
+  }
+
+  .xl\:disabled\:text-yellow-300:disabled {
+    color: #faf089;
+  }
+
+  .xl\:disabled\:text-yellow-400:disabled {
+    color: #f6e05e;
+  }
+
+  .xl\:disabled\:text-yellow-500:disabled {
+    color: #ecc94b;
+  }
+
+  .xl\:disabled\:text-yellow-600:disabled {
+    color: #d69e2e;
+  }
+
+  .xl\:disabled\:text-yellow-700:disabled {
+    color: #b7791f;
+  }
+
+  .xl\:disabled\:text-yellow-800:disabled {
+    color: #975a16;
+  }
+
+  .xl\:disabled\:text-yellow-900:disabled {
+    color: #744210;
+  }
+
+  .xl\:disabled\:text-green-100:disabled {
+    color: #f0fff4;
+  }
+
+  .xl\:disabled\:text-green-200:disabled {
+    color: #c6f6d5;
+  }
+
+  .xl\:disabled\:text-green-300:disabled {
+    color: #9ae6b4;
+  }
+
+  .xl\:disabled\:text-green-400:disabled {
+    color: #68d391;
+  }
+
+  .xl\:disabled\:text-green-500:disabled {
+    color: #48bb78;
+  }
+
+  .xl\:disabled\:text-green-600:disabled {
+    color: #38a169;
+  }
+
+  .xl\:disabled\:text-green-700:disabled {
+    color: #2f855a;
+  }
+
+  .xl\:disabled\:text-green-800:disabled {
+    color: #276749;
+  }
+
+  .xl\:disabled\:text-green-900:disabled {
+    color: #22543d;
+  }
+
+  .xl\:disabled\:text-teal-100:disabled {
+    color: #e6fffa;
+  }
+
+  .xl\:disabled\:text-teal-200:disabled {
+    color: #b2f5ea;
+  }
+
+  .xl\:disabled\:text-teal-300:disabled {
+    color: #81e6d9;
+  }
+
+  .xl\:disabled\:text-teal-400:disabled {
+    color: #4fd1c5;
+  }
+
+  .xl\:disabled\:text-teal-500:disabled {
+    color: #38b2ac;
+  }
+
+  .xl\:disabled\:text-teal-600:disabled {
+    color: #319795;
+  }
+
+  .xl\:disabled\:text-teal-700:disabled {
+    color: #2c7a7b;
+  }
+
+  .xl\:disabled\:text-teal-800:disabled {
+    color: #285e61;
+  }
+
+  .xl\:disabled\:text-teal-900:disabled {
+    color: #234e52;
+  }
+
+  .xl\:disabled\:text-blue-100:disabled {
+    color: #ebf8ff;
+  }
+
+  .xl\:disabled\:text-blue-200:disabled {
+    color: #bee3f8;
+  }
+
+  .xl\:disabled\:text-blue-300:disabled {
+    color: #90cdf4;
+  }
+
+  .xl\:disabled\:text-blue-400:disabled {
+    color: #63b3ed;
+  }
+
+  .xl\:disabled\:text-blue-500:disabled {
+    color: #4299e1;
+  }
+
+  .xl\:disabled\:text-blue-600:disabled {
+    color: #3182ce;
+  }
+
+  .xl\:disabled\:text-blue-700:disabled {
+    color: #2b6cb0;
+  }
+
+  .xl\:disabled\:text-blue-800:disabled {
+    color: #2c5282;
+  }
+
+  .xl\:disabled\:text-blue-900:disabled {
+    color: #2a4365;
+  }
+
+  .xl\:disabled\:text-indigo-100:disabled {
+    color: #ebf4ff;
+  }
+
+  .xl\:disabled\:text-indigo-200:disabled {
+    color: #c3dafe;
+  }
+
+  .xl\:disabled\:text-indigo-300:disabled {
+    color: #a3bffa;
+  }
+
+  .xl\:disabled\:text-indigo-400:disabled {
+    color: #7f9cf5;
+  }
+
+  .xl\:disabled\:text-indigo-500:disabled {
+    color: #667eea;
+  }
+
+  .xl\:disabled\:text-indigo-600:disabled {
+    color: #5a67d8;
+  }
+
+  .xl\:disabled\:text-indigo-700:disabled {
+    color: #4c51bf;
+  }
+
+  .xl\:disabled\:text-indigo-800:disabled {
+    color: #434190;
+  }
+
+  .xl\:disabled\:text-indigo-900:disabled {
+    color: #3c366b;
+  }
+
+  .xl\:disabled\:text-purple-100:disabled {
+    color: #faf5ff;
+  }
+
+  .xl\:disabled\:text-purple-200:disabled {
+    color: #e9d8fd;
+  }
+
+  .xl\:disabled\:text-purple-300:disabled {
+    color: #d6bcfa;
+  }
+
+  .xl\:disabled\:text-purple-400:disabled {
+    color: #b794f4;
+  }
+
+  .xl\:disabled\:text-purple-500:disabled {
+    color: #9f7aea;
+  }
+
+  .xl\:disabled\:text-purple-600:disabled {
+    color: #805ad5;
+  }
+
+  .xl\:disabled\:text-purple-700:disabled {
+    color: #6b46c1;
+  }
+
+  .xl\:disabled\:text-purple-800:disabled {
+    color: #553c9a;
+  }
+
+  .xl\:disabled\:text-purple-900:disabled {
+    color: #44337a;
+  }
+
+  .xl\:disabled\:text-pink-100:disabled {
+    color: #fff5f7;
+  }
+
+  .xl\:disabled\:text-pink-200:disabled {
+    color: #fed7e2;
+  }
+
+  .xl\:disabled\:text-pink-300:disabled {
+    color: #fbb6ce;
+  }
+
+  .xl\:disabled\:text-pink-400:disabled {
+    color: #f687b3;
+  }
+
+  .xl\:disabled\:text-pink-500:disabled {
+    color: #ed64a6;
+  }
+
+  .xl\:disabled\:text-pink-600:disabled {
+    color: #d53f8c;
+  }
+
+  .xl\:disabled\:text-pink-700:disabled {
+    color: #b83280;
+  }
+
+  .xl\:disabled\:text-pink-800:disabled {
+    color: #97266d;
+  }
+
+  .xl\:disabled\:text-pink-900:disabled {
     color: #702459;
   }
 
