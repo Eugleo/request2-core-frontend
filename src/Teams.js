@@ -12,7 +12,7 @@ import Page from "./Page.js";
 export function Teams() {
   // TODO Add paging
   let [total, setTotal] = useState(null);
-  let [limit, setLimit] = useState(1);
+  let [limit, setLimit] = useState(20);
   let [offset, setOffset] = useState(0);
   let [teams, setTeams] = useState([]);
   let { auth } = useContext(AuthContext);
