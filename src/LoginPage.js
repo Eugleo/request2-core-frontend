@@ -36,7 +36,7 @@ export default function LoginPage() {
           <a href="#" className="text-green-700 text-sm hover:text-green-600 mb-6">
             Forgot you password?
           </a>
-          <Button.Primary title="Log in" type="submit" />
+          <Button.Primary title="Log in" type="submit" className="justify-center" />
         </Form>
       </Formik>
     </CenteredPage>
