@@ -100,7 +100,7 @@ export default function EditAnnouncement() {
                   { Authorization: auth.user.apiKey }
                 ).then(() => setShouldRedirect(true));
               }}
-              className="mr-2"
+              className="mr-2 bg-white"
             />
           )}
 
