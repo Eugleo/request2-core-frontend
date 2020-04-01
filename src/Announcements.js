@@ -66,11 +66,16 @@ function AnnouncementCard(props) {
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link
             to={`announcements/${props.id}`}
-            className="text-xl font-medium text-black hover:text-green-700"
+            className={
+              "text-xl font-medium text-black hover:text-green-700 " +
+              (props.active ? "text-black" : "text-gray-400")
+            }
           >
             {props.title}
           </Link>
-          <p className="text-gray-500 text-sm">{formatDate(props.created)}</p>
+          <p className={"text-sm " + (props.active ? "text-gray-500" : "text-gray-300")}>
+            {formatDate(props.created)}
+          </p>
         </div>
         <div className="flex-grow" />
         <Authorized roles={["Admin"]}>
@@ -80,7 +85,10 @@ function AnnouncementCard(props) {
           </Button.NormalLinked>
         </Authorized>
       </div>
-      <MdRender source={props.body} className="px-6 pt-3 pb-1" />
+      <MdRender
+        source={props.body}
+        className={"px-6 pt-3 pb-1 " + (props.active ? "text-gray-800" : "text-gray-400")}
+      />
     </div>
   );
 }

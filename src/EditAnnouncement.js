@@ -78,6 +78,32 @@ export default function EditAnnouncement() {
             }}
           />
           <span className="flex-grow" />
+          {ann.active ? (
+            <Button.Danger
+              title="Deactivate"
+              onClick={() => {
+                // TODO Add error handling
+                Api.del(`/announcement/${id}`, {
+                  headers: { Authorization: auth.user.apiKey }
+                }).then(() => setShouldRedirect(true));
+              }}
+              className="mr-2"
+            />
+          ) : (
+            <Button.Secondary
+              title="Reactivate"
+              onClick={() => {
+                // TODO Add error handling
+                Api.put(
+                  `/announcement/${id}`,
+                  { ...ann, active: true },
+                  { Authorization: auth.user.apiKey }
+                ).then(() => setShouldRedirect(true));
+              }}
+              className="mr-2"
+            />
+          )}
+
           <Button.Normal
             title="Cancel"
             className="bg-white"
