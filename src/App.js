@@ -17,6 +17,8 @@ import AuthContext from "./Auth.js";
 import { Teams } from "./Teams.js";
 import EditTeam from "./EditTeam.js";
 import NewTeam from "./NewTeam.js";
+import NewAnnouncement from "./NewAnnouncement.js";
+import EditAnnouncement from "./EditAnnouncement.js";
 
 function reducer(state, action) {
   switch (action.type) {
@@ -101,6 +103,12 @@ function AppBody(props) {
     case true:
       return (
         <Switch>
+          <Route path="/announcements/new">
+            <NewAnnouncement />
+          </Route>
+          <Route path="/announcements/:id/edit">
+            <EditAnnouncement />
+          </Route>
           <Route path="/announcements/:id">
             <AnnouncementFromUrl />
           </Route>

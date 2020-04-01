@@ -41,7 +41,9 @@ export function Teams() {
     <Page title="Teams" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
         <div className="flex flex-col">
-          <AddTeamButton />
+          <Authorized roles={["Admin"]}>
+            <AddTeamButton />
+          </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
             {teams.map(team => (
               <Team key={team.id} editLink={`/teams/${team.id}/edit`} {...team.data} />

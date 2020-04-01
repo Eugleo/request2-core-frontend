@@ -1,12 +1,14 @@
 import React, { useEffect, useState, useContext } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
+import { AtomSpinner } from "react-epic-spinners";
 import * as Button from "./Buttons.js";
 import { Link, useParams } from "react-router-dom";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
-import Page from "./Page.js";
+import Page, { CenteredPage } from "./Page.js";
+import MdRender from "./MdRender.js";
 
 export function Announcements() {
   let [anns, setAnns] = useState([]);
@@ -32,7 +34,9 @@ export function Announcements() {
     <Page title="Announcements" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
-          <AddAnnButton />
+          <Authorized roles={["Admin"]}>
+            <AddAnnButton />
+          </Authorized>
           <div className="flex flex-col">
             {anns.map(ann => (
               <AnnouncementCard key={ann.id} id={ann.id} {...ann.data} />
@@ -76,30 +80,47 @@ function AnnouncementCard(props) {
           </Button.NormalLinked>
         </Authorized>
       </div>
-      <div className="px-6 py-3 text-gray-800 text-md">{props.body}</div>
+      <MdRender source={props.body} className="px-6 pt-3 pb-1" />
     </div>
   );
 }
 
 function formatDate(unixTime) {
   let d = new Date(unixTime * 1000);
-  return `${d.getDay()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  return `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
 }
 
 export function AnnouncementFromUrl() {
   var { id } = useParams();
-  return <Announcement id={id} />;
-}
+  let [ann, setAnn] = useState(null);
+  let { auth } = useContext(AuthContext);
 
-function Announcement(props) {
-  return (
-    <>
-      <h1>
-        <Link to="/announcements">
-          <Icon.ChevronLeft className="inline-icon" color="black" />
-        </Link>
-        Announcement id: {props.id}
-      </h1>
-    </>
-  );
+  useEffect(() => {
+    Api.get(`/announcement/${id}`, { headers: { Authorization: auth.user.apiKey } })
+      .then(r => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw Error(`Can't retreieve announcement with ID ${id}`);
+        }
+      })
+      .then(js => setAnn(js.data))
+      .catch(err => console.log(err));
+  }, [id, auth.user.apiKey]);
+
+  if (ann === null) {
+    return (
+      <CenteredPage title="Loading announcement">
+        <div className="flex justify-center">
+          <AtomSpinner color="gray" />
+        </div>
+      </CenteredPage>
+    );
+  } else {
+    return (
+      <Page title={ann.title} width="max-w-2xl">
+        <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-5 pb-3" />
+      </Page>
+    );
+  }
 }
