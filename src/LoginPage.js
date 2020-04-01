@@ -5,7 +5,7 @@ import { Formik, Form } from "formik";
 import { CenteredPage } from "./Page.js";
 import { InputField } from "./Forms.js";
 import AuthContext from "./Auth.js";
-import { Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 import * as Button from "./Buttons.js";
 
@@ -18,7 +18,7 @@ export default function LoginPage() {
   }
 
   return (
-    <CenteredPage title="Log in to your account" width="max-w-md">
+    <CenteredPage title="Log in to reQuest" width="max-w-md">
       <Formik
         initialValues={{
           email: "",
@@ -33,10 +33,10 @@ export default function LoginPage() {
           ) : null}
           <InputField name="email" label="Email address" />
           <InputField type="password" name="password" label="Password" />
-          <a href="#" className="text-green-700 text-sm hover:text-green-600 mb-6">
+          <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
             Forgot you password?
-          </a>
-          <Button.Primary title="Log in" type="submit" className="justify-center" />
+          </Link>
+          <Button.Primary title="Log in" type="submit" />
         </Form>
       </Formik>
     </CenteredPage>

@@ -56,7 +56,7 @@ function UserDetails() {
 
 function formatDate(unixTime) {
   let d = new Date(unixTime * 1000);
-  return `${d.getDay()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
+  return `${d.getDate()}. ${d.getMonth() + 1}. ${d.getFullYear()}`;
 }
 
 function Section(props) {
