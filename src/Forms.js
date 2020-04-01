@@ -9,7 +9,7 @@ export function InputField({ label, initValue, ...props }) {
       helpers.setValue(initValue);
       return;
     }
-  }, [helpers, initValue]);
+  }, [initValue]); // don't add helpers, causes infinite loop
 
   return (
     <div className="flex flex-col mb-6 w-full">

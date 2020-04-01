@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useState, useContext } from "react";
 
 import * as Button from "./Buttons.js";
 import * as Api from "./Api.js";
