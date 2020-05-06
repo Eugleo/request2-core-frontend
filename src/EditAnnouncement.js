@@ -21,14 +21,14 @@ export default function EditAnnouncement() {
 
   useEffect(() => {
     Api.get(`/announcement/${id}`, { headers: { Authorization: auth.user.apiKey } })
-      .then(r => {
+      .then((r) => {
         if (r.ok) {
           return r.json();
         } else {
           throw new Error(`Unable to fetch announcement with id: ${id}`);
         }
       })
-      .then(js => {
+      .then((js) => {
         setAnn(js.data);
         setBody(js.data.body);
         setTitle(js.data.title);
@@ -51,13 +51,13 @@ export default function EditAnnouncement() {
         <input
           className="resize-y p-2 border rounded focus:outline-none focus:shadow-outline mb-4"
           value={title}
-          onChange={e => setTitle(e.target.value)}
+          onChange={(e) => setTitle(e.target.value)}
         />
         <span className="text-sm text-gray-600 mb-1">Body</span>
         <textarea
           className="resize-y font-mono text-sm px-2 py-1 border rounded focus:outline-none focus:shadow-outline mb-4 h-48"
           value={body}
-          onChange={e => setBody(e.target.value)}
+          onChange={(e) => setBody(e.target.value)}
         />
         <span className="text-sm text-gray-600 mb-1">Preview</span>
         <MdRender source={body} className="border border-gray-300 rounded-sm pb-4 pt-6 px-6 mb-6" />
@@ -71,7 +71,7 @@ export default function EditAnnouncement() {
                 {
                   ...ann,
                   title,
-                  body
+                  body,
                 },
                 { Authorization: auth.user.apiKey }
               ).then(() => setShouldRedirect(true));
@@ -84,7 +84,7 @@ export default function EditAnnouncement() {
               onClick={() => {
                 // TODO Add error handling
                 Api.del(`/announcement/${id}`, {
-                  headers: { Authorization: auth.user.apiKey }
+                  headers: { Authorization: auth.user.apiKey },
                 }).then(() => setShouldRedirect(true));
               }}
               className="mr-2"
@@ -104,11 +104,7 @@ export default function EditAnnouncement() {
             />
           )}
 
-          <Button.Normal
-            title="Cancel"
-            className="bg-white"
-            onClick={() => setShouldRedirect(true)}
-          />
+          <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
         </div>
       </div>
     </Page>

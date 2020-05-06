@@ -10,13 +10,13 @@ export function Normal(props) {
     "text-sm",
     "px-4",
     "py-2",
-    "text-gray-800",
+    "text-gray-700",
     "border",
-    "border-gray-300",
+    "border-gray-400",
     "focus:outline-none",
-    "hover:border-gray-400",
+    "hover:border-gray-500",
     "hover:shadow-inner",
-    props.className || ""
+    props.className || "",
   ];
 
   return (
@@ -41,7 +41,7 @@ export function Danger(props) {
     "focus:outline-none",
     "hover:border-red-400",
     "hover:shadow-inner",
-    props.className || ""
+    props.className || "",
   ];
 
   return (
@@ -66,7 +66,7 @@ export function Secondary(props) {
     "focus:outline-none",
     "hover:border-green-400",
     "hover:shadow-inner",
-    props.className || ""
+    props.className || "",
   ];
 
   return (
@@ -92,7 +92,7 @@ export function Primary(props) {
     "focus:outline-none",
     "hover:bg-green-500",
     "hover:shadow-inner",
-    props.className || ""
+    props.className || "",
   ];
 
   return (
@@ -111,13 +111,13 @@ export function NormalLinked(props) {
     "text-sm",
     "px-4",
     "py-2",
-    "text-gray-800",
+    "text-gray-700",
     "border",
-    "border-gray-300",
+    "border-gray-400",
     "focus:outline-none",
-    "hover:border-gray-400",
+    "hover:border-gray-500",
     "hover:shadow-inner",
-    props.className || ""
+    props.className || "",
   ];
 
   return (
