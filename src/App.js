@@ -26,14 +26,14 @@ function reducer(state, action) {
     case "LOGIN":
       return {
         loggedIn: true,
-        user: action.payload
+        user: action.payload,
       };
     case "LOGOUT":
       //TODO check that the logout succeeded
       Api.post("/logout", { api_key: state.user.apiKey }, { Authorization: state.user.apiKey });
       return {
         loggedIn: false,
-        user: null
+        user: null,
       };
     default:
       return state;
@@ -45,12 +45,12 @@ function App() {
     loggedIn: true,
     userID: 1,
     user: {
-      apiKey: "jGGKE85W9lDWTEcLMAtEL5dYeqYlxx1fNLN0e20D9j2",
+      apiKey: "3T7Cn1HDcfaGnURMR0kZRtUQS03XwNyL4x4gileL672",
       name: "Evžen",
       roles: ["Admin", "Client", "Operator"],
       team: { name: "Evženův supertým" },
-      created: 115151
-    }
+      created: 115151,
+    },
   };
 
   let [backendAvailable, setBackendAvailable] = useState(null);
@@ -58,15 +58,15 @@ function App() {
 
   useEffect(() => {
     Api.get("/capability")
-      .then(r => r.json())
-      .then(js => {
+      .then((r) => r.json())
+      .then((js) => {
         if (js.includes("request2")) {
           setBackendAvailable(true);
         } else {
           throw Error("Unsupported backend");
         }
       })
-      .catch(e => {
+      .catch((e) => {
         console.log(e);
         setBackendAvailable(false);
       });
