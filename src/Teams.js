@@ -22,16 +22,16 @@ export function Teams() {
     if (auth.loggedIn) {
       let url = Api.urlWithParams("/teams", { limit, offset });
       Api.get(url, { headers: { Authorization: apiKey } })
-        .then(r => {
+        .then((r) => {
           if (r.ok) {
             return r.json();
           } else {
             throw new Error("Unable to retrieve the teams");
           }
         })
-        .then(json => {
+        .then((json) => {
           setTotal(json.total);
-          setTeams(json.teams);
+          setTeams(json.values);
         })
         .catch(console.log);
     }
@@ -45,8 +45,8 @@ export function Teams() {
             <AddTeamButton />
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
-            {teams.map(team => (
-              <Team key={team.id} editLink={`/teams/${team.id}/edit`} {...team.data} />
+            {teams.map((team) => (
+              <Team key={team._id} editLink={`/teams/${team._id}/edit`} {...team} />
             ))}
           </div>
           <Pagination
