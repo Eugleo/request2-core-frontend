@@ -13,18 +13,18 @@ export default function EditTeam() {
   let id = match.params["id"];
   let { auth } = useContext(AuthContext);
   let [shouldRedirect, setShouldRedirect] = useState(false);
-  let [team, setTeam] = useState({ name: "", code: "" });
+  let [team, setTeam] = useState({ name: "", code: "", active: true });
 
   useEffect(() => {
     Api.get(`/teams/${id}`, { headers: { Authorization: auth.user.apiKey } })
-      .then(r => {
+      .then((r) => {
         if (r.ok) {
           return r.json();
         } else {
           throw new Error(`Unable to fetch team with id: ${id}`);
         }
       })
-      .then(js => setTeam(js.data))
+      .then((js) => setTeam(js))
       .catch(() => setTeam(null));
   }, [id, auth.user.apiKey]);
 
@@ -40,9 +40,9 @@ export default function EditTeam() {
     <Page title="Edit team" width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: "", code: "" }}
+          initialValues={{ name: "", code: "", active: true }}
           validate={validate}
-          onSubmit={values => {
+          onSubmit={(values) => {
             // TODO Add error handling
             Api.put(`/teams/${id}`, { ...team, ...values }, { Authorization: auth.user.apiKey });
             setShouldRedirect(true);
@@ -52,13 +52,13 @@ export default function EditTeam() {
             <InputField
               name="name"
               initValue={team.name || ""}
-              onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
+              onClick={(obj) => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Team leader"
             />
             <InputField
               name="code"
               initValue={team.code || ""}
-              onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
+              onClick={(obj) => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Institutional code"
             />
             <div className="flex justify-between w-full items-stretch pt-3">
