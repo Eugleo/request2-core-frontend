@@ -3,20 +3,18 @@ import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import * as Button from "./Buttons.js";
 import { Link } from "react-router-dom";
-import Pagination from "./Pagination.js";
+import Pagination, { usePagination } from "./Pagination.js";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
 
 import Page from "./Page.js";
 
 export function Teams() {
-  // TODO Add paging
-  let [total, setTotal] = useState(null);
-  let [limit, setLimit] = useState(20);
-  let [offset, setOffset] = useState(0);
   let [teams, setTeams] = useState([]);
   let { auth } = useContext(AuthContext);
   let apiKey = auth.user == null ? null : auth.user.apiKey;
+
+  const { setTotal, limit, offset, ...pagination } = usePagination();
 
   useEffect(() => {
     if (auth.loggedIn) {
@@ -49,14 +47,7 @@ export function Teams() {
               <Team key={team._id} editLink={`/teams/${team._id}/edit`} {...team} />
             ))}
           </div>
-          <Pagination
-            offset={offset}
-            bound={1}
-            setOffset={setOffset}
-            limit={limit}
-            total={total}
-            around={1}
-          />
+          <Pagination {...pagination} />
         </div>
       </Authentized>
     </Page>

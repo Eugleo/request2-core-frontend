@@ -13,7 +13,7 @@ export default function EditTeam() {
   let id = match.params["id"];
   let { auth } = useContext(AuthContext);
   let [shouldRedirect, setShouldRedirect] = useState(false);
-  let [team, setTeam] = useState({ name: "", code: "", active: true });
+  let [team, setTeam] = useState({ name: "", code: "" });
 
   useEffect(() => {
     Api.get(`/teams/${id}`, { headers: { Authorization: auth.user.apiKey } })
@@ -40,7 +40,7 @@ export default function EditTeam() {
     <Page title="Edit team" width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: "", code: "", active: true }}
+          initialValues={{ name: "", code: "" }}
           validate={validate}
           onSubmit={(values) => {
             // TODO Add error handling

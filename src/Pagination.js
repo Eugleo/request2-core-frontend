@@ -1,78 +1,102 @@
-import React from "react";
+import React, { useState } from "react";
+import { urlWithParams } from "./Api";
 
 import * as Icon from "react-feather";
+import { Link, useLocation } from "react-router-dom";
 
-export default function Pagination(props) {
-  let page = Math.floor(props.offset / props.limit);
-  let totalPages = Math.floor(props.total / props.limit);
+function useQuery() {
+  return new URLSearchParams(useLocation().search);
+}
 
-  let start = [...Array(props.bound).keys()];
-  let middle = [...Array(props.around * 2 + 1).keys()]
-    .map(n => page + n - props.around)
-    .filter(n => n > props.bound - 1 && n < totalPages - props.bound);
-  let end = start
-    .slice() // needed to prevent reverse from reversiong the original array
-    .reverse()
-    .map(n => totalPages - 1 - n)
-    .filter(n => n > props.bound - 1);
+export function usePagination(initLimit = 1, around = 1, onBoundary = 1) {
+  const queryParams = useQuery();
+  const location = useLocation();
+  const [total, setTotal] = useState(0);
+  const [limit, setLimit] = useState(initLimit);
 
-  let buttons = [start, middle, end]
-    .reduce((acc, a) => {
-      if (a.length > 0) {
-        let dif = a[0] - acc[acc.length - 1];
-        if (dif > 2) {
-          acc.push("...");
-        } else if (dif === 2) {
-          acc.push(a[0] - 1);
-        }
-      }
+  const currentPage = queryParams.get("page") ? Number(queryParams.get("page")) : 0;
+  const finalPage = Math.max(Math.floor(total / limit) - 1, 0);
 
-      return acc.concat(a);
-    })
-    .map((txt, i) => {
-      if (txt === "...") {
-        return <EtcLabel key={i} />;
+  console.log(currentPage);
+  console.log(location.pathname);
+
+  const shouldBeHidden = (n) =>
+    n >= 0 + onBoundary && n <= finalPage - onBoundary && Math.abs(currentPage - n) > around;
+
+  const pages = [...Array(finalPage + 1).keys()]
+    // Hide pages according to basic rules
+    .map((n) => ({ number: n, hidden: shouldBeHidden(n) }))
+    // Unhide a page if it's surrounded by shown pages
+    .map((p, i, a) => {
+      const prevHidden = i === 0 || a[i - 1].hidden;
+      const nextHidden = i === a.length - 1 || a[i + 1].hidden;
+      if (!p.hidden || !(prevHidden || nextHidden)) {
+        return { ...p, hidden: false };
       } else {
-        return (
-          <NumberButton
-            key={i}
-            disabled={txt === page}
-            onClick={() => props.setOffset(txt * props.limit)}
-          >
-            {txt + 1}
-          </NumberButton>
-        );
+        return { ...p, hidden: true };
       }
-    });
+    })
+    // Collapse hidden pages to one
+    .filter((p, i, a) => !p.hidden || i === 0 || !a[i - 1].hidden)
+    // Add additional info to shown pages
+    .map((p) =>
+      p.hidden
+        ? p
+        : {
+            active: p === currentPage,
+            link: urlWithParams(location.pathname, { page: p.number }),
+            ...p,
+          }
+    );
 
-  buttons = [
+  return { currentPage, pages, setTotal, setLimit, limit, offset: currentPage * limit };
+}
+
+export default function Pagination({ currentPage, pages }) {
+  const location = useLocation();
+
+  if (pages.length <= 1) {
+    return (
+      <div className="px-6 py-3 text-sm flex items-center justify-center">
+        <div className="text-sm tracking-wide text-gray-600">These are all the items</div>
+      </div>
+    );
+  }
+
+  const pageButons = pages.map((p) => {
+    if (!p.hidden) {
+      return <PaginationItem {...p} key={p.number} />;
+    } else {
+      return <Ellipsis key={p.number} />;
+    }
+  });
+
+  const lastPage = pages[pages.length - 1].number;
+
+  const buttons = [
     <ArrowButton
-      dir="LEFT"
-      disabled={page === 0}
-      key="LEFT"
-      onClick={() => props.setOffset(props.offset - props.limit)}
+      dir="L"
+      key="L"
+      disabled={currentPage === 0}
+      link={urlWithParams(location.pathname, { page: currentPage - 1 })}
     />,
-    ...buttons,
+    ...pageButons,
     <ArrowButton
-      dir="RIGHT"
-      disabled={page === totalPages - 1}
-      key="RIGHT"
-      onClick={() => props.setOffset(props.offset + props.limit)}
-    />
+      dir="R"
+      key="R"
+      disabled={currentPage === lastPage}
+      link={urlWithParams(location.pathname, { page: currentPage + 1 })}
+    />,
   ];
 
   return (
     <div className="px-6 py-3 text-sm flex items-center justify-center">
-      {totalPages > 1 ? (
-        <div className="flex border border-gray-300 rounded-md ">{buttons}</div>
-      ) : (
-        <div className="text-sm tracking-wide text-gray-600">These are all the items</div>
-      )}
+      <div className="flex border border-gray-300 rounded-md ">{buttons}</div>
     </div>
   );
 }
 
-function EtcLabel() {
+function Ellipsis() {
   return (
     <div className="list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center">
       ...
@@ -80,35 +104,38 @@ function EtcLabel() {
   );
 }
 
-function ArrowButton({ dir, ...props }) {
+function ArrowButton({ dir, disabled, link }) {
   let icon;
-  if (dir === "LEFT") {
+  if (dir === "L") {
     icon = <Icon.ChevronLeft className="h-4" />;
   } else {
     icon = <Icon.ChevronRight className="h-4" />;
   }
 
+  let classes = "list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center";
+
+  if (disabled) {
+    classes += " text-gray-500";
+  }
+
   return (
-    <button
-      className="list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center disabled:text-gray-500"
-      {...props}
-    >
+    <Link key={dir} className={classes} to={link}>
       {icon}
-    </button>
+    </Link>
   );
 }
 
-function NumberButton(props) {
+function PaginationItem({ number, active, link }) {
   let classes = "list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center";
-  if (!props.disabled) {
+  if (!active) {
     classes += " hover:bg-gray-200 text-gray-800";
   } else {
     classes += " font-extrabold";
   }
 
   return (
-    <button className={classes} {...props}>
-      {props.children}
-    </button>
+    <Link className={classes} to={link}>
+      {number + 1}
+    </Link>
   );
 }

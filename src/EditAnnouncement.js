@@ -20,7 +20,7 @@ export default function EditAnnouncement() {
   let [body, setBody] = useState("");
 
   useEffect(() => {
-    Api.get(`/announcement/${id}`, { headers: { Authorization: auth.user.apiKey } })
+    Api.get(`/announcements/${id}`, { headers: { Authorization: auth.user.apiKey } })
       .then((r) => {
         if (r.ok) {
           return r.json();
@@ -29,9 +29,9 @@ export default function EditAnnouncement() {
         }
       })
       .then((js) => {
-        setAnn(js.data);
-        setBody(js.data.body);
-        setTitle(js.data.title);
+        setAnn(js);
+        setBody(js.body);
+        setTitle(js.title);
       })
       .catch(() => setAnn(null));
   }, [id, auth.user.apiKey]);
@@ -67,7 +67,7 @@ export default function EditAnnouncement() {
             onClick={() => {
               // TODO Handle failure
               Api.put(
-                `/announcement/${id}`,
+                `/announcements/${id}`,
                 {
                   ...ann,
                   title,
@@ -83,7 +83,7 @@ export default function EditAnnouncement() {
               title="Deactivate"
               onClick={() => {
                 // TODO Add error handling
-                Api.del(`/announcement/${id}`, {
+                Api.del(`/announcements/${id}`, {
                   headers: { Authorization: auth.user.apiKey },
                 }).then(() => setShouldRedirect(true));
               }}
@@ -95,7 +95,7 @@ export default function EditAnnouncement() {
               onClick={() => {
                 // TODO Add error handling
                 Api.put(
-                  `/announcement/${id}`,
+                  `/announcements/${id}`,
                   { ...ann, active: true },
                   { Authorization: auth.user.apiKey }
                 ).then(() => setShouldRedirect(true));

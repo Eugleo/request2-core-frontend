@@ -6,6 +6,7 @@ import * as Button from "./Buttons.js";
 import { Link, useParams } from "react-router-dom";
 
 import AuthContext, { Authentized, Authorized } from "./Auth.js";
+import Pagination, { usePagination } from "./Pagination.js";
 
 import Page, { CenteredPage } from "./Page.js";
 import MdRender from "./MdRender.js";
@@ -15,20 +16,26 @@ export function Announcements() {
   let { auth } = useContext(AuthContext);
   let apiKey = auth.user ? auth.user.apiKey : null;
 
+  const { setTotal, limit, offset, ...pagination } = usePagination();
+
   useEffect(() => {
     if (auth.loggedIn) {
-      Api.get("/announcements", { headers: { Authorization: apiKey } })
-        .then(r => {
+      let url = Api.urlWithParams("/announcements", { limit, offset });
+      Api.get(url, { headers: { Authorization: apiKey } })
+        .then((r) => {
           if (r.ok) {
             return r.json();
           } else {
             throw new Error("Unable to retrieve the announcements");
           }
         })
-        .then(json => setAnns(json))
+        .then((json) => {
+          setTotal(json.total);
+          setAnns(json.values);
+        })
         .catch(console.log);
     }
-  }, [auth.loggedIn, apiKey]);
+  }, [auth.loggedIn, apiKey, limit, offset]);
 
   return (
     <Page title="Announcements" width="max-w-2xl">
@@ -38,11 +45,12 @@ export function Announcements() {
             <AddAnnButton />
           </Authorized>
           <div className="flex flex-col">
-            {anns.map(ann => (
-              <AnnouncementCard key={ann.id} id={ann.id} {...ann.data} />
+            {anns.map((ann) => (
+              <AnnouncementCard key={ann._id} id={ann._id} {...ann} />
             ))}
           </div>
         </div>
+        <Pagination {...pagination} />
       </Authentized>
     </Page>
   );
@@ -65,7 +73,7 @@ function AnnouncementCard(props) {
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link
-            to={`announcements/${props.id}`}
+            to={`announcements/${props._id}`}
             className={
               "text-xl font-medium text-black hover:text-green-700 " +
               (props.active ? "text-black" : "text-gray-400")
@@ -74,12 +82,12 @@ function AnnouncementCard(props) {
             {props.title}
           </Link>
           <p className={"text-sm " + (props.active ? "text-gray-500" : "text-gray-300")}>
-            {formatDate(props.created)}
+            {formatDate(props.dateCreated)}
           </p>
         </div>
         <div className="flex-grow" />
         <Authorized roles={["Admin"]}>
-          <Button.NormalLinked to={`announcements/${props.id}/edit`} className="pl-2 pr-3">
+          <Button.NormalLinked to={`announcements/${props._id}/edit`} className="pl-2 pr-3">
             <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
             Edit
           </Button.NormalLinked>
@@ -104,16 +112,16 @@ export function AnnouncementFromUrl() {
   let { auth } = useContext(AuthContext);
 
   useEffect(() => {
-    Api.get(`/announcement/${id}`, { headers: { Authorization: auth.user.apiKey } })
-      .then(r => {
+    Api.get(`/announcements/${id}`, { headers: { Authorization: auth.user.apiKey } })
+      .then((r) => {
         if (r.ok) {
           return r.json();
         } else {
           throw Error(`Can't retreieve announcement with ID ${id}`);
         }
       })
-      .then(js => setAnn(js.data))
-      .catch(err => console.log(err));
+      .then((js) => setAnn(js.data))
+      .catch((err) => console.log(err));
   }, [id, auth.user.apiKey]);
 
   if (ann === null) {
