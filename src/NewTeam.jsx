@@ -1,16 +1,29 @@
-import React, { useContext, useState } from "react";
-import { Formik, Form } from "formik";
-import { InputField } from "./Forms.js";
-import Page from "./Page";
+import React, { useState } from 'react';
+import { Formik, Form } from 'formik';
+import { Redirect } from 'react-router-dom';
+import InputField from './Forms';
+import Page from './Page';
 
-import AuthContext from "./Auth";
-import { Redirect } from "react-router-dom";
-import * as Api from "./Api.js";
-import * as Button from "./Buttons.js";
+import { useAuth } from './Auth';
+import * as Button from './Buttons';
+
+function validate(values) {
+  const error = {};
+
+  if (!values.name) {
+    error.name = 'This field is required';
+  }
+
+  if (!values.code) {
+    error.code = 'This field is required';
+  }
+
+  return error;
+}
 
 export default function NewTeam() {
-  let { auth } = useContext(AuthContext);
-  let [shouldRedirect, setShouldRedirect] = useState(false);
+  const { authPost } = useAuth();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   if (shouldRedirect) {
     return <Redirect to="/teams" />;
@@ -20,10 +33,10 @@ export default function NewTeam() {
     <Page title="New team" width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: "", code: "" }}
+          initialValues={{ name: '', code: '' }}
           validate={validate}
           onSubmit={values => {
-            Api.post("/teams", { ...values, active: true }, { Authorization: auth.user.apiKey });
+            authPost('/teams', { ...values, active: true });
             setShouldRedirect(true);
           }}
         >
@@ -39,18 +52,4 @@ export default function NewTeam() {
       </div>
     </Page>
   );
-}
-
-function validate(values) {
-  let error = {};
-
-  if (!values.name) {
-    error.name = "This field is required";
-  }
-
-  if (!values.code) {
-    error.code = "This field is required";
-  }
-
-  return error;
 }

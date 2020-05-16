@@ -1,4 +1,4 @@
-export const test = `
+const test = `
 # Markdown: Syntax
 
 **Note:** This document is itself written using Markdown; you
@@ -292,3 +292,5 @@ normal paragraph. For example:
 
 Use the \`printf()\` function.
 `;
+
+export default test;

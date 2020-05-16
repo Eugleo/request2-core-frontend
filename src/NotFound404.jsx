@@ -1,5 +1,5 @@
-import React from "react";
-import { CenteredPage } from "./Page";
+import React from 'react';
+import { CenteredPage } from './Page';
 
 export default function NotFound404() {
   return (

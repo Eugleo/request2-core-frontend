@@ -1,16 +1,32 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import { InputField } from './Forms.js';
+import InputField from './Forms.jsx';
 import Page from './Page';
 
 import { useAuth } from './Auth';
-import * as Button from './Buttons.js';
+import * as Button from './Buttons';
 
-import MdRender from './MdRender.js';
+import MdRender from './MdRender';
 
+function validate(values) {
+  const error = {};
+
+  if (!values.title) {
+    error.title = 'This field is required';
+  }
+
+  if (!values.body) {
+    error.body = 'This field is required';
+  }
+
+  return error;
+}
+
+// TODO Implement using Formik
 export default function EditAnnouncement() {
   const match = useRouteMatch();
+  // @ts-ignore
   const { id } = match.params;
   const { authDel, authGet, authPut } = useAuth();
   const [shouldRedirect, setShouldRedirect] = useState(false);
@@ -99,18 +115,4 @@ export default function EditAnnouncement() {
       </div>
     </Page>
   );
-}
-
-function validate(values) {
-  const error = {};
-
-  if (!values.name) {
-    error.name = 'This field is required';
-  }
-
-  if (!values.code) {
-    error.code = 'This field is required';
-  }
-
-  return error;
 }

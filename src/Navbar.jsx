@@ -1,11 +1,10 @@
-import React from "react";
+import React from 'react';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
-import { Authentized, NotAuthentized } from "./Auth.js";
+import { Authentized, NotAuthentized } from './Auth';
+import UserView from './UserView';
 
-import "./styles/tailwind.css";
-import { NavLink as RouterNavLink } from "react-router-dom";
-
-import UserView from "./UserView.js";
+import './styles/tailwind.css';
 
 export default function Navbar() {
   return (
@@ -16,13 +15,13 @@ export default function Navbar() {
             <span className="text-green-600 font-extrabold text-xl mr-6">
               rQ<sup>2</sup>
             </span>
-            <Authentized>
+            <Authentized or="/login">
               <NavLink to="/announcements">Announcements</NavLink>
               <NavLink to="/teams">Teams</NavLink>
             </Authentized>
           </div>
           <div className="flex items-center justify-right">
-            <Authentized>
+            <Authentized or="/login">
               <UserView />
             </Authentized>
             <NotAuthentized>
@@ -36,14 +35,14 @@ export default function Navbar() {
   );
 }
 
-function NavLink(props) {
+function NavLink({ className = null, to, children }) {
   return (
     <RouterNavLink
-      to={props.to}
-      className={props.className || "ml-2 px-3 py-2 rounded-md text-sm hover:bg-gray-200"}
+      to={to}
+      className={className || 'ml-2 px-3 py-2 rounded-md text-sm hover:bg-gray-200'}
       activeClassName="bg-gray-200"
     >
-      {props.children}
+      {children}
     </RouterNavLink>
   );
 }

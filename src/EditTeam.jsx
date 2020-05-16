@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import { InputField } from './Forms';
+import InputField from './Forms';
 import Page from './Page';
 
 import { useAuth } from './Auth';
@@ -23,6 +23,7 @@ function validate(values) {
 
 export default function EditTeam() {
   const match = useRouteMatch();
+  // @ts-ignore
   const { id } = match.params;
   const { authGet, authPut, authDel } = useAuth();
   const [shouldRedirect, setShouldRedirect] = useState(false);

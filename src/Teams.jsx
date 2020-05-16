@@ -1,29 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
-import * as Api from './Api.js';
-import * as Button from './Buttons.js';
 import { Link } from 'react-router-dom';
-import Pagination, { usePagination } from './Pagination.js';
+import * as Api from './Api';
+import * as Button from './Buttons';
+import Pagination, { usePagination } from './Pagination';
 
-import AuthContext, { Authentized, Authorized, useAuth } from './Auth.js';
+import { Authentized, Authorized, useAuth } from './Auth';
 
-import Page from './Page.js';
+import Page from './Page';
 
-export function Teams() {
-  let [teams, setTeams] = useState([]);
-  let { authGet } = useAuth();
+export default function Teams() {
+  const [teams, setTeams] = useState([]);
+  const { authGet } = useAuth();
 
-  const { setTotal, limit, offset, ...pagination } = usePagination();
+  const { setTotal, limit, offset, currentPage, pages } = usePagination();
 
   useEffect(() => {
-    let url = Api.urlWithParams('/teams', { limit, offset });
+    const url = Api.urlWithParams('/teams', { limit, offset });
     authGet(url)
       .then(r => {
         if (r.ok) {
           return r.json();
-        } else {
-          throw new Error('Unable to retrieve the teams');
         }
+        throw new Error('Unable to retrieve the teams');
       })
       .then(json => {
         setTotal(json.total);
@@ -41,10 +40,10 @@ export function Teams() {
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
             {teams.map(team => (
-              <Team key={team._id} editLink={`/teams/${team._id}/edit`} {...team} />
+              <Team key={team._id} editLink={`/teams/${team._id}/edit`} team={team} />
             ))}
           </div>
-          <Pagination {...pagination} />
+          <Pagination currentPage={currentPage} pages={pages} />
         </div>
       </Authentized>
     </Page>
@@ -62,18 +61,18 @@ function AddTeamButton() {
   );
 }
 
-function Team(props) {
+function Team({ editLink, team }) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-grow">
-        {props.active ? (
-          <h2 className="text-gray-900 font-medium">{props.name}</h2>
+        {team.active ? (
+          <h2 className="text-gray-900 font-medium">{team.name}</h2>
         ) : (
-          <h2 className="text-gray-400 font-medium">{props.name}</h2>
+          <h2 className="text-gray-400 font-medium">{team.name}</h2>
         )}
       </div>
       <Authorized roles={['Admin']}>
-        <Button.NormalLinked to={props.editLink} className="pl-2 pr-3">
+        <Button.NormalLinked to={editLink} className="pl-2 pr-3">
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit
         </Button.NormalLinked>

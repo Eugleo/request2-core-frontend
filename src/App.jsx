@@ -1,38 +1,36 @@
-import React, { useState, useEffect, useReducer } from "react";
+import React, { useState, useEffect, useReducer } from 'react';
 
-import * as Api from "./Api.js";
-import Navbar from "./Navbar.js";
-import Footer from "./Footer.js";
-import { AtomSpinner } from "react-epic-spinners";
+import { AtomSpinner } from 'react-epic-spinners';
+import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import * as Api from './Api';
+import Navbar from './Navbar';
+import Footer from './Footer';
 
-import { HashRouter as Router, Route, Switch, Redirect } from "react-router-dom";
+import Page from './Page';
+import AuthContext, { useAuth } from './Auth';
+import NotFound404 from './NotFound404';
 
-import Page from "./Page.js";
-import AuthContext from "./Auth.js";
-import NotFound404 from "./NotFound404.js";
+import { AnnouncementFromUrl, Announcements } from './Announcements';
+import { NewRegistrationPage, RegisterPage } from './Registration';
+import LoginPage from './LoginPage';
 
-import { AnnouncementFromUrl, Announcements } from "./Announcements.js";
-import { NewRegistrationPage, RegisterPage } from "./Registration.js";
-import LoginPage from "./LoginPage.js";
-
-import { Teams } from "./Teams.js";
-import EditTeam from "./EditTeam.js";
-import NewTeam from "./NewTeam.js";
-import NewAnnouncement from "./NewAnnouncement.js";
-import EditAnnouncement from "./EditAnnouncement.js";
-import { useAuth } from "./Auth.js";
+import Teams from './Teams';
+import EditTeam from './EditTeam';
+import NewTeam from './NewTeam';
+import NewAnnouncement from './NewAnnouncement';
+import EditAnnouncement from './EditAnnouncement';
 
 function reducer(state, action) {
-  const { authPost, authGet } = useAuth();
+  const { authPost } = useAuth();
   switch (action.type) {
-    case "LOGIN":
+    case 'LOGIN':
       return {
         loggedIn: true,
         user: action.payload,
       };
-    case "LOGOUT":
-      //TODO check that the logout succeeded
-      authPost("/logout", { api_key: state.user.apiKey });
+    case 'LOGOUT':
+      // TODO check that the logout succeeded
+      authPost('/logout', { api_key: state.user.apiKey });
       return {
         loggedIn: false,
         user: null,
@@ -43,29 +41,29 @@ function reducer(state, action) {
 }
 
 function App() {
-  let initialAuth = {
+  const initialAuth = {
     loggedIn: true,
     userID: 1,
     user: {
-      apiKey: "QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4",
-      name: "Evžen",
-      roles: ["Admin", "Client", "Operator"],
-      team: { name: "Evženův supertým" },
+      apiKey: 'QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4',
+      name: 'Evžen',
+      roles: ['Admin', 'Client', 'Operator'],
+      team: { name: 'Evženův supertým' },
       created: 115151,
     },
   };
 
-  let [backendAvailable, setBackendAvailable] = useState(null);
-  let [auth, dispatch] = useReducer(reducer, initialAuth);
+  const [backendAvailable, setBackendAvailable] = useState(null);
+  const [auth, dispatch] = useReducer(reducer, initialAuth);
 
   useEffect(() => {
-    Api.get("/capability")
+    Api.get('/capability')
       .then(r => r.json())
       .then(js => {
-        if (js.includes("request2")) {
+        if (js.includes('request2')) {
           setBackendAvailable(true);
         } else {
-          throw Error("Unsupported backend");
+          throw Error('Unsupported backend');
         }
       })
       .catch(e => {
