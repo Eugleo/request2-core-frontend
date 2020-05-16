@@ -75,7 +75,7 @@ export default function EditTeam() {
               label="Institutional code"
             />
             <div className="flex justify-between w-full items-stretch pt-3">
-              <Button.Primary type="submit" title="Save changes" />
+              <Button.PrimarySubmit title="Save changes" />
               <div className="flex">
                 {team.active ? (
                   <Button.Danger
@@ -85,7 +85,7 @@ export default function EditTeam() {
                       authDel(`/teams/${id}`);
                       setShouldRedirect(true);
                     }}
-                    className="mr-2"
+                    classNames={['mr-2']}
                   />
                 ) : (
                   <Button.Secondary
@@ -95,7 +95,7 @@ export default function EditTeam() {
                       authPut(`/teams/${id}`, { ...team, active: true });
                       setShouldRedirect(true);
                     }}
-                    className="mr-2"
+                    classNames={['mr-2']}
                   />
                 )}
                 <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />

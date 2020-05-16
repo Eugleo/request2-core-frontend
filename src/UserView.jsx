@@ -55,7 +55,7 @@ function UserDetails() {
         <Button.Danger
           title="Log out"
           onClick={() => dispatch({ type: 'LOGOUT' })}
-          className="mt-2 w-full flex justify-center"
+          classNames={['mt-2', 'w-full', 'flex', 'justify-center']}
         />
       </div>
     </div>

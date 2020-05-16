@@ -48,11 +48,11 @@ export function NewRegistrationPage() {
             <>
               <InputField name="email" label="Email address" />
               {regState === 'loading' ? (
-                <center>
+                <div className="m-auto">
                   <AtomSpinner />
-                </center>
+                </div>
               ) : (
-                <Button.Primary title="Register" type="submit" />
+                <Button.PrimarySubmit title="Register" />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">
@@ -128,7 +128,7 @@ export function RegisterPage() {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.Primary title="Finish registration" type="submit" />
+                <Button.PrimarySubmit title="Finish registration" />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">

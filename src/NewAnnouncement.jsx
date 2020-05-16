@@ -53,7 +53,7 @@ export default function NewAnnouncement() {
           <span className="flex-grow" />
           <Button.Normal
             title="Cancel"
-            className="bg-white"
+            classNames={['bg-white']}
             onClick={() => setShouldRedirect(true)}
           />
         </div>

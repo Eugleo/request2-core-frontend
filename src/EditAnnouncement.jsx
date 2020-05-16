@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import InputField from './Forms.jsx';
+import InputField from './Forms';
 import Page from './Page';
 
 import { useAuth } from './Auth';
@@ -95,7 +95,7 @@ export default function EditAnnouncement() {
                 // TODO Add error handling
                 authDel(`/announcements/${id}`).then(() => setShouldRedirect(true));
               }}
-              className="mr-2"
+              classNames={['mr-2']}
             />
           ) : (
             <Button.Secondary
@@ -106,7 +106,7 @@ export default function EditAnnouncement() {
                   setShouldRedirect(true)
                 );
               }}
-              className="mr-2 bg-white"
+              classNames={['mr-2', 'bg-white']}
             />
           )}
 

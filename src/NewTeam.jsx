@@ -44,7 +44,7 @@ export default function NewTeam() {
             <InputField name="name" label="Team leader" />
             <InputField name="code" label="Institutional code" />
             <div className="flex justify-between w-full items-stretch pt-3">
-              <Button.Primary title="Add new team" type="submit" />
+              <Button.PrimarySubmit title="Add new team" />
               <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
             </div>
           </Form>

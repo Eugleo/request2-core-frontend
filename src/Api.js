@@ -1,7 +1,7 @@
 const hostname = 'http://localhost:9080';
 
-export function get(url) {
-  return fetch(hostname + url, { method: 'GET' });
+export function get(url, headers = {}) {
+  return fetch(hostname + url, { method: 'GET', headers });
 }
 
 export function post(url, data) {

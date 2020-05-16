@@ -84,7 +84,7 @@ function AnnouncementCard({ ann: { _id, active, title, body, dateCreated } }) {
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.NormalLinked to={`announcements/${_id}/edit`} className="pl-2 pr-3">
+          <Button.NormalLinked to={`announcements/${_id}/edit`} classNames={['pl-2', 'pr-3']}>
             <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
             Edit
           </Button.NormalLinked>

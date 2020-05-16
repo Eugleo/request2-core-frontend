@@ -49,17 +49,11 @@ export function useAuth() {
 }
 
 export function Authentized({ children, or }) {
-  return (
-    <Authorized noUser={or} roles={[]}>
-      {children}
-    </Authorized>
-  );
+  return <Authorized noUser={or}>{children}</Authorized>;
 }
 
-export function NotAuthentized(props) {
-  const { auth } = useContext(AuthContext);
-
-  return auth.loggedIn ? null : props.children;
+export function NotAuthentized({ or = null, children }) {
+  return <Authorized noUser={children}>{or}</Authorized>;
 }
 
 export function Authorized({ noUser = <Redirect to="/login" />, roles = [], or = null, children }) {

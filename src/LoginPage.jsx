@@ -5,12 +5,12 @@ import * as Api from './Api';
 
 import { CenteredPage } from './Page';
 import InputField from './Forms';
-import AuthContext, { useAuth } from './Auth';
+import AuthContext, { NotAuthentized } from './Auth';
 
 import * as Button from './Buttons';
 
-function getUserInfo(authGet) {
-  return authGet('/me')
+function getUserInfo(apiKey) {
+  return Api.get('/me', { Authorization: apiKey })
     .then(r => {
       if (r.ok) {
         return r.json();
@@ -59,34 +59,31 @@ function validate(values) {
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const { dispatch } = useContext(AuthContext);
-  const { authGet } = useAuth();
-
-  if (auth.loggedIn) {
-    return <Redirect to="/announcements" />;
-  }
 
   return (
     <CenteredPage title="Log in to reQuest" width="max-w-md">
-      <Formik
-        initialValues={{
-          email: '',
-          password: '',
-        }}
-        validate={validate}
-        onSubmit={values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)}
-      >
-        <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
-          {loginFailed ? (
-            <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
-          ) : null}
-          <InputField name="email" label="Email address" />
-          <InputField type="password" name="password" label="Password" />
-          <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
-            Forgot you password?
-          </Link>
-          <Button.Primary title="Log in" type="submit" />
-        </Form>
-      </Formik>
+      <NotAuthentized or={<Redirect to="/announcements" />}>
+        <Formik
+          initialValues={{
+            email: '',
+            password: '',
+          }}
+          validate={validate}
+          onSubmit={values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)}
+        >
+          <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
+            {loginFailed ? (
+              <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
+            ) : null}
+            <InputField name="email" label="Email address" />
+            <InputField type="password" name="password" label="Password" />
+            <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
+              Forgot you password?
+            </Link>
+            <Button.PrimarySubmit title="Log in" />
+          </Form>
+        </Formik>
+      </NotAuthentized>
     </CenteredPage>
   );
 }

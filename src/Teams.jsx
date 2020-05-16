@@ -72,7 +72,7 @@ function Team({ editLink, team }) {
         )}
       </div>
       <Authorized roles={['Admin']}>
-        <Button.NormalLinked to={editLink} className="pl-2 pr-3">
+        <Button.NormalLinked to={editLink} classNames={['pl-2', 'pr-3']}>
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit
         </Button.NormalLinked>
