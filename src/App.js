@@ -20,8 +20,10 @@ import EditTeam from "./EditTeam.js";
 import NewTeam from "./NewTeam.js";
 import NewAnnouncement from "./NewAnnouncement.js";
 import EditAnnouncement from "./EditAnnouncement.js";
+import { useAuth } from "./Auth.js";
 
 function reducer(state, action) {
+  const { authPost, authGet } = useAuth();
   switch (action.type) {
     case "LOGIN":
       return {
@@ -30,7 +32,7 @@ function reducer(state, action) {
       };
     case "LOGOUT":
       //TODO check that the logout succeeded
-      Api.post("/logout", { api_key: state.user.apiKey }, { Authorization: state.user.apiKey });
+      authPost("/logout", { api_key: state.user.apiKey });
       return {
         loggedIn: false,
         user: null,
@@ -58,15 +60,15 @@ function App() {
 
   useEffect(() => {
     Api.get("/capability")
-      .then((r) => r.json())
-      .then((js) => {
+      .then(r => r.json())
+      .then(js => {
         if (js.includes("request2")) {
           setBackendAvailable(true);
         } else {
           throw Error("Unsupported backend");
         }
       })
-      .catch((e) => {
+      .catch(e => {
         console.log(e);
         setBackendAvailable(false);
       });
@@ -92,9 +94,9 @@ function AppBody(props) {
   switch (props.backendAvailable) {
     case null:
       return (
-        <center>
+        <div className="m-auto">
           <AtomSpinner color="forest-green" />
-        </center>
+        </div>
       );
     case true:
       return (

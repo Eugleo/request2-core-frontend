@@ -1,14 +1,14 @@
 let hostname = "http://localhost:9080";
 
-export async function get(url, data = {}) {
-  return await fetch(hostname + url, { method: "GET", ...data });
+export async function get(url) {
+  return await fetch(hostname + url, { method: "GET" });
 }
 
-export async function post(url, data, headers = {}) {
+async function post(url, data) {
   return await fetch(hostname + url, {
     method: "POST",
-    headers: { "Content-Type": "application/json", ...headers },
-    body: JSON.stringify(data)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
 }
 
@@ -17,14 +17,14 @@ export function urlWithParams(url, params) {
   return `${url}?${strParams.join("&")}`;
 }
 
-export async function del(url, data = {}) {
-  return await fetch(hostname + url, { method: "DELETE", ...data });
+export async function del(url) {
+  return await fetch(hostname + url, { method: "DELETE" });
 }
 
-export async function put(url, data, headers = {}) {
+export async function put(url, data) {
   return await fetch(hostname + url, {
     method: "PUT",
-    headers: { "Content-Type": "application/json", ...headers },
-    body: JSON.stringify(data)
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(data),
   });
 }

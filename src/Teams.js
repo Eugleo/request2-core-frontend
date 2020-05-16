@@ -1,49 +1,46 @@
-import React, { useEffect, useState, useContext } from "react";
-import * as Icon from "react-feather";
-import * as Api from "./Api.js";
-import * as Button from "./Buttons.js";
-import { Link } from "react-router-dom";
-import Pagination, { usePagination } from "./Pagination.js";
+import React, { useEffect, useState } from 'react';
+import * as Icon from 'react-feather';
+import * as Api from './Api.js';
+import * as Button from './Buttons.js';
+import { Link } from 'react-router-dom';
+import Pagination, { usePagination } from './Pagination.js';
 
-import AuthContext, { Authentized, Authorized } from "./Auth.js";
+import AuthContext, { Authentized, Authorized, useAuth } from './Auth.js';
 
-import Page from "./Page.js";
+import Page from './Page.js';
 
 export function Teams() {
   let [teams, setTeams] = useState([]);
-  let { auth } = useContext(AuthContext);
-  let apiKey = auth.user == null ? null : auth.user.apiKey;
+  let { authGet } = useAuth();
 
   const { setTotal, limit, offset, ...pagination } = usePagination();
 
   useEffect(() => {
-    if (auth.loggedIn) {
-      let url = Api.urlWithParams("/teams", { limit, offset });
-      Api.get(url, { headers: { Authorization: apiKey } })
-        .then((r) => {
-          if (r.ok) {
-            return r.json();
-          } else {
-            throw new Error("Unable to retrieve the teams");
-          }
-        })
-        .then((json) => {
-          setTotal(json.total);
-          setTeams(json.values);
-        })
-        .catch(console.log);
-    }
-  }, [auth.loggedIn, apiKey, limit, offset]);
+    let url = Api.urlWithParams('/teams', { limit, offset });
+    authGet(url)
+      .then(r => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw new Error('Unable to retrieve the teams');
+        }
+      })
+      .then(json => {
+        setTotal(json.total);
+        setTeams(json.values);
+      })
+      .catch(console.log);
+  }, [authGet, limit, offset]);
 
   return (
     <Page title="Teams" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
         <div className="flex flex-col">
-          <Authorized roles={["Admin"]}>
+          <Authorized roles={['Admin']}>
             <AddTeamButton />
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
-            {teams.map((team) => (
+            {teams.map(team => (
               <Team key={team._id} editLink={`/teams/${team._id}/edit`} {...team} />
             ))}
           </div>
@@ -75,7 +72,7 @@ function Team(props) {
           <h2 className="text-gray-400 font-medium">{props.name}</h2>
         )}
       </div>
-      <Authorized roles={["Admin"]}>
+      <Authorized roles={['Admin']}>
         <Button.NormalLinked to={props.editLink} className="pl-2 pr-3">
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit

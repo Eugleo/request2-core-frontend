@@ -1,11 +1,11 @@
-import React, { useEffect, useState, useContext } from "react";
+import React, { useEffect, useState } from "react";
 import * as Icon from "react-feather";
 import * as Api from "./Api.js";
 import { AtomSpinner } from "react-epic-spinners";
 import * as Button from "./Buttons.js";
 import { Link, useParams } from "react-router-dom";
 
-import AuthContext, { Authentized, Authorized } from "./Auth.js";
+import { Authentized, Authorized, useAuth } from "./Auth.js";
 import Pagination, { usePagination } from "./Pagination.js";
 
 import Page, { CenteredPage } from "./Page.js";
@@ -13,29 +13,26 @@ import MdRender from "./MdRender.js";
 
 export function Announcements() {
   let [anns, setAnns] = useState([]);
-  let { auth } = useContext(AuthContext);
-  let apiKey = auth.user ? auth.user.apiKey : null;
+  let { authGet } = useAuth();
 
   const { setTotal, limit, offset, ...pagination } = usePagination();
 
   useEffect(() => {
-    if (auth.loggedIn) {
-      let url = Api.urlWithParams("/announcements", { limit, offset });
-      Api.get(url, { headers: { Authorization: apiKey } })
-        .then((r) => {
-          if (r.ok) {
-            return r.json();
-          } else {
-            throw new Error("Unable to retrieve the announcements");
-          }
-        })
-        .then((json) => {
-          setTotal(json.total);
-          setAnns(json.values);
-        })
-        .catch(console.log);
-    }
-  }, [auth.loggedIn, apiKey, limit, offset]);
+    let url = Api.urlWithParams("/announcements", { limit, offset });
+    authGet(url)
+      .then(r => {
+        if (r.ok) {
+          return r.json();
+        } else {
+          throw new Error("Unable to retrieve the announcements");
+        }
+      })
+      .then(json => {
+        setTotal(json.total);
+        setAnns(json.values);
+      })
+      .catch(console.log);
+  }, [authGet, limit, offset]);
 
   return (
     <Page title="Announcements" width="max-w-2xl">
@@ -45,7 +42,7 @@ export function Announcements() {
             <AddAnnButton />
           </Authorized>
           <div className="flex flex-col">
-            {anns.map((ann) => (
+            {anns.map(ann => (
               <AnnouncementCard key={ann._id} id={ann._id} {...ann} />
             ))}
           </div>
@@ -109,20 +106,20 @@ function formatDate(unixTime) {
 export function AnnouncementFromUrl() {
   var { id } = useParams();
   let [ann, setAnn] = useState(null);
-  let { auth } = useContext(AuthContext);
+  let { authGet } = useAuth();
 
   useEffect(() => {
-    Api.get(`/announcements/${id}`, { headers: { Authorization: auth.user.apiKey } })
-      .then((r) => {
+    authGet(`/announcements/${id}`)
+      .then(r => {
         if (r.ok) {
           return r.json();
         } else {
           throw Error(`Can't retreieve announcement with ID ${id}`);
         }
       })
-      .then((js) => setAnn(js.data))
-      .catch((err) => console.log(err));
-  }, [id, auth.user.apiKey]);
+      .then(js => setAnn(js.data))
+      .catch(err => console.log(err));
+  }, [id, authGet]);
 
   if (ann === null) {
     return (
