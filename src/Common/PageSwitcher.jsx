@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
-import { urlWithParams } from './Api';
+import { urlWithParams } from '../Utils/Api';
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);

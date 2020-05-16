@@ -2,23 +2,23 @@ import React, { useState, useEffect, useReducer } from 'react';
 
 import { AtomSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
-import * as Api from './Api';
-import Navbar from './Navbar';
-import Footer from './Footer';
+import Navbar from './Page/Navbar';
+import * as Api from './Utils/Api';
+import Footer from './Page/Footer';
 
-import Page from './Page';
-import AuthContext, { useAuth } from './Auth';
-import NotFound404 from './NotFound404';
+import Page from './Page/Page';
+import AuthContext, { useAuth } from './Utils/Auth';
+import NotFound404 from './Page/NotFound404';
 
-import { AnnouncementFromUrl, Announcements } from './Announcements';
-import { NewRegistrationPage, RegisterPage } from './Registration';
-import LoginPage from './LoginPage';
+import { AnnouncementFromUrl, Announcements } from './Announcement/Announcements';
+import { NewRegistrationPage, RegisterPage } from './Page/Registration';
+import LoginPage from './Page/LoginPage';
 
-import Teams from './Teams';
-import EditTeam from './EditTeam';
-import NewTeam from './NewTeam';
-import NewAnnouncement from './NewAnnouncement';
-import EditAnnouncement from './EditAnnouncement';
+import Teams from './Team/Teams';
+import EditTeam from './Team/EditTeam';
+import NewTeam from './Team/NewTeam';
+import NewAnnouncement from './Announcement/NewAnnouncement';
+import EditAnnouncement from './Announcement/EditAnnouncement';
 
 function reducer(state, action) {
   const { authPost } = useAuth();

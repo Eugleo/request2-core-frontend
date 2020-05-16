@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 
 import { Redirect } from 'react-router-dom';
-import * as Button from './Buttons';
+import * as Button from '../Common/Buttons';
 
-import { useAuth } from './Auth';
+import { useAuth } from '../Utils/Auth';
 
-import Page from './Page';
-import MdRender from './MdRender';
+import Page from '../Page/Page';
+import MdRender from '../Common/MdRender';
 
 // TODO Fields shouldn't be empty (Formik?)
 export default function NewAnnouncement() {

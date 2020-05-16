@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Redirect } from 'react-router-dom';
-import InputField from './Forms';
-import Page from './Page';
+import InputField from '../Common/Forms';
+import Page from '../Page/Page';
 
-import { useAuth } from './Auth';
-import * as Button from './Buttons';
+import { useAuth } from '../Utils/Auth';
+import * as Button from '../Common/Buttons';
 
 function validate(values) {
   const error = {};

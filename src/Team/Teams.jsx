@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { Link } from 'react-router-dom';
-import * as Api from './Api';
-import * as Button from './Buttons';
-import Pagination, { usePagination } from './Pagination';
+import * as Api from '../Utils/Api';
+import * as Button from '../Common/Buttons';
+import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import { Authentized, Authorized, useAuth } from './Auth';
+import { Authentized, Authorized, useAuth } from '../Utils/Auth';
 
-import Page from './Page';
+import Page from '../Page/Page';
 
 export default function Teams() {
   const [teams, setTeams] = useState([]);

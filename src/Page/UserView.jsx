@@ -4,10 +4,10 @@
 import React, { useContext, useState } from 'react';
 
 import * as Icon from 'react-feather';
-import * as Button from './Buttons';
-import AuthContext from './Auth';
+import * as Button from '../Common/Buttons';
+import AuthContext from '../Utils/Auth';
 
-import formatDate from './Date';
+import formatDate from '../Utils/Date';
 
 // TODO Fix accessibility
 export default function UserView() {

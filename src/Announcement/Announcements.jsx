@@ -2,16 +2,16 @@ import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams } from 'react-router-dom';
-import * as Api from './Api';
-import * as Button from './Buttons';
+import * as Api from '../Utils/Api';
+import * as Button from '../Common/Buttons';
 
-import { Authentized, Authorized, useAuth } from './Auth';
-import Pagination, { usePagination } from './Pagination';
+import { Authentized, Authorized, useAuth } from '../Utils/Auth';
+import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import Page, { CenteredPage } from './Page';
-import MdRender from './MdRender';
+import Page, { CenteredPage } from '../Page/Page';
+import MdRender from '../Common/MdRender';
 
-import formatDate from './Date';
+import formatDate from '../Utils/Date';
 
 export function Announcements() {
   const [anns, setAnns] = useState([]);

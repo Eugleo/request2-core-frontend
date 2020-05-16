@@ -2,12 +2,12 @@ import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Formik, Form, Field } from 'formik';
 import { Link, useParams } from 'react-router-dom';
-import * as Api from './Api';
+import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
-import InputField from './Forms';
+import InputField from '../Common/Forms';
 
-import * as Button from './Buttons';
+import * as Button from '../Common/Buttons';
 
 function validate(values) {
   const errors = {};

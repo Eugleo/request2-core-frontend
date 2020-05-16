@@ -1,10 +1,10 @@
 import React from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 
-import { Authentized, NotAuthentized } from './Auth';
+import { Authentized, NotAuthentized } from '../Utils/Auth';
 import UserView from './UserView';
 
-import './styles/tailwind.css';
+import '../styles/tailwind.css';
 
 export default function Navbar() {
   return (
