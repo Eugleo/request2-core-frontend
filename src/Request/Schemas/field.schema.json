@@ -1,0 +1,224 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Form field",
+  "type": "object",
+  "allOf": [
+    {
+      "if": {
+        "properties": { "type": { "enum": ["single-choice"] } }
+      },
+      "then": {
+        "required": ["choices"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "enum": ["multiple-choice"] } }
+      },
+      "then": {
+        "required": ["choices"]
+      }
+    },
+    {
+      "if": {
+        "properties": { "type": { "enum": ["text-with-hints"] } }
+      },
+      "then": {
+        "required": ["choices"]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "enum": ["text-short", "text-long", "text-with-hints"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "minLength": {
+                "type": "number"
+              },
+              "maxLength": {
+                "type": "number"
+              },
+              "matches": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation": { "isType": { "enum": ["number"] } }
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "properties": {
+              "integer": {
+                "type": "boolean"
+              },
+              "moreThan": {
+                "type": "boolean"
+              },
+              "lessThan": {
+                "type": "boolean"
+              },
+              "positive": {
+                "type": "boolean"
+              },
+              "negative": {
+                "type": "boolean"
+              },
+              "min": {
+                "type": "boolean"
+              },
+              "max": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "type": { "enum": ["text-short", "text-long", "text-with-hints"] }
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "errors": {
+              "properties": {
+                "minLength": {
+                  "type": "string"
+                },
+                "maxLength": {
+                  "type": "string"
+                },
+                "matches": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "validation": { "isType": { "enum": ["number"] } }
+        }
+      },
+      "then": {
+        "properties": {
+          "validation": {
+            "errors": {
+              "properties": {
+                "integer": {
+                  "type": "string"
+                },
+                "moreThan": {
+                  "type": "string"
+                },
+                "lessThan": {
+                  "type": "string"
+                },
+                "positive": {
+                  "type": "string"
+                },
+                "negative": {
+                  "type": "string"
+                },
+                "min": {
+                  "type": "string"
+                },
+                "max": {
+                  "type": "string"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  ],
+  "required": ["type", "name"],
+  "properties": {
+    "include": {
+      "type": "string"
+    },
+    "name": {
+      "type": "string"
+    },
+    "type": {
+      "type": "string",
+      "enum": [
+        "single-choice",
+        "multiple-choice",
+        "text-short",
+        "text-long",
+        "text-with-hints",
+        "image"
+      ]
+    },
+    "choices": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "description": {
+      "type": "string"
+    },
+    "validation": {
+      "type": "object",
+      "properties": {
+        "errors": {
+          "type": "object",
+          "properties": {
+            "required": {
+              "type": "string"
+            },
+            "default": {
+              "type": "string"
+            },
+            "oneOf": {
+              "type": "string"
+            },
+            "notOneOf": {
+              "type": "string"
+            },
+            "isType": {
+              "type": "string"
+            }
+          }
+        },
+        "default": {},
+        "oneOf": {
+          "type": "array",
+          "minItems": 1
+        },
+        "notOneOf": {
+          "type": "array",
+          "minItems": 1
+        },
+        "isType": {
+          "type": "string"
+        }
+      }
+    },
+    "required": {
+      "type": "boolean"
+    }
+  }
+}

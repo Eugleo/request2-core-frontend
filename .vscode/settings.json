@@ -1,0 +1,12 @@
+{
+  "json.schemas": [
+    {
+      "fileMatch": ["*.rcfg.json"],
+      "url": "./src/Request/Schemas/request.schema.json"
+    },
+    {
+      "fileMatch": ["field-library.json"],
+      "url": "./src/Request/Schemas/field-library.schema.json"
+    }
+  ]
+}
