@@ -5,23 +5,18 @@
   "allOf": [
     {
       "if": {
-        "properties": { "type": { "enum": ["single-choice"] } }
+        "not": { "required": ["include"] }
       },
       "then": {
-        "required": ["choices"]
+        "required": ["type", "name"]
       }
     },
     {
       "if": {
-        "properties": { "type": { "enum": ["multiple-choice"] } }
-      },
-      "then": {
-        "required": ["choices"]
-      }
-    },
-    {
-      "if": {
-        "properties": { "type": { "enum": ["text-with-hints"] } }
+        "required": ["type"],
+        "properties": {
+          "type": { "enum": ["single-choice", "multiple-choice", "text-with-hints"] }
+        }
       },
       "then": {
         "required": ["choices"]
@@ -45,6 +40,19 @@
               },
               "matches": {
                 "type": "string"
+              },
+              "errors": {
+                "properties": {
+                  "minLength": {
+                    "type": "string"
+                  },
+                  "maxLength": {
+                    "type": "string"
+                  },
+                  "matches": {
+                    "type": "string"
+                  }
+                }
               }
             }
           }
@@ -81,69 +89,30 @@
               },
               "max": {
                 "type": "boolean"
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "type": { "enum": ["text-short", "text-long", "text-with-hints"] }
-        }
-      },
-      "then": {
-        "properties": {
-          "validation": {
-            "errors": {
-              "properties": {
-                "minLength": {
-                  "type": "string"
-                },
-                "maxLength": {
-                  "type": "string"
-                },
-                "matches": {
-                  "type": "string"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "if": {
-        "properties": {
-          "validation": { "isType": { "enum": ["number"] } }
-        }
-      },
-      "then": {
-        "properties": {
-          "validation": {
-            "errors": {
-              "properties": {
-                "integer": {
-                  "type": "string"
-                },
-                "moreThan": {
-                  "type": "string"
-                },
-                "lessThan": {
-                  "type": "string"
-                },
-                "positive": {
-                  "type": "string"
-                },
-                "negative": {
-                  "type": "string"
-                },
-                "min": {
-                  "type": "string"
-                },
-                "max": {
-                  "type": "string"
+              },
+              "errors": {
+                "properties": {
+                  "integer": {
+                    "type": "string"
+                  },
+                  "moreThan": {
+                    "type": "string"
+                  },
+                  "lessThan": {
+                    "type": "string"
+                  },
+                  "positive": {
+                    "type": "string"
+                  },
+                  "negative": {
+                    "type": "string"
+                  },
+                  "min": {
+                    "type": "string"
+                  },
+                  "max": {
+                    "type": "string"
+                  }
                 }
               }
             }
@@ -152,10 +121,11 @@
       }
     }
   ],
-  "required": ["type", "name"],
+  "additionalProperties": false,
   "properties": {
     "include": {
-      "type": "string"
+      "type": "string",
+      "pattern": "^@[a-z0-9?!:/=%*^~@-]+$"
     },
     "name": {
       "type": "string"
@@ -173,6 +143,7 @@
     },
     "choices": {
       "type": "array",
+      "minItems": 2,
       "items": {
         "type": "string"
       }
@@ -180,42 +151,8 @@
     "description": {
       "type": "string"
     },
-    "validation": {
-      "type": "object",
-      "properties": {
-        "errors": {
-          "type": "object",
-          "properties": {
-            "required": {
-              "type": "string"
-            },
-            "default": {
-              "type": "string"
-            },
-            "oneOf": {
-              "type": "string"
-            },
-            "notOneOf": {
-              "type": "string"
-            },
-            "isType": {
-              "type": "string"
-            }
-          }
-        },
-        "default": {},
-        "oneOf": {
-          "type": "array",
-          "minItems": 1
-        },
-        "notOneOf": {
-          "type": "array",
-          "minItems": 1
-        },
-        "isType": {
-          "type": "string"
-        }
-      }
+    "hint": {
+      "type": "string"
     },
     "required": {
       "type": "boolean"
