@@ -32,7 +32,7 @@ function makeField(preField) {
     case 'text-long':
       return <LongText name={f.name} description={f.description} hint={f.hint} key={f.name} />;
     case 'text-with-hints':
-      return <TextWithHints hints={f.choices} key={f.name} />;
+      return <TextWithHints name={f.name} hints={f.choices} key={f.name} />;
     case 'single-choice':
       return (
         <SingleChoice

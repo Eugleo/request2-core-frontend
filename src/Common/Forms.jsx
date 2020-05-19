@@ -1,6 +1,8 @@
 import React, { useEffect } from 'react';
 import { useField } from 'formik';
 import c from 'classnames';
+import { components } from 'react-select';
+import Creatable from 'react-select/creatable';
 
 export function InputField({ label, initValue = '', name, ...props }) {
   const [field, meta, helpers] = useField({ name, ...props });
@@ -16,7 +18,7 @@ export function InputField({ label, initValue = '', name, ...props }) {
         {...field}
         {...props}
         className={
-          'border shadow-inner text-sm border-gray-300 text-gray-900 rounded-md py-1 px-2 ' +
+          'border text-sm border-gray-300 text-gray-900 rounded-md py-1 px-2 ' +
           'focus:outline-none focus:shadow-outline-blue focus:border-blue-600 focus:z-10 font-normal'
         }
       />
@@ -29,7 +31,7 @@ function TextField({ name, description, type = undefined, children, hint }) {
 
   const classes = [
     'border',
-    'shadow-inner',
+    'shadow-sm',
     'text-sm',
     'border-gray-300',
     'text-gray-900',
@@ -118,8 +120,68 @@ export function LongText({ name, description, hint }) {
   );
 }
 
-export function TextWithHints({ hints }) {
-  return <Field>Text With Hints</Field>;
+export function TextWithHints({ name, description, hints }) {
+  const [field, meta, helpers] = useField({ name, type: 'text' });
+
+  const classes = [
+    'border',
+    'shadow-sm',
+    'border-gray-300',
+    'text-gray-900',
+    'rounded-md',
+    'py-1',
+    'px-2',
+    'focus:outline-none',
+    'focus:shadow-outline-blue',
+    'focus:border-blue-600',
+    'focus:z-10',
+    'font-normal',
+    'flex',
+    'flex-row',
+    'text-gray-300',
+  ];
+
+  const sortedHints = hints.sort();
+
+  const Placeholder = ({ children, ...props }) => {
+    return (
+      <components.Placeholder {...props} className="text-gray-500">
+        {children}
+      </components.Placeholder>
+    );
+  };
+
+  const Control = ({ children, ...props }) => {
+    return (
+      <components.Control {...props} className={c(classes)}>
+        {children}
+      </components.Control>
+    );
+  };
+
+  return (
+    <Field touched={meta.touched} error={meta.error}>
+      <FieldLabel text={name} />
+      <Creatable
+        name={name}
+        placeholder="Select or type..."
+        components={{ Control, Placeholder }}
+        styles={{
+          control: () => ({}),
+          placeholder: () => ({ position: 'absolute', paddingLeft: '2px' }),
+          singleValue: (base, state) => ({
+            ...base,
+            color: state.selectProps.menuIsOpen ? '#8795A1' : base.color,
+          }),
+        }}
+        onBlur={field.onBlur}
+        onChange={value => helpers.setValue(value)}
+        isClearable
+        options={sortedHints.map(h => ({ value: h, label: h }))}
+      />
+      <Description>{description}</Description>
+    </Field>
+  );
 }
 
 export function Image() {
