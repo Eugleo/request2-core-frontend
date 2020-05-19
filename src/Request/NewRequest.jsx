@@ -113,12 +113,14 @@ export default function NewRequestPage() {
             {schema.sections
               .map(makeSection)
               .concat(
-                <div className="flex flex-row">
+                <div className="flex flex-row" key="submit">
                   <PrimarySubmit>Submit a new request</PrimarySubmit>
                 </div>
               )
               .map(s => [s])
-              .reduce((acc, s) => acc.concat(<div className="border-t-2 bg-gray-400 w-full" />, s))}
+              .reduce((acc, s, ix) =>
+                acc.concat(<div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />, s)
+              )}
           </Form>
         </Formik>
       </div>

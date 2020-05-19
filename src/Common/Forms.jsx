@@ -20,7 +20,6 @@ export function InputField({ label, initValue = '', name, ...props }) {
           'focus:outline-none focus:shadow-outline-blue focus:border-blue-600 focus:z-10 font-normal'
         }
       />
-      <ErrorMessage touched={meta.touched} error={meta.error} />
     </div>
   );
 }
@@ -45,9 +44,8 @@ function TextField({ name, description, type = undefined, children, hint }) {
   ];
 
   return (
-    <Field>
+    <Field touched={meta.touched} error={meta.error}>
       <FieldLabel text={name} />
-      <ErrorMessage touched={meta.touched} error={meta.error} />
       {children(field, classes)}
       <Description>{description}</Description>
     </Field>
@@ -58,9 +56,8 @@ export function MultipleChoice({ name, description, choices }) {
   const [field, meta] = useField({ name, type: 'checkbox' });
 
   return (
-    <Field>
+    <Field touched={meta.touched} error={meta.error}>
       <FieldLabel text={name} />
-      <ErrorMessage touched={meta.touched} error={meta.error} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -84,9 +81,8 @@ export function SingleChoice({ name, description, hint, choices }) {
   const [field, meta] = useField({ name, type: 'radio' });
 
   return (
-    <Field>
+    <Field touched={meta.touched} error={meta.error}>
       <FieldLabel text={name} />
-      <ErrorMessage touched={meta.touched} error={meta.error} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -158,8 +154,17 @@ function ChoiceLabel({ htmlFor, children }) {
   );
 }
 
-function Field({ children }) {
-  return <div className="flex flex-col w-full">{children}</div>;
+function Field({ touched, error, children }) {
+  const classNames = ['flex', 'flex-col', 'w-full', 'rounded-md', 'px-4', 'py-2'];
+  return (
+    <div className={c('flex', 'flex-row', error && touched && 'bg-yellow-100')}>
+      <div className={c('w-1', 'bg-transparent', error && touched && 'bg-yellow-500')} />
+      <div className="flex flex-col w-full">
+        <div className={c(classNames)}>{children}</div>
+        {error && touched && <span className="px-4 py-2 text-yellow-800">{error}</span>}
+      </div>
+    </div>
+  );
 }
 
 function FieldLabel({ text }) {
