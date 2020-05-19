@@ -4,6 +4,10 @@ import c from 'classnames';
 import { components } from 'react-select';
 import Creatable from 'react-select/creatable';
 
+import Tooltip from 'react-tooltip';
+
+import * as Icon from 'react-feather';
+
 export function InputField({ label, initValue = '', name, ...props }) {
   const [field, meta, helpers] = useField({ name, ...props });
 
@@ -18,7 +22,7 @@ export function InputField({ label, initValue = '', name, ...props }) {
         {...field}
         {...props}
         className={
-          'border text-sm border-gray-300 text-gray-900 rounded-md py-1 px-2 ' +
+          'border text-md border-gray-300 text-gray-900 rounded-md py-1 px-2 ' +
           'focus:outline-none focus:shadow-outline-blue focus:border-blue-600 focus:z-10 font-normal'
         }
       />
@@ -32,7 +36,7 @@ function TextField({ name, description, type = undefined, children, hint }) {
   const classes = [
     'border',
     'shadow-sm',
-    'text-sm',
+    'text-md',
     'border-gray-300',
     'text-gray-900',
     'rounded-md',
@@ -47,19 +51,19 @@ function TextField({ name, description, type = undefined, children, hint }) {
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldLabel text={name} />
+      <FieldHeader hint={hint} label={name} />
       {children(field, classes)}
       <Description>{description}</Description>
     </Field>
   );
 }
 
-export function MultipleChoice({ name, description, choices }) {
+export function MultipleChoice({ name, description, choices, hint }) {
   const [field, meta] = useField({ name, type: 'checkbox' });
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldLabel text={name} />
+      <FieldHeader hint={hint} label={name} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -84,7 +88,7 @@ export function SingleChoice({ name, description, hint, choices }) {
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldLabel text={name} />
+      <FieldHeader hint={hint} label={name} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -120,7 +124,7 @@ export function LongText({ name, description, hint }) {
   );
 }
 
-export function TextWithHints({ name, description, hints }) {
+export function TextWithHints({ name, description, hints, hint }) {
   const [field, meta, helpers] = useField({ name, type: 'text' });
 
   const classes = [
@@ -161,7 +165,7 @@ export function TextWithHints({ name, description, hints }) {
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldLabel text={name} />
+      <FieldHeader hint={hint} label={name} />
       <Creatable
         name={name}
         placeholder="Select or type..."
@@ -235,20 +239,32 @@ function Field({ touched, error, children }) {
   );
 }
 
+function Description({ children }) {
+  return children ? <p className="font-normal mt-2 text-sm text-gray-500">{children}</p> : null;
+}
+
+function FieldHeader({ hint, label }) {
+  return (
+    <div className="flex flex-row items-center mb-1">
+      <FieldLabel text={label} />
+      <Hint hint={hint} />
+    </div>
+  );
+}
+
 function FieldLabel({ text }) {
   return (
-    <label htmlFor={text} className="font-medium text-gray-800 mb-1">
+    <label htmlFor={text} className="font-medium text-gray-800 mr-2">
       {text}
     </label>
   );
 }
 
-function ErrorMessage({ touched, error }) {
-  return touched && error ? <div className="mt-1 text-red-600 text-xs">{error}</div> : null;
+function Hint({ hint }) {
+  return hint ? (
+    <>
+      <Icon.HelpCircle data-tip={hint} className="h-5 text-gray-500" />
+      <Tooltip className="bg-gray-600" />
+    </>
+  ) : null;
 }
-
-function Description({ children }) {
-  return children ? <p className="font-normal mt-2 text-sm text-gray-500">{children}</p> : null;
-}
-
-function Hint() {}
