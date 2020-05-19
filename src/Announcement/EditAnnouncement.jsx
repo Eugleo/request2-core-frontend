@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { Formik, Form } from 'formik';
+// import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import InputField from '../Common/Forms';
+// import {InputField} from '../Common/Forms';
 import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
@@ -9,19 +9,19 @@ import * as Button from '../Common/Buttons';
 
 import MdRender from '../Common/MdRender';
 
-function validate(values) {
-  const error = {};
+// function validate(values) {
+//   const error = {};
 
-  if (!values.title) {
-    error.title = 'This field is required';
-  }
+//   if (!values.title) {
+//     error.title = 'This field is required';
+//   }
 
-  if (!values.body) {
-    error.body = 'This field is required';
-  }
+//   if (!values.body) {
+//     error.body = 'This field is required';
+//   }
 
-  return error;
-}
+//   return error;
+// }
 
 // TODO Implement using Formik
 export default function EditAnnouncement() {

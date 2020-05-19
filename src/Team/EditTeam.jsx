@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import InputField from '../Common/Forms';
+import { InputField } from '../Common/Forms';
 import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';

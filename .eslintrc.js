@@ -25,7 +25,7 @@ module.exports = {
   plugins: ['react', 'prettier'],
   rules: {
     'no-underscore-dangle': 0,
-    'react/jsx-props-no-spreading': [1, { exceptions: ['input'] }],
+    'react/jsx-props-no-spreading': [1, { exceptions: ['input', 'textarea'] }],
     'react/prop-types': 0,
     'react/no-unescaped-entities': 0,
     'prettier/prettier': 'error',

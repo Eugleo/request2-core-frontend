@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
-import InputField from '../Common/Forms';
+import { InputField } from '../Common/Forms';
 
 import * as Button from '../Common/Buttons';
 

@@ -5,11 +5,13 @@ const AuthContext = React.createContext({ auth: {}, dispatch: null });
 const hostname = 'http://localhost:9080';
 export default AuthContext;
 
+// TODO Save apiKey into localStorage
 export function useAuth() {
   const { auth } = useContext(AuthContext);
 
   const headers = { Authorization: auth.user.apiKey };
 
+  // TODO USe useCallback
   function withUser(func) {
     if (!auth.loggedIn) {
       return () => Promise.reject(new Error("User isn't logged in"));
@@ -45,7 +47,13 @@ export function useAuth() {
     );
   }
 
-  return { authGet, authPost, authDel, authPut, auth };
+  return {
+    authGet,
+    authPost,
+    authDel,
+    authPut,
+    auth,
+  };
 }
 
 export function Authentized({ children, or }) {

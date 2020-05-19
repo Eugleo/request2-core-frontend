@@ -19,9 +19,9 @@ import EditTeam from './Team/EditTeam';
 import NewTeam from './Team/NewTeam';
 import NewAnnouncement from './Announcement/NewAnnouncement';
 import EditAnnouncement from './Announcement/EditAnnouncement';
+import NewRequestPage from './Request/NewRequest';
 
 function reducer(state, action) {
-  const { authPost } = useAuth();
   switch (action.type) {
     case 'LOGIN':
       return {
@@ -30,7 +30,7 @@ function reducer(state, action) {
       };
     case 'LOGOUT':
       // TODO check that the logout succeeded
-      authPost('/logout', { api_key: state.user.apiKey });
+      Api.post('/logout', { Authorization: state.user.apiKey });
       return {
         loggedIn: false,
         user: null,
@@ -99,6 +99,9 @@ function AppBody(props) {
     case true:
       return (
         <Switch>
+          <Route path="/requests/new">
+            <NewRequestPage />
+          </Route>
           <Route path="/announcements/new">
             <NewAnnouncement />
           </Route>
@@ -139,7 +142,7 @@ function AppBody(props) {
       );
     default:
       return (
-        <Page title="Error" width="lg">
+        <Page title="Error" width="max-w-lg">
           <p className="text-gray-800">
             Something seems to be wrong with the server. Try again later.
           </p>

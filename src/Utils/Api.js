@@ -4,10 +4,10 @@ export function get(url, headers = {}) {
   return fetch(hostname + url, { method: 'GET', headers });
 }
 
-export function post(url, data) {
+export function post(url, data, headers = {}) {
   return fetch(hostname + url, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: { 'Content-Type': 'application/json', ...headers },
     body: JSON.stringify(data),
   });
 }

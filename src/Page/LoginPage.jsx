@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
-import InputField from '../Common/Forms';
+import { InputField } from '../Common/Forms';
 import AuthContext, { NotAuthentized } from '../Utils/Auth';
 
 import * as Button from '../Common/Buttons';
