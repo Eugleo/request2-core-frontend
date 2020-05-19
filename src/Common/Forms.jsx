@@ -124,9 +124,11 @@ export function TextWithHints({ hints }) {
 
 export function Image() {
   return (
-    <div className="flex flex-col justify-center  rounded-md shadow-inner shadow-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
-      Drop thee images here
-    </div>
+    <Field>
+      <div className="flex flex-col justify-center  rounded-md shadow-inner shadow-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
+        Drop thee images here
+      </div>
+    </Field>
   );
 }
 
@@ -143,12 +145,16 @@ export function Section({ title, children, description }) {
 }
 
 function ChoiceField({ children }) {
-  return <div className="flex flex-row items-center">{children}</div>;
+  return (
+    <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:bg-gray-200">
+      {children}
+    </div>
+  );
 }
 
 function ChoiceLabel({ htmlFor, children }) {
   return (
-    <label htmlFor={htmlFor} className="ml-2 text-gray-800">
+    <label htmlFor={htmlFor} className="w-full ml-2 text-gray-800">
       {children}
     </label>
   );
