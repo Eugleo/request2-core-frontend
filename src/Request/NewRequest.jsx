@@ -14,6 +14,7 @@ import {
 } from '../Common/Forms';
 
 import validateSMR from './SmallMoleculeRequest';
+import { PrimarySubmit } from '../Common/Buttons';
 
 // TODO Report errors on incorrect include
 function resolveInclude(preField) {
@@ -108,9 +109,16 @@ export default function NewRequestPage() {
           onSubmit={console.log}
           validateOnChange
         >
-          <Form className="flex flex-col">
-            {schema.sections.map(makeSection)}
-            <button type="submit">Submit</button>
+          <Form className="grid grid-cols-1 gap-12">
+            {schema.sections
+              .map(makeSection)
+              .concat(
+                <div className="flex flex-row">
+                  <PrimarySubmit>Submit a new request</PrimarySubmit>
+                </div>
+              )
+              .map(s => [s])
+              .reduce((acc, s) => acc.concat(<div className="border-t-2 bg-gray-400 w-full" />, s))}
           </Form>
         </Formik>
       </div>

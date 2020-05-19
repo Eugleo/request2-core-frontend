@@ -117,27 +117,31 @@ export function ShortText({ name, description, hint }) {
 export function LongText({ name, description, hint }) {
   return (
     <TextField name={name} description={description} hint={hint}>
-      {(field, classes) => <textarea {...field} className={c(classes)} />}
+      {(field, classes) => <textarea {...field} className={c(classes, 'h-20')} />}
     </TextField>
   );
 }
 
 export function TextWithHints({ hints }) {
-  return <div>Text With Hints</div>;
+  return <Field>Text With Hints</Field>;
 }
 
 export function Image() {
-  return <div className="bg">Image uploader</div>;
+  return (
+    <div className="flex flex-col justify-center  rounded-md shadow-inner shadow-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
+      Drop thee images here
+    </div>
+  );
 }
 
 export function Section({ title, children, description }) {
   return (
-    <div className="grid grid-cols-4 gap-8 mb-12 border-b-2 pb-6">
+    <div className="grid grid-cols-4 gap-8">
       <div>
         <h2 className="text-xl text-gray-900 font-bold">{title}</h2>
         <Description>{description}</Description>
       </div>
-      <div className="col-span-3 flex flex-col">{children}</div>
+      <div className="col-span-3 grid grid-cols-1 gap-4">{children}</div>
     </div>
   );
 }
@@ -155,7 +159,7 @@ function ChoiceLabel({ htmlFor, children }) {
 }
 
 function Field({ children }) {
-  return <div className="flex flex-col w-full mb-4">{children}</div>;
+  return <div className="flex flex-col w-full">{children}</div>;
 }
 
 function FieldLabel({ text }) {
