@@ -15,6 +15,7 @@ import {
 
 import validateSMR from './SmallMoleculeRequest';
 import { PrimarySubmit } from '../Common/Buttons';
+import { useAuth } from '../Utils/Auth';
 
 // TODO Report errors on incorrect include
 function resolveInclude(preField) {
@@ -89,6 +90,7 @@ function getValidate(fields) {
 
 // TODO Check that the field names are unique
 export default function NewRequestPage() {
+  const { auth } = useAuth();
   const schema = smallMolecule;
   const fields = getFields(schema);
 
@@ -106,7 +108,7 @@ export default function NewRequestPage() {
         <Formik
           initialValues={initialValues}
           validate={validateSMR(fields, getValidate)}
-          onSubmit={console.log}
+          onSubmit={values => submit(values, auth.userId, auth.team._id)}
           validateOnChange
         >
           <Form className="grid grid-cols-1 gap-12">
@@ -126,4 +128,25 @@ export default function NewRequestPage() {
       </div>
     </Page>
   );
+}
+
+function submit(properties, authorId, teamId) {
+  return {
+    properties: Object.entries(properties).map(([name, value]) => ({
+      authorId,
+      propertyType: name,
+      propertyData: value,
+      dateAdded: Date.now() / 1000,
+      active: true,
+    })),
+    request: {
+      authorId,
+      teamId,
+      status: 'Requested',
+      // TODO Generalize to other types of requests
+      requestType: 'small-molecule',
+      dateCreated: Date.now() / 1000,
+      active: true,
+    },
+  };
 }
