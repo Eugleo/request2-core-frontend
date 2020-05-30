@@ -1,4 +1,4 @@
-import React, { useContext } from 'react';
+import React, { useContext, useCallback } from 'react';
 import { Redirect } from 'react-router-dom';
 
 const AuthContext = React.createContext({ auth: {}, dispatch: null });
@@ -11,41 +11,55 @@ export function useAuth() {
 
   const headers = { Authorization: auth.user.apiKey };
 
-  // TODO USe useCallback
-  function withUser(func) {
-    if (!auth.loggedIn) {
-      return () => Promise.reject(new Error("User isn't logged in"));
-    }
-    return func;
-  }
+  const withUser = useCallback(
+    func => {
+      if (!auth.loggedIn) {
+        return () => Promise.reject(new Error("User isn't logged in"));
+      }
+      return func;
+    },
+    [auth.loggedIn]
+  );
 
-  function authGet(url) {
-    return withUser(fetch(hostname + url, { method: 'GET', headers }));
-  }
+  const authGet = useCallback(
+    url => {
+      return withUser(fetch(hostname + url, { method: 'GET', headers }));
+    },
+    [headers]
+  );
 
-  function authPost(url, data) {
-    return withUser(
-      fetch(hostname + url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify(data),
-      })
-    );
-  }
+  const authPost = useCallback(
+    (url, data) => {
+      return withUser(
+        fetch(hostname + url, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify(data),
+        })
+      );
+    },
+    [headers]
+  );
 
-  function authDel(url) {
-    return withUser(fetch(hostname + url, { method: 'DELETE', headers }));
-  }
+  const authDel = useCallback(
+    url => {
+      return withUser(fetch(hostname + url, { method: 'DELETE', headers }));
+    },
+    [headers]
+  );
 
-  function authPut(url, data) {
-    return withUser(
-      fetch(hostname + url, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json', ...headers },
-        body: JSON.stringify(data),
-      })
-    );
-  }
+  const authPut = useCallback(
+    (url, data) => {
+      return withUser(
+        fetch(hostname + url, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json', ...headers },
+          body: JSON.stringify(data),
+        })
+      );
+    },
+    [headers]
+  );
 
   return {
     authGet,
