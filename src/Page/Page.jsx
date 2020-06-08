@@ -2,7 +2,7 @@ import React from 'react';
 import c from 'classnames';
 
 export default function Page({ width = null, title, children }) {
-  const classes = [width || 'w-full', 'px-6', 'flex-grow', 'mx-auto'];
+  const classes = [width, 'w-full', 'px-6', 'flex-grow', 'mx-auto'];
 
   return (
     <div className={c(classes)}>
