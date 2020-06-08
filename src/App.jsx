@@ -43,7 +43,7 @@ function reducer(state, action) {
 function App() {
   const initialAuth = {
     loggedIn: true,
-    userID: 1,
+    userId: 1,
     user: {
       apiKey: 'QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4',
       name: 'Evžen',
