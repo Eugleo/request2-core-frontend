@@ -88,48 +88,6 @@ function getValidate(fields) {
   };
 }
 
-// TODO Check that the field names are unique
-export default function NewRequestPage() {
-  const { auth } = useAuth();
-  const schema = smallMolecule;
-  const fields = getFields(schema);
-
-  const initialValues = fields.reduce(
-    (acc, { name, type }) => ({
-      ...acc,
-      [name]: type === 'multiple-choice' ? [] : '',
-    }),
-    {}
-  );
-
-  return (
-    <Page title={`New ${schema.title}`} width="max-w-4xl">
-      <div className="bg-white  rounded-lg shadow-md mb-8 p-8">
-        <Formik
-          initialValues={initialValues}
-          validate={validateSMR(fields, getValidate)}
-          onSubmit={values => submit(values, auth.userId, auth.team._id)}
-          validateOnChange
-        >
-          <Form className="grid grid-cols-1 gap-12">
-            {schema.sections
-              .map(makeSection)
-              .concat(
-                <div className="flex flex-row" key="submit">
-                  <PrimarySubmit>Submit a new request</PrimarySubmit>
-                </div>
-              )
-              .map(s => [s])
-              .reduce((acc, s, ix) =>
-                acc.concat(<div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />, s)
-              )}
-          </Form>
-        </Formik>
-      </div>
-    </Page>
-  );
-}
-
 function submit(properties, authorId, teamId) {
   return {
     properties: Object.entries(properties).map(([name, value]) => ({
@@ -149,4 +107,48 @@ function submit(properties, authorId, teamId) {
       active: true,
     },
   };
+}
+
+// TODO Check that the field names are unique
+export default function NewRequestPage() {
+  const { auth } = useAuth();
+  const schema = smallMolecule;
+  const fields = getFields(schema);
+
+  const initialValues = fields.reduce(
+    (acc, { name, type }) => ({
+      ...acc,
+      [name]: type === 'multiple-choice' ? [] : '',
+    }),
+    {}
+  );
+
+  console.log(auth);
+
+  return (
+    <Page title={`New ${schema.title}`} width="max-w-4xl">
+      <div className="bg-white  rounded-lg shadow-md mb-8 p-8">
+        <Formik
+          initialValues={initialValues}
+          validate={validateSMR(fields, getValidate)}
+          onSubmit={values => submit(values, auth.userId, auth.user.team._id)}
+          validateOnChange
+        >
+          <Form className="grid grid-cols-1 gap-12">
+            {schema.sections
+              .map(makeSection)
+              .concat(
+                <div className="flex flex-row" key="submit">
+                  <PrimarySubmit>Submit a new request</PrimarySubmit>
+                </div>
+              )
+              .map(s => [s])
+              .reduce((acc, s, ix) =>
+                acc.concat(<div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />, s)
+              )}
+          </Form>
+        </Formik>
+      </div>
+    </Page>
+  );
 }

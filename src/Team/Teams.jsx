@@ -13,7 +13,7 @@ export default function Teams() {
   const [teams, setTeams] = useState([]);
   const { authGet } = useAuth();
 
-  const { setTotal, limit, offset, currentPage, pages } = usePagination();
+  const { setTotal, limit, offset, currentPage, pages } = usePagination(3);
 
   useEffect(() => {
     const url = Api.urlWithParams('/teams', { limit, offset });

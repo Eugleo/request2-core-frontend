@@ -1,6 +1,8 @@
 import React from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 
+import * as Icon from 'react-feather';
+
 import { Authentized, NotAuthentized } from '../Utils/Auth';
 import UserView from './UserView';
 
@@ -18,6 +20,11 @@ export default function Navbar() {
             <Authentized or="/login">
               <NavLink to="/announcements">Announcements</NavLink>
               <NavLink to="/teams">Teams</NavLink>
+              <NavLink to="/requests/new">
+                <span className="flex flex-row items-center">
+                  <Icon.PlusCircle className="text-gray-700 mr-2 h-5 w-5" /> New Request
+                </span>
+              </NavLink>
             </Authentized>
           </div>
           <div className="flex items-center justify-right">
