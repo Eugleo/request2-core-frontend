@@ -9,11 +9,11 @@ import Tooltip from 'react-tooltip';
 import * as Icon from 'react-feather';
 
 export function InputField({ label, initValue = '', name, ...props }) {
-  const [field, meta, helpers] = useField({ name, ...props });
+  const [field, , helpers] = useField({ name, ...props });
 
   useEffect(() => {
     helpers.setValue(initValue);
-  }, [initValue]);
+  }, [helpers, initValue]);
 
   return (
     <div className="flex flex-col mb-6 w-full">

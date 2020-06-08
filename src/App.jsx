@@ -7,7 +7,7 @@ import * as Api from './Utils/Api';
 import Footer from './Page/Footer';
 
 import Page from './Page/Page';
-import AuthContext, { useAuth } from './Utils/Auth';
+import AuthContext from './Utils/Auth';
 import NotFound404 from './Page/NotFound404';
 
 import { AnnouncementFromUrl, Announcements } from './Announcement/Announcements';
@@ -48,7 +48,7 @@ function App() {
       apiKey: 'QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4',
       name: 'Evžen',
       roles: ['Admin', 'Client', 'Operator'],
-      team: { name: 'Evženův supertým' },
+      team: { name: 'Evženův supertým', _id: 2 },
       created: 115151,
     },
   };
