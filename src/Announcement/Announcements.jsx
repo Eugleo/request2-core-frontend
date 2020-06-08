@@ -17,7 +17,7 @@ export function Announcements() {
   const [anns, setAnns] = useState([]);
   const { authGet } = useAuth();
 
-  const { setTotal, limit, offset, currentPage, pages } = usePagination();
+  const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
 
   useEffect(() => {
     const url = Api.urlWithParams('/announcements', { limit, offset });
@@ -33,7 +33,7 @@ export function Announcements() {
         setAnns(json.values);
       })
       .catch(console.log);
-  }, [authGet, limit, offset]);
+  }, [authGet, setTotal, limit, offset]);
 
   return (
     <Page title="Announcements" width="max-w-2xl">

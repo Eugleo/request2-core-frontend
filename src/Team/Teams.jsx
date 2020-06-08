@@ -29,7 +29,7 @@ export default function Teams() {
         setTeams(json.values);
       })
       .catch(console.log);
-  }, [authGet, limit, offset]);
+  }, [authGet, setTotal, limit, offset]);
 
   return (
     <Page title="Teams" width="max-w-2xl">
