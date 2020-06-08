@@ -6,9 +6,9 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'airbnb',
-    'plugin:react/recommended',
     'prettier/react',
     'plugin:prettier/recommended',
+    'plugin:react/recommended',
   ],
   parser: 'babel-eslint',
   globals: {
