@@ -8,29 +8,7 @@ import Tooltip from 'react-tooltip';
 
 import * as Icon from 'react-feather';
 
-export function InputField({ label, initValue = '', name, ...props }) {
-  const [field, , helpers] = useField({ name, ...props });
-
-  useEffect(() => {
-    helpers.setValue(initValue);
-  }, [helpers, initValue]);
-
-  return (
-    <div className="flex flex-col mb-6 w-full">
-      <FieldLabel text={name} />
-      <input
-        {...field}
-        {...props}
-        className={
-          'border text-md border-gray-300 text-gray-900 rounded-md py-1 px-2 ' +
-          'focus:outline-none focus:shadow-outline-blue focus:border-blue-600 focus:z-10 font-normal'
-        }
-      />
-    </div>
-  );
-}
-
-function TextField({ name, description, type = undefined, children, hint }) {
+function TextField({ name, description, label = undefined, type = undefined, children, hint }) {
   const [field, meta] = useField({ name, type });
 
   const classes = [
@@ -51,7 +29,7 @@ function TextField({ name, description, type = undefined, children, hint }) {
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldHeader hint={hint} label={name} />
+      <FieldHeader hint={hint} label={label || name} />
       {children(field, classes)}
       <Description>{description}</Description>
     </Field>
@@ -108,17 +86,24 @@ export function SingleChoice({ name, description, hint, choices }) {
   );
 }
 
-export function ShortText({ name, description, hint }) {
+export function ShortText({
+  name,
+  description = null,
+  hint = null,
+  label = undefined,
+  type = 'text',
+  ...props
+}) {
   return (
-    <TextField name={name} description={description} hint={hint} type="text">
-      {(field, classes) => <input type="text" {...field} className={c(classes)} />}
+    <TextField name={name} description={description} hint={hint} type={type} label={label}>
+      {(field, classes) => <input type={type} {...field} {...props} className={c(classes)} />}
     </TextField>
   );
 }
 
-export function LongText({ name, description, hint }) {
+export function LongText({ name, description, hint, label = undefined }) {
   return (
-    <TextField name={name} description={description} hint={hint}>
+    <TextField name={name} description={description} hint={hint} label={label}>
       {(field, classes) => <textarea {...field} className={c(classes, 'h-20')} />}
     </TextField>
   );

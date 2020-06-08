@@ -4,7 +4,7 @@ import { Link, Redirect } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
-import { InputField } from '../Common/Forms';
+import { ShortText } from '../Common/Forms';
 import AuthContext, { NotAuthentized } from '../Utils/Auth';
 
 import * as Button from '../Common/Buttons';
@@ -75,8 +75,8 @@ export default function LoginPage() {
             {loginFailed ? (
               <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
             ) : null}
-            <InputField name="email" label="Email address" />
-            <InputField type="password" name="password" label="Password" />
+            <ShortText name="email" label="Email address" />
+            <ShortText type="password" name="password" label="Password" />
             <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
               Forgot you password?
             </Link>

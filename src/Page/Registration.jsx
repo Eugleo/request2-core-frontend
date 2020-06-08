@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
-import { InputField } from '../Common/Forms';
+import { ShortText } from '../Common/Forms';
 
 import * as Button from '../Common/Buttons';
 
@@ -46,7 +46,7 @@ export function NewRegistrationPage() {
             </p>
           ) : (
             <>
-              <InputField name="email" label="Email address" />
+              <ShortText name="email" label="Email address" />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
@@ -117,12 +117,12 @@ export function RegisterPage() {
             </p>
           ) : (
             <>
-              <InputField name="email" label="Email address" disabled />
+              <ShortText name="email" label="Email address" disabled />
               <Field name="token" type="hidden" />
-              <InputField name="name" label="User name" placeholder="Name Surname" />
-              <InputField name="team" label="Team ID" disabled />
-              <InputField name="password" type="password" label="Password" />
-              <InputField name="passwordCheck" type="password" label="Password (again)" />
+              <ShortText name="name" label="User name" placeholder="Name Surname" />
+              <ShortText name="team" label="Team ID" disabled />
+              <ShortText name="password" type="password" label="Password" />
+              <ShortText name="passwordCheck" type="password" label="Password (again)" />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />

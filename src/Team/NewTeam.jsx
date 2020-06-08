@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Formik, Form } from 'formik';
 import { Redirect } from 'react-router-dom';
-import { InputField } from '../Common/Forms';
+import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
@@ -41,8 +41,8 @@ export default function NewTeam() {
           }}
         >
           <Form className="flex flex-col items-start">
-            <InputField name="name" label="Team leader" />
-            <InputField name="code" label="Institutional code" />
+            <ShortText name="name" label="Team leader" />
+            <ShortText name="code" label="Institutional code" />
             <div className="flex justify-between w-full items-stretch pt-3">
               <Button.PrimarySubmit title="Add new team" />
               <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />

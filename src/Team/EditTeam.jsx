@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useRouteMatch, Redirect } from 'react-router-dom';
-import { InputField } from '../Common/Forms';
+import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
@@ -62,13 +62,13 @@ export default function EditTeam() {
           }}
         >
           <Form className="flex flex-col items-start">
-            <InputField
+            <ShortText
               name="name"
               initValue={team.name || ''}
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Team leader"
             />
-            <InputField
+            <ShortText
               name="code"
               initValue={team.code || ''}
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
