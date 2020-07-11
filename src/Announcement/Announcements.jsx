@@ -109,7 +109,7 @@ export function AnnouncementFromUrl() {
         if (r.ok) {
           return r.json();
         }
-        throw Error(`Can't retreieve announcement with ID ${id}`);
+        throw Error(`Can't retrieve announcement with ID ${id}`);
       })
       .then(js => setAnn(js.data))
       .catch(err => console.log(err));

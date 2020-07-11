@@ -36,12 +36,12 @@ function TextField({ name, description, label = undefined, type = undefined, chi
   );
 }
 
-export function MultipleChoice({ name, description, choices, hint }) {
+export function MultipleChoice({ name, description, label = undefined, choices, hint }) {
   const [field, meta] = useField({ name, type: 'checkbox' });
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldHeader hint={hint} label={name} />
+      <FieldHeader hint={hint} label={label || name} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -61,12 +61,12 @@ export function MultipleChoice({ name, description, choices, hint }) {
   );
 }
 
-export function SingleChoice({ name, description, hint, choices }) {
+export function SingleChoice({ name, description, label = undefined, hint, choices }) {
   const [field, meta] = useField({ name, type: 'radio' });
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldHeader hint={hint} label={name} />
+      <FieldHeader hint={hint} label={label || name} />
       <div>
         {choices.map(choice => (
           <ChoiceField key={choice}>
@@ -109,7 +109,7 @@ export function LongText({ name, description, hint, label = undefined }) {
   );
 }
 
-export function TextWithHints({ name, description, hints, hint }) {
+export function TextWithHints({ name, description, label = undefined, hints, hint }) {
   const [field, meta, helpers] = useField({ name, type: 'text' });
 
   const classes = [
@@ -150,7 +150,7 @@ export function TextWithHints({ name, description, hints, hint }) {
 
   return (
     <Field touched={meta.touched} error={meta.error}>
-      <FieldHeader hint={hint} label={name} />
+      <FieldHeader hint={hint} label={label || name} />
       <Creatable
         name={name}
         placeholder="Select or type..."
@@ -197,15 +197,13 @@ export function Section({ title, children, description }) {
 
 function ChoiceField({ children }) {
   return (
-    <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:bg-gray-200">
-      {children}
-    </div>
+    <div className="flex flex-row items-center px-2 rounded-md hover:bg-gray-200">{children}</div>
   );
 }
 
 function ChoiceLabel({ htmlFor, children }) {
   return (
-    <label htmlFor={htmlFor} className="w-full ml-2 text-gray-800">
+    <label htmlFor={htmlFor} className="w-full ml-2 py-1 text-gray-800">
       {children}
     </label>
   );

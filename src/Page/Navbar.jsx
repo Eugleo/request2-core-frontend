@@ -18,13 +18,9 @@ export default function Navbar() {
               rQ<sup>2</sup>
             </span>
             <Authentized or="/login">
+              <NavLink to="/requests">Requests</NavLink>
               <NavLink to="/announcements">Announcements</NavLink>
               <NavLink to="/teams">Teams</NavLink>
-              <NavLink to="/requests/new">
-                <span className="flex flex-row items-center">
-                  <Icon.PlusCircle className="text-gray-700 mr-2 h-5 w-5" /> New Request
-                </span>
-              </NavLink>
             </Authentized>
           </div>
           <div className="flex items-center justify-right">

@@ -31,6 +31,7 @@ export default function Teams() {
       .catch(console.log);
   }, [authGet, limit, offset]);
 
+  // TODO Refactor to use List from Common
   return (
     <Page title="Teams" width="max-w-2xl">
       <Authentized or={<div>You need to be logged in to view teams.</div>}>
