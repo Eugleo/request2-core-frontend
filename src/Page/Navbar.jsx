@@ -1,9 +1,7 @@
 import React from 'react';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 
-import * as Icon from 'react-feather';
-
-import { Authentized, NotAuthentized } from '../Utils/Auth';
+import { Authentized, NotAuthentized, Authorized } from '../Utils/Auth';
 import UserView from './UserView';
 
 import '../styles/tailwind.css';
@@ -18,7 +16,12 @@ export default function Navbar() {
               rQ<sup>2</sup>
             </span>
             <Authentized or="/login">
-              <NavLink to="/requests">Requests</NavLink>
+              <Authorized roles={['Client']}>
+                <NavLink to="/requests">My Requests</NavLink>
+              </Authorized>
+              <Authorized roles={['Operator']}>
+                <NavLink to="/operator/requests">Client's Requests</NavLink>
+              </Authorized>
               <NavLink to="/announcements">Announcements</NavLink>
               <NavLink to="/teams">Teams</NavLink>
             </Authentized>

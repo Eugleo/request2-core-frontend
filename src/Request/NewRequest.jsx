@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
-import { useParams } from 'react-router-dom';
+import { useParams, Redirect } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
 import Page from '../Page/Page';
 import {
@@ -16,6 +16,7 @@ import {
 import validateSMR from './SmallMoleculeRequest';
 import { PrimarySubmit } from '../Common/Buttons';
 import { useAuth } from '../Utils/Auth';
+import * as Button from '../Common/Buttons';
 
 // TODO Report errors on incorrect include
 function resolveInclude(preField) {
@@ -122,29 +123,33 @@ function getValidate(fields) {
 
 function stringify(value) {
   if (Array.isArray(value)) {
-    value.map(v => v.toString()).join(',');
-  } else if (typeof value === 'object') {
+    return value.map(v => v.toString()).join(';;;');
+  }
+  if (typeof value === 'object') {
     return value.value;
   }
-
   return value.toString();
 }
 
 function submit(authPost, type, properties, authorId, teamId) {
-  authPost('/requests', {
+  return authPost('/requests', {
     props: Object.entries(properties)
-      .filter(name => name !== 'request-description/sample-name')
-      .map(([name, value]) => ({
-        authorId,
-        propertyType: name,
-        propertyData: stringify(value),
-        dateAdded: Math.round(Date.now() / 1000),
-        active: true,
-      })),
+      .filter(([name]) => !name.startsWith('request-description/'))
+      .map(([name, value]) => {
+        console.log(value, stringify(value));
+        return {
+          authorId,
+          propertyType: name,
+          propertyData: stringify(value),
+          dateAdded: Math.round(Date.now() / 1000),
+          active: true,
+        };
+      }),
     req: {
       name: properties['request-description/sample-name'],
       authorId,
       teamId,
+      assigneeId: null,
       status: 'Requested',
       requestType: type,
       dateCreated: Math.round(Date.now() / 1000),
@@ -157,6 +162,7 @@ function submit(authPost, type, properties, authorId, teamId) {
 export default function NewRequestPage() {
   const { requestType } = useParams();
   const { auth, authPost } = useAuth();
+  const [shouldRedirect, setShouldRedirect] = useState(false);
 
   const [requestTypes, setRequestTypes] = useState(null);
   useEffect(() => {
@@ -168,6 +174,9 @@ export default function NewRequestPage() {
 
   if (requestTypes === null) {
     return <Page title="New Request" width="max-w-4xl" />;
+  }
+  if (shouldRedirect) {
+    return <Redirect to="/requests" />;
   }
 
   const initialSection = {
@@ -189,29 +198,36 @@ export default function NewRequestPage() {
     {}
   );
 
+  // TODO Add validation code specific for each type of request
   return (
     <Page title={`New ${schema.title}`} width="max-w-4xl">
       <div className="bg-white rounded-lg shadow-md mb-8 p-8">
         <Formik
           initialValues={initialValues}
-          validate={validateSMR(fields, getValidate)}
-          onSubmit={values =>
-            submit(authPost, requestType, values, auth.userId, auth.user.team._id)
-          }
+          onSubmit={values => {
+            submit(authPost, requestType, values, auth.userId, auth.user.team._id).then(() =>
+              setShouldRedirect(true)
+            );
+          }}
           validateOnChange
         >
           <Form className="grid grid-cols-1 gap-12">
             {sections
               .map(makeSection)
-              .concat(
-                <div className="flex flex-row" key="submit">
-                  <PrimarySubmit>Submit a new request</PrimarySubmit>
-                </div>
-              )
+              .concat()
               .map(s => [s])
-              .reduce((acc, s, ix) =>
-                acc.concat(<div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />, s)
-              )}
+              .flatMap((s, ix) => [
+                s,
+                <div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />,
+              ])}
+            <div className="flex flex-row justify-between" key="submit">
+              <PrimarySubmit>Submit a new request</PrimarySubmit>
+              <Button.Normal
+                title="Cancel"
+                classNames={['bg-white']}
+                onClick={() => setShouldRedirect(true)}
+              />
+            </div>
           </Form>
         </Formik>
       </div>

@@ -23,7 +23,7 @@ function Item({ index, name, value }) {
 // TODO Add request title to the backend
 export default function Request({ request, properties }) {
   return (
-    <Page width="max-w-2xl" title={request.title}>
+    <Page width="max-w-2xl" title={request.name}>
       {properties.map((p, ix) => (
         <Item index={ix} key={p.propertyType} name={p.propertyType} value={p.propertyData} />
       ))}

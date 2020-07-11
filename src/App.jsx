@@ -20,8 +20,9 @@ import NewTeam from './Team/NewTeam';
 import NewAnnouncement from './Announcement/NewAnnouncement';
 import EditAnnouncement from './Announcement/EditAnnouncement';
 import NewRequestPage from './Request/NewRequest';
-import MainRequestPage from './Request/Client/MainRequestPage';
-import RequestPage from './Request/Client/RequestPage';
+import RequestPage from './Request/RequestPage';
+import OperatorRequestListPage from './Request/Operator/OperatorRequestListPage';
+import ClientRequestListPage from './Request/Client/ClientRequestListPage';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -101,6 +102,9 @@ function AppBody(props) {
     case true:
       return (
         <Switch>
+          <Route path="/operator/requests">
+            <OperatorRequestListPage />
+          </Route>
           <Route path="/requests/new/:requestType">
             <NewRequestPage />
           </Route>
@@ -108,7 +112,7 @@ function AppBody(props) {
             <RequestPage />
           </Route>
           <Route path="/requests">
-            <MainRequestPage />
+            <ClientRequestListPage />
           </Route>
           <Route path="/announcements/new">
             <NewAnnouncement />

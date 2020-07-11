@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { useField } from 'formik';
 import c from 'classnames';
 import { components } from 'react-select';
@@ -96,7 +96,9 @@ export function ShortText({
 }) {
   return (
     <TextField name={name} description={description} hint={hint} type={type} label={label}>
-      {(field, classes) => <input type={type} {...field} {...props} className={c(classes)} />}
+      {(field, classes) => {
+        return <input type={type} {...field} {...props} className={c(classes)} />;
+      }}
     </TextField>
   );
 }
@@ -183,7 +185,7 @@ export function Image() {
   );
 }
 
-export function Section({ title, children, description }) {
+export function Section({ title, children, description = null }) {
   return (
     <div className="grid grid-cols-4 gap-8">
       <div>

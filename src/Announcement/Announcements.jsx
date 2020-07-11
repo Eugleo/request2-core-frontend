@@ -111,7 +111,7 @@ export function AnnouncementFromUrl() {
         }
         throw Error(`Can't retrieve announcement with ID ${id}`);
       })
-      .then(js => setAnn(js.data))
+      .then(js => setAnn(js))
       .catch(err => console.log(err));
   }, [id, authGet]);
 
@@ -124,6 +124,7 @@ export function AnnouncementFromUrl() {
       </CenteredPage>
     );
   }
+
   return (
     <Page title={ann.title} width="max-w-2xl">
       <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-5 pb-3" />

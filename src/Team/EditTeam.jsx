@@ -27,7 +27,7 @@ export default function EditTeam() {
   const { id } = match.params;
   const { authGet, authPut, authDel } = useAuth();
   const [shouldRedirect, setShouldRedirect] = useState(false);
-  const [team, setTeam] = useState({ name: '', code: '', active: true });
+  const [team, setTeam] = useState({ name: '', code: '', active: false });
 
   useEffect(() => {
     authGet(`/teams/${id}`)
@@ -44,7 +44,9 @@ export default function EditTeam() {
   if (team === null) {
     return <Redirect to="/404" />;
   }
-
+  if (team.name === '') {
+    return <Page title="Edit team" width="max-w-2xl" />;
+  }
   if (shouldRedirect) {
     return <Redirect to="/teams" />;
   }
@@ -53,7 +55,7 @@ export default function EditTeam() {
     <Page title="Edit team" width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: '', code: '' }}
+          initialValues={{ name: team.name || '', code: team.code || '' }}
           validate={validate}
           onSubmit={values => {
             // TODO Add error handling
@@ -64,13 +66,11 @@ export default function EditTeam() {
           <Form className="flex flex-col items-start">
             <ShortText
               name="name"
-              initValue={team.name || ''}
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Team leader"
             />
             <ShortText
               name="code"
-              initValue={team.code || ''}
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}
               label="Institutional code"
             />
