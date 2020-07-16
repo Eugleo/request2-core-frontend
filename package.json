@@ -10,6 +10,7 @@
     "classnames": "^2.2.6",
     "feather-icons": "^4.28.0",
     "formik": "^2.1.4",
+    "moment": "^2.27.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-epic-spinners": "^0.4.1",
