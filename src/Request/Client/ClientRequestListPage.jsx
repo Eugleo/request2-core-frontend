@@ -120,7 +120,7 @@ function Section({ title, children }) {
 
 function SquareItem({ name, link }) {
   return (
-    <Link to={link}>
+    <Link to={link} className="flex">
       <div className="duration-150 hover:shadow-lg relative rounded-lg bg-white shadow-md p-4 flex flex-col-reverse">
         <span className="lg:mt-10 mt-6 text-lg">{name}</span>
       </div>

@@ -8,7 +8,7 @@ import '../styles/tailwind.css';
 
 export default function Navbar() {
   return (
-    <nav className="w-full bg-white sticky border-gray-300 border-b top-0 p-4">
+    <nav className="w-full bg-white sticky border-gray-300 border-b top-0 p-4 z-10">
       <div className="max-w-full mx-auto">
         <div className="flex items-center justify-between h-full">
           <div className="flex items-center justify-left">

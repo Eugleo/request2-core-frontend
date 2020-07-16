@@ -235,7 +235,7 @@ export default function NewRequestPage() {
                 <div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />,
               ])}
             <div className="flex flex-row justify-between" key="submit">
-              <PrimarySubmit>Submit a new request</PrimarySubmit>
+              <PrimarySubmit>Submit the request</PrimarySubmit>
               <Button.Normal
                 title="Cancel"
                 classNames={['bg-white']}
