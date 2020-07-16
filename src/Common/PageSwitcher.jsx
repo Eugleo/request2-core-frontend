@@ -17,9 +17,6 @@ export function usePagination(initLimit = 1, around = 1, onBoundary = 1) {
   const currentPage = queryParams.get('page') ? Number(queryParams.get('page')) : 0;
   const finalPage = Math.max(Math.floor(total / limit) - 1, 0);
 
-  console.log(currentPage);
-  console.log(location.pathname);
-
   const shouldBeHidden = n =>
     n >= 0 + onBoundary && n <= finalPage - onBoundary && Math.abs(currentPage - n) > around;
 

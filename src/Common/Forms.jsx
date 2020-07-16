@@ -125,7 +125,7 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
     'focus:outline-none',
     'focus:shadow-outline-blue',
     'focus:border-blue-600',
-    'z-10',
+    'focus:z-10',
     'font-normal',
     'flex',
     'flex-row',

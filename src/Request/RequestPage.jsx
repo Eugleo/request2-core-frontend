@@ -94,7 +94,7 @@ function ButtonArray({ request, properties, setRequest }) {
         title="Assign to me"
         onClick={() => {
           authPut(`/requests/${request._id}`, {
-            props: properties,
+            props: [],
             req: { ...request, assigneeId: auth.userId },
           });
           setRequest({ ...request, assigneeId: auth.userId });

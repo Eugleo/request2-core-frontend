@@ -223,6 +223,10 @@ export default function NewRequestPage() {
               auth.user.team._id
             ).then(() => setShouldRedirect(true));
           }}
+          validate={validateSMR(
+            fields.map(f => ({ ...f, name: fieldPath(f.section, f.name) })),
+            getValidate
+          )}
           validateOnChange
         >
           <Form className="grid grid-cols-1 gap-12">
