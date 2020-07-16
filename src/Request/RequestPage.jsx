@@ -109,7 +109,7 @@ function ButtonArray({ request, properties, setRequest }) {
         title="Unassign me"
         onClick={() => {
           authPut(`/requests/${request._id}`, {
-            props: properties,
+            props: [],
             req: { ...request, assigneeId: undefined },
           });
           setRequest({ ...request, assigneeId: undefined });
