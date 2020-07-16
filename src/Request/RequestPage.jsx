@@ -1,11 +1,12 @@
-import React, { useEffect, useState, useCallback } from 'react';
+import React, { useEffect, useState } from 'react';
 import c from 'classnames';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
 import { Section } from '../Common/Forms';
 import formatDate from '../Utils/Date';
-import { useAuth } from '../Utils/Auth';
+import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
+import ResultReportCard from './ResultReportCard';
 
 function Item({ index, name, value }) {
   return (
@@ -125,9 +126,9 @@ function ButtonArray({ request, properties, setRequest }) {
   return <div className="col-span-1 flex flex-row-reverse items-center">{buttons}</div>;
 }
 
-function RequestProperties({ properties }) {
+function RequestProperties({ properties, title }) {
   return (
-    <div className="bg-white rounded-lg shadow-md mb-12 p-8 grid grid-cols-1 gap-10 col-span-3">
+    <Card title={title}>
       {properties
         .filter(p => p.active && p.propertyData !== '')
         .reduce((acc, p, ix) => {
@@ -149,7 +150,7 @@ function RequestProperties({ properties }) {
         })
         .flatMap((s, ix) => [<div key={ix} className="border-t-2 bg-gray-400 w-full" />, s])
         .slice(1)}
-    </div>
+    </Card>
   );
 }
 
@@ -191,6 +192,19 @@ function StatusLabel({ status }) {
       <div className="bg-gray-400 py-2 px-4 rounded-full text-xs text-gray-800">Requested</div>
     );
   }
+}
+
+function Card({ title, children }) {
+  return (
+    <div className="col-span-3 w-full shadow-md rounded-md bg-white">
+      <div>
+        <h2 className="px-6 text-2xl border-b border-gray-200 py-6 mb-8 font-bold w-full">
+          {title}
+        </h2>
+      </div>
+      <div className="px-6 pb-6 grid grid-cols-1 gap-8">{children}</div>
+    </div>
+  );
 }
 
 export default function RequestPage() {
@@ -274,6 +288,42 @@ export default function RequestPage() {
     ...properties.filter(p => p.active).map(p => p.dateAdded),
     request.dateCreated
   );
+  if (properties.find(p => p.propertyType.startsWith('operator:'))) {
+    return (
+      <Page>
+        <RequestHeader
+          request={request}
+          properties={properties}
+          author={author || {}}
+          lastChange={lastChange}
+          setRequest={setRequest}
+        />
+
+        <RequestProperties
+          title="Results report"
+          properties={properties
+            .filter(p => p.propertyType.startsWith('operator:'))
+            .map(p => ({ ...p, propertyType: p.propertyType.slice(9) }))}
+        />
+
+        <RequestDetails
+          request={request}
+          author={author || {}}
+          assignee={assignee}
+          team={team || {}}
+          lastChange={lastChange}
+        />
+
+        <RequestProperties
+          title="Request details"
+          properties={properties.filter(p => !p.propertyType.startsWith('operator:'))}
+        />
+        <Authorized roles={['Operator']}>
+          {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
+        </Authorized>
+      </Page>
+    );
+  }
 
   return (
     <Page>
@@ -292,6 +342,9 @@ export default function RequestPage() {
         team={team || {}}
         lastChange={lastChange}
       />
+      <Authorized roles={['Operator']}>
+        {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
+      </Authorized>
     </Page>
   );
 }
@@ -306,6 +359,7 @@ function Page({ children }) {
     'grid',
     'grid-cols-4',
     'gap-8',
+    'mb-10',
   ];
 
   return <div className={c(classes)}>{children}</div>;

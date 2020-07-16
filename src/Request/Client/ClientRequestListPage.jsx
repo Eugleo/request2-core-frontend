@@ -55,7 +55,7 @@ export default function ClientRequestListPage() {
   return (
     <Page title="My requests" width="max-w-4xl">
       <NewRequestSection />
-      <div>
+      <div className="mb-12">
         <Section title="In progress">
           {inProgress.length > 0 ? (
             <List>{inProgress}</List>
@@ -128,12 +128,31 @@ function SquareItem({ name, link }) {
   );
 }
 
-function Item({ request: { name, code, status, dateCreated }, link }) {
+function Item({ request: { name, code, status, authorId, dateCreated }, link }) {
+  const { authGet } = useAuth();
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    authGet(`/users/${authorId}`)
+      .then(r => {
+        if (r.ok) {
+          return r.json();
+        }
+        throw Error(`Can't retrieve information about author with ID ${authorId}`);
+      })
+      .then(js => {
+        setAuthor(js);
+      })
+      .catch(err => console.log(err));
+  }, [authGet, authorId, setAuthor]);
+
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle link={link} title={name} />
-        <span className="text-xs text-gray-600">#{code}</span>
+        <span className="text-xs text-gray-600">
+          #{code} created by <span className="font-semibold">{(author && author.name) || ''}</span>
+        </span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
 
