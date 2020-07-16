@@ -71,7 +71,7 @@ export default function OperatorRequestListPage() {
       </Section>
 
       <Section title="Finished">
-        {assigned.length > 0 ? (
+        {finished.length > 0 ? (
           <List>{finished}</List>
         ) : (
           <EmptyLabel text="No requests have been finished yet" />
@@ -99,12 +99,12 @@ function Section({ title, children }) {
   );
 }
 
-function Item({ request: { publicId, name, dateCreated }, link }) {
+function Item({ request: { code, name, dateCreated }, link }) {
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-9">
         <LinkedItemTitle link={link} title={name} />
-        <span className="text-xs text-gray-600">#{publicId}</span>
+        <span className="text-xs text-gray-600">#{code}</span>
       </div>
       <span className="text-sm text-gray-700 col-span-1">{formatDate(dateCreated)}</span>
     </ItemContainer>

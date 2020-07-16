@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Formik, Form } from 'formik';
+import { Formik, Form, yupToFormErrors } from 'formik';
 import { useParams, Redirect } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
 import Page from '../Page/Page';
@@ -131,22 +131,31 @@ function stringify(value) {
   return value.toString();
 }
 
-function submit(authPost, type, properties, authorId, teamId) {
+// TODO Write this properly
+function generateCode(type, date) {
+  const year = date.getFullYear().toString().slice(2);
+  const day = date.getDate().toString().padStart(2, 0);
+  const month = date.getMonth().toString().padStart(2, 0);
+  const minute = date.getMinutes().toString().padStart(2, 0);
+  const second = date.getSeconds().toString().padStart(2, 0);
+  const hour = date.getHours().toString().padStart(2, 0);
+  return `${type}:${year}${month}${day}:${hour}${minute}${second}`;
+}
+
+function submit(authPost, typeAbbrev, type, properties, authorId, teamId) {
   return authPost('/requests', {
     props: Object.entries(properties)
       .filter(([name]) => !name.startsWith('request-description/'))
-      .map(([name, value]) => {
-        console.log(value, stringify(value));
-        return {
-          authorId,
-          propertyType: name,
-          propertyData: stringify(value),
-          dateAdded: Math.round(Date.now() / 1000),
-          active: true,
-        };
-      }),
+      .map(([name, value]) => ({
+        authorId,
+        propertyType: name,
+        propertyData: stringify(value),
+        dateAdded: Math.round(Date.now() / 1000),
+        active: true,
+      })),
     req: {
       name: properties['request-description/sample-name'],
+      code: generateCode(typeAbbrev, new Date()),
       authorId,
       teamId,
       assigneeId: null,
@@ -205,9 +214,14 @@ export default function NewRequestPage() {
         <Formik
           initialValues={initialValues}
           onSubmit={values => {
-            submit(authPost, requestType, values, auth.userId, auth.user.team._id).then(() =>
-              setShouldRedirect(true)
-            );
+            submit(
+              authPost,
+              schema.typeAbbreviation,
+              requestType,
+              values,
+              auth.userId,
+              auth.user.team._id
+            ).then(() => setShouldRedirect(true));
           }}
           validateOnChange
         >

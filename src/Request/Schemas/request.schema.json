@@ -2,10 +2,14 @@
   "$schema": "https://json-schema.org/draft-07/schema",
   "title": "Request specification",
   "type": "object",
-  "required": ["title", "sections"],
+  "required": ["title", "sections", "typeAbbreviation"],
   "properties": {
     "title": {
       "type": "string"
+    },
+    "typeAbbreviation": {
+      "type": "string",
+      "pattern": "^[A-Z]{1,4}$"
     },
     "sections": {
       "type": "array",

@@ -42,6 +42,8 @@ export default function ClientRequestListPage() {
       .catch(console.log);
   }, [authGet, setTotal, limit, offset]);
 
+  console.log(requests);
+
   const inProgress = requests
     .filter(r => r.status === 'WIP' || r.status === 'Requested')
     .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
@@ -126,12 +128,12 @@ function SquareItem({ name, link }) {
   );
 }
 
-function Item({ request: { publicId, status, name, dateCreated }, link }) {
+function Item({ request: { name, code, status, dateCreated }, link }) {
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle link={link} title={name} />
-        <span className="text-xs text-gray-600">#{publicId}</span>
+        <span className="text-xs text-gray-600">#{code}</span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
 
