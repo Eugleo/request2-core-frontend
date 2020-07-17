@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams } from 'react-router-dom';
+import moment from 'moment';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 
@@ -65,7 +66,26 @@ function AddAnnButton() {
   );
 }
 
-function AnnouncementCard({ ann: { _id, active, title, body, dateCreated } }) {
+function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreated } }) {
+  const { authGet } = useAuth();
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    if (authorId) {
+      authGet(`/users/${authorId}`)
+        .then(r => {
+          if (r.ok) {
+            return r.json();
+          }
+          throw Error(`Can't retrieve information about author with ID ${authorId}`);
+        })
+        .then(js => {
+          setAuthor(js);
+        })
+        .catch(err => console.log(err));
+    }
+  }, [authGet, authorId, setAuthor]);
+
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
@@ -79,7 +99,12 @@ function AnnouncementCard({ ann: { _id, active, title, body, dateCreated } }) {
             {title}
           </Link>
           <p className={`text-sm ${active ? 'text-gray-500' : 'text-gray-300'}`}>
-            {formatDate(dateCreated)}
+            {author && (
+              <span>
+                Created by <span className="font-medium">{author.name}</span>{' '}
+              </span>
+            )}
+            {moment.unix(dateCreated).fromNow()}
           </p>
         </div>
         <div className="flex-grow" />
@@ -102,6 +127,23 @@ export function AnnouncementFromUrl() {
   const { id } = useParams();
   const [ann, setAnn] = useState(null);
   const { authGet } = useAuth();
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    if (ann) {
+      authGet(`/users/${ann.authorId}`)
+        .then(r => {
+          if (r.ok) {
+            return r.json();
+          }
+          throw Error(`Can't retrieve information about author with ID ${ann.authorId}`);
+        })
+        .then(js => {
+          setAuthor(js);
+        })
+        .catch(err => console.log(err));
+    }
+  }, [authGet, ann, setAuthor]);
 
   useEffect(() => {
     authGet(`/announcements/${id}`)
@@ -127,7 +169,7 @@ export function AnnouncementFromUrl() {
 
   return (
     <Page title={ann.title} width="max-w-2xl">
-      <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-5 pb-3" />
+      <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-2 pb-3 mb-12" />
     </Page>
   );
 }

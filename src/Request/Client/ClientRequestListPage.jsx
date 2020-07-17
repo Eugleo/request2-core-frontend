@@ -165,9 +165,7 @@ function Item({ request: { name, code, status, authorId, dateCreated }, link }) 
 
 function StatusLabel({ status }) {
   if (status === 'Done') {
-    return (
-      <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Show results</div>
-    );
+    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
   }
   if (status === 'WIP') {
     return (

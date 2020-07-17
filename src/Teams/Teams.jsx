@@ -65,12 +65,13 @@ function AddTeamButton() {
 function Team({ editLink, team }) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
-      <div className="flex flex-grow">
+      <div className="flex items-center flex-grow">
         {team.active ? (
           <h2 className="text-gray-900 font-medium">{team.name}</h2>
         ) : (
           <h2 className="text-gray-400 font-medium">{team.name}</h2>
         )}
+        <p className="text-sm text-gray-600">#{team.code}</p>
       </div>
       <Authorized roles={['Admin']}>
         <Button.NormalLinked to={editLink} classNames={['pl-2', 'pr-3']}>

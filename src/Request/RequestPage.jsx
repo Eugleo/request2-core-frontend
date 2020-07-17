@@ -49,7 +49,7 @@ function Property({ name, property: { propertyData, dateAdded } }) {
           ))}
         </div>
       ) : (
-        <p>{propertyData}</p>
+        <p className="break-words text-sm">{propertyData}</p>
       )}
     </div>
   );
@@ -164,7 +164,7 @@ function RequestDetails({ request, author, assignee, team, lastChange }) {
   }
 
   return (
-    <div className="flex flex-col items-start">
+    <div className="flex flex-col items-start row-span-2">
       <HeaderItem label="Author" contents={`${author.name} @ ${team.name}`} />
       <HeaderItem label="Date requested" contents={formatDate(request.dateCreated)} />
       <HeaderItem label="Last change" contents={moment.unix(lastChange).fromNow()} />
@@ -176,9 +176,7 @@ function RequestDetails({ request, author, assignee, team, lastChange }) {
 
 function StatusLabel({ status }) {
   if (status === 'Done') {
-    return (
-      <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Show results</div>
-    );
+    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
   }
   if (status === 'WIP') {
     return (
@@ -196,7 +194,10 @@ function StatusLabel({ status }) {
 
 function Card({ title, children }) {
   return (
-    <div className="col-span-3 w-full shadow-md rounded-md bg-white">
+    <div
+      style={{ height: 'fit-content' }}
+      className="col-span-3 w-full shadow-md rounded-md bg-white"
+    >
       <div>
         <h2 className="px-6 text-2xl border-b border-gray-200 py-6 mb-8 font-bold w-full">
           {title}
@@ -334,7 +335,7 @@ export default function RequestPage() {
         lastChange={lastChange}
         setRequest={setRequest}
       />
-      <RequestProperties properties={properties} />
+      <RequestProperties title="Request details" properties={properties} />
       <RequestDetails
         request={request}
         author={author || {}}

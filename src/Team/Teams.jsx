@@ -13,7 +13,7 @@ export default function Teams() {
   const [teams, setTeams] = useState([]);
   const { authGet } = useAuth();
 
-  const { setTotal, limit, offset, currentPage, pages } = usePagination(3);
+  const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
 
   useEffect(() => {
     const url = Api.urlWithParams('/teams', { limit, offset });
@@ -64,12 +64,19 @@ function AddTeamButton() {
 function Team({ editLink, team }) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
-      <div className="flex flex-grow">
+      <div className="flex flex-col flex-grow">
         {team.active ? (
-          <h2 className="text-gray-900 font-medium">{team.name}</h2>
+          <h2 className="text-gray-900 font-medium">
+            {team.name}
+            <span className="text-gray-500 font-normal">'s group</span>
+          </h2>
         ) : (
-          <h2 className="text-gray-400 font-medium">{team.name}</h2>
+          <h2 className="text-gray-400 font-medium">
+            {team.name}
+            <span className="text-gray-300 font-normal">'s group</span>
+          </h2>
         )}
+        <p className="text-sm text-gray-600">#{team.code}</p>
       </div>
       <Authorized roles={['Admin']}>
         <Button.NormalLinked to={editLink} classNames={['pl-2', 'pr-3']}>

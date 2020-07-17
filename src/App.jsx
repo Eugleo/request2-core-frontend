@@ -49,9 +49,9 @@ function App() {
     userId: 1,
     user: {
       apiKey: 'QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4',
-      name: 'Evžen',
+      name: 'Evžen Wybitul',
       roles: ['Admin', 'Client', 'Operator'],
-      team: { name: 'Evženův supertým', _id: 2 },
+      team: { name: 'Jiří Vondrášek', _id: 2 },
       created: 115151,
     },
   };

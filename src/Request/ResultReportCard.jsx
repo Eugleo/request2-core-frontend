@@ -176,7 +176,7 @@ export default function ResultReportCard({ request }) {
   );
 
   return (
-    <Card title="Report of the results">
+    <Card title="Edit the results">
       <Formik
         initialValues={initialValues}
         onSubmit={values => {

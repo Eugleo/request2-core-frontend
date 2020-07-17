@@ -55,29 +55,30 @@ export default function OperatorRequestListPage() {
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">
-      <Section title="Assigned to me">
-        {assigned.length > 0 ? (
-          <List>{assigned}</List>
-        ) : (
-          <EmptyLabel text="Yay! No more requests to solve" />
-        )}
-      </Section>
-      <Section title="Unattended">
-        {unattended.length > 0 ? (
-          <List>{unattended}</List>
-        ) : (
-          <EmptyLabel text="All of the requests have an assigned operator" />
-        )}
-      </Section>
+      <div className="mb-12">
+        <Section title="Assigned to me">
+          {assigned.length > 0 ? (
+            <List>{assigned}</List>
+          ) : (
+            <EmptyLabel text="Yay! No more requests to solve" />
+          )}
+        </Section>
+        <Section title="Unattended">
+          {unattended.length > 0 ? (
+            <List>{unattended}</List>
+          ) : (
+            <EmptyLabel text="All of the requests have an assigned operator" />
+          )}
+        </Section>
 
-      <Section title="Finished">
-        {finished.length > 0 ? (
-          <List>{finished}</List>
-        ) : (
-          <EmptyLabel text="No requests have been finished yet" />
-        )}
-        <List>{finished}</List>
-      </Section>
+        <Section title="Finished">
+          {finished.length > 0 ? (
+            <List>{finished}</List>
+          ) : (
+            <EmptyLabel text="No requests have been finished yet" />
+          )}
+        </Section>
+      </div>
     </Page>
   );
 }
