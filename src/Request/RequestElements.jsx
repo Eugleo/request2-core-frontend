@@ -1,32 +1,74 @@
-import React from 'react';
-import c from 'classnames';
-import Page from '../Page/Page';
+import React, { useState, useEffect } from 'react';
+import { useAuth } from '../Utils/Auth';
+import { ItemContainer, LinkedItemTitle } from '../Common/List';
+import formatDate from '../Utils/Date';
 
-function Item({ index, name, value }) {
+export function EmptyLabel({ text }) {
   return (
-    <div
-      className={c(
-        'px-4',
-        'py-5',
-        'grid',
-        'grid-cols-3',
-        'gap-4',
-        index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-      )}
-    >
-      <dt className="font-medium text-gray-500">{name}</dt>
-      <dd className="col-span-2">{value}</dd>
+    <div className="flex flex-col justify-center  rounded-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
+      {text}
     </div>
   );
 }
 
-// TODO Add request title to the backend
-export default function Request({ request, properties }) {
+export function Section({ title, children }) {
   return (
-    <Page width="max-w-2xl" title={request.name}>
-      {properties.map((p, ix) => (
-        <Item index={ix} key={p.propertyType} name={p.propertyType} value={p.propertyData} />
-      ))}
-    </Page>
+    <div>
+      <h2 className="text-xl font-bold mb-4 mt-8">{title}</h2>
+      {children}
+    </div>
   );
+}
+
+export function ListItem({ request: { name, code, status, authorId, dateCreated }, link }) {
+  const { authGet } = useAuth();
+  const [author, setAuthor] = useState(null);
+
+  useEffect(() => {
+    authGet(`/users/${authorId}`)
+      .then(r => {
+        if (r.ok) {
+          return r.json();
+        }
+        throw Error(`Can't retrieve information about author with ID ${authorId}`);
+      })
+      .then(js => {
+        setAuthor(js);
+      })
+      .catch(err => console.log(err));
+  }, [authGet, authorId, setAuthor]);
+
+  return (
+    <ItemContainer>
+      <div className="flex flex-col col-span-5">
+        <LinkedItemTitle link={link} title={name} />
+        <span className="text-xs text-gray-600">
+          #{code} created by <span className="font-semibold">{(author && author.name) || ''}</span>
+        </span>
+      </div>
+      <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
+
+      <div className="col-span-3 flex-row-reverse flex">
+        <StatusLabel status={status} />
+      </div>
+    </ItemContainer>
+  );
+}
+
+function StatusLabel({ status }) {
+  if (status === 'Done') {
+    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
+  }
+  if (status === 'WIP') {
+    return (
+      <div className="bg-yellow-200 py-2 px-4 rounded-full text-xs text-yellow-700">
+        In progress
+      </div>
+    );
+  }
+  if (status === 'Requested') {
+    return (
+      <div className="bg-gray-200 py-2 px-4 rounded-full text-xs text-gray-700">Requested</div>
+    );
+  }
 }

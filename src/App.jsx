@@ -10,19 +10,14 @@ import Page from './Page/Page';
 import AuthContext from './Utils/Auth';
 import NotFound404 from './Page/NotFound404';
 
-import { AnnouncementFromUrl, Announcements } from './Announcement/Announcements';
+import { Announcements } from './Announcement/Announcements';
 import { NewRegistrationPage, RegisterPage } from './Page/Registration';
 import LoginPage from './Page/LoginPage';
 
 import Teams from './Team/Teams';
-import EditTeam from './Team/EditTeam';
-import NewTeam from './Team/NewTeam';
-import NewAnnouncement from './Announcement/NewAnnouncement';
-import EditAnnouncement from './Announcement/EditAnnouncement';
-import NewRequestPage from './Request/NewRequest';
+import RequestsAsOperator from './Request/Operator/Requests';
+import RequestsAsClient from './Request/Client/Requests';
 import RequestPage from './Request/RequestPage';
-import OperatorRequestListPage from './Request/Operator/OperatorRequestListPage';
-import ClientRequestListPage from './Request/Client/ClientRequestListPage';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -102,54 +97,20 @@ function AppBody(props) {
     case true:
       return (
         <Routes>
-          <Route path="/operator/requests">
-            <OperatorRequestListPage />
+          <Route path="/me/*">
+            <Route path="requests" element={<RequestsAsClient />} />
+            <Route path="requests/:id" element={<RequestPage />} />
           </Route>
-          <Route path="/requests/new/:requestType">
-            <NewRequestPage />
+          <Route path="/requests/*" element={<RequestsAsOperator />} />
+          <Route path="/announcements/*" element={<Announcements />} />
+          <Route path="/teams/*" element={<Teams />} />
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/register">
+            <Route path="new" element={<NewRegistrationPage />} />
+            <Route path=":email/:token" element={<RegisterPage />} />
           </Route>
-          <Route path="/requests/:id">
-            <RequestPage />
-          </Route>
-          <Route path="/requests">
-            <ClientRequestListPage />
-          </Route>
-          <Route path="/announcements/new">
-            <NewAnnouncement />
-          </Route>
-          <Route path="/announcements/:id/edit">
-            <EditAnnouncement />
-          </Route>
-          <Route path="/announcements/:id">
-            <AnnouncementFromUrl />
-          </Route>
-          <Route path="/announcements">
-            <Announcements />
-          </Route>
-          <Route path="/teams/new">
-            <NewTeam />
-          </Route>
-          <Route path="/teams/:id/edit">
-            <EditTeam />
-          </Route>
-          <Route path="/teams">
-            <Teams />
-          </Route>
-          <Route path="/login">
-            <LoginPage />
-          </Route>
-          <Route path="/register/new">
-            <NewRegistrationPage />
-          </Route>
-          <Route path="/register/:email/:token">
-            <RegisterPage />
-          </Route>
-          <Route path="/404">
-            <NotFound404 />
-          </Route>
-          <Route path="/">
-            <LoginPage />
-          </Route>
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/*" element={<NotFound404 />} />
         </Routes>
       );
     default:

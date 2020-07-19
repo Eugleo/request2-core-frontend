@@ -17,10 +17,10 @@ export default function Navbar() {
             </span>
             <Authentized or="/login">
               <Authorized roles={['Client']}>
-                <NavLink to="/requests">My Requests</NavLink>
+                <NavLink to="/me/requests">My Requests</NavLink>
               </Authorized>
               <Authorized roles={['Operator']}>
-                <NavLink to="/operator/requests">Client's Requests</NavLink>
+                <NavLink to="/requests">Client's Requests</NavLink>
               </Authorized>
               <NavLink to="/announcements">Announcements</NavLink>
               <NavLink to="/teams">Teams</NavLink>

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
@@ -40,7 +40,7 @@ export default function EditTeam() {
   }, [id, authGet]);
 
   if (team === null) {
-    return navigate('/404');
+    return <Navigate to="/404" />;
   }
   if (team.name === '') {
     return <Page title="Edit team" width="max-w-2xl" />;
@@ -78,7 +78,7 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authDel(`/teams/${id}`);
-                      navigate('..');
+                      navigate('../..');
                     }}
                     classNames={['mr-2']}
                   />
@@ -88,12 +88,12 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authPut(`/teams/${id}`, { ...team, active: true });
-                      navigate('..');
+                      navigate('../..');
                     }}
                     classNames={['mr-2']}
                   />
                 )}
-                <Button.Normal title="Cancel" onClick={() => navigate('..')} />
+                <Button.Normal title="Cancel" onClick={() => navigate('../..')} />
               </div>
             </div>
           </Form>

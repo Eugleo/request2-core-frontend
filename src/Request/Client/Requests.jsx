@@ -1,16 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import * as Icon from 'react-feather';
-import { Link } from 'react-router-dom';
+import { Link, Routes, Route } from 'react-router-dom';
 import Page from '../../Page/Page';
 
-import { List, ItemContainer, LinkedItemTitle } from '../../Common/List';
-import formatDate from '../../Utils/Date';
+import { List } from '../../Common/List';
 
 import { useAuth } from '../../Utils/Auth';
 import * as Api from '../../Utils/Api';
 import { usePagination } from '../../Common/PageSwitcher';
+import RequestPage from '../RequestPage';
+import NewRequestPage from '../NewRequest';
+import { Section, ListItem } from '../RequestElements';
 
-export default function ClientRequestListPage() {
+export default function Requests() {
+  return (
+    <Routes>
+      <Route path="" element={<RequestList />} />
+      <Route path="new/:requestType" element={<NewRequestPage />} />
+      <Route path=":id" element={<RequestPage />} />
+    </Routes>
+  );
+}
+
+function RequestList() {
   const [requests, setRequests] = useState([]);
   const { authGet } = useAuth();
 
@@ -42,15 +54,13 @@ export default function ClientRequestListPage() {
       .catch(console.log);
   }, [authGet, setTotal, limit, offset]);
 
-  console.log(requests);
-
   const inProgress = requests
     .filter(r => r.status === 'WIP' || r.status === 'Requested')
-    .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
 
   const finished = requests
     .filter(r => r.status === 'Done')
-    .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
 
   return (
     <Page title="My requests" width="max-w-4xl">
@@ -109,15 +119,6 @@ function NewRequestSection() {
   );
 }
 
-function Section({ title, children }) {
-  return (
-    <div>
-      <h2 className="text-xl font-bold mb-4 mt-8">{title}</h2>
-      {children}
-    </div>
-  );
-}
-
 function SquareItem({ name, link }) {
   return (
     <Link to={link} className="flex">
@@ -126,57 +127,4 @@ function SquareItem({ name, link }) {
       </div>
     </Link>
   );
-}
-
-function Item({ request: { name, code, status, authorId, dateCreated }, link }) {
-  const { authGet } = useAuth();
-  const [author, setAuthor] = useState(null);
-
-  useEffect(() => {
-    authGet(`/users/${authorId}`)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw Error(`Can't retrieve information about author with ID ${authorId}`);
-      })
-      .then(js => {
-        setAuthor(js);
-      })
-      .catch(err => console.log(err));
-  }, [authGet, authorId, setAuthor]);
-
-  return (
-    <ItemContainer>
-      <div className="flex flex-col col-span-5">
-        <LinkedItemTitle link={link} title={name} />
-        <span className="text-xs text-gray-600">
-          #{code} created by <span className="font-semibold">{(author && author.name) || ''}</span>
-        </span>
-      </div>
-      <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
-
-      <div className="col-span-3 flex-row-reverse flex">
-        <StatusLabel status={status} />
-      </div>
-    </ItemContainer>
-  );
-}
-
-function StatusLabel({ status }) {
-  if (status === 'Done') {
-    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
-  }
-  if (status === 'WIP') {
-    return (
-      <div className="bg-yellow-200 py-2 px-4 rounded-full text-xs text-yellow-700">
-        In progress
-      </div>
-    );
-  }
-  if (status === 'Requested') {
-    return (
-      <div className="bg-gray-200 py-2 px-4 rounded-full text-xs text-gray-700">Requested</div>
-    );
-  }
 }

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import { Formik, Form } from 'formik';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useParams, useNavigate, Navigate } from 'react-router-dom';
 // import {InputField} from '../Common/Forms';
 import Page from '../Page/Page';
 
@@ -49,7 +49,7 @@ export default function EditAnnouncement() {
   }, [id, authGet]);
 
   if (ann === null) {
-    return navigate('..');
+    return <Navigate to=".." />;
   }
 
   return (

@@ -1,15 +1,26 @@
 import React, { useState, useEffect } from 'react';
+import { Routes, Route } from 'react-router-dom';
 import Page from '../../Page/Page';
 
-import { List, ItemContainer, LinkedItemTitle } from '../../Common/List';
-import formatDate from '../../Utils/Date';
+import { List } from '../../Common/List';
 import { useAuth } from '../../Utils/Auth';
 
 import { usePagination } from '../../Common/PageSwitcher';
 
 import * as Api from '../../Utils/Api';
+import RequestPage from '../RequestPage';
+import { EmptyLabel, Section, ListItem } from '../RequestElements';
 
-export default function OperatorRequestListPage() {
+export default function Requests() {
+  return (
+    <Routes>
+      <Route path="" element={<RequestList />} />
+      <Route path=":id" element={<RequestPage />} />
+    </Routes>
+  );
+}
+
+function RequestList() {
   const [requests, setRequests] = useState([]);
   const { authGet, auth } = useAuth();
 
@@ -43,15 +54,15 @@ export default function OperatorRequestListPage() {
 
   const assigned = requests
     .filter(r => r.status !== 'Done' && r.assigneeId === auth.userId)
-    .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
 
   const finished = requests
     .filter(r => r.status === 'Done' && r.assigneeId === auth.userId)
-    .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
 
   const unattended = requests
     .filter(r => r.status !== 'Done' && !r.assigneeId)
-    .map(r => <Item key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">
@@ -80,34 +91,5 @@ export default function OperatorRequestListPage() {
         </Section>
       </div>
     </Page>
-  );
-}
-
-function EmptyLabel({ text }) {
-  return (
-    <div className="flex flex-col justify-center  rounded-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
-      {text}
-    </div>
-  );
-}
-
-function Section({ title, children }) {
-  return (
-    <div>
-      <h2 className="text-xl font-bold mb-4 mt-8">{title}</h2>
-      {children}
-    </div>
-  );
-}
-
-function Item({ request: { code, name, dateCreated }, link }) {
-  return (
-    <ItemContainer>
-      <div className="flex flex-col col-span-9">
-        <LinkedItemTitle link={link} title={name} />
-        <span className="text-xs text-gray-600">#{code}</span>
-      </div>
-      <span className="text-sm text-gray-700 col-span-1">{formatDate(dateCreated)}</span>
-    </ItemContainer>
   );
 }

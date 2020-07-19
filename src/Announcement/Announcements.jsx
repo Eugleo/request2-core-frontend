@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { AtomSpinner } from 'react-epic-spinners';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useParams, Routes, Route } from 'react-router-dom';
 import moment from 'moment';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
@@ -11,10 +11,21 @@ import Pagination, { usePagination } from '../Common/PageSwitcher';
 
 import Page, { CenteredPage } from '../Page/Page';
 import MdRender from '../Common/MdRender';
-
-import formatDate from '../Utils/Date';
+import NewAnnouncement from './NewAnnouncement';
+import EditAnnouncement from './EditAnnouncement';
 
 export function Announcements() {
+  return (
+    <Routes>
+      <Route path="" element={<AnnList />} />
+      <Route path="new" element={<NewAnnouncement />} />
+      <Route path="/announcements/:id/edit" element={<EditAnnouncement />} />
+      <Route path="/announcements/:id" element={<AnnouncementFromUrl />} />
+    </Routes>
+  );
+}
+
+function AnnList() {
   const [anns, setAnns] = useState([]);
   const { authGet } = useAuth();
 

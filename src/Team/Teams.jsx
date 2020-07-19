@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
-import { Link } from 'react-router-dom';
+import { Link, Routes, Route } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
@@ -8,8 +8,20 @@ import Pagination, { usePagination } from '../Common/PageSwitcher';
 import { Authentized, Authorized, useAuth } from '../Utils/Auth';
 
 import Page from '../Page/Page';
+import NewTeam from './NewTeam';
+import EditTeam from './EditTeam';
 
 export default function Teams() {
+  return (
+    <Routes>
+      <Route path="" element={<TeamList />} />
+      <Route path="new" element={<NewTeam />} />
+      <Route path=":id/edit" element={<EditTeam />} />
+    </Routes>
+  );
+}
+
+function TeamList() {
   const [teams, setTeams] = useState([]);
   const { authGet } = useAuth();
 
