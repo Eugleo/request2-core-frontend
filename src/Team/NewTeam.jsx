@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Formik, Form } from 'formik';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
@@ -23,11 +23,7 @@ function validate(values) {
 
 export default function NewTeam() {
   const { authPost } = useAuth();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
-  if (shouldRedirect) {
-    return <Redirect to="/teams" />;
-  }
+  const navigate = useNavigate();
 
   return (
     <Page title="New team" width="max-w-2xl">
@@ -37,7 +33,7 @@ export default function NewTeam() {
           validate={validate}
           onSubmit={values => {
             authPost('/teams', { ...values, active: true });
-            setShouldRedirect(true);
+            navigate('..');
           }}
         >
           <Form className="flex flex-col items-start">
@@ -45,7 +41,7 @@ export default function NewTeam() {
             <ShortText name="code" label="Institutional code" />
             <div className="flex justify-between w-full items-stretch pt-3">
               <Button.PrimarySubmit title="Add new team" />
-              <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
+              <Button.Normal title="Cancel" onClick={() => navigate('..')} />
             </div>
           </Form>
         </Formik>

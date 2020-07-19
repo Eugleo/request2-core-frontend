@@ -1,5 +1,5 @@
 import React, { useContext, useCallback } from 'react';
-import { Redirect } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 const AuthContext = React.createContext({ auth: {}, dispatch: null });
 const hostname = 'http://localhost:9080';
@@ -69,19 +69,20 @@ export function useAuth() {
   };
 }
 
-export function Authentized({ children, or }) {
-  return <Authorized noUser={or}>{children}</Authorized>;
+export function Authentized({ children, or: otherwise }) {
+  return <Authorized noUser={otherwise}>{children}</Authorized>;
 }
 
 export function NotAuthentized({ or = null, children }) {
   return <Authorized noUser={children}>{or}</Authorized>;
 }
 
-export function Authorized({ noUser = <Redirect to="/login" />, roles = [], or = null, children }) {
+export function Authorized({ noUser = '/login', roles = [], or = null, children }) {
   const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   if (!auth.loggedIn) {
-    return noUser;
+    navigate(noUser);
   }
 
   if (!roles.every(r => auth.user.roles.includes(r))) {

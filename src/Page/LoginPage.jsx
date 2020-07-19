@@ -1,6 +1,6 @@
 import React, { useContext, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { Link, Redirect } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
 import { CenteredPage } from './Page';
@@ -59,10 +59,11 @@ function validate(values) {
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const { dispatch } = useContext(AuthContext);
+  const navigate = useNavigate();
 
   return (
     <CenteredPage title="Log in to reQuest" width="max-w-md">
-      <NotAuthentized or={<Redirect to="/announcements" />}>
+      <NotAuthentized or={navigate('..')}>
         <Formik
           initialValues={{
             email: '',

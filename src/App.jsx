@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useReducer } from 'react';
 
 import { AtomSpinner } from 'react-epic-spinners';
-import { HashRouter as Router, Route, Switch, Redirect } from 'react-router-dom';
+import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Navbar from './Page/Navbar';
 import * as Api from './Utils/Api';
 import Footer from './Page/Footer';
@@ -101,7 +101,7 @@ function AppBody(props) {
       );
     case true:
       return (
-        <Switch>
+        <Routes>
           <Route path="/operator/requests">
             <OperatorRequestListPage />
           </Route>
@@ -148,9 +148,9 @@ function AppBody(props) {
             <NotFound404 />
           </Route>
           <Route path="/">
-            <Redirect to="/login" />
+            <LoginPage />
           </Route>
-        </Switch>
+        </Routes>
       );
     default:
       return (

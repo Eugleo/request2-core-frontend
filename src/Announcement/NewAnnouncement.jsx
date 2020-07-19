@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { Redirect } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 
 import { useAuth } from '../Utils/Auth';
@@ -13,11 +13,7 @@ export default function NewAnnouncement() {
   const { authPost, auth } = useAuth();
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
-  const [shouldRedirect, setShouldRedirect] = useState(false);
-
-  if (shouldRedirect) {
-    return <Redirect to="/announcements" />;
-  }
+  const navigate = useNavigate();
 
   return (
     <Page title="New announcement" width="max-w-2xl">
@@ -47,15 +43,11 @@ export default function NewAnnouncement() {
                 authorId: auth.userId,
                 dateCreated: Math.floor(Date.now() / 1000),
                 active: true,
-              }).then(() => setShouldRedirect(true));
+              }).then(() => navigate('..'));
             }}
           />
           <span className="flex-grow" />
-          <Button.Normal
-            title="Cancel"
-            classNames={['bg-white']}
-            onClick={() => setShouldRedirect(true)}
-          />
+          <Button.Normal title="Cancel" classNames={['bg-white']} onClick={() => navigate('..')} />
         </div>
       </div>
     </Page>

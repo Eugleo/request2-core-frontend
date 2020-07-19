@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Formik, Form } from 'formik';
-import { useParams, Redirect } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
 import Page from '../Page/Page';
 import {
@@ -171,7 +171,7 @@ function submit(authPost, typeAbbrev, type, properties, authorId, teamId) {
 export default function NewRequestPage() {
   const { requestType } = useParams();
   const { auth, authPost } = useAuth();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
+  const navigate = useNavigate();
 
   const [requestTypes, setRequestTypes] = useState(null);
   useEffect(() => {
@@ -183,9 +183,6 @@ export default function NewRequestPage() {
 
   if (requestTypes === null) {
     return <Page title="New Request" width="max-w-4xl" />;
-  }
-  if (shouldRedirect) {
-    return <Redirect to="/requests" />;
   }
 
   const initialSection = {
@@ -221,7 +218,7 @@ export default function NewRequestPage() {
               values,
               auth.userId,
               auth.user.team._id
-            ).then(() => setShouldRedirect(true));
+            ).then(() => navigate('..'));
           }}
           validate={validateSMR(
             fields.map(f => ({ ...f, name: fieldPath(f.section, f.name) })),
@@ -243,7 +240,7 @@ export default function NewRequestPage() {
               <Button.Normal
                 title="Cancel"
                 classNames={['bg-white']}
-                onClick={() => setShouldRedirect(true)}
+                onClick={() => navigate('..')}
               />
             </div>
           </Form>

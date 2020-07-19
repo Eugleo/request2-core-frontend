@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Formik, Form } from 'formik';
-import { useRouteMatch, Redirect } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
@@ -22,12 +22,10 @@ function validate(values) {
 }
 
 export default function EditTeam() {
-  const match = useRouteMatch();
-  // @ts-ignore
-  const { id } = match.params;
+  const { id } = useParams();
   const { authGet, authPut, authDel } = useAuth();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
   const [team, setTeam] = useState({ name: '', code: '', active: false });
+  const navigate = useNavigate();
 
   useEffect(() => {
     authGet(`/teams/${id}`)
@@ -42,13 +40,10 @@ export default function EditTeam() {
   }, [id, authGet]);
 
   if (team === null) {
-    return <Redirect to="/404" />;
+    return navigate('/404');
   }
   if (team.name === '') {
     return <Page title="Edit team" width="max-w-2xl" />;
-  }
-  if (shouldRedirect) {
-    return <Redirect to="/teams" />;
   }
 
   return (
@@ -60,7 +55,7 @@ export default function EditTeam() {
           onSubmit={values => {
             // TODO Add error handling
             authPut(`/teams/${id}`, { ...team, ...values });
-            setShouldRedirect(true);
+            navigate('..');
           }}
         >
           <Form className="flex flex-col items-start">
@@ -83,7 +78,7 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authDel(`/teams/${id}`);
-                      setShouldRedirect(true);
+                      navigate('..');
                     }}
                     classNames={['mr-2']}
                   />
@@ -93,12 +88,12 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authPut(`/teams/${id}`, { ...team, active: true });
-                      setShouldRedirect(true);
+                      navigate('..');
                     }}
                     classNames={['mr-2']}
                   />
                 )}
-                <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
+                <Button.Normal title="Cancel" onClick={() => navigate('..')} />
               </div>
             </div>
           </Form>

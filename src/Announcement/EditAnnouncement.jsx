@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 // import { Formik, Form } from 'formik';
-import { useRouteMatch, Redirect } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 // import {InputField} from '../Common/Forms';
 import Page from '../Page/Page';
 
@@ -25,11 +25,9 @@ import MdRender from '../Common/MdRender';
 
 // TODO Implement using Formik
 export default function EditAnnouncement() {
-  const match = useRouteMatch();
-  // @ts-ignore
-  const { id } = match.params;
+  const { id } = useParams();
+  const navigate = useNavigate();
   const { authDel, authGet, authPut } = useAuth();
-  const [shouldRedirect, setShouldRedirect] = useState(false);
   const [ann, setAnn] = useState({ active: null });
   const [title, setTitle] = useState('');
   const [body, setBody] = useState('');
@@ -51,11 +49,7 @@ export default function EditAnnouncement() {
   }, [id, authGet]);
 
   if (ann === null) {
-    return <Redirect to="/404" />;
-  }
-
-  if (shouldRedirect) {
-    return <Redirect to="/announcements" />;
+    return navigate('..');
   }
 
   return (
@@ -84,7 +78,7 @@ export default function EditAnnouncement() {
                 ...ann,
                 title,
                 body,
-              }).then(() => setShouldRedirect(true));
+              }).then(() => navigate('..'));
             }}
           />
           <span className="flex-grow" />
@@ -93,7 +87,7 @@ export default function EditAnnouncement() {
               title="Deactivate"
               onClick={() => {
                 // TODO Add error handling
-                authDel(`/announcements/${id}`).then(() => setShouldRedirect(true));
+                authDel(`/announcements/${id}`).then(() => navigate('..'));
               }}
               classNames={['mr-2']}
             />
@@ -103,14 +97,14 @@ export default function EditAnnouncement() {
               onClick={() => {
                 // TODO Add error handling
                 authPut(`/announcements/${id}`, { ...ann, active: true }).then(() =>
-                  setShouldRedirect(true)
+                  navigate('..')
                 );
               }}
               classNames={['mr-2', 'bg-white']}
             />
           )}
 
-          <Button.Normal title="Cancel" onClick={() => setShouldRedirect(true)} />
+          <Button.Normal title="Cancel" onClick={() => navigate('..')} />
         </div>
       </div>
     </Page>
