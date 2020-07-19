@@ -13,9 +13,9 @@ export function ItemContainer({ children }) {
   );
 }
 
-export function LinkedItemTitle({ link, title }) {
+export function LinkedItemTitle({ to, title }) {
   return (
-    <Link to={link} className="text-md font text-black hover:text-green-700">
+    <Link to={to} className="text-md font text-black hover:text-green-700">
       {title}
     </Link>
   );

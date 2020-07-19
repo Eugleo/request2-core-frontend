@@ -20,7 +20,7 @@ export function Section({ title, children }) {
   );
 }
 
-export function ListItem({ request: { name, code, status, authorId, dateCreated }, link }) {
+export function ListItem({ request: { name, code, status, authorId, dateCreated }, to }) {
   const { authGet } = useAuth();
   const [author, setAuthor] = useState(null);
 
@@ -41,7 +41,7 @@ export function ListItem({ request: { name, code, status, authorId, dateCreated 
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
-        <LinkedItemTitle link={link} title={name} />
+        <LinkedItemTitle to={to} title={name} />
         <span className="text-xs text-gray-600">
           #{code} created by <span className="font-semibold">{(author && author.name) || ''}</span>
         </span>

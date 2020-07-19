@@ -54,15 +54,15 @@ function RequestList() {
 
   const assigned = requests
     .filter(r => r.status !== 'Done' && r.assigneeId === auth.userId)
-    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
 
   const finished = requests
     .filter(r => r.status === 'Done' && r.assigneeId === auth.userId)
-    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
 
   const unattended = requests
     .filter(r => r.status !== 'Done' && !r.assigneeId)
-    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">

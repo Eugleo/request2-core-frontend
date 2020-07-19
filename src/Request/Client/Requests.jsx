@@ -10,7 +10,7 @@ import * as Api from '../../Utils/Api';
 import { usePagination } from '../../Common/PageSwitcher';
 import RequestPage from '../RequestPage';
 import NewRequestPage from '../NewRequest';
-import { Section, ListItem } from '../RequestElements';
+import { Section, ListItem, EmptyLabel } from '../RequestElements';
 
 export default function Requests() {
   return (
@@ -56,11 +56,11 @@ function RequestList() {
 
   const inProgress = requests
     .filter(r => r.status === 'WIP' || r.status === 'Requested')
-    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
 
   const finished = requests
     .filter(r => r.status === 'Done')
-    .map(r => <ListItem key={r._id} request={r} link={`/requests/${r._id}`} />);
+    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
 
   return (
     <Page title="My requests" width="max-w-4xl">
@@ -83,14 +83,6 @@ function RequestList() {
         </Section>
       </div>
     </Page>
-  );
-}
-
-function EmptyLabel({ text }) {
-  return (
-    <div className="flex flex-col justify-center  rounded-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
-      {text}
-    </div>
   );
 }
 
