@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
 import Page from '../../Page/Page';
 
@@ -20,74 +20,54 @@ export default function Requests() {
   );
 }
 
+function compareRequests(r1, r2) {
+  if (r1.dateCreated < r2.dateCreated) {
+    return -1;
+  }
+  if (r1.dateCreated === r2.dateCreated) {
+    return 0;
+  }
+  return 1;
+}
+
 function RequestList() {
-  const [requests, setRequests] = useState([]);
-  const { authGet, auth } = useAuth();
+  const { auth } = useAuth();
+  const { sTot, lim, off } = usePagination(100);
+  const requests = Api.useGetWitLimit('/requests', lim, off, sTot, v => v.sort(compareRequests));
 
-  const { setTotal, limit, offset } = usePagination(100);
-
-  useEffect(() => {
-    const url = Api.urlWithParams('/requests', { limit, offset });
-    authGet(url)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error('Unable to retrieve the requests');
-      })
-      .then(json => {
-        setTotal(json.total);
-        setRequests(
-          json.values.sort((r1, r2) => {
-            if (r1.dateCreated < r2.dateCreated) {
-              return -1;
-            }
-            if (r1.dateCreated === r2.dateCreated) {
-              return 0;
-            }
-            return 1;
-          })
-        );
-      })
-      .catch(console.log);
-  }, [authGet, setTotal, limit, offset]);
+  const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
 
   const assigned = requests
     .filter(r => r.status !== 'Done' && r.assigneeId === auth.userId)
-    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
+    .map(makeReq);
 
   const finished = requests
     .filter(r => r.status === 'Done' && r.assigneeId === auth.userId)
-    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
+    .map(makeReq);
 
-  const unattended = requests
-    .filter(r => r.status !== 'Done' && !r.assigneeId)
-    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
+  const unattended = requests.filter(r => r.status !== 'Done' && !r.assigneeId).map(makeReq);
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">
       <div className="mb-12">
         <Section title="Assigned to me">
-          {assigned.length > 0 ? (
-            <List>{assigned}</List>
-          ) : (
-            <EmptyLabel text="Yay! No more requests to solve" />
-          )}
+          <List
+            elements={assigned}
+            empty={<EmptyLabel text="Yay! No more requests to solve" />}
+          ></List>
         </Section>
         <Section title="Unattended">
-          {unattended.length > 0 ? (
-            <List>{unattended}</List>
-          ) : (
-            <EmptyLabel text="All of the requests have an assigned operator" />
-          )}
+          <List
+            elements={unattended}
+            empty={<EmptyLabel text="All of the requests have an assigned operator" />}
+          />
         </Section>
 
         <Section title="Finished">
-          {finished.length > 0 ? (
-            <List>{finished}</List>
-          ) : (
-            <EmptyLabel text="No requests have been finished yet" />
-          )}
+          <List
+            elements={finished}
+            empty={<EmptyLabel text="No requests have been finished yet" />}
+          ></List>
         </Section>
       </div>
     </Page>

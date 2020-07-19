@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React from 'react';
 import * as Icon from 'react-feather';
 import { Link, Routes, Route } from 'react-router-dom';
 import Page from '../../Page/Page';
@@ -22,64 +22,45 @@ export default function Requests() {
   );
 }
 
+function compareRequests(r1, r2) {
+  if (r1.dateCreated < r2.dateCreated) {
+    return -1;
+  }
+  if (r1.dateCreated === r2.dateCreated) {
+    return 0;
+  }
+  return 1;
+}
+
 function RequestList() {
-  const [requests, setRequests] = useState([]);
-  const { authGet } = useAuth();
+  const { auth } = useAuth();
+  const { sTot, lim, off } = usePagination(100);
+  const requests = Api.useGetWitLimit('/requests', lim, off, sTot, v => v.sort(compareRequests));
 
-  const { setTotal, limit, offset } = usePagination(100);
-
-  useEffect(() => {
-    const url = Api.urlWithParams('/requests', { limit, offset });
-    authGet(url)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error('Unable to retrieve the requests');
-      })
-      .then(json => {
-        setTotal(json.total);
-        setRequests(
-          json.values.sort((r1, r2) => {
-            if (r1.dateCreated < r2.dateCreated) {
-              return -1;
-            }
-            if (r1.dateCreated === r2.dateCreated) {
-              return 0;
-            }
-            return 1;
-          })
-        );
-      })
-      .catch(console.log);
-  }, [authGet, setTotal, limit, offset]);
+  const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
 
   const inProgress = requests
     .filter(r => r.status === 'WIP' || r.status === 'Requested')
-    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
+    .map(makeReq);
 
-  const finished = requests
-    .filter(r => r.status === 'Done')
-    .map(r => <ListItem key={r._id} request={r} to={r._id.toString()} />);
+  const finished = requests.filter(r => r.status === 'Done').map(makeReq);
 
   return (
     <Page title="My requests" width="max-w-4xl">
       <NewRequestSection />
       <div className="mb-12">
         <Section title="In progress">
-          {inProgress.length > 0 ? (
-            <List>{inProgress}</List>
-          ) : (
-            <EmptyLabel text="No requests are being worked on" />
-          )}
+          <List
+            elements={inProgress}
+            empty={<EmptyLabel text="No requests are being worked on" />}
+          />
         </Section>
 
         <Section title="Finished">
-          {finished.length > 0 ? (
-            <List>{finished}</List>
-          ) : (
-            <EmptyLabel text="No requests have been completed yet" />
-          )}
+          <List
+            elements={finished}
+            empty={<EmptyLabel text="No requests have been completed yet" />}
+          />
         </Section>
       </div>
     </Page>
@@ -99,7 +80,11 @@ function NewRequestSection() {
       className="grid grid-cols-3 lg:grid-cols-4 gap-5"
     >
       {requestTypes.map(rt => (
-        <SquareItem key={rt.title} link={`/requests/new/${rt.type}`} name={`New ${rt.title}`} />
+        <NewRequestButton
+          key={rt.title}
+          link={`/requests/new/${rt.type}`}
+          name={`New ${rt.title}`}
+        />
       ))}
       <div className="cursor-pointer duration-150 p-4 rounded-lg hover:bg-gray-200 flex justify-center items-center flex-col">
         <div className="bg-gray-300 rounded-full w-12 h-12 p-3 mb-2 flex items-center justify-center">
@@ -111,7 +96,7 @@ function NewRequestSection() {
   );
 }
 
-function SquareItem({ name, link }) {
+function NewRequestButton({ name, link }) {
   return (
     <Link to={link} className="flex">
       <div className="duration-150 hover:shadow-lg relative rounded-lg bg-white shadow-md p-4 flex flex-col-reverse">

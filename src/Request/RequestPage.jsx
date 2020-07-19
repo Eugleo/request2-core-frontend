@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import c from 'classnames';
 import { useParams } from 'react-router-dom';
 import moment from 'moment';
@@ -7,24 +7,9 @@ import formatDate from '../Utils/Date';
 import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import ResultReportCard from './ResultReportCard';
+import { useGet } from '../Utils/Api';
 
-function Item({ index, name, value }) {
-  return (
-    <div
-      className={c(
-        'px-4',
-        'py-5',
-        'grid',
-        'grid-cols-3',
-        'gap-4',
-        index % 2 === 0 ? 'bg-gray-100' : 'bg-white'
-      )}
-    >
-      <dt className="font-medium text-gray-500">{name}</dt>
-      <dd className="col-span-2">{value}</dd>
-    </div>
-  );
-}
+import maybe from '../Utils/Maybe';
 
 function parseFieldPath(fp) {
   const section = fp.match(/^[^/]+/)[0].replace(/-/g, ' ');
@@ -210,76 +195,13 @@ function Card({ title, children }) {
 
 export default function RequestPage() {
   const { id } = useParams();
-  const [request, setRequest] = useState(null);
-  const [properties, setProperties] = useState(null);
-  const { authGet } = useAuth();
-  const [team, setTeam] = useState(null);
-  const [author, setAuthor] = useState(null);
-  const [assignee, setAssignee] = useState(undefined);
   const { auth } = useAuth();
 
-  useEffect(() => {
-    if (request && request.assigneeId && auth.userId !== request.assigneeId) {
-      authGet(`/users/${request.assigneeId}`)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw Error(`Can't retrieve information about author with ID ${request.authorId}`);
-        })
-        .then(js => {
-          setAssignee(js);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [authGet, request, setAssignee]);
-
-  useEffect(() => {
-    if (request) {
-      authGet(`/users/${request.authorId}`)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw Error(`Can't retrieve information about author with ID ${request.authorId}`);
-        })
-        .then(js => {
-          setAuthor(js);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [authGet, request, setAuthor]);
-
-  useEffect(() => {
-    if (request) {
-      authGet(`/teams/${request.teamId}`)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw Error(`Can't retrieve information about team with ID ${request.authorId}`);
-        })
-        .then(js => {
-          setTeam(js);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [authGet, request, setTeam]);
-
-  useEffect(() => {
-    authGet(`/requests/${id}`)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw Error(`Can't retrieve announcement with ID ${id}`);
-      })
-      .then(js => {
-        setRequest(js.request);
-        setProperties(js.properties);
-      })
-      .catch(err => console.log(err));
-  }, [id, authGet, setRequest, setProperties]);
+  const { request, properties } = useGet(`/requests/${id}`);
+  const team = useGet(maybe(request, r => `/teams/${r.teamId}`));
+  const author = useGet(maybe(request, r => `/users/${r.authorId}`));
+  const shouldFetchAssignee = request && auth.userId !== request.assigneeId;
+  const assignee = useGet(maybe(shouldFetchAssignee, r => `users/${r.assigneeId}`));
 
   if (request === null || properties === null) {
     return <Page />;

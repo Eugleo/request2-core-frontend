@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { useAuth } from '../Utils/Auth';
+import React from 'react';
 import { ItemContainer, LinkedItemTitle } from '../Common/List';
 import formatDate from '../Utils/Date';
+import { useGet } from '../Utils/Api';
 
 export function EmptyLabel({ text }) {
   return (
@@ -21,22 +21,7 @@ export function Section({ title, children }) {
 }
 
 export function ListItem({ request: { name, code, status, authorId, dateCreated }, to }) {
-  const { authGet } = useAuth();
-  const [author, setAuthor] = useState(null);
-
-  useEffect(() => {
-    authGet(`/users/${authorId}`)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw Error(`Can't retrieve information about author with ID ${authorId}`);
-      })
-      .then(js => {
-        setAuthor(js);
-      })
-      .catch(err => console.log(err));
-  }, [authGet, authorId, setAuthor]);
+  const author = useGet(`/users/${authorId}`);
 
   return (
     <ItemContainer>

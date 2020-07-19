@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import * as Icon from 'react-feather';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams, Routes, Route } from 'react-router-dom';
@@ -26,26 +26,8 @@ export function Announcements() {
 }
 
 function AnnList() {
-  const [anns, setAnns] = useState([]);
-  const { authGet } = useAuth();
-
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-
-  useEffect(() => {
-    const url = Api.urlWithParams('/announcements', { limit, offset });
-    authGet(url)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error('Unable to retrieve the announcements');
-      })
-      .then(json => {
-        setTotal(json.total);
-        setAnns(json.values);
-      })
-      .catch(console.log);
-  }, [authGet, setTotal, limit, offset]);
+  const anns = Api.useGetWitLimit('/announcements', limit, offset, setTotal);
 
   return (
     <Page title="Announcements" width="max-w-2xl">
@@ -78,24 +60,7 @@ function AddAnnButton() {
 }
 
 function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreated } }) {
-  const { authGet } = useAuth();
-  const [author, setAuthor] = useState(null);
-
-  useEffect(() => {
-    if (authorId) {
-      authGet(`/users/${authorId}`)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw Error(`Can't retrieve information about author with ID ${authorId}`);
-        })
-        .then(js => {
-          setAuthor(js);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [authGet, authorId, setAuthor]);
+  const author = Api.useGet(authorId ? `/users/${authorId}` : undefined);
 
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
@@ -136,39 +101,10 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
 
 export function AnnouncementFromUrl() {
   const { id } = useParams();
-  const [ann, setAnn] = useState(null);
-  const { authGet } = useAuth();
-  const [author, setAuthor] = useState(null);
+  const ann = Api.useGet(`/announcements/${id}`);
+  const author = Api.useGet(ann ? `/users/${ann.authorId}` : undefined);
 
-  useEffect(() => {
-    if (ann) {
-      authGet(`/users/${ann.authorId}`)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw Error(`Can't retrieve information about author with ID ${ann.authorId}`);
-        })
-        .then(js => {
-          setAuthor(js);
-        })
-        .catch(err => console.log(err));
-    }
-  }, [authGet, ann, setAuthor]);
-
-  useEffect(() => {
-    authGet(`/announcements/${id}`)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw Error(`Can't retrieve announcement with ID ${id}`);
-      })
-      .then(js => setAnn(js))
-      .catch(err => console.log(err));
-  }, [id, authGet]);
-
-  if (ann === null) {
+  if (!ann) {
     return (
       <CenteredPage title="Loading announcement">
         <div className="flex justify-center">

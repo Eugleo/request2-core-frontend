@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import * as Icon from 'react-feather';
 import { Link, Routes, Route } from 'react-router-dom';
 import * as Api from '../Utils/Api';
@@ -22,26 +22,8 @@ export default function Teams() {
 }
 
 function TeamList() {
-  const [teams, setTeams] = useState([]);
-  const { authGet } = useAuth();
-
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-
-  useEffect(() => {
-    const url = Api.urlWithParams('/teams', { limit, offset });
-    authGet(url)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error('Unable to retrieve the teams');
-      })
-      .then(json => {
-        setTotal(json.total);
-        setTeams(json.values);
-      })
-      .catch(console.log);
-  }, [authGet, setTotal, limit, offset]);
+  const teams = Api.useGetWitLimit('/teams', limit, offset, setTotal);
 
   return (
     <Page title="Teams" width="max-w-2xl">

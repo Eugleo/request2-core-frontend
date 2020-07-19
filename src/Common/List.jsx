@@ -1,8 +1,12 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-export function List({ children }) {
-  return <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">{children}</div>;
+export function List({ elements, empty }) {
+  return elements.length > 0 ? (
+    <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">{elements}</div>
+  ) : (
+    empty
+  );
 }
 
 export function ItemContainer({ children }) {

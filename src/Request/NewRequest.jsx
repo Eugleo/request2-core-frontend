@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useMemo } from 'react';
 import { Formik, Form } from 'formik';
 import { useParams, useNavigate } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
@@ -173,13 +173,12 @@ export default function NewRequestPage() {
   const { auth, authPost } = useAuth();
   const navigate = useNavigate();
 
-  const [requestTypes, setRequestTypes] = useState(null);
-  useEffect(() => {
+  const requestTypes = useMemo(() => {
     const types = new Map();
     const req = require.context('./RequestTypes', true, /^.*\.rcfg\.json$/im);
     req.keys().forEach(fileName => types.set(fileName.match(/[^/]+(?=\.rcfg)/)[0], req(fileName)));
-    setRequestTypes(types);
-  }, [setRequestTypes]);
+    return types;
+  }, []);
 
   if (requestTypes === null) {
     return <Page title="New Request" width="max-w-4xl" />;

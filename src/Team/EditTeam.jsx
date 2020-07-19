@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
 import { ShortText } from '../Common/Forms';
@@ -6,6 +6,7 @@ import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
+import { useGet } from '../Utils/Api';
 
 function validate(values) {
   const error = {};
@@ -23,26 +24,16 @@ function validate(values) {
 
 export default function EditTeam() {
   const { id } = useParams();
-  const { authGet, authPut, authDel } = useAuth();
-  const [team, setTeam] = useState({ name: '', code: '', active: false });
+  const { authPut, authDel } = useAuth();
+  const team = useGet(`/teams/${id}`, { name: '', code: '', active: false });
   const navigate = useNavigate();
 
-  useEffect(() => {
-    authGet(`/teams/${id}`)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error(`Unable to fetch team with id: ${id}`);
-      })
-      .then(js => setTeam(js))
-      .catch(() => setTeam(null));
-  }, [id, authGet]);
-
-  if (team === null) {
+  if (!team) {
     return <Navigate to="/404" />;
   }
-  if (team.name === '') {
+
+  // TODO Add proper loading
+  if (team && team.name === '') {
     return <Page title="Edit team" width="max-w-2xl" />;
   }
 
