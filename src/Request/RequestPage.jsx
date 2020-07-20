@@ -30,7 +30,9 @@ function Property({ name, property: { propertyData, dateAdded } }) {
       {propertyData.includes(';;;') ? (
         <div className="flex flex-row flex-wrap">
           {propertyData.split(';;;').map(d => (
-            <span className="px-2 py-1 text-sm bg-gray-100 border rounded-sm mr-2 mb-2">{d}</span>
+            <span key={d} className="px-2 py-1 text-sm bg-gray-100 border rounded-sm mr-2 mb-2">
+              {d}
+            </span>
           ))}
         </div>
       ) : (
@@ -49,7 +51,7 @@ function HeaderItem({ label, contents }) {
   );
 }
 
-function RequestHeader({ request, properties, author, lastChange, setRequest }) {
+function RequestHeader({ request, author, lastChange }) {
   return (
     <div className="col-span-4 grid grid-cols-4">
       <div className="col-span-3">
@@ -65,12 +67,12 @@ function RequestHeader({ request, properties, author, lastChange, setRequest }) 
           </p>
         </div>
       </div>
-      <ButtonArray request={request} properties={properties} setRequest={setRequest} />
+      <ButtonArray request={request} />
     </div>
   );
 }
 
-function ButtonArray({ request, properties, setRequest }) {
+function ButtonArray({ request }) {
   const { auth, authPut } = useAuth();
   const buttons = [];
 
@@ -83,7 +85,6 @@ function ButtonArray({ request, properties, setRequest }) {
             props: [],
             req: { ...request, assigneeId: auth.userId },
           });
-          setRequest({ ...request, assigneeId: auth.userId });
         }}
       />
     );
@@ -98,7 +99,6 @@ function ButtonArray({ request, properties, setRequest }) {
             props: [],
             req: { ...request, assigneeId: undefined },
           });
-          setRequest({ ...request, assigneeId: undefined });
         }}
       />
     );
@@ -196,14 +196,13 @@ function Card({ title, children }) {
 export default function RequestPage() {
   const { id } = useParams();
   const { auth } = useAuth();
-
-  const { request, properties } = useGet(`/requests/${id}`);
+  const { request, properties } = useGet(`/requests/${id}`, {});
   const team = useGet(maybe(request, r => `/teams/${r.teamId}`));
   const author = useGet(maybe(request, r => `/users/${r.authorId}`));
   const shouldFetchAssignee = request && auth.userId !== request.assigneeId;
   const assignee = useGet(maybe(shouldFetchAssignee, r => `users/${r.assigneeId}`));
 
-  if (request === null || properties === null) {
+  if (!request || !properties) {
     return <Page />;
   }
 
@@ -214,13 +213,7 @@ export default function RequestPage() {
   if (properties.find(p => p.propertyType.startsWith('operator:'))) {
     return (
       <Page>
-        <RequestHeader
-          request={request}
-          properties={properties}
-          author={author || {}}
-          lastChange={lastChange}
-          setRequest={setRequest}
-        />
+        <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
 
         <RequestProperties
           title="Results report"
@@ -250,13 +243,7 @@ export default function RequestPage() {
 
   return (
     <Page>
-      <RequestHeader
-        request={request}
-        properties={properties}
-        author={author || {}}
-        lastChange={lastChange}
-        setRequest={setRequest}
-      />
+      <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
       <RequestProperties title="Request details" properties={properties} />
       <RequestDetails
         request={request}

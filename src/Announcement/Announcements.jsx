@@ -6,7 +6,7 @@ import moment from 'moment';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 
-import { Authentized, Authorized, useAuth } from '../Utils/Auth';
+import { Authentized, Authorized } from '../Utils/Auth';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
 import Page, { CenteredPage } from '../Page/Page';
@@ -19,8 +19,8 @@ export function Announcements() {
     <Routes>
       <Route path="" element={<AnnList />} />
       <Route path="new" element={<NewAnnouncement />} />
-      <Route path="/announcements/:id/edit" element={<EditAnnouncement />} />
-      <Route path="/announcements/:id" element={<AnnouncementFromUrl />} />
+      <Route path=":id/edit" element={<EditAnnouncement />} />
+      <Route path=":id" element={<AnnouncementFromUrl />} />
     </Routes>
   );
 }
@@ -51,7 +51,7 @@ function AnnList() {
 function AddAnnButton() {
   return (
     <Link
-      to="/announcements/new"
+      to="new"
       className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
     >
       <Icon.Plus className="stroke-2 mr-1" /> Add new announcement
@@ -67,7 +67,7 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link
-            to={`announcements/${_id}`}
+            to={`${_id}`}
             className={`text-xl font-medium text-black hover:text-green-700 ${
               active ? 'text-black' : 'text-gray-400'
             }`}
@@ -85,7 +85,7 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.NormalLinked to={`announcements/${_id}/edit`} classNames={['pl-2', 'pr-3']}>
+          <Button.NormalLinked to={`${_id}/edit`} classNames={['pl-2', 'pr-3']}>
             <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
             Edit
           </Button.NormalLinked>

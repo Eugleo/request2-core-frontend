@@ -32,8 +32,10 @@ function compareRequests(r1, r2) {
 
 function RequestList() {
   const { auth } = useAuth();
-  const { sTot, lim, off } = usePagination(100);
-  const requests = Api.useGetWitLimit('/requests', lim, off, sTot, v => v.sort(compareRequests));
+  const { setTotal, limit, offset } = usePagination(100);
+  const requests = Api.useGetWitLimit('/requests', limit, offset, setTotal, v =>
+    v.sort(compareRequests)
+  );
 
   const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
 

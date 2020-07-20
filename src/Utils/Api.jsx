@@ -15,13 +15,13 @@ export function useGetWitLimit(url, limit, offset, setTotal, transform = x => x)
 
   // TODO Add error handling
   useEffect(() => {
-    const urlWithLimit = urlWithParams('/announcements', { limit, offset });
+    const urlWithLimit = urlWithParams(url, { limit, offset });
     authGet(urlWithLimit)
       .then(r => {
         if (r.ok) {
           return r.json();
         }
-        throw new Error('Unable to retrieve the announcements');
+        throw new Error(`Unable to retrieve the items from ${url}`);
       })
       .then(json => {
         setTotal(json.total);
