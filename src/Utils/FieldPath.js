@@ -6,7 +6,7 @@ export function makeFieldPath(namespace, section, propertyName) {
 }
 
 export function parseFieldPath(fp) {
-  const match = fp.match(/^(.+):(.+)\/(.+)$/g);
+  const match = fp.match(/^(.+):(.+)\/(.+)$/);
   const namespace = match[1];
   const section = match[2].replace(/-/g, ' ');
   const field = match[3].replace(/-/g, ' ');
