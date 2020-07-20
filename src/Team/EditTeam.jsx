@@ -41,7 +41,7 @@ export default function EditTeam() {
     <Page title="Edit team" width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: team.name || '', code: team.code || '' }}
+          initialValues={{ name: team.name, code: team.code }}
           validate={validate}
           onSubmit={values => {
             // TODO Add error handling
@@ -49,7 +49,7 @@ export default function EditTeam() {
             navigate('..');
           }}
         >
-          <Form className="flex flex-col items-start">
+          <Form className="flex flex-col items-stretch">
             <ShortText
               name="name"
               onClick={obj => obj.target.setSelectionRange(0, obj.target.value.length)}

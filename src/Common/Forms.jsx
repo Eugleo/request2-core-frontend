@@ -103,10 +103,10 @@ export function ShortText({
   );
 }
 
-export function LongText({ name, description, hint, label = undefined }) {
+export function LongText({ name, description = '', hint = '', label = undefined, className = '' }) {
   return (
     <TextField name={name} description={description} hint={hint} label={label}>
-      {(field, classes) => <textarea {...field} className={c(classes, 'h-20')} />}
+      {(field, classes) => <textarea {...field} className={c(classes, 'h-20', className)} />}
     </TextField>
   );
 }

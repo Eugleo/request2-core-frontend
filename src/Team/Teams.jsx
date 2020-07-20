@@ -5,7 +5,7 @@ import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import { Authentized, Authorized, useAuth } from '../Utils/Auth';
+import { Authentized, Authorized } from '../Utils/Auth';
 
 import Page from '../Page/Page';
 import NewTeam from './NewTeam';
@@ -34,7 +34,7 @@ function TeamList() {
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
             {teams.map(team => (
-              <Team key={team._id} editLink={`/teams/${team._id}/edit`} team={team} />
+              <Team key={team._id} editLink={`${team._id}/edit`} team={team} />
             ))}
           </div>
           <Pagination currentPage={currentPage} pages={pages} />
@@ -47,7 +47,7 @@ function TeamList() {
 function AddTeamButton() {
   return (
     <Link
-      to="/teams/new"
+      to="new"
       className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
     >
       <Icon.Plus className="stroke-2 mr-1" /> Add new team
