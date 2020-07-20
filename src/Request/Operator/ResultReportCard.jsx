@@ -14,6 +14,7 @@ import * as Button from '../../Common/Buttons';
 import { useAuth } from '../../Utils/Auth';
 import { makeFieldPath } from '../../Utils/FieldPath';
 import StatusPicker from './StatusPicker';
+import StatusSelect from './StatusSelector';
 
 function getValidate(fields) {
   return values => {
@@ -81,9 +82,7 @@ export default function ResultReportCard({ request }) {
 
   return (
     <Card title="Edit the results">
-      <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
-        <StatusPicker />
-      </Formik>
+      <Formik initialValues={initialValues} onSubmit={values => console.log(values)} />
     </Card>
   );
 }

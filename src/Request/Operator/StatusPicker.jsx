@@ -36,36 +36,36 @@ function StatusButton({ title, className = '', onClick, active = false, activeCl
 }
 
 export default function StatusPicker() {
-  const [field, , meta] = useField({ name: 'status' });
+  const [active, setActive] = useState('Pending');
 
   return (
-    <div className="flex flex-col items-stretch w-32">
+    <div className="flex flex-row">
       <StatusButton
         title="Pending"
-        active={field.value === 'Pending'}
+        active={active === 'Pending'}
         className="mb-2 "
         activeCl="bg-blue-100 text-blue-400 border border-blue-300"
-        onClick={() => meta.setValue('Pending')}
+        onClick={() => setActive('Pending')}
       />
       <StatusButton
         title="In progress"
-        active={field.value === 'In progress'}
+        active={active === 'In progress'}
         className="mb-2 "
         activeCl="bg-yellow-100 text-yellow-600 border border-yellow-300"
-        onClick={() => meta.setValue('In progress')}
+        onClick={() => setActive('In progress')}
       />
       <StatusButton
         title="Done"
-        active={field.value === 'Done'}
+        active={active === 'Done'}
         className="mb-10"
         activeCl="bg-green-100 text-green-400 border border-green-300"
-        onClick={() => meta.setValue('Done')}
+        onClick={() => setActive('Done')}
       />
       <StatusButton
         title="Awaiting input"
-        active={field.value === 'Awaiting input'}
+        active={active === 'Awaiting input'}
         activeCl="bg-red-100 text-red-400 border border-red-300"
-        onClick={() => meta.setValue('Awaiting input')}
+        onClick={() => setActive('Awaiting input')}
       />
     </div>
   );

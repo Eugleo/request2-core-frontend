@@ -9,8 +9,10 @@ import * as Button from '../Common/Buttons';
 import ResultReportCard from './Operator/ResultReportCard';
 import { useLoadResources } from '../Utils/Api';
 
-import { maybe } from '../Utils/Func';
+import { maybe, capitalize } from '../Utils/Func';
 import { parseFieldPath } from '../Utils/FieldPath';
+import StatusPicker from './Operator/StatusPicker';
+import StatusSelect from './Operator/StatusSelector';
 
 function Property({ name, property: { propertyData, dateAdded } }) {
   return (
@@ -34,11 +36,11 @@ function Property({ name, property: { propertyData, dateAdded } }) {
   );
 }
 
-function HeaderItem({ label, contents }) {
+function HeaderItem({ label, children }) {
   return (
     <div className="mb-4 col-span-1">
       <h3 className="font-medium text-gray-600">{label}</h3>
-      <p className="text-gray-800">{contents}</p>
+      {children}
     </div>
   );
 }
@@ -52,7 +54,7 @@ function RequestHeader({ request, author, lastChange }) {
           <span className="ml-4 text-3xl text-gray-500">#{request.code}</span>
         </div>
         <div className="flex flex-row items-center">
-          <StatusLabel status={request.status} />
+          <StatusSelect />
           <p className="ml-4 text-gray-700 text-sm">
             <span className="font-semibold">{author.name}</span> has requested this item{' '}
             <span>{moment.unix(lastChange).fromNow()}</span>
@@ -135,9 +137,20 @@ function RequestDetails({ request, author, team }) {
 
   return (
     <div className="flex flex-col items-start row-span-2">
-      <HeaderItem label="Author" contents={`${author.name} @ ${team.name}`} />
-      <HeaderItem label="Date requested" contents={formatDate(request.dateCreated)} />
-      <HeaderItem label="Type" contents={type.charAt(0).toUpperCase() + type.slice(1)} />
+      <HeaderItem label="Author">
+        <p className="text-gray-800">
+          {author.name} @ {team.name}
+        </p>
+      </HeaderItem>
+      <HeaderItem label="Date requested">
+        <p className="text-gray-800">{formatDate(request.dateCreated)}</p>
+      </HeaderItem>
+      <HeaderItem label="Type">
+        <p className="text-gray-800">{capitalize(type)}</p>
+      </HeaderItem>
+      <HeaderItem label="Status">
+        <StatusPicker />
+      </HeaderItem>
     </div>
   );
 }
