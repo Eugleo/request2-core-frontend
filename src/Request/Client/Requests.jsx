@@ -5,12 +5,11 @@ import Page from '../../Page/Page';
 
 import { List } from '../../Common/List';
 
-import { useAuth } from '../../Utils/Auth';
 import * as Api from '../../Utils/Api';
 import { usePagination } from '../../Common/PageSwitcher';
 import RequestPage from '../RequestPage';
 import NewRequestPage from '../NewRequest';
-import { Section, ListItem, EmptyLabel } from '../RequestElements';
+import { Section, EmptyLabel, ListItemWithoutAuthor } from '../RequestElements';
 
 export default function Requests() {
   return (
@@ -33,11 +32,12 @@ function compareRequests(r1, r2) {
 }
 
 function RequestList() {
-  const { auth } = useAuth();
-  const { sTot, lim, off } = usePagination(100);
-  const requests = Api.useGetWitLimit('/requests', lim, off, sTot, v => v.sort(compareRequests));
+  const { setTotal, limit, offset } = usePagination(100);
+  const requests = Api.useGetWitLimit('/requests', limit, offset, setTotal, v =>
+    v.sort(compareRequests)
+  );
 
-  const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
+  const makeReq = r => <ListItemWithoutAuthor key={r._id} request={r} to={r._id.toString()} />;
 
   const inProgress = requests
     .filter(r => r.status === 'WIP' || r.status === 'Requested')
@@ -76,8 +76,11 @@ function NewRequestSection() {
 
   return (
     <div
-      style={{ gridTemplateColumns: 'repeat(auto-fit, minmax(250px, 1fr));', gridAutoRows: '1fr' }}
-      className="grid grid-cols-3 lg:grid-cols-4 gap-5"
+      style={{
+        gridTemplateColumns: 'repeat(auto-fit, minmax(13ch, 1fr))',
+        gridAutoRows: '1fr',
+      }}
+      className="grid gap-5 "
     >
       {requestTypes.map(rt => (
         <NewRequestButton
@@ -98,8 +101,8 @@ function NewRequestSection() {
 
 function NewRequestButton({ name, link }) {
   return (
-    <Link to={link} className="flex">
-      <div className="duration-150 hover:shadow-lg relative rounded-lg bg-white shadow-md p-4 flex flex-col-reverse">
+    <Link to={link} className="h-full w-full">
+      <div className="h-full w-full duration-150 hover:shadow-lg relative rounded-lg bg-white shadow-md p-4 flex flex-col-reverse">
         <span className="lg:mt-10 mt-6 text-lg">{name}</span>
       </div>
     </Link>
