@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Icon from 'react-feather';
 import { AtomSpinner } from 'react-epic-spinners';
-import { Link, useParams, Routes, Route } from 'react-router-dom';
+import { Link, useParams, Routes, Route, Navigate } from 'react-router-dom';
 import moment from 'moment';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
@@ -13,6 +13,7 @@ import Page, { CenteredPage } from '../Page/Page';
 import MdRender from '../Common/MdRender';
 import NewAnnouncement from './NewAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
+import { maybe } from '../Utils/Func';
 
 export function Announcements() {
   return (
@@ -27,7 +28,22 @@ export function Announcements() {
 
 function AnnList() {
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const anns = Api.useGetWitLimit('/announcements', limit, offset, setTotal);
+  const { data: payload, status, error } = Api.useLoadResourcesWithLimit(
+    '/announcements',
+    limit,
+    offset,
+    setTotal
+  );
+  const anns = payload && payload.values;
+
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+
+  if (status === 'loading') {
+    return <Page title="Announcements" width="max-w-2xl" />;
+  }
 
   return (
     <Page title="Announcements" width="max-w-2xl">
@@ -60,7 +76,7 @@ function AddAnnButton() {
 }
 
 function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreated } }) {
-  const author = Api.useGet(authorId ? `/users/${authorId}` : undefined);
+  const { data: author } = Api.useLoadResources(maybe(authorId, id => `/users/${id}`));
 
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
@@ -101,10 +117,15 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
 
 export function AnnouncementFromUrl() {
   const { id } = useParams();
-  const ann = Api.useGet(`/announcements/${id}`);
-  const author = Api.useGet(ann ? `/users/${ann.authorId}` : undefined);
+  const { data: ann, error, status } = Api.useLoadResources(`/announcements/${id}`);
+  const { data: author } = Api.useLoadResources(maybe(ann, a => `/users/${a.authorId}`));
 
-  if (!ann) {
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+
+  if (status === 'loading') {
     return (
       <CenteredPage title="Loading announcement">
         <div className="flex justify-center">

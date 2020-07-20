@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Icon from 'react-feather';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
@@ -10,6 +10,7 @@ import { Authentized, Authorized } from '../Utils/Auth';
 import Page from '../Page/Page';
 import NewTeam from './NewTeam';
 import EditTeam from './EditTeam';
+import { comparator } from '../Utils/Func';
 
 export default function Teams() {
   return (
@@ -23,7 +24,23 @@ export default function Teams() {
 
 function TeamList() {
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const teams = Api.useGetWitLimit('/teams', limit, offset, setTotal);
+  const { data: payload, error, status } = Api.useLoadResourcesWithLimit(
+    '/teams',
+    limit,
+    offset,
+    setTotal,
+    v => v.sort(comparator(t => t.name))
+  );
+  const teams = payload && payload.values;
+
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+
+  if (status === 'loading') {
+    return <Page title="Teams" width="max-w-2xl" />;
+  }
 
   return (
     <Page title="Teams" width="max-w-2xl">

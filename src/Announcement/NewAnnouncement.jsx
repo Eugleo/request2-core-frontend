@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 
-import { useNavigate, useParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 
 import { useAuth } from '../Utils/Auth';

@@ -6,7 +6,7 @@ import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
-import { useGet } from '../Utils/Api';
+import { useLoadResources } from '../Utils/Api';
 
 function validate(values) {
   const error = {};
@@ -25,17 +25,18 @@ function validate(values) {
 export default function EditTeam() {
   const { id } = useParams();
   const { authPut, authDel } = useAuth();
-  const team = useGet(`/teams/${id}`, { name: '', code: '', active: false });
+  const { data: team, error, status } = useLoadResources(`/teams/${id}`);
   const navigate = useNavigate();
 
-  if (!team) {
+  if (status === 'loading') {
+    return <Page title="Edit team" width="max-w-2xl" />;
+  }
+  if (error) {
+    console.log(error);
     return <Navigate to="/404" />;
   }
 
-  // TODO Add proper loading
-  if (team && team.name === '') {
-    return <Page title="Edit team" width="max-w-2xl" />;
-  }
+  console.log({ team, error, status });
 
   return (
     <Page title="Edit team" width="max-w-2xl">
@@ -46,7 +47,7 @@ export default function EditTeam() {
           onSubmit={values => {
             // TODO Add error handling
             authPut(`/teams/${id}`, { ...team, ...values });
-            navigate('..');
+            navigate(-1);
           }}
         >
           <Form className="flex flex-col items-stretch">
@@ -69,7 +70,7 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authDel(`/teams/${id}`);
-                      navigate('../..');
+                      navigate(-1);
                     }}
                     classNames={['mr-2']}
                   />
@@ -79,12 +80,12 @@ export default function EditTeam() {
                     onClick={() => {
                       // TODO Add error handling
                       authPut(`/teams/${id}`, { ...team, active: true });
-                      navigate('../..');
+                      navigate(-1);
                     }}
                     classNames={['mr-2']}
                   />
                 )}
-                <Button.Normal title="Cancel" onClick={() => navigate('../..')} />
+                <Button.Normal title="Cancel" onClick={() => navigate(-1)} />
               </div>
             </div>
           </Form>

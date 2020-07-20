@@ -136,7 +136,7 @@ function generateCode(type, date) {
 function submit(authPost, typeAbbrev, type, properties, authorId, teamId) {
   return authPost('/requests', {
     props: Object.entries(properties)
-      .filter(([name]) => !name.startsWith('request-description/'))
+      .filter(([name]) => !name.startsWith('client:request-description/'))
       .map(([name, value]) => ({
         authorId,
         propertyType: name,
@@ -145,7 +145,7 @@ function submit(authPost, typeAbbrev, type, properties, authorId, teamId) {
         active: true,
       })),
     req: {
-      name: properties['request-description/sample-name'],
+      name: properties['client:request-description/sample-name'],
       code: generateCode(typeAbbrev, new Date()),
       authorId,
       teamId,
@@ -208,7 +208,7 @@ export default function NewRequestPage() {
               values,
               auth.userId,
               auth.user.team._id
-            ).then(() => navigate('..'));
+            ).then(() => navigate(-1));
           }}
           validate={validateSMR(
             fields.map(f => ({ ...f, name: makeFieldPath('client', f.section, f.name) })),

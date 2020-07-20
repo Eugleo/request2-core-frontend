@@ -1,6 +1,6 @@
 import React from 'react';
 import * as Icon from 'react-feather';
-import { Link, Routes, Route } from 'react-router-dom';
+import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import Page from '../../Page/Page';
 
 import { List } from '../../Common/List';
@@ -10,6 +10,7 @@ import { usePagination } from '../../Common/PageSwitcher';
 import RequestPage from '../RequestPage';
 import NewRequestPage from '../NewRequest';
 import { Section, EmptyLabel, ListItemWithoutAuthor } from '../RequestElements';
+import { comparator } from '../../Utils/Func';
 
 export default function Requests() {
   return (
@@ -21,21 +22,25 @@ export default function Requests() {
   );
 }
 
-function compareRequests(r1, r2) {
-  if (r1.dateCreated < r2.dateCreated) {
-    return -1;
-  }
-  if (r1.dateCreated === r2.dateCreated) {
-    return 0;
-  }
-  return 1;
-}
-
 function RequestList() {
   const { setTotal, limit, offset } = usePagination(100);
-  const requests = Api.useGetWitLimit('/requests', limit, offset, setTotal, v =>
-    v.sort(compareRequests)
+  const { data: payload, error, status } = Api.useLoadResourcesWithLimit(
+    '/requests',
+    limit,
+    offset,
+    setTotal,
+    v => v.sort(comparator(r => r.dateCreated))
   );
+  const requests = payload && payload.values;
+
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+
+  if (status === 'loading') {
+    return <Page title="My requests" width="max-w-4xl" />;
+  }
 
   const makeReq = r => <ListItemWithoutAuthor key={r._id} request={r} to={r._id.toString()} />;
 
@@ -83,11 +88,7 @@ function NewRequestSection() {
       className="grid gap-5 "
     >
       {requestTypes.map(rt => (
-        <NewRequestButton
-          key={rt.title}
-          link={`/requests/new/${rt.type}`}
-          name={`New ${rt.title}`}
-        />
+        <NewRequestButton key={rt.title} link={`new/${rt.type}`} name={`New ${rt.title}`} />
       ))}
       <div className="cursor-pointer duration-150 p-4 rounded-lg hover:bg-gray-200 flex justify-center items-center flex-col">
         <div className="bg-gray-300 rounded-full w-12 h-12 p-3 mb-2 flex items-center justify-center">

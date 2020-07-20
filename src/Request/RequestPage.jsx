@@ -1,13 +1,13 @@
 import React from 'react';
 import c from 'classnames';
-import { useParams } from 'react-router-dom';
+import { useParams, Navigate } from 'react-router-dom';
 import moment from 'moment';
 import { Section } from '../Common/Forms';
 import formatDate from '../Utils/Date';
 import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import ResultReportCard from './ResultReportCard';
-import { useGet } from '../Utils/Api';
+import { useLoadResources } from '../Utils/Api';
 
 import { maybe } from '../Utils/Func';
 import { parseFieldPath } from '../Utils/FieldPath';
@@ -188,13 +188,22 @@ function Card({ title, children }) {
 export default function RequestPage() {
   const { id } = useParams();
   const { auth } = useAuth();
-  const { request, properties } = useGet(`/requests/${id}`, {});
-  const team = useGet(maybe(request, r => `/teams/${r.teamId}`));
-  const author = useGet(maybe(request, r => `/users/${r.authorId}`));
-  const shouldFetchAssignee = request && auth.userId !== request.assigneeId;
-  const assignee = useGet(maybe(shouldFetchAssignee, r => `users/${r.assigneeId}`));
+  const { data: payload, error, status } = useLoadResources(`/requests/${id}`);
+  const request = payload && payload.request;
+  const properties = payload && payload.properties;
 
-  if (!request || !properties) {
+  const { data: team } = useLoadResources(maybe(request, r => `/teams/${r.teamId}`));
+  const { data: author } = useLoadResources(maybe(request, r => `/users/${r.authorId}`));
+  const shouldFetchAssignee = request && auth.userId !== request.assigneeId;
+  const { data: assignee } = useLoadResources(
+    maybe(shouldFetchAssignee, r => `/users/${r.assigneeId}`)
+  );
+
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+  if (status === 'loading') {
     return <Page />;
   }
 
@@ -209,7 +218,6 @@ export default function RequestPage() {
     return (
       <Page>
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
-
         <RequestProperties
           title="Results report"
           properties={propertiesWithSections.filter(p => p.namespace === 'operator')}

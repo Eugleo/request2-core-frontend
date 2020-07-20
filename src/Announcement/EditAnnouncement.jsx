@@ -1,8 +1,6 @@
-import React, { useEffect, useState } from 'react';
-// import { Formik, Form } from 'formik';
+import React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-// import {InputField} from '../Common/Forms';
-import { Formik, Form, useField } from 'formik';
+import { Formik, Form } from 'formik';
 import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
@@ -10,7 +8,7 @@ import * as Button from '../Common/Buttons';
 
 import MdRender from '../Common/MdRender';
 import { ShortText, LongText } from '../Common/Forms';
-import { useGet } from '../Utils/Api';
+import { useLoadResources } from '../Utils/Api';
 
 function validate(values) {
   const error = {};
@@ -31,12 +29,13 @@ export default function EditAnnouncement() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { authDel, authPut } = useAuth();
-  const ann = useGet(`/announcements/${id}`, { active: null, title: '', body: '' });
+  const { data: ann, error, status } = useLoadResources(`/announcements/${id}`);
 
-  if (ann === null) {
-    return <Navigate to=".." />;
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
   }
-  if (ann && ann.title === '') {
+  if (status === 'loading') {
     return <Page title="Edit announcement" width="max-w-2xl" />;
   }
 

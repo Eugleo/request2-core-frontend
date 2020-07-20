@@ -1,7 +1,7 @@
 import React from 'react';
 import { ItemContainer, LinkedItemTitle } from '../Common/List';
 import formatDate from '../Utils/Date';
-import { useGet } from '../Utils/Api';
+import { useLoadResources } from '../Utils/Api';
 
 export function EmptyLabel({ text }) {
   return (
@@ -21,14 +21,14 @@ export function Section({ title, children }) {
 }
 
 export function ListItem({ request: { name, code, status, authorId, dateCreated }, to }) {
-  const author = useGet(`/users/${authorId}`);
+  const { data: author } = useLoadResources(`/users/${authorId}`);
 
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle to={to} title={name} />
         <span className="text-xs text-gray-600">
-          #{code} created by <span className="font-semibold">{(author && author.name) || ''}</span>
+          #{code} created by {author && <span className="font-semibold">{author.name}</span>}
         </span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>

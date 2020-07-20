@@ -98,8 +98,7 @@ function AppBody(props) {
       return (
         <Routes>
           <Route path="/me/*">
-            <Route path="requests" element={<RequestsAsClient />} />
-            <Route path="requests/:id" element={<RequestPage />} />
+            <Route path="requests/*" element={<RequestsAsClient />} />
           </Route>
           <Route path="/requests/*" element={<RequestsAsOperator />} />
           <Route path="/announcements/*" element={<Announcements />} />

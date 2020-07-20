@@ -9,49 +9,42 @@ export function urlWithParams(url, params) {
   return `${url}?${strParams.join('&')}`;
 }
 
-export function useGetWitLimit(url, limit, offset, setTotal, transform = x => x) {
+export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transform = x => x) {
   const { authGet } = useAuth();
-  const [items, setItems] = useState([]);
+  const [items, setItems] = useState({ data: undefined, error: undefined, status: 'loading' });
 
-  // TODO Add error handling
   useEffect(() => {
     const urlWithLimit = urlWithParams(url, { limit, offset });
     authGet(urlWithLimit)
-      .then(r => {
-        if (r.ok) {
-          return r.json();
-        }
-        throw new Error(`Unable to retrieve the items from ${url}`);
-      })
+      .then(r => r.json())
       .then(json => {
-        setTotal(json.total);
-        setItems(transform(json.values));
-      })
-      .catch(console.log);
+        if (json.data && json.data.values && json.data.total) {
+          setItems({
+            ...json,
+            data: { ...json.data, values: transform(json.data.values) },
+            status: 'loaded',
+          });
+          setTotal(json.data.total);
+        } else {
+          setItems({ ...json, status: 'loaded' });
+          setTotal(0);
+        }
+      });
   }, [authGet, setTotal, limit, offset]);
 
   return items;
 }
 
-export function useGet(url, def = undefined) {
+// The server returns either { error: ... } or { data: ... }
+export function useLoadResources(url) {
   const { authGet } = useAuth();
-  const [item, setItem] = useState(def);
+  const [item, setItem] = useState({ status: 'loading', data: undefined, error: undefined });
 
-  // TODO Add error handling
   useEffect(() => {
     if (url) {
       authGet(url)
-        .then(r => {
-          if (r.ok) {
-            return r.json();
-          }
-          throw new Error(`Unable to retrieve the items from ${url}`);
-        })
-        .then(json => setItem(json))
-        .catch(err => {
-          console.log(err);
-          setItem(null);
-        });
+        .then(r => r.json())
+        .then(json => setItem({ ...json, status: 'loaded' }));
     }
   }, [authGet, setItem, url]);
 
