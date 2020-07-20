@@ -40,6 +40,22 @@ export function ListItem({ request: { name, code, status, authorId, dateCreated 
   );
 }
 
+export function ListItemWithoutAuthor({ request: { name, code, status, dateCreated }, to }) {
+  return (
+    <ItemContainer>
+      <div className="flex flex-col col-span-5">
+        <LinkedItemTitle to={to} title={name} />
+        <span className="text-xs text-gray-600">#{code}</span>
+      </div>
+      <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
+
+      <div className="col-span-3 flex-row-reverse flex">
+        <StatusLabel status={status} />
+      </div>
+    </ItemContainer>
+  );
+}
+
 function StatusLabel({ status }) {
   if (status === 'Done') {
     return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
