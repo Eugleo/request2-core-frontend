@@ -17,6 +17,7 @@ import validateSMR from './SmallMoleculeRequest';
 import { PrimarySubmit } from '../Common/Buttons';
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
+import { makeFieldPath } from '../Utils/FieldPath';
 
 // TODO Report errors on incorrect include
 function resolveInclude(preField) {
@@ -26,20 +27,10 @@ function resolveInclude(preField) {
   return resolveInclude({ ...preField, include: undefined, ...fieldLib[preField.include] });
 }
 
-function fieldPath(section, propertyName) {
-  const normalize = str => str.toLowerCase().replace(/\s+/g, '-');
-  return `${normalize(section)}/${normalize(propertyName)}`;
-}
-
-function showFieldPath(fp) {
-  const path = fp.match(/[^/]+$/)[0].replace(/-/g, ' ');
-  return path.charAt(0).toUpperCase() + path.slice(1);
-}
-
 function makeField(preField, sectionTitle) {
   const f = resolveInclude(preField);
-  const name = fieldPath(sectionTitle, f.name);
-  const label = showFieldPath(name);
+  const name = makeFieldPath('client', sectionTitle, f.name);
+  const label = f.name;
   switch (f.type) {
     case 'text-short':
       return (
@@ -198,7 +189,7 @@ export default function NewRequestPage() {
   const initialValues = fields.reduce(
     (acc, { name, type, section }) => ({
       ...acc,
-      [fieldPath(section, name)]: type === 'multiple-choice' ? [] : '',
+      [makeFieldPath('client', section, name)]: type === 'multiple-choice' ? [] : '',
     }),
     {}
   );
@@ -220,7 +211,7 @@ export default function NewRequestPage() {
             ).then(() => navigate('..'));
           }}
           validate={validateSMR(
-            fields.map(f => ({ ...f, name: fieldPath(f.section, f.name) })),
+            fields.map(f => ({ ...f, name: makeFieldPath('client', f.section, f.name) })),
             getValidate
           )}
           validateOnChange

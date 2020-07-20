@@ -16,6 +16,7 @@ import * as Button from '../Common/Buttons';
 import report from './RequestTypes/result-report.json';
 import fieldLib from './RequestTypes/field-library.json';
 import { useAuth } from '../Utils/Auth';
+import { makeFieldPath } from '../Utils/FieldPath';
 
 function resolveInclude(preField) {
   if (!preField.include) {
@@ -24,20 +25,10 @@ function resolveInclude(preField) {
   return resolveInclude({ ...preField, include: undefined, ...fieldLib[preField.include] });
 }
 
-function fieldPath(section, propertyName) {
-  const normalize = str => str.toLowerCase().replace(/\s+/g, '-');
-  return `${normalize(section)}/${normalize(propertyName)}`;
-}
-
-function showFieldPath(fp) {
-  const path = fp.match(/[^/]+$/)[0].replace(/-/g, ' ');
-  return path.charAt(0).toUpperCase() + path.slice(1);
-}
-
 function makeField(preField, sectionTitle) {
   const f = resolveInclude(preField);
-  const name = fieldPath(sectionTitle, f.name);
-  const label = showFieldPath(name);
+  const name = makeFieldPath('operator', sectionTitle, f.name);
+  const label = f.name;
   switch (f.type) {
     case 'text-short':
       return (
@@ -170,7 +161,7 @@ export default function ResultReportCard({ request }) {
   const initialValues = fields.reduce(
     (acc, { name, type, section }) => ({
       ...acc,
-      [fieldPath(section, name)]: type === 'multiple-choice' ? [] : '',
+      [makeFieldPath('operator', section, name)]: type === 'multiple-choice' ? [] : '',
     }),
     {}
   );

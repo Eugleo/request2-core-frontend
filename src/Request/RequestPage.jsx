@@ -9,16 +9,8 @@ import * as Button from '../Common/Buttons';
 import ResultReportCard from './ResultReportCard';
 import { useGet } from '../Utils/Api';
 
-import maybe from '../Utils/Maybe';
-
-function parseFieldPath(fp) {
-  const section = fp.match(/^[^/]+/)[0].replace(/-/g, ' ');
-  const name = fp.match(/[^/]+$/)[0].replace(/-/g, ' ');
-  return [
-    section.charAt(0).toUpperCase() + section.slice(1),
-    name.charAt(0).toUpperCase() + name.slice(1),
-  ];
-}
+import { maybe } from '../Utils/Func';
+import { parseFieldPath } from '../Utils/FieldPath';
 
 function Property({ name, property: { propertyData, dateAdded } }) {
   return (
@@ -117,7 +109,7 @@ function RequestProperties({ properties, title }) {
       {properties
         .filter(p => p.active && p.propertyData !== '')
         .reduce((acc, p, ix) => {
-          const [section, name] = parseFieldPath(p.propertyType);
+          const { section, name } = parseFieldPath(p.propertyType);
           if (ix > 0 && acc[acc.length - 1].name === section) {
             acc[acc.length - 1].fields.push({ ...p, name });
             return acc;
@@ -210,16 +202,17 @@ export default function RequestPage() {
     ...properties.filter(p => p.active).map(p => p.dateAdded),
     request.dateCreated
   );
-  if (properties.find(p => p.propertyType.startsWith('operator:'))) {
+
+  const propertiesWithSections = properties.map(p => ({ ...p, ...parseFieldPath(p.propertyType) }));
+
+  if (propertiesWithSections.find(p => p.namespace === 'operator')) {
     return (
       <Page>
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
 
         <RequestProperties
           title="Results report"
-          properties={properties
-            .filter(p => p.propertyType.startsWith('operator:'))
-            .map(p => ({ ...p, propertyType: p.propertyType.slice(9) }))}
+          properties={propertiesWithSections.filter(p => p.namespace === 'operator')}
         />
 
         <RequestDetails
@@ -232,7 +225,7 @@ export default function RequestPage() {
 
         <RequestProperties
           title="Request details"
-          properties={properties.filter(p => !p.propertyType.startsWith('operator:'))}
+          properties={propertiesWithSections.filter(p => p.namespace !== 'operator')}
         />
         <Authorized roles={['Operator']}>
           {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
