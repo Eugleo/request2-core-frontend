@@ -6,7 +6,7 @@ import { Section } from '../Common/Forms';
 import formatDate from '../Utils/Date';
 import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
-import ResultReportCard from './ResultReportCard';
+import ResultReportCard from './Operator/ResultReportCard';
 import { useLoadResources } from '../Utils/Api';
 
 import { maybe } from '../Utils/Func';
@@ -109,18 +109,17 @@ function RequestProperties({ properties, title }) {
       {properties
         .filter(p => p.active && p.propertyData !== '')
         .reduce((acc, p, ix) => {
-          const { section, name } = parseFieldPath(p.propertyType);
-          if (ix > 0 && acc[acc.length - 1].name === section) {
-            acc[acc.length - 1].fields.push({ ...p, name });
+          if (ix > 0 && acc[acc.length - 1].name === p.section) {
+            acc[acc.length - 1].fields.push(p);
             return acc;
           }
-          return acc.concat([{ name: section, fields: [{ ...p, name }] }]);
+          return acc.concat([{ name: p.section, fields: [p] }]);
         }, [])
         .map(s => {
           return (
             <Section key={s.name} title={s.name}>
               {s.fields.map(f => (
-                <Property key={f.propertyType} name={f.name} property={f} />
+                <Property key={f.propertyType} name={f.field} property={f} />
               ))}
             </Section>
           );
@@ -131,22 +130,14 @@ function RequestProperties({ properties, title }) {
   );
 }
 
-function RequestDetails({ request, author, assignee, team, lastChange }) {
-  const { auth } = useAuth();
-
+function RequestDetails({ request, author, team }) {
   const type = request.requestType.split(/-/g).join(' ');
-  let assigneeName = 'Nobody yet';
-  if (request.assigneeId) {
-    assigneeName = request.assigneeId === auth.userId ? 'Me' : (assignee && assignee.name) || '';
-  }
 
   return (
     <div className="flex flex-col items-start row-span-2">
       <HeaderItem label="Author" contents={`${author.name} @ ${team.name}`} />
       <HeaderItem label="Date requested" contents={formatDate(request.dateCreated)} />
-      <HeaderItem label="Last change" contents={moment.unix(lastChange).fromNow()} />
       <HeaderItem label="Type" contents={type.charAt(0).toUpperCase() + type.slice(1)} />
-      <HeaderItem label="Assigned to" contents={assigneeName} />
     </div>
   );
 }
@@ -212,7 +203,9 @@ export default function RequestPage() {
     request.dateCreated
   );
 
-  const propertiesWithSections = properties.map(p => ({ ...p, ...parseFieldPath(p.propertyType) }));
+  const propertiesWithSections = properties.map(p => {
+    return { ...p, ...parseFieldPath(p.propertyType) };
+  });
 
   if (propertiesWithSections.find(p => p.namespace === 'operator')) {
     return (
@@ -245,17 +238,18 @@ export default function RequestPage() {
   return (
     <Page>
       <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
-      <RequestProperties title="Request details" properties={properties} />
+      <Authorized roles={['Operator']}>
+        <ResultReportCard request={request} />
+      </Authorized>
+
       <RequestDetails
         request={request}
         author={author || {}}
-        assignee={assignee}
         team={team || {}}
         lastChange={lastChange}
       />
-      <Authorized roles={['Operator']}>
-        {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
-      </Authorized>
+
+      <RequestProperties title="Request details" properties={propertiesWithSections} />
     </Page>
   );
 }
