@@ -1,7 +1,19 @@
 import React from 'react';
+import c from 'classnames';
 import { ItemContainer, LinkedItemTitle } from '../Common/List';
 import formatDate from '../Utils/Date';
 import { useLoadResources } from '../Utils/Api';
+import { statusStyle } from './Status';
+
+export function idToCode(id) {
+  const table = [1, 2, 3, 4, 5, 6, 7, 8, 9, ...'ABCDEFGHIJKLMNPQRSTUVWXYZ'.split('')];
+
+  const first = Math.floor(id / (34 * 34));
+  const second = Math.floor((id - first * (34 * 34)) / 34);
+  const third = id - first * (34 * 34) - second * 34;
+
+  return `${table[first]}${table[second]}${table[third]}`;
+}
 
 export function EmptyLabel({ text }) {
   return (
@@ -20,7 +32,7 @@ export function Section({ title, children }) {
   );
 }
 
-export function ListItem({ request: { name, code, status, authorId, dateCreated }, to }) {
+export function ListItem({ request: { _id, name, status, authorId, dateCreated }, to }) {
   const { data: author } = useLoadResources(`/users/${authorId}`);
 
   return (
@@ -28,7 +40,8 @@ export function ListItem({ request: { name, code, status, authorId, dateCreated 
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle to={to} title={name} />
         <span className="text-xs text-gray-600">
-          #{code} created by {author && <span className="font-semibold">{author.name}</span>}
+          #{idToCode(_id)} created by{' '}
+          {author && <span className="font-semibold">{author.name}</span>}
         </span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
@@ -40,12 +53,12 @@ export function ListItem({ request: { name, code, status, authorId, dateCreated 
   );
 }
 
-export function ListItemWithoutAuthor({ request: { name, code, status, dateCreated }, to }) {
+export function ListItemWithoutAuthor({ request: { _id, name, status, dateCreated }, to }) {
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle to={to} title={name} />
-        <span className="text-xs text-gray-600">#{code}</span>
+        <span className="text-xs text-gray-600">#{idToCode(_id)}</span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
 
@@ -57,19 +70,5 @@ export function ListItemWithoutAuthor({ request: { name, code, status, dateCreat
 }
 
 function StatusLabel({ status }) {
-  if (status === 'Done') {
-    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
-  }
-  if (status === 'WIP') {
-    return (
-      <div className="bg-yellow-200 py-2 px-4 rounded-full text-xs text-yellow-700">
-        In progress
-      </div>
-    );
-  }
-  if (status === 'Requested') {
-    return (
-      <div className="bg-gray-200 py-2 px-4 rounded-full text-xs text-gray-700">Requested</div>
-    );
-  }
+  return <div className={c('py-1 px-4 rounded-full text-xs', statusStyle(status))}>{status}</div>;
 }
