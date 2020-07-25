@@ -32,7 +32,10 @@ export function Section({ title, children }) {
   );
 }
 
-export function ListItem({ request: { _id, name, status, authorId, dateCreated }, to }) {
+export function ListItem({
+  request: { _id, name, requestType, status, authorId, dateCreated },
+  to,
+}) {
   const { data: author } = useLoadResources(`/users/${authorId}`);
 
   return (
@@ -40,7 +43,7 @@ export function ListItem({ request: { _id, name, status, authorId, dateCreated }
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle to={to} title={name} />
         <span className="text-xs text-gray-600">
-          #{idToCode(_id)} created by{' '}
+          #{requestType.charAt(0).toUpperCase()}/{idToCode(_id)} created by{' '}
           {author && <span className="font-semibold">{author.name}</span>}
         </span>
       </div>
@@ -53,12 +56,17 @@ export function ListItem({ request: { _id, name, status, authorId, dateCreated }
   );
 }
 
-export function ListItemWithoutAuthor({ request: { _id, name, status, dateCreated }, to }) {
+export function ListItemWithoutAuthor({
+  request: { _id, name, requestType, status, dateCreated },
+  to,
+}) {
   return (
     <ItemContainer>
       <div className="flex flex-col col-span-5">
         <LinkedItemTitle to={to} title={name} />
-        <span className="text-xs text-gray-600">#{idToCode(_id)}</span>
+        <span className="text-xs text-gray-600">
+          #{requestType.charAt(0).toUpperCase()}/{idToCode(_id)}
+        </span>
       </div>
       <span className="text-sm text-gray-700 col-span-2">{formatDate(dateCreated)}</span>
 

@@ -51,7 +51,9 @@ function RequestHeader({ request, author, lastChange }) {
       <div className="col-span-3">
         <div className="flex flex-row items-center mb-2">
           <h1 className="text-3xl font-bold leading-tight text-black">{request.name}</h1>
-          <span className="ml-4 text-3xl text-gray-500">#{idToCode(request._id)}</span>
+          <span className="ml-4 text-3xl text-gray-500">
+            #{request.requestType.charAt(0).toUpperCase()}/{idToCode(request._id)}
+          </span>
         </div>
         <div className="flex flex-row items-center">
           <StatusSelect request={request} />
@@ -123,24 +125,6 @@ function RequestDetails({ request, author, team }) {
   );
 }
 
-function StatusLabel({ status }) {
-  if (status === 'Done') {
-    return <div className="bg-green-200 py-2 px-4 rounded-full text-xs text-green-700">Done</div>;
-  }
-  if (status === 'WIP') {
-    return (
-      <div className="bg-yellow-200 py-2 px-4 rounded-full text-xs text-yellow-700">
-        In progress
-      </div>
-    );
-  }
-  if (status === 'Requested') {
-    return (
-      <div className="bg-gray-400 py-2 px-4 rounded-full text-xs text-gray-800">Requested</div>
-    );
-  }
-}
-
 function Card({ title, children }) {
   return (
     <div
@@ -157,7 +141,7 @@ function Card({ title, children }) {
   );
 }
 
-export default function RequestPage() {
+export default function RequestPage({ typeCode }) {
   const { id } = useParams();
   const { auth } = useAuth();
   const { data: payload, error, status } = useLoadResources(`/requests/${id}`);
@@ -166,10 +150,6 @@ export default function RequestPage() {
 
   const { data: team } = useLoadResources(maybe(request, r => `/teams/${r.teamId}`));
   const { data: author } = useLoadResources(maybe(request, r => `/users/${r.authorId}`));
-  const shouldFetchAssignee = request && auth.userId !== request.assigneeId;
-  const { data: assignee } = useLoadResources(
-    maybe(shouldFetchAssignee, r => `/users/${r.assigneeId}`)
-  );
 
   if (error) {
     console.log(error);
