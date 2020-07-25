@@ -27,3 +27,18 @@ export function statusStyleHover(status) {
       return 'hover:bg-purple-100 hover:text-purple-400';
   }
 }
+
+export function statusToString(status) {
+  switch (status) {
+    case 'InProgress':
+      return 'In Progress';
+    case 'AwaitingInput':
+      return 'Awaiting Input';
+    default:
+      return status;
+  }
+}
+
+export function statusFromString(str) {
+  return str.replace(' ', '');
+}

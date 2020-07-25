@@ -122,38 +122,24 @@ function stringify(value) {
   return value.toString();
 }
 
-// TODO Write this properly
-function generateCode(type, date) {
-  const year = date.getFullYear().toString().slice(2);
-  const day = date.getDate().toString().padStart(2, 0);
-  const month = date.getMonth().toString().padStart(2, 0);
-  const minute = date.getMinutes().toString().padStart(2, 0);
-  const second = date.getSeconds().toString().padStart(2, 0);
-  const hour = date.getHours().toString().padStart(2, 0);
-  return `${type}:${year}${month}${day}:${hour}${minute}${second}`;
-}
-
-function submit(authPost, typeAbbrev, type, properties, authorId, teamId) {
+function submit(authPost, type, properties, authorId, teamId) {
   return authPost('/requests', {
-    props: Object.entries(properties)
-      .filter(([name]) => !name.startsWith('client:request-description/'))
-      .map(([name, value]) => ({
+    props: [...Object.entries(properties), ['operator:request-description/status', 'Pending']].map(
+      ([name, value]) => ({
         authorId,
-        propertyType: name,
+        propertyPath: name,
         propertyData: stringify(value),
         dateAdded: Math.round(Date.now() / 1000),
         active: true,
-      })),
+      })
+    ),
     req: {
       name: properties['client:request-description/sample-name'],
-      code: generateCode(typeAbbrev, new Date()),
       authorId,
       teamId,
-      assigneeId: null,
-      status: 'Requested',
+      status: 'Pending',
       requestType: type,
       dateCreated: Math.round(Date.now() / 1000),
-      active: true,
     },
   });
 }
@@ -201,14 +187,9 @@ export default function NewRequestPage() {
         <Formik
           initialValues={initialValues}
           onSubmit={values => {
-            submit(
-              authPost,
-              schema.typeAbbreviation,
-              requestType,
-              values,
-              auth.userId,
-              auth.user.team._id
-            ).then(() => navigate(-1));
+            submit(authPost, requestType, values, auth.userId, auth.user.team._id).then(() =>
+              navigate(-1)
+            );
           }}
           validate={validateSMR(
             fields.map(f => ({ ...f, name: makeFieldPath('client', f.section, f.name) })),
@@ -230,7 +211,7 @@ export default function NewRequestPage() {
               <Button.Normal
                 title="Cancel"
                 classNames={['bg-white']}
-                onClick={() => navigate('..')}
+                onClick={() => navigate(-1)}
               />
             </div>
           </Form>

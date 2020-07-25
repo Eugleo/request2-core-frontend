@@ -11,6 +11,7 @@ import RequestPage from '../RequestPage';
 import NewRequestPage from '../NewRequest';
 import { Section, EmptyLabel, ListItemWithoutAuthor } from '../RequestElements';
 import { comparator } from '../../Utils/Func';
+import { statusToString } from '../Status';
 
 export default function Requests() {
   return (
@@ -31,7 +32,7 @@ function RequestList() {
     setTotal,
     v => v.sort(comparator(r => r.dateCreated))
   );
-  const requests = payload && payload.values;
+  const requests = payload && payload.values.map(r => ({ ...r, status: statusToString(r.status) }));
 
   if (error) {
     console.log(error);
@@ -44,9 +45,7 @@ function RequestList() {
 
   const makeReq = r => <ListItemWithoutAuthor key={r._id} request={r} to={r._id.toString()} />;
 
-  const inProgress = requests
-    .filter(r => r.status === 'WIP' || r.status === 'Requested')
-    .map(makeReq);
+  const inProgress = requests.filter(r => !['Done', 'Deleted'].includes(r.status)).map(makeReq);
 
   const finished = requests.filter(r => r.status === 'Done').map(makeReq);
 

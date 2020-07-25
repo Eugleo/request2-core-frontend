@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import c from 'classnames';
-import { statusStyle, statusStyleHover } from '../Status';
+import { statusStyle, statusStyleHover, statusFromString, statusToString } from '../Status';
+import { useAuth } from '../../Utils/Auth';
 
 function StatusButton({ title, onClick, active }) {
   return (
@@ -19,9 +20,10 @@ function StatusButton({ title, onClick, active }) {
   );
 }
 
-export default function StatusSelect() {
+export default function StatusSelect({ request }) {
+  const { auth, authPut } = useAuth();
   const [hidden, setHidden] = useState(true);
-  const [selected, setSelected] = useState('Pending');
+  const [selected, setSelected] = useState(statusToString(request.status));
 
   return (
     <div className="relative">
@@ -64,6 +66,19 @@ export default function StatusSelect() {
             onClick={() => {
               setHidden(true);
               setSelected(title);
+              authPut(`/requests/${request._id}`, {
+                req: { ...request, status: statusFromString(title) },
+                props: [
+                  {
+                    requestId: request._id,
+                    authorId: auth.userId,
+                    propertyPath: 'operator:request-description/status',
+                    propertyData: statusFromString(title),
+                    dateAdded: Math.round(Date.now() / 1000),
+                    active: true,
+                  },
+                ],
+              });
             }}
           />
         ))}

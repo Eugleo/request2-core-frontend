@@ -12,6 +12,8 @@ import RequestPage from '../RequestPage';
 import { EmptyLabel, Section, ListItem } from '../RequestElements';
 import { comparator } from '../../Utils/Func';
 
+import { statusToString } from '../Status';
+
 export default function Requests() {
   return (
     <Routes>
@@ -31,7 +33,7 @@ function RequestList() {
     setTotal,
     v => v.sort(comparator(r => r.dateCreated))
   );
-  const requests = payload && payload.values;
+  const requests = payload && payload.values.map(r => ({ ...r, status: statusToString(r.status) }));
 
   if (error) {
     console.log(error);
@@ -44,27 +46,15 @@ function RequestList() {
 
   const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
 
-  const assigned = requests
-    .filter(r => r.status !== 'Done' && r.assigneeId === auth.userId)
-    .map(makeReq);
+  const assigned = requests.filter(r => r.status !== 'Done').map(makeReq);
 
-  const finished = requests
-    .filter(r => r.status === 'Done' && r.assigneeId === auth.userId)
-    .map(makeReq);
-
-  const unattended = requests.filter(r => r.status !== 'Done' && !r.assigneeId).map(makeReq);
+  const finished = requests.filter(r => r.status === 'Done').map(makeReq);
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">
       <div className="mb-12">
         <Section title="Assigned to me">
           <List elements={assigned} empty={<EmptyLabel text="Yay! No more requests to solve" />} />
-        </Section>
-        <Section title="Unattended">
-          <List
-            elements={unattended}
-            empty={<EmptyLabel text="All of the requests have an assigned operator" />}
-          />
         </Section>
 
         <Section title="Finished">

@@ -8,10 +8,10 @@ import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import ResultReportCard from './Operator/ResultReportCard';
 import { useLoadResources } from '../Utils/Api';
+import { idToCode } from './RequestElements';
 
 import { maybe, capitalize } from '../Utils/Func';
 import { parseFieldPath } from '../Utils/FieldPath';
-import StatusPicker from './Operator/StatusPicker';
 import StatusSelect from './Operator/StatusSelector';
 
 function Property({ name, property: { propertyData, dateAdded } }) {
@@ -38,8 +38,8 @@ function Property({ name, property: { propertyData, dateAdded } }) {
 
 function HeaderItem({ label, children }) {
   return (
-    <div className="mb-4 col-span-1">
-      <h3 className="font-medium text-gray-600">{label}</h3>
+    <div className="text-sm mb-4 col-span-1">
+      <h3 className="text-sm font-medium text-gray-600">{label}</h3>
       {children}
     </div>
   );
@@ -51,10 +51,10 @@ function RequestHeader({ request, author, lastChange }) {
       <div className="col-span-3">
         <div className="flex flex-row items-center mb-2">
           <h1 className="text-3xl font-bold leading-tight text-black">{request.name}</h1>
-          <span className="ml-4 text-3xl text-gray-500">#{request.code}</span>
+          <span className="ml-4 text-3xl text-gray-500">#{idToCode(request._id)}</span>
         </div>
         <div className="flex flex-row items-center">
-          <StatusSelect />
+          <StatusSelect request={request} />
           <p className="ml-4 text-gray-700 text-sm">
             <span className="font-semibold">{author.name}</span> has requested this item{' '}
             <span>{moment.unix(lastChange).fromNow()}</span>
@@ -67,36 +67,7 @@ function RequestHeader({ request, author, lastChange }) {
 }
 
 function ButtonArray({ request }) {
-  const { auth, authPut } = useAuth();
   const buttons = [];
-
-  if (auth.user.roles.includes('Operator') && !request.assigneeId) {
-    buttons.push(
-      <Button.Primary
-        title="Assign to me"
-        onClick={() => {
-          authPut(`/requests/${request._id}`, {
-            props: [],
-            req: { ...request, assigneeId: auth.userId },
-          });
-        }}
-      />
-    );
-  }
-
-  if (request.assigneeId === auth.userId) {
-    buttons.push(
-      <Button.Danger
-        title="Unassign me"
-        onClick={() => {
-          authPut(`/requests/${request._id}`, {
-            props: [],
-            req: { ...request, assigneeId: undefined },
-          });
-        }}
-      />
-    );
-  }
 
   buttons.push(
     <Button.NormalLinked to={`/requests/${request._id}/edit`} title="Edit" classNames={['mr-2']} />
@@ -121,7 +92,7 @@ function RequestProperties({ properties, title }) {
           return (
             <Section key={s.name} title={s.name}>
               {s.fields.map(f => (
-                <Property key={f.propertyType} name={f.field} property={f} />
+                <Property key={f.propertyPath} name={f.field} property={f} />
               ))}
             </Section>
           );
@@ -138,18 +109,15 @@ function RequestDetails({ request, author, team }) {
   return (
     <div className="flex flex-col items-start row-span-2">
       <HeaderItem label="Author">
-        <p className="text-gray-800">
+        <p className="text-sm text-gray-800">
           {author.name} @ {team.name}
         </p>
       </HeaderItem>
       <HeaderItem label="Date requested">
-        <p className="text-gray-800">{formatDate(request.dateCreated)}</p>
+        <p className="text-sm text-gray-800">{formatDate(request.dateCreated)}</p>
       </HeaderItem>
       <HeaderItem label="Type">
-        <p className="text-gray-800">{capitalize(type)}</p>
-      </HeaderItem>
-      <HeaderItem label="Status">
-        <StatusPicker />
+        <p className="text-sm text-gray-800">{capitalize(type)}</p>
       </HeaderItem>
     </div>
   );
@@ -217,7 +185,7 @@ export default function RequestPage() {
   );
 
   const propertiesWithSections = properties.map(p => {
-    return { ...p, ...parseFieldPath(p.propertyType) };
+    return { ...p, ...parseFieldPath(p.propertyPath) };
   });
 
   if (propertiesWithSections.find(p => p.namespace === 'operator')) {
@@ -229,13 +197,7 @@ export default function RequestPage() {
           properties={propertiesWithSections.filter(p => p.namespace === 'operator')}
         />
 
-        <RequestDetails
-          request={request}
-          author={author || {}}
-          assignee={assignee}
-          team={team || {}}
-          lastChange={lastChange}
-        />
+        <RequestDetails request={request} author={author || {}} team={team || {}} />
 
         <RequestProperties
           title="Request details"
@@ -255,12 +217,7 @@ export default function RequestPage() {
         <ResultReportCard request={request} />
       </Authorized>
 
-      <RequestDetails
-        request={request}
-        author={author || {}}
-        team={team || {}}
-        lastChange={lastChange}
-      />
+      <RequestDetails request={request} author={author || {}} team={team || {}} />
 
       <RequestProperties title="Request details" properties={propertiesWithSections} />
     </Page>
