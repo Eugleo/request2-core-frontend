@@ -1,26 +1,6 @@
 import React, { useState } from 'react';
 import c from 'classnames';
-
-function statusStyle(status, hover = false) {
-  switch (status) {
-    case 'Pending':
-      return hover
-        ? 'hover:bg-blue-100 hover:text-blue-500'
-        : 'bg-blue-100 text-blue-500 border border-blue-300 hover:border-blue-500';
-    case 'In progress':
-      return hover
-        ? 'hover:bg-orange-100 hover:text-orange-600'
-        : 'bg-orange-100 text-orange-600 border border-orange-300 hover:border-orange-500';
-    case 'Done':
-      return hover
-        ? 'hover:bg-green-100 hover:text-green-500'
-        : 'bg-green-100 text-green-500 border border-green-300 hover:border-green-500';
-    default:
-      return hover
-        ? 'hover:bg-red-100 hover:text-red-400'
-        : 'bg-red-100 text-red-400 border border-red-300 hover:border-red-500';
-  }
-}
+import { statusStyle, statusStyleHover } from '../Status';
 
 function StatusButton({ title, onClick, active }) {
   return (
@@ -30,7 +10,7 @@ function StatusButton({ title, onClick, active }) {
       className={c(
         'w-full py-3 px-8 box-border text-sm',
         active && 'text-gray-300 cursor-auto',
-        !active && statusStyle(title, true)
+        !active && statusStyleHover(title)
       )}
       onClick={onClick}
     >
@@ -57,7 +37,7 @@ export default function StatusSelect() {
           {selected}
           <div
             style={{ top: '1px' }}
-            className={c('pointer-events-none relative ml-2 ', statusStyle(selected, true))}
+            className={c('pointer-events-none relative ml-2 ', statusStyleHover(selected))}
           >
             <svg
               className="fill-current h-4 w-4"
@@ -76,7 +56,7 @@ export default function StatusSelect() {
           'absolute bg-white rounded-md shadow-lg w-48 mt-2 ml-4 border border-gray-200'
         )}
       >
-        {['Pending', 'In progress', 'Done', 'Awaiting input'].map(title => (
+        {['Pending', 'In Progress', 'Done', 'Awaiting Input', 'Deleted'].map(title => (
           <StatusButton
             key={title}
             title={title}
