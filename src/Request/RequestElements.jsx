@@ -7,10 +7,11 @@ import { statusStyle } from './Status';
 
 export function idToCode(id) {
   const table = [1, 2, 3, 4, 5, 6, 7, 8, 9, ...'ABCDEFGHIJKLMNPQRSTUVWXYZ'.split('')];
+  const k = table.length;
 
   const code = [...Array(10).keys()]
     .reverse()
-    .reduce(([dgs, rst], n) => [[...dgs, Math.floor(rst / 34 ** n)], rst % 34 ** n], [[], id])[0]
+    .reduce(([dgs, rst], n) => [[...dgs, Math.floor(rst / k ** n)], rst % k ** n], [[], id])[0]
     .map(i => table[i])
     .join('');
 
