@@ -8,11 +8,13 @@ import { statusStyle } from './Status';
 export function idToCode(id) {
   const table = [1, 2, 3, 4, 5, 6, 7, 8, 9, ...'ABCDEFGHIJKLMNPQRSTUVWXYZ'.split('')];
 
-  const first = Math.floor(id / (34 * 34));
-  const second = Math.floor((id - first * (34 * 34)) / 34);
-  const third = id - first * (34 * 34) - second * 34;
+  const code = [...Array(10).keys()]
+    .reverse()
+    .reduce(([dgs, rst], n) => [[...dgs, Math.floor(rst / 34 ** n)], rst % 34 ** n], [[], id])[0]
+    .map(i => table[i])
+    .join('');
 
-  return `${table[first]}${table[second]}${table[third]}`;
+  return code.replace(/^1+(?=\w\w\w)/, '');
 }
 
 export function EmptyLabel({ text }) {
