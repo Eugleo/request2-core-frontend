@@ -8,7 +8,7 @@ import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import ResultReportCard from './Operator/ResultReportCard';
 import { useLoadResources } from '../Utils/Api';
-import { idToCode } from './RequestElements';
+import { idToCode, StatusLabel } from './RequestElements';
 
 import { maybe, capitalize } from '../Utils/Func';
 import { parseFieldPath } from '../Utils/FieldPath';
@@ -56,7 +56,9 @@ function RequestHeader({ request, author, lastChange }) {
           </span>
         </div>
         <div className="flex flex-row items-center">
-          <StatusSelect request={request} />
+          <Authorized roles={['Operator']} or={<StatusLabel status={request.status} />}>
+            <StatusSelect request={request} />
+          </Authorized>
           <p className="ml-4 text-gray-700 text-sm">
             <span className="font-semibold">{author.name}</span> has requested this item{' '}
             <span>{moment.unix(lastChange).fromNow()}</span>
@@ -141,7 +143,7 @@ function Card({ title, children }) {
   );
 }
 
-export default function RequestPage({ typeCode }) {
+export default function RequestPage() {
   const { id } = useParams();
   const { auth } = useAuth();
   const { data: payload, error, status } = useLoadResources(`/requests/${id}`);
@@ -168,7 +170,11 @@ export default function RequestPage({ typeCode }) {
     return { ...p, ...parseFieldPath(p.propertyPath) };
   });
 
-  if (propertiesWithSections.find(p => p.namespace === 'operator')) {
+  if (
+    propertiesWithSections.find(
+      p => p.namespace === 'operator' && p.section !== 'Request description'
+    )
+  ) {
     return (
       <Page>
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />

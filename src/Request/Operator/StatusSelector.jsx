@@ -9,7 +9,7 @@ function StatusButton({ title, onClick, active }) {
       type="button"
       disabled={active}
       className={c(
-        'w-full py-3 px-8 box-border text-sm',
+        'w-full py-3 px-3 box-border text-xs',
         active && 'text-gray-300 cursor-auto',
         !active && statusStyleHover(title)
       )}
@@ -30,7 +30,7 @@ export default function StatusSelect({ request }) {
       <button
         type="button"
         className={c(
-          'rounded-full text-sm py-1 pl-4 pr-3 block transition-all duration-75',
+          'rounded-full text-xs py-1 pl-4 pr-3 block transition-all duration-75',
           statusStyle(selected)
         )}
         onClick={() => setHidden(h => !h)}
@@ -55,7 +55,7 @@ export default function StatusSelect({ request }) {
       <div
         className={c(
           hidden && 'hidden',
-          'absolute bg-white rounded-md shadow-lg w-48 mt-2 ml-4 border border-gray-200'
+          'absolute bg-white rounded-md shadow-lg w-32 mt-2 ml-4 border border-gray-200'
         )}
       >
         {['Pending', 'In Progress', 'Done', 'Awaiting Input', 'Deleted'].map(title => (

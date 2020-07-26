@@ -106,7 +106,13 @@ export function ShortText({
 export function LongText({ name, description = '', hint = '', label = undefined, className = '' }) {
   return (
     <TextField name={name} description={description} hint={hint} label={label}>
-      {(field, classes) => <textarea {...field} className={c(classes, 'h-20', className)} />}
+      {(field, classes) => (
+        <textarea
+          style={{ minHeight: '5rem' }}
+          {...field}
+          className={c(classes, 'h-20', className)}
+        />
+      )}
     </TextField>
   );
 }
@@ -175,13 +181,16 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
   );
 }
 
-export function Image() {
+export function Image({ className = '' }) {
   return (
-    <Field>
-      <div className="flex flex-col justify-center  rounded-md shadow-inner shadow-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
-        Drop thee images here
-      </div>
-    </Field>
+    <div
+      className={c(
+        'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
+        className
+      )}
+    >
+      Drop thee images here
+    </div>
   );
 }
 
@@ -212,11 +221,11 @@ function ChoiceLabel({ htmlFor, children }) {
 }
 
 function Field({ touched, error, children }) {
-  const classNames = ['flex', 'flex-col', 'w-full', 'rounded-md', 'px-4', 'py-2'];
+  const classNames = ['flex', 'flex-col', 'w-full', 'h-full', 'rounded-md', 'px-4', 'py-2'];
   return (
-    <div className={c('flex', 'flex-row', error && touched && 'bg-yellow-100')}>
+    <div className={c('flex', 'flex-row', 'w-full', error && touched && 'bg-yellow-100')}>
       <div className={c('w-1', 'bg-transparent', error && touched && 'bg-yellow-500')} />
-      <div className="flex flex-col w-full">
+      <div className="flex flex-col w-full h-full">
         <div className={c(classNames)}>{children}</div>
         {error && touched && <span className="px-4 py-2 text-yellow-800">{error}</span>}
       </div>
