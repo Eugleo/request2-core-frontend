@@ -1,14 +1,11 @@
 import { capitalize } from './Func';
 
-export function makeFieldPath(namespace, section, propertyName) {
+export function makeFieldPath(section, propertyName) {
   const normalize = str => str.toLowerCase().replace(/\s+/g, '-');
-  return `${namespace}:${normalize(section)}/${normalize(propertyName)}`;
+  return `${normalize(section)}/${normalize(propertyName)}`;
 }
 
-export function parseFieldPath(fp) {
-  const match = fp.match(/^(.+):(.+)\/(.+)$/);
-  const namespace = match[1];
-  const section = match[2].replace(/-/g, ' ');
-  const field = match[3].replace(/-/g, ' ');
-  return { namespace, section: capitalize(section), field: capitalize(field) };
+export function parseFieldName(name) {
+  const pieces = name.split('/');
+  return { section: pieces.length > 1 && capitalize(pieces[1]), field: capitalize(pieces[0]) };
 }

@@ -11,7 +11,7 @@ import { useLoadResources } from '../Utils/Api';
 import { idToCode, StatusLabel } from './RequestElements';
 
 import { maybe, capitalize } from '../Utils/Func';
-import { parseFieldPath } from '../Utils/FieldPath';
+import { parseFieldName } from '../Utils/FieldPath';
 import StatusSelect from './Operator/StatusSelector';
 
 function Property({ name, property: { propertyData, dateAdded } }) {
@@ -96,7 +96,7 @@ function RequestProperties({ properties, title }) {
           return (
             <Section key={s.name} title={s.name}>
               {s.fields.map(f => (
-                <Property key={f.propertyPath} name={f.field} property={f} />
+                <Property key={f.propertyName} name={f.field} property={f} />
               ))}
             </Section>
           );
@@ -167,27 +167,23 @@ export default function RequestPage() {
   );
 
   const propertiesWithSections = properties.map(p => {
-    return { ...p, ...parseFieldPath(p.propertyPath) };
+    return { ...p, ...parseFieldName(p.propertyName) };
   });
 
-  if (
-    propertiesWithSections.find(
-      p => p.namespace === 'operator' && p.section !== 'Request description'
-    )
-  ) {
+  if (propertiesWithSections.find(p => p.type === 'Result')) {
     return (
       <Page>
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
         <RequestProperties
           title="Results report"
-          properties={propertiesWithSections.filter(p => p.namespace === 'operator')}
+          properties={propertiesWithSections.filter(p => p.type === 'Result')}
         />
 
         <RequestDetails request={request} author={author || {}} team={team || {}} />
 
         <RequestProperties
           title="Request details"
-          properties={propertiesWithSections.filter(p => p.namespace !== 'operator')}
+          properties={propertiesWithSections.filter(p => p.type === 'Detail')}
         />
         <Authorized roles={['Operator']}>
           {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
@@ -205,7 +201,10 @@ export default function RequestPage() {
 
       <RequestDetails request={request} author={author || {}} team={team || {}} />
 
-      <RequestProperties title="Request details" properties={propertiesWithSections} />
+      <RequestProperties
+        title="Request details"
+        properties={propertiesWithSections.filter(p => p.type === 'Detail')}
+      />
     </Page>
   );
 }

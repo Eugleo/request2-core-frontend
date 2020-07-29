@@ -1,10 +1,9 @@
 import React from 'react';
-import { Form, Formik, useField } from 'formik';
+import { Form, Formik } from 'formik';
 import { LongText, Image, ShortText } from '../../Common/Forms';
 import * as Button from '../../Common/Buttons';
 
 import { useAuth } from '../../Utils/Auth';
-import { makeFieldPath } from '../../Utils/FieldPath';
 
 function getValidate(fields) {
   return values => {
@@ -37,7 +36,7 @@ function submit(authPut, properties, authorId, request) {
       .map(([name, value]) => ({
         authorId,
         requestId: request._id,
-        propertyPath: `operator:${name}`,
+        propertyName: name,
         propertyData: stringify(value),
         dateAdded: Math.round(Date.now() / 1000),
         active: true,
@@ -60,10 +59,10 @@ export default function ResultReportCard({ request }) {
 
   const initialValues = {
     status: request.status,
-    'operator:result/time-spent-(operator)': '',
-    'operator:result/time-spent-(machine)': '',
-    'operator:result/files': '',
-    'operator:result/files-description': '',
+    'result/time-spent-(operator)': '',
+    'result/time-spent-(machine)': '',
+    'result/files': '',
+    'result/files-description': '',
   };
 
   return (
@@ -77,11 +76,7 @@ export default function ResultReportCard({ request }) {
 
             <div className="col-span-4 grid grid-cols-4 px-6 py-4">
               <div className="row-span-2 col-span-3 flex flex-row items-stretch w-full h-full">
-                <LongText
-                  name="operator:result/files-description"
-                  label="Description"
-                  className="h-full w-full"
-                />
+                <LongText name="files-description" label="Description" className="h-full w-full" />
               </div>
 
               <div className="col-span-1">
@@ -91,7 +86,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="operator:result/time-spent-(operator)"
+                    name="time-spent-(operator)"
                     label="Time (operator)"
                   />
                 </div>
@@ -102,7 +97,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="operator:result/time-spent-(machine)"
+                    name="time-spent-(machine)"
                     label="Time (machine)"
                   />
                 </div>

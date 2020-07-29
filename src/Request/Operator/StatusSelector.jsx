@@ -72,7 +72,8 @@ export default function StatusSelect({ request }) {
                   {
                     requestId: request._id,
                     authorId: auth.userId,
-                    propertyPath: 'operator:request-description/status',
+                    propertyType: 'General',
+                    propertyName: 'status',
                     propertyData: statusFromString(title),
                     dateAdded: Math.round(Date.now() / 1000),
                     active: true,

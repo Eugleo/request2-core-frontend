@@ -21,7 +21,7 @@ export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transfor
         if (json.data && json.data.values && json.data.total) {
           setItems({
             ...json,
-            data: { ...json.data, values: transform(json.data.values) },
+            data: { ...json.data, values: json.data.values },
             status: 'loaded',
           });
           setTotal(json.data.total);
@@ -30,9 +30,13 @@ export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transfor
           setTotal(0);
         }
       });
-  }, [authGet, setTotal, limit, offset]);
+  }, [authGet, limit, url, offset, setTotal]);
 
-  return items;
+  return {
+    ...items,
+    data: items.data &&
+      items.data.values && { ...items.data, values: transform(items.data.values) },
+  };
 }
 
 // The server returns either { error: ... } or { data: ... }
@@ -46,7 +50,7 @@ export function useLoadResources(url) {
         .then(r => r.json())
         .then(json => setItem({ ...json, status: 'loaded' }));
     }
-  }, [authGet, setItem, url]);
+  }, [authGet, url]);
 
   return item;
 }
