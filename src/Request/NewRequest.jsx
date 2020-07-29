@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useParams, useNavigate } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
@@ -18,6 +18,8 @@ import { PrimarySubmit } from '../Common/Buttons';
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import { makeFieldPath } from '../Utils/FieldPath';
+import { idToCode } from './RequestElements';
+import Modal from '../Common/Modal';
 
 // TODO Report errors on incorrect include
 function resolveInclude(preField) {
@@ -29,7 +31,7 @@ function resolveInclude(preField) {
 
 function makeField(preField, sectionTitle) {
   const f = resolveInclude(preField);
-  const name = makeFieldPath('client', sectionTitle, f.name);
+  const name = makeFieldPath(sectionTitle, f.name);
   const label = f.name;
   switch (f.type) {
     case 'text-short':
@@ -122,19 +124,28 @@ function stringify(value) {
   return value.toString();
 }
 
-function submit(authPost, type, properties, authorId, teamId) {
+function submit(authPost, type, formValues, authorId, teamId) {
+  console.log(formValues);
+
+  const mkProp = (n, t, d) => ({
+    authorId,
+    dateAdded: Math.round(Date.now() / 1000),
+    active: true,
+    propertyName: n,
+    propertyType: t,
+    propertyData: d,
+  });
+
+  const status = mkProp('status', 'General', 'Pending');
+  const title = mkProp('title', 'General', formValues.title);
+  const details = Object.entries(formValues).map(([name, value]) =>
+    mkProp(name, 'Detail', stringify(value))
+  );
+
   return authPost('/requests', {
-    props: [...Object.entries(properties), ['operator:request-description/status', 'Pending']].map(
-      ([name, value]) => ({
-        authorId,
-        propertyPath: name,
-        propertyData: stringify(value),
-        dateAdded: Math.round(Date.now() / 1000),
-        active: true,
-      })
-    ),
+    props: [status, title, ...details],
     req: {
-      name: properties['client:request-description/sample-name'],
+      name: formValues.title,
       authorId,
       teamId,
       status: 'Pending',
@@ -144,8 +155,11 @@ function submit(authPost, type, properties, authorId, teamId) {
   });
 }
 
+// TODO Add "title" field
+
 // TODO Check that the field names are unique
 export default function NewRequestPage() {
+  const [modalInfo, setModalInfo] = useState({ show: false, request: undefined });
   const { requestType } = useParams();
   const { auth, authPost } = useAuth();
   const navigate = useNavigate();
@@ -161,12 +175,8 @@ export default function NewRequestPage() {
     return <Page title="New Request" width="max-w-4xl" />;
   }
 
-  const initialSection = {
-    title: 'Request Description',
-    fields: [{ include: '@sample-name', required: true }, { include: '@private-note' }],
-  };
   const schema = requestTypes.get(requestType);
-  const sections = [initialSection, ...schema.sections];
+  const { sections } = schema;
   const fields = sections
     .map(s => s.fields.map(f => ({ section: s.title, ...f })))
     .flat()
@@ -175,29 +185,57 @@ export default function NewRequestPage() {
   const initialValues = fields.reduce(
     (acc, { name, type, section }) => ({
       ...acc,
-      [makeFieldPath('client', section, name)]: type === 'multiple-choice' ? [] : '',
+      [makeFieldPath(section, name)]: type === 'multiple-choice' ? [] : '',
     }),
     {}
   );
 
+  // TODO Add proper error handling
   // TODO Add validation code specific for each type of request
   return (
     <Page title={`New ${schema.title}`} width="max-w-4xl">
+      {modalInfo.show && modalInfo.request ? (
+        <Modal title="Success!" closeText="Close" onClose={() => navigate(-1)}>
+          <p className="mt-4">
+            Your request has been submitted. Please tag your samples with the following ID so that
+            the operators will be able to match them to your request
+          </p>
+          <div className="my-8 flex flex-row justify-center items-center ">
+            <p className="text-gray-600 text-2xl">
+              #{modalInfo.request.requestType.charAt(0).toUpperCase()}/
+              {idToCode(modalInfo.request._id)}
+            </p>
+          </div>
+        </Modal>
+      ) : null}
       <div className="bg-white rounded-lg shadow-md mb-8 p-8">
         <Formik
           initialValues={initialValues}
           onSubmit={values => {
-            submit(authPost, requestType, values, auth.userId, auth.user.team._id).then(() =>
-              navigate(-1)
-            );
+            submit(authPost, requestType, values, auth.userId, auth.user.team._id)
+              .then(r =>
+                r.status === 201
+                  ? r.json()
+                  : new Error('There was an error with processing your request')
+              )
+              .then(js => setModalInfo({ show: true, request: js.data }))
+              .catch(console.log);
           }}
           validate={validateSMR(
-            fields.map(f => ({ ...f, name: makeFieldPath('client', f.section, f.name) })),
+            fields.map(f => ({ ...f, name: makeFieldPath(f.section, f.name) })),
             getValidate
           )}
           validateOnChange
         >
           <Form className="grid grid-cols-1 gap-12">
+            <Section title="General information">
+              <ShortText
+                name="title"
+                label="Request title"
+                description="How the request will be called in your requests overview"
+              />
+            </Section>
+            <div className="border-t-2 bg-gray-400 w-full" />
             {sections
               .map(makeSection)
               .concat()
