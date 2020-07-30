@@ -125,8 +125,6 @@ function stringify(value) {
 }
 
 function submit(authPost, type, formValues, authorId, teamId) {
-  console.log(formValues);
-
   const mkProp = (n, t, d) => ({
     authorId,
     dateAdded: Math.round(Date.now() / 1000),
@@ -138,9 +136,9 @@ function submit(authPost, type, formValues, authorId, teamId) {
 
   const status = mkProp('status', 'General', 'Pending');
   const title = mkProp('title', 'General', formValues.title);
-  const details = Object.entries(formValues).map(([name, value]) =>
-    mkProp(name, 'Detail', stringify(value))
-  );
+  const details = Object.entries(formValues)
+    .filter(([name]) => name !== 'title')
+    .map(([name, value]) => mkProp(name, 'Detail', stringify(value)));
 
   return authPost('/requests', {
     props: [status, title, ...details],
@@ -154,8 +152,6 @@ function submit(authPost, type, formValues, authorId, teamId) {
     },
   });
 }
-
-// TODO Add "title" field
 
 // TODO Check that the field names are unique
 export default function NewRequestPage() {

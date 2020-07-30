@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import c from 'classnames';
 import { statusStyle, statusStyleHover, statusFromString, statusToString } from '../Status';
 import { useAuth } from '../../Utils/Auth';
+import useOnClickOutside from '../../Common/Hooks';
 
 function StatusButton({ title, onClick, active }) {
   return (
@@ -24,9 +25,10 @@ export default function StatusSelect({ request }) {
   const { auth, authPut } = useAuth();
   const [hidden, setHidden] = useState(true);
   const [selected, setSelected] = useState(statusToString(request.status));
+  const ref = useOnClickOutside(() => setHidden(true));
 
   return (
-    <div className="relative">
+    <div className="relative" ref={hidden ? null : ref}>
       <button
         type="button"
         className={c(
@@ -52,38 +54,35 @@ export default function StatusSelect({ request }) {
         </div>
       </button>
 
-      <div
-        className={c(
-          hidden && 'hidden',
-          'absolute bg-white rounded-md shadow-lg w-32 mt-2 ml-4 border border-gray-200'
-        )}
-      >
-        {['Pending', 'In Progress', 'Done', 'Awaiting Input', 'Deleted'].map(title => (
-          <StatusButton
-            key={title}
-            title={title}
-            active={title === selected}
-            onClick={() => {
-              setHidden(true);
-              setSelected(title);
-              authPut(`/requests/${request._id}`, {
-                req: { ...request, status: statusFromString(title) },
-                props: [
-                  {
-                    requestId: request._id,
-                    authorId: auth.userId,
-                    propertyType: 'General',
-                    propertyName: 'status',
-                    propertyData: statusFromString(title),
-                    dateAdded: Math.round(Date.now() / 1000),
-                    active: true,
-                  },
-                ],
-              });
-            }}
-          />
-        ))}
-      </div>
+      {!hidden && (
+        <div className="absolute bg-white rounded-md shadow-lg w-32 mt-2 ml-4 border border-gray-200">
+          {['Pending', 'In Progress', 'Done', 'Awaiting Input', 'Deleted'].map(title => (
+            <StatusButton
+              key={title}
+              title={title}
+              active={title === selected}
+              onClick={() => {
+                setHidden(true);
+                setSelected(title);
+                authPut(`/requests/${request._id}`, {
+                  req: { ...request, status: statusFromString(title) },
+                  props: [
+                    {
+                      requestId: request._id,
+                      authorId: auth.userId,
+                      propertyType: 'General',
+                      propertyName: 'status',
+                      propertyData: statusFromString(title),
+                      dateAdded: Math.round(Date.now() / 1000),
+                      active: true,
+                    },
+                  ],
+                });
+              }}
+            />
+          ))}
+        </div>
+      )}
     </div>
   );
 }
