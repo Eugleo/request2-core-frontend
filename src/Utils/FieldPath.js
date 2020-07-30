@@ -6,6 +6,8 @@ export function makeFieldPath(section, propertyName) {
 }
 
 export function parseFieldName(name) {
-  const pieces = name.split('/');
-  return { section: pieces.length > 1 && capitalize(pieces[1]), field: capitalize(pieces[0]) };
+  const denormalize = str => str && capitalize(str.split('-').join(' '));
+
+  const [field, section] = name.split('/').reverse();
+  return { section: denormalize(section), field: denormalize(field) };
 }

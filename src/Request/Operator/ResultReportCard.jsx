@@ -29,19 +29,19 @@ function stringify(value) {
   return value.toString();
 }
 
-function submit(authPut, properties, authorId, request) {
+function submit(authorId, authPut, properties, request) {
+  console.log(properties);
   return authPut(`/requests/${request._id}`, {
-    props: Object.entries(properties)
-      .filter(f => f.name !== 'status/status')
-      .map(([name, value]) => ({
-        authorId,
-        requestId: request._id,
-        propertyName: name,
-        propertyData: stringify(value),
-        dateAdded: Math.round(Date.now() / 1000),
-        active: true,
-      })),
-    req: { ...request, status: properties['status/status'] },
+    props: Object.entries(properties).map(([name, value]) => ({
+      authorId,
+      requestId: request._id,
+      propertyType: 'Result',
+      propertyName: name,
+      propertyData: stringify(value),
+      dateAdded: Math.round(Date.now() / 1000),
+      active: true,
+    })),
+    req: request,
   });
 }
 
@@ -58,7 +58,6 @@ export default function ResultReportCard({ request }) {
   const { auth, authPut } = useAuth();
 
   const initialValues = {
-    status: request.status,
     'result/time-spent-(operator)': '',
     'result/time-spent-(machine)': '',
     'result/files': '',
@@ -67,7 +66,12 @@ export default function ResultReportCard({ request }) {
 
   return (
     <Card title="Results">
-      <Formik initialValues={initialValues} onSubmit={values => console.log(values)}>
+      <Formik
+        initialValues={initialValues}
+        onSubmit={values => {
+          submit(auth.userId, authPut, values, request).then(r => console.log(r));
+        }}
+      >
         <Form className="col-span-3 bg-white rounded-md shadow-sm">
           <div className="border-b border-gray-200 grid grid-cols-5">
             <div className="col-span-1 bg-gray-200">
@@ -76,7 +80,11 @@ export default function ResultReportCard({ request }) {
 
             <div className="col-span-4 grid grid-cols-4 px-6 py-4">
               <div className="row-span-2 col-span-3 flex flex-row items-stretch w-full h-full">
-                <LongText name="files-description" label="Description" className="h-full w-full" />
+                <LongText
+                  name="result/files-description"
+                  label="Description"
+                  className="h-full w-full"
+                />
               </div>
 
               <div className="col-span-1">
@@ -86,7 +94,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="time-spent-(operator)"
+                    name="result/time-spent-(operator)"
                     label="Time (operator)"
                   />
                 </div>
@@ -97,7 +105,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="time-spent-(machine)"
+                    name="result/time-spent-(machine)"
                     label="Time (machine)"
                   />
                 </div>

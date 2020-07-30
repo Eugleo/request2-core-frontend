@@ -46,15 +46,18 @@ function RequestList() {
 
   const makeReq = r => <ListItem key={r._id} request={r} to={r._id.toString()} />;
 
-  const assigned = requests.filter(r => r.status !== 'Done').map(makeReq);
+  const inProgress = requests.filter(r => r.status !== 'Done').map(makeReq);
 
   const finished = requests.filter(r => r.status === 'Done').map(makeReq);
 
   return (
     <Page title="Client's Requests" width="max-w-4xl">
       <div className="mb-12">
-        <Section title="Assigned to me">
-          <List elements={assigned} empty={<EmptyLabel text="Yay! No more requests to solve" />} />
+        <Section title="In progress">
+          <List
+            elements={inProgress}
+            empty={<EmptyLabel text="Yay! No more requests to solve" />}
+          />
         </Section>
 
         <Section title="Finished">

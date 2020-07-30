@@ -20,7 +20,7 @@ export function idToCode(id) {
 
 export function EmptyLabel({ text }) {
   return (
-    <div className="flex flex-col justify-center  rounded-md border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500">
+    <div className="flex flex-col justify-center rounded-md border h-32 text-center text-lg text-gray-500">
       {text}
     </div>
   );

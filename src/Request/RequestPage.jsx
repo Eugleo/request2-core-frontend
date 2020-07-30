@@ -60,7 +60,7 @@ function RequestHeader({ request, author, lastChange }) {
             <StatusSelect request={request} />
           </Authorized>
           <p className="ml-4 text-gray-700 text-sm">
-            <span className="font-semibold">{author.name}</span> has requested this item{' '}
+            <span className="font-semibold">{author.name}</span> has updated this item{' '}
             <span>{moment.unix(lastChange).fromNow()}</span>
           </p>
         </div>
@@ -170,20 +170,22 @@ export default function RequestPage() {
     return { ...p, ...parseFieldName(p.propertyName) };
   });
 
-  if (propertiesWithSections.find(p => p.type === 'Result')) {
+  console.log(propertiesWithSections);
+
+  if (propertiesWithSections.find(p => p.propertyType === 'Result')) {
     return (
       <Page>
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
         <RequestProperties
           title="Results report"
-          properties={propertiesWithSections.filter(p => p.type === 'Result')}
+          properties={propertiesWithSections.filter(p => p.propertyType === 'Result')}
         />
 
         <RequestDetails request={request} author={author || {}} team={team || {}} />
 
         <RequestProperties
           title="Request details"
-          properties={propertiesWithSections.filter(p => p.type === 'Detail')}
+          properties={propertiesWithSections.filter(p => p.propertyType === 'Detail')}
         />
         <Authorized roles={['Operator']}>
           {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
@@ -203,7 +205,7 @@ export default function RequestPage() {
 
       <RequestProperties
         title="Request details"
-        properties={propertiesWithSections.filter(p => p.type === 'Detail')}
+        properties={propertiesWithSections.filter(p => p.propertyType === 'Detail')}
       />
     </Page>
   );
