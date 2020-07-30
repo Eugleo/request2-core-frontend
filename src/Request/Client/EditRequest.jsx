@@ -1,26 +1,58 @@
-import React, { useMemo, useState } from 'react';
-import { Formik, Form } from 'formik';
-import { useParams, useNavigate } from 'react-router-dom';
-import fieldLib from './RequestTypes/field-library.json';
-import Page from '../Page/Page';
+import React, { useMemo } from 'react';
+import { useParams, Navigate, useNavigate } from 'react-router';
+import { Form, Formik } from 'formik';
 import {
-  Section,
-  ShortText,
   LongText,
+  ShortText,
   TextWithHints,
   SingleChoice,
   MultipleChoice,
   Image,
-} from '../Common/Forms';
+  Section,
+} from '../../Common/Forms';
+import fieldLib from '../RequestTypes/field-library.json';
+import { makeFieldPath } from '../../Utils/FieldPath';
+import { useAsyncGet } from '../../Utils/Api';
+import Page from '../../Page/Page';
+import validateSMR from '../SmallMoleculeRequest';
+import * as Button from '../../Common/Buttons';
+import { useAuth } from '../../Utils/Auth';
 
-import validateSMR from './SmallMoleculeRequest';
-import { useAuth } from '../Utils/Auth';
-import * as Button from '../Common/Buttons';
-import { makeFieldPath } from '../Utils/FieldPath';
-import { idToCode } from './RequestElements';
-import Modal from '../Common/Modal';
+function stringify(value) {
+  if (Array.isArray(value)) {
+    return value.map(v => v.toString()).join(';;;');
+  }
+  if (typeof value === 'object') {
+    return value.value;
+  }
+  return value.toString();
+}
 
-// TODO Report errors on incorrect include
+function submit(authPut, authorId, request, formValues) {
+  const mkProp = (n, t, d) => ({
+    authorId,
+    dateAdded: Math.round(Date.now() / 1000),
+    active: true,
+    propertyName: n,
+    propertyType: t,
+    propertyData: d,
+    requestId: request._id,
+  });
+
+  const title = mkProp('title', 'General', formValues.title);
+  const details = Object.entries(formValues)
+    .filter(([name]) => name !== 'title')
+    .map(([name, value]) => mkProp(name, 'Detail', stringify(value)));
+
+  return authPut(`/requests/${request._id}`, {
+    props: [title, ...details],
+    req: {
+      ...request,
+      name: formValues.title,
+    },
+  });
+}
+
 function resolveInclude(preField) {
   if (!preField.include) {
     return preField;
@@ -91,14 +123,6 @@ function makeField(preField, sectionTitle) {
   }
 }
 
-function makeSection(section) {
-  return (
-    <Section title={section.title} key={section.title} description={section.description}>
-      {section.fields.map(f => makeField(f, section.title))}
-    </Section>
-  );
-}
-
 function getValidate(fields) {
   return values => {
     return fields
@@ -113,55 +137,25 @@ function getValidate(fields) {
   };
 }
 
-function stringify(value) {
-  if (Array.isArray(value)) {
-    return value.map(v => v.toString()).join(';;;');
-  }
-  if (typeof value === 'object') {
-    return value.value;
-  }
-  return value.toString();
+function makeSection(section) {
+  return (
+    <Section title={section.title} key={section.title} description={section.description}>
+      {section.fields.map(f => makeField(f, section.title))}
+    </Section>
+  );
 }
 
-function submit(authPost, type, formValues, authorId, teamId) {
-  const mkProp = (n, t, d) => ({
-    authorId,
-    dateAdded: Math.round(Date.now() / 1000),
-    active: true,
-    propertyName: n,
-    propertyType: t,
-    propertyData: d,
-  });
-
-  const status = mkProp('status', 'General', 'Pending');
-  const title = mkProp('title', 'General', formValues.title);
-  const details = Object.entries(formValues)
-    .filter(([name]) => name !== 'title')
-    .map(([name, value]) => mkProp(name, 'Detail', stringify(value)));
-
-  return authPost('/requests', {
-    props: [status, title, ...details],
-    req: {
-      name: formValues.title,
-      authorId,
-      teamId,
-      status: 'Pending',
-      requestType: type,
-      dateCreated: Math.round(Date.now() / 1000),
-    },
-  });
-}
-
-// TODO Check that the field names are unique
-export default function NewRequestPage() {
-  const [modalInfo, setModalInfo] = useState({ show: false, request: undefined });
-  const { requestType } = useParams();
-  const { auth, authPost } = useAuth();
+export default function EditRequestPage() {
   const navigate = useNavigate();
+  const { id } = useParams();
+  const { auth, authPut } = useAuth();
+  const { data: payload, error, pending } = useAsyncGet(`/requests/${id}`);
+  const request = payload && payload.request;
+  const properties = payload && payload.properties;
 
   const requestTypes = useMemo(() => {
     const types = new Map();
-    const req = require.context('./RequestTypes', true, /^.*\.rcfg\.json$/im);
+    const req = require.context('../RequestTypes', true, /^.*\.rcfg\.json$/im);
     req.keys().forEach(fileName => types.set(fileName.match(/[^/]+(?=\.rcfg)/)[0], req(fileName)));
     return types;
   }, []);
@@ -170,7 +164,15 @@ export default function NewRequestPage() {
     return <Page title="New Request" width="max-w-4xl" />;
   }
 
-  const schema = requestTypes.get(requestType);
+  if (pending) {
+    return <Page title="Editing request" />;
+  }
+  if (error) {
+    console.log(error);
+    return <Navigate to="/404" />;
+  }
+
+  const schema = requestTypes.get(request.requestType);
   const { sections } = schema;
   const fields = sections
     .map(s => s.fields.map(f => ({ section: s.title, ...f })))
@@ -178,44 +180,23 @@ export default function NewRequestPage() {
     .map(field => resolveInclude(field));
 
   const initialValues = fields.reduce(
-    (acc, { name, type, section }) => ({
-      ...acc,
-      [makeFieldPath(section, name)]: type === 'multiple-choice' ? [] : '',
-    }),
-    {}
+    (acc, { name, type: fieldType, section }) => {
+      const propertyName = makeFieldPath(section, name);
+      const { propertyData } = properties.find(p => p.active && p.propertyName === propertyName);
+      return {
+        ...acc,
+        [propertyName]: fieldType === 'multiple-choice' ? propertyData.split(';;;') : propertyData,
+      };
+    },
+    { title: request.name }
   );
 
-  // TODO Add proper error handling
-  // TODO Add validation code specific for each type of request
   return (
-    <Page title={`New ${schema.title}`} width="max-w-4xl">
-      {modalInfo.show && modalInfo.request ? (
-        <Modal title="Success!" closeText="Close" onClose={() => navigate(-1)}>
-          <p className="mt-4">
-            Your request has been submitted. Please tag your samples with the following ID so that
-            the operators will be able to match them to your request
-          </p>
-          <div className="my-8 flex flex-row justify-center items-center ">
-            <p className="text-gray-600 text-2xl">
-              #{modalInfo.request.requestType.charAt(0).toUpperCase()}/
-              {idToCode(modalInfo.request._id)}
-            </p>
-          </div>
-        </Modal>
-      ) : null}
+    <Page title={`Editing ${request.name} request`} width="max-w-4xl">
       <div className="bg-white rounded-lg shadow-md mb-8 p-8">
         <Formik
           initialValues={initialValues}
-          onSubmit={values => {
-            submit(authPost, requestType, values, auth.userId, auth.user.team._id)
-              .then(r =>
-                r.status === 201
-                  ? r.json()
-                  : new Error('There was an error with processing your request')
-              )
-              .then(js => setModalInfo({ show: true, request: js.data }))
-              .catch(console.log);
-          }}
+          onSubmit={values => submit(authPut, auth.userId, request, values)}
           validate={validateSMR(
             fields.map(f => ({ ...f, name: makeFieldPath(f.section, f.name) })),
             getValidate
@@ -240,7 +221,7 @@ export default function NewRequestPage() {
                 <div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />,
               ])}
             <div className="flex flex-row justify-between" key="submit">
-              <Button.PrimarySubmit>Submit the request</Button.PrimarySubmit>
+              <Button.PrimarySubmit>Save changes</Button.PrimarySubmit>
               <Button.Normal
                 title="Cancel"
                 classNames={['bg-white']}

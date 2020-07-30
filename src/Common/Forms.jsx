@@ -71,7 +71,7 @@ export function SingleChoice({ name, description, label = undefined, hint, choic
         {choices.map(choice => (
           <ChoiceField key={choice}>
             <input
-              {...{ ...field, checked: undefined }}
+              {...{ ...field, checked: meta.initialValue === choice }}
               type="radio"
               id={`${name}/${choice}`}
               value={choice}
@@ -175,6 +175,7 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
         onChange={value => helpers.setValue(value)}
         isClearable
         options={sortedHints.map(h => ({ value: h, label: h }))}
+        defaultValue={{ value: meta.initialValue, label: meta.initialValue }}
       />
       <Description>{description}</Description>
     </Field>

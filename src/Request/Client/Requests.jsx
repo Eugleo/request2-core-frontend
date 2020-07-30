@@ -19,7 +19,7 @@ export default function Requests() {
     <Routes>
       <Route path="" element={<RequestList />} />
       <Route path="new/:requestType" element={<NewRequestPage />} />
-      <Route path="edit/:id" element={<EditRequestPage />} />
+      <Route path=":id/edit" element={<EditRequestPage />} />
       <Route path=":id" element={<RequestPage />} />
     </Routes>
   );

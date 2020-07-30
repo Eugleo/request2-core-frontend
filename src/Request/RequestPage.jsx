@@ -73,9 +73,7 @@ function RequestHeader({ request, author, lastChange }) {
 function ButtonArray({ request }) {
   const buttons = [];
 
-  buttons.push(
-    <Button.NormalLinked to={`/requests/${request._id}/edit`} title="Edit" classNames={['mr-2']} />
-  );
+  buttons.push(<Button.NormalLinked to="edit" title="Edit" classNames={['mr-2']} />);
 
   return <div className="col-span-1 flex flex-row-reverse items-center">{buttons}</div>;
 }
