@@ -2,7 +2,7 @@ import React from 'react';
 import c from 'classnames';
 import { ItemContainer, LinkedItemTitle } from '../Common/List';
 import formatDate from '../Utils/Date';
-import { useLoadResources } from '../Utils/Api';
+import { useAsyncGet } from '../Utils/Api';
 import { statusStyle } from './Status';
 
 export function idToCode(id) {
@@ -39,7 +39,7 @@ export function ListItem({
   request: { _id, name, requestType, status, authorId, dateCreated },
   to,
 }) {
-  const { data: author } = useLoadResources(`/users/${authorId}`);
+  const { data: author } = useAsyncGet(`/users/${authorId}`);
 
   return (
     <ItemContainer>

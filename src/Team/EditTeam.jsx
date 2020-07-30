@@ -6,7 +6,7 @@ import Page from '../Page/Page';
 
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
-import { useLoadResources } from '../Utils/Api';
+import { useAsyncGet } from '../Utils/Api';
 
 function validate(values) {
   const error = {};
@@ -25,18 +25,16 @@ function validate(values) {
 export default function EditTeam() {
   const { id } = useParams();
   const { authPut, authDel } = useAuth();
-  const { data: team, error, status } = useLoadResources(`/teams/${id}`);
+  const { data: team, error, pending } = useAsyncGet(`/teams/${id}`);
   const navigate = useNavigate();
 
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="Edit team" width="max-w-2xl" />;
   }
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
-
-  console.log({ team, error, status });
 
   return (
     <Page title="Edit team" width="max-w-2xl">

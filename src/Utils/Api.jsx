@@ -11,7 +11,7 @@ export function urlWithParams(url, params) {
 
 export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transform = x => x) {
   const { authGet } = useAuth();
-  const [items, setItems] = useState({ data: undefined, error: undefined, status: 'loading' });
+  const [items, setItems] = useState({ data: undefined, error: undefined, pending: true });
 
   useEffect(() => {
     const urlWithLimit = urlWithParams(url, { limit, offset });
@@ -26,7 +26,7 @@ export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transfor
           });
           setTotal(json.data.total);
         } else {
-          setItems({ ...json, status: 'loaded' });
+          setItems({ ...json, pending: false });
           setTotal(0);
         }
       });
@@ -40,15 +40,15 @@ export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transfor
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useLoadResources(url) {
+export function useAsyncGet(url) {
   const { authGet } = useAuth();
-  const [item, setItem] = useState({ status: 'loading', data: undefined, error: undefined });
+  const [item, setItem] = useState({ pending: true, data: undefined, error: undefined });
 
   useEffect(() => {
     if (url) {
       authGet(url)
         .then(r => r.json())
-        .then(json => setItem({ ...json, status: 'loaded' }));
+        .then(json => setItem({ ...json, pending: false }));
     }
   }, [authGet, url]);
 

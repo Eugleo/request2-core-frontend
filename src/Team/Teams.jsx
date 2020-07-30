@@ -24,7 +24,7 @@ export default function Teams() {
 
 function TeamList() {
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const { data: payload, error, status } = Api.useLoadResourcesWithLimit(
+  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit(
     '/teams',
     limit,
     offset,
@@ -38,7 +38,7 @@ function TeamList() {
     return <Navigate to="/404" />;
   }
 
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="Teams" width="max-w-2xl" />;
   }
 

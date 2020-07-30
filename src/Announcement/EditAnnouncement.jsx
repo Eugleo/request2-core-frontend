@@ -8,7 +8,7 @@ import * as Button from '../Common/Buttons';
 
 import MdRender from '../Common/MdRender';
 import { ShortText, LongText } from '../Common/Forms';
-import { useLoadResources } from '../Utils/Api';
+import { useAsyncGet } from '../Utils/Api';
 
 function validate(values) {
   const error = {};
@@ -29,13 +29,13 @@ export default function EditAnnouncement() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { authDel, authPut } = useAuth();
-  const { data: ann, error, status } = useLoadResources(`/announcements/${id}`);
+  const { data: ann, error, pending } = useAsyncGet(`/announcements/${id}`);
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="Edit announcement" width="max-w-2xl" />;
   }
 

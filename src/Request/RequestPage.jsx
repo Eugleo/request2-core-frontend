@@ -7,7 +7,7 @@ import formatDate from '../Utils/Date';
 import { useAuth, Authorized } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import ResultReportCard from './Operator/ResultReportCard';
-import { useLoadResources } from '../Utils/Api';
+import { useAsyncGet } from '../Utils/Api';
 import { idToCode, StatusLabel } from './RequestElements';
 
 import { maybe, capitalize } from '../Utils/Func';
@@ -146,18 +146,18 @@ function Card({ title, children }) {
 export default function RequestPage() {
   const { id } = useParams();
   const { auth } = useAuth();
-  const { data: payload, error, status } = useLoadResources(`/requests/${id}`);
+  const { data: payload, error, pending } = useAsyncGet(`/requests/${id}`);
   const request = payload && payload.request;
   const properties = payload && payload.properties;
 
-  const { data: team } = useLoadResources(maybe(request, r => `/teams/${r.teamId}`));
-  const { data: author } = useLoadResources(maybe(request, r => `/users/${r.authorId}`));
+  const { data: team } = useAsyncGet(maybe(request, r => `/teams/${r.teamId}`));
+  const { data: author } = useAsyncGet(maybe(request, r => `/users/${r.authorId}`));
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
-  if (status === 'loading') {
+  if (pending) {
     return <Page />;
   }
 

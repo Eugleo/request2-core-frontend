@@ -28,7 +28,7 @@ export function Announcements() {
 
 function AnnList() {
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const { data: payload, status, error } = Api.useLoadResourcesWithLimit(
+  const { data: payload, pending, error } = Api.useLoadResourcesWithLimit(
     '/announcements',
     limit,
     offset,
@@ -41,7 +41,7 @@ function AnnList() {
     return <Navigate to="/404" />;
   }
 
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="Announcements" width="max-w-2xl" />;
   }
 
@@ -76,7 +76,7 @@ function AddAnnButton() {
 }
 
 function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreated } }) {
-  const { data: author } = Api.useLoadResources(maybe(authorId, id => `/users/${id}`));
+  const { data: author } = Api.useAsyncGet(maybe(authorId, id => `/users/${id}`));
 
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
@@ -117,15 +117,15 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
 
 export function AnnouncementFromUrl() {
   const { id } = useParams();
-  const { data: ann, error, status } = Api.useLoadResources(`/announcements/${id}`);
-  const { data: author } = Api.useLoadResources(maybe(ann, a => `/users/${a.authorId}`));
+  const { data: ann, error, pending } = Api.useAsyncGet(`/announcements/${id}`);
+  const { data: author } = Api.useAsyncGet(maybe(ann, a => `/users/${a.authorId}`));
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
 
-  if (status === 'loading') {
+  if (pending) {
     return (
       <CenteredPage title="Loading announcement">
         <div className="flex justify-center">

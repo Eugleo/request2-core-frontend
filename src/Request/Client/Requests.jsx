@@ -12,12 +12,14 @@ import NewRequestPage from '../NewRequest';
 import { Section, EmptyLabel, ListItemWithoutAuthor } from '../RequestElements';
 import { comparator } from '../../Utils/Func';
 import { statusToString } from '../Status';
+import EditRequestPage from './EditRequest';
 
 export default function Requests() {
   return (
     <Routes>
       <Route path="" element={<RequestList />} />
       <Route path="new/:requestType" element={<NewRequestPage />} />
+      <Route path="edit/:id" element={<EditRequestPage />} />
       <Route path=":id" element={<RequestPage />} />
     </Routes>
   );
@@ -25,7 +27,7 @@ export default function Requests() {
 
 function RequestList() {
   const { setTotal, limit, offset } = usePagination(100);
-  const { data: payload, error, status } = Api.useLoadResourcesWithLimit(
+  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit(
     '/requests',
     limit,
     offset,
@@ -39,7 +41,7 @@ function RequestList() {
     return <Navigate to="/404" />;
   }
 
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="My requests" width="max-w-4xl" />;
   }
 

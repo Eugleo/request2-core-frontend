@@ -26,7 +26,7 @@ export default function Requests() {
 function RequestList() {
   const { auth } = useAuth();
   const { setTotal, limit, offset } = usePagination(100);
-  const { data: payload, error, status } = Api.useLoadResourcesWithLimit(
+  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit(
     '/requests',
     limit,
     offset,
@@ -40,7 +40,7 @@ function RequestList() {
     return <Navigate to="/404" />;
   }
 
-  if (status === 'loading') {
+  if (pending) {
     return <Page title="Client's Requests" width="max-w-4xl" />;
   }
 
