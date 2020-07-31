@@ -1,14 +1,15 @@
 import React from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';
+import { Team } from './Team';
+import { Maybe } from '../Utils/Maybe';
 import { ShortText } from '../Common/Forms';
 import Page from '../Page/Page';
 
-import { useAuth } from '../Utils/Auth';
-import * as Button from '../Common/Buttons';
+type TeamStub = { name: string; code: string };
 
-function validate(values) {
-  const error = {};
+function validate(values: TeamStub) {
+  const error: TeamStub = { name: '', code: '' };
 
   if (!values.name) {
     error.name = 'This field is required';
@@ -21,28 +22,35 @@ function validate(values) {
   return error;
 }
 
-export default function NewTeam() {
-  const { authPost } = useAuth();
+export default function TeamForm({
+  title,
+  team,
+  onSubmit,
+  children,
+}: {
+  title: string;
+  team?: Maybe<Team>;
+  onSubmit: (values: TeamStub) => Promise<Response>;
+  children: React.ReactNode;
+}) {
   const navigate = useNavigate();
 
   return (
-    <Page title="New team" width="max-w-2xl">
+    <Page title={title} width="max-w-2xl">
       <div className="bg-white rounded-md shadow-sm p-6">
         <Formik
-          initialValues={{ name: '', code: '' }}
+          initialValues={{ name: team?.name || '', code: team?.code || '' }}
           validate={validate}
           onSubmit={values => {
-            authPost('/teams', { ...values, active: true });
-            navigate('..');
+            onSubmit(values)
+              .then(() => navigate(-1))
+              .catch(console.log);
           }}
         >
           <Form className="flex flex-col items-start">
             <ShortText name="name" label="Team leader" />
             <ShortText name="code" label="Institutional code" />
-            <div className="flex justify-between w-full items-stretch pt-3">
-              <Button.PrimarySubmit title="Add new team" />
-              <Button.Normal title="Cancel" onClick={() => navigate('..')} />
-            </div>
+            {children}
           </Form>
         </Formik>
       </div>

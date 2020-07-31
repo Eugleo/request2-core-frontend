@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 
 import { useAuth } from './Auth';
+import { WithID } from './WithID';
+import { Maybe } from './Maybe';
 
 const hostname = 'http://localhost:9080';
 
@@ -10,49 +12,42 @@ export function urlWithParams(url: string, params: Record<string, any>) {
 }
 
 type Resource<T> = {
-  data: { values: Array<T>; total: number } | null;
-  error: string | null;
+  data: Maybe<T>;
+  error: Maybe<string>;
   pending: boolean;
 };
 
-export function useLoadResourcesWithLimit<T>(
+export function useAsyncGetMany<T>(
   url: string,
   limit: number,
   offset: number,
-  setTotal: Function,
-  transform = (x: Array<T>) => x
-): Resource<T> {
+  transform = (x: Array<WithID<T>>) => x
+): Resource<{ values: Array<WithID<T>>; total: number }> {
   const { authGet } = useAuth();
-  const [items, setItems] = useState<Resource<T>>({ data: null, error: null, pending: true });
+  const [pending, setPending] = useState<boolean>(true);
+  const [error, setError] = useState<Maybe<string>>(null);
+  const [data, setData] = useState<Maybe<{ values: Array<WithID<T>>; total: number }>>(null);
 
   useEffect(() => {
     const urlWithLimit = urlWithParams(url, { limit, offset });
     authGet(urlWithLimit)
       .then(r => r.json())
       .then(json => {
-        if (json.data && json.data.values && json.data.total) {
-          setItems({
-            ...json,
-            data: { ...json.data, values: json.data.values },
-            status: 'loaded',
-          });
-          setTotal(json.data.total);
-        } else {
-          setItems({ ...json, pending: false });
-          setTotal(0);
-        }
+        setError(json.error);
+        setData(json.data);
+        setPending(false);
       });
-  }, [authGet, limit, url, offset, setTotal]);
+  }, [authGet, url, limit, offset]);
 
   return {
-    ...items,
-    data: items.data &&
-      items.data.values && { ...items.data, values: transform(items.data.values) },
+    error,
+    pending,
+    data: data && { total: data.total, values: transform(data.values) },
   };
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet<T>(url: string): Resource<T> {
+export function useAsyncGet<T>(url: string): Resource<WithID<T>> {
   const { authGet } = useAuth();
   const [item, setItem] = useState({ pending: true, data: null, error: null });
 

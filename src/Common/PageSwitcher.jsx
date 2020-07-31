@@ -1,21 +1,16 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 
 import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
 import { urlWithParams } from '../Utils/Api';
 
 function useQuery() {
-  return new URLSearchParams(useLocation().search);
+  const loc = useLocation();
+  return useMemo(() => new URLSearchParams(loc.search), [loc.search]);
 }
 
-export function usePagination(initLimit = 1, around = 1, onBoundary = 1) {
-  const queryParams = useQuery();
-  const location = useLocation();
-  const [total, setTotal] = useState(0);
-  const [limit, setLimit] = useState(initLimit);
-
-  const currentPage = queryParams.get('page') ? Number(queryParams.get('page')) : 0;
-  const finalPage = Math.max(Math.floor(total / limit) - 1, 0);
+function paginate(finalPage, pathname, onBoundary = 1, around = 1) {
+  const currentPage = 0;
 
   const shouldBeHidden = n =>
     n >= 0 + onBoundary && n <= finalPage - onBoundary && Math.abs(currentPage - n) > around;
@@ -40,16 +35,29 @@ export function usePagination(initLimit = 1, around = 1, onBoundary = 1) {
         ? p
         : {
             active: p.number === currentPage,
-            link: urlWithParams(location.pathname, { page: p.number }),
+            link: urlWithParams(pathname, { page: p.number }),
             ...p,
           }
     );
 
-  return { currentPage, pages, setTotal, setLimit, limit, offset: currentPage * limit };
+  return pages;
 }
 
-export default function Pagination({ currentPage, pages }) {
+export function usePagination(initLimit = 10) {
+  const queryParams = useQuery();
+
+  const [limit, setLimit] = useState(initLimit);
+  const [offset, setOffset] = useState(0);
+
+  const currentPage = Number(queryParams.get('page') || 0);
+
+  return { limit, setLimit, offset, setOffset, currentPage };
+}
+
+export default function Pagination({ currentPage, limit, total }) {
   const location = useLocation();
+  const finalPage = Math.max(Math.floor(total / limit) - 1, 0);
+  const pages = paginate(finalPage, location.pathname);
 
   if (pages.length <= 1) {
     return (

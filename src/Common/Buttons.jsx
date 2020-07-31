@@ -1,8 +1,22 @@
 /* eslint-disable react/jsx-props-no-spreading */
 import React from 'react';
-import { Link } from 'react-router-dom';
-
+import { Link, useNavigate } from 'react-router-dom';
 import c from 'classnames';
+import * as Icon from 'react-feather';
+
+export function Edit({ id = null }) {
+  return (
+    <NormalLinked to={id ? `${id}/edit` : 'edit'} classNames={['pl-2', 'pr-3']}>
+      <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
+      Edit
+    </NormalLinked>
+  );
+}
+
+export function Cancel() {
+  const navigate = useNavigate();
+  return <Normal title="Cancel" onClick={() => navigate(-1)} />;
+}
 
 export function Normal({ title, children = null, classNames = [], onClick }) {
   const classes = [
