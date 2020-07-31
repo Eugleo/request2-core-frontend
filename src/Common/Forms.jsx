@@ -71,11 +71,12 @@ export function SingleChoice({ name, description, label = undefined, hint, choic
         {choices.map(choice => (
           <ChoiceField key={choice}>
             <input
-              {...{ ...field, checked: meta.initialValue === choice }}
+              {...{ ...field, checked: undefined }}
               type="radio"
               id={`${name}/${choice}`}
               value={choice}
               key={choice}
+              defaultChecked={meta.initialValue === choice}
             />
             <ChoiceLabel htmlFor={`${name}/${choice}`}>{choice}</ChoiceLabel>
           </ChoiceField>
