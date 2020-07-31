@@ -65,22 +65,22 @@ function RequestHeader({ request, author, lastChange }) {
           </p>
         </div>
       </div>
-      <ButtonArray request={request} />
+      <ButtonArray />
     </div>
   );
 }
 
-function ButtonArray({ request }) {
-  const buttons = [];
-
-  buttons.push(<Button.NormalLinked to="edit" title="Edit" classNames={['mr-2']} />);
-
-  return <div className="col-span-1 flex flex-row-reverse items-center">{buttons}</div>;
+function ButtonArray() {
+  return (
+    <div className="col-span-1 flex flex-row-reverse items-center">
+      <Button.NormalLinked to="edit" title="Edit" classNames={['mr-2']} />
+    </div>
+  );
 }
 
-function RequestProperties({ properties, title }) {
+function RequestProperties({ properties, title, edit = false }) {
   return (
-    <Card title={title}>
+    <Card title={title} edit={edit}>
       {properties
         .filter(p => p.active && p.propertyData !== '')
         .reduce((acc, p, ix) => {
@@ -125,16 +125,17 @@ function RequestDetails({ request, author, team }) {
   );
 }
 
-function Card({ title, children }) {
+function Card({ title, children, edit }) {
   return (
     <div
       style={{ height: 'fit-content' }}
       className="col-span-3 w-full shadow-md rounded-md bg-white"
     >
       <div>
-        <h2 className="px-6 text-2xl border-b border-gray-200 py-6 mb-8 font-bold w-full">
-          {title}
-        </h2>
+        <div className="flex px-6 flex-row items-center justify-between mb-8 border-b border-gray-200">
+          <h2 className="text-2xl py-6 font-bold w-full">{title}</h2>
+          {edit && <Button.NormalLinked to="edit" title="Edit" />}
+        </div>
       </div>
       <div className="px-6 pb-6 grid grid-cols-1 gap-8">{children}</div>
     </div>
@@ -164,11 +165,13 @@ export default function RequestPage() {
     request.dateCreated
   );
 
-  const propertiesWithSections = properties.map(p => {
-    return { ...p, ...parseFieldName(p.propertyName) };
-  });
+  console.log(properties);
 
-  console.log(propertiesWithSections);
+  const propertiesWithSections = properties
+    .filter(p => p.active)
+    .map(p => {
+      return { ...p, ...parseFieldName(p.propertyName) };
+    });
 
   if (propertiesWithSections.find(p => p.propertyType === 'Result')) {
     return (
@@ -177,6 +180,7 @@ export default function RequestPage() {
         <RequestProperties
           title="Results report"
           properties={propertiesWithSections.filter(p => p.propertyType === 'Result')}
+          edit={auth.user.roles.includes('Operator')}
         />
 
         <RequestDetails request={request} author={author || {}} team={team || {}} />

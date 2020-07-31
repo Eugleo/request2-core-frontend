@@ -13,12 +13,14 @@ import { EmptyLabel, Section, ListItem } from '../RequestElements';
 import { comparator } from '../../Utils/Func';
 
 import { statusToString } from '../Status';
+import EditRequestPage from '../Client/EditRequest';
 
 export default function Requests() {
   return (
     <Routes>
       <Route path="" element={<RequestList />} />
       <Route path=":id" element={<RequestPage />} />
+      <Route path=":id/edit" element={<EditRequestPage />} />
     </Routes>
   );
 }
