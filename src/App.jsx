@@ -17,7 +17,6 @@ import LoginPage from './Page/LoginPage';
 import Teams from './Team/Teams';
 import RequestsAsOperator from './Request/Operator/Requests';
 import RequestsAsClient from './Request/Client/Requests';
-import RequestPage from './Request/RequestPage';
 
 function reducer(state, action) {
   switch (action.type) {

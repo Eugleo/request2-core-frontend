@@ -47,7 +47,7 @@ function AnnList() {
 
   return (
     <Page title="Announcements" width="max-w-2xl">
-      <Authentized or={<div>You need to be logged in to view announcements.</div>}>
+      <Authentized otherwise={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
           <Authorized roles={['Admin']}>
             <AddAnnButton />

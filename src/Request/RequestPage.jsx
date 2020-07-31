@@ -58,7 +58,7 @@ function RequestHeader({ request, author, lastChange }) {
           </span>
         </div>
         <div className="flex flex-row items-center">
-          <Authorized roles={['Operator']} or={<StatusLabel status={request.status} />}>
+          <Authorized roles={['Operator']} otherwise={<StatusLabel status={request.status} />}>
             <StatusSelect request={request} />
           </Authorized>
           <p className="ml-4 text-gray-700 text-sm">
@@ -222,7 +222,7 @@ export default function RequestPage() {
 
         <RequestProperties title="Request details" properties={resultSections} />
         <Authorized roles={['Operator']}>
-          {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
+          <ResultReportCard request={request} />
         </Authorized>
       </Page>
     );

@@ -11,6 +11,7 @@ import Page from '../Page/Page';
 import NewTeam from './NewTeam';
 import EditTeam from './EditTeam';
 import { comparator } from '../Utils/Func';
+import { Team } from './Team';
 
 export default function Teams() {
   return (
@@ -24,34 +25,34 @@ export default function Teams() {
 
 function TeamList() {
   const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit(
+  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit<Team>(
     '/teams',
     limit,
     offset,
     setTotal,
-    v => v.sort(comparator(t => t.name))
+    v => v.sort(comparator((t: Team) => t.name))
   );
-  const teams = payload && payload.values;
+  const teams = payload?.values;
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
 
-  if (pending) {
+  if (!teams || pending) {
     return <Page title="Teams" width="max-w-2xl" />;
   }
 
   return (
     <Page title="Teams" width="max-w-2xl">
-      <Authentized or={<div>You need to be logged in to view teams.</div>}>
+      <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
         <div className="flex flex-col">
           <Authorized roles={['Admin']}>
             <AddTeamButton />
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
-            {teams.map(team => (
-              <Team key={team._id} editLink={`${team._id}/edit`} team={team} />
+            {teams.map((team: Team) => (
+              <Item key={team._id} team={team} />
             ))}
           </div>
           <Pagination currentPage={currentPage} pages={pages} />
@@ -72,7 +73,7 @@ function AddTeamButton() {
   );
 }
 
-function Team({ editLink, team }) {
+function Item({ team }: { team: Team }) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-col flex-grow">
@@ -90,7 +91,7 @@ function Team({ editLink, team }) {
         <p className="text-sm text-gray-600">#{team.code}</p>
       </div>
       <Authorized roles={['Admin']}>
-        <Button.NormalLinked to={editLink} classNames={['pl-2', 'pr-3']}>
+        <Button.NormalLinked to={`${team._id}/edit`} classNames={['pl-2', 'pr-3']}>
           <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
           Edit
         </Button.NormalLinked>

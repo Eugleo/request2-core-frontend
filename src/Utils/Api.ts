@@ -4,14 +4,26 @@ import { useAuth } from './Auth';
 
 const hostname = 'http://localhost:9080';
 
-export function urlWithParams(url, params) {
+export function urlWithParams(url: string, params: Record<string, any>) {
   const strParams = Object.keys(params).map(k => `${k}=${params[k]}`);
   return `${url}?${strParams.join('&')}`;
 }
 
-export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transform = x => x) {
+type Resource<T> = {
+  data: { values: Array<T>; total: number } | null;
+  error: string | null;
+  pending: boolean;
+};
+
+export function useLoadResourcesWithLimit<T>(
+  url: string,
+  limit: number,
+  offset: number,
+  setTotal: Function,
+  transform = (x: Array<T>) => x
+): Resource<T> {
   const { authGet } = useAuth();
-  const [items, setItems] = useState({ data: undefined, error: undefined, pending: true });
+  const [items, setItems] = useState<Resource<T>>({ data: null, error: null, pending: true });
 
   useEffect(() => {
     const urlWithLimit = urlWithParams(url, { limit, offset });
@@ -40,9 +52,9 @@ export function useLoadResourcesWithLimit(url, limit, offset, setTotal, transfor
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet(url) {
+export function useAsyncGet<T>(url: string): Resource<T> {
   const { authGet } = useAuth();
-  const [item, setItem] = useState({ pending: true, data: undefined, error: undefined });
+  const [item, setItem] = useState({ pending: true, data: null, error: null });
 
   useEffect(() => {
     if (url) {
@@ -55,11 +67,11 @@ export function useAsyncGet(url) {
   return item;
 }
 
-export function get(url, headers = {}) {
+export function get(url: string, headers = {}) {
   return fetch(hostname + url, { method: 'GET', headers });
 }
 
-export function post(url, data, headers = {}) {
+export function post(url: string, data: any, headers = {}) {
   return fetch(hostname + url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...headers },
@@ -67,11 +79,11 @@ export function post(url, data, headers = {}) {
   });
 }
 
-export function del(url) {
+export function del(url: string) {
   return fetch(hostname + url, { method: 'DELETE' });
 }
 
-export function put(url, data) {
+export function put(url: string, data: RequestInit) {
   return fetch(hostname + url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },

@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink as RouterNavLink } from 'react-router-dom';
+import { NavLink as RouterNavLink, Navigate } from 'react-router-dom';
 
 import { Authentized, NotAuthentized, Authorized } from '../Utils/Auth';
 import UserView from './UserView';
@@ -15,7 +15,7 @@ export default function Navbar() {
             <span className="text-green-600 font-extrabold text-xl mr-6">
               rQ<sup>2</sup>
             </span>
-            <Authentized or="/login">
+            <Authentized otherwise={<Navigate to="/login" />}>
               <Authorized roles={['Client']}>
                 <NavLink to="/me/requests">My Requests</NavLink>
               </Authorized>
@@ -27,7 +27,7 @@ export default function Navbar() {
             </Authentized>
           </div>
           <div className="flex items-center justify-right">
-            <Authentized or="/login">
+            <Authentized otherwise={<Navigate to="/login" />}>
               <UserView />
             </Authentized>
             <NotAuthentized>
