@@ -1,1 +1,1 @@
-export type Team = { _id: number; name: string; code: string; active: boolean };
+export type Team = { name: string; code: string; active: boolean };

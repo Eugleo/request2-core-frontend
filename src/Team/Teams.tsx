@@ -1,17 +1,17 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import * as Icon from 'react-feather';
 import { Link, Routes, Route, Navigate } from 'react-router-dom';
+import c from 'classnames';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
-
 import { Authentized, Authorized } from '../Utils/Auth';
-
 import Page from '../Page/Page';
 import NewTeam from './NewTeam';
-import EditTeam from './EditTeam';
 import { comparator } from '../Utils/Func';
 import { Team } from './Team';
+import EditTeam from './EditTeam';
+import { WithID } from '../Utils/WithID';
 
 export default function Teams() {
   return (
@@ -24,22 +24,21 @@ export default function Teams() {
 }
 
 function TeamList() {
-  const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit<Team>(
+  const { limit, offset, currentPage } = usePagination();
+  const sort = useCallback(v => v.sort(comparator((t: Team) => t.name)), []);
+  const { data: payload, error, pending } = Api.useAsyncGetMany<Team>(
     '/teams',
     limit,
     offset,
-    setTotal,
-    v => v.sort(comparator((t: Team) => t.name))
+    sort
   );
-  const teams = payload?.values;
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
 
-  if (!teams || pending) {
+  if (!payload || pending) {
     return <Page title="Teams" width="max-w-2xl" />;
   }
 
@@ -51,11 +50,11 @@ function TeamList() {
             <AddTeamButton />
           </Authorized>
           <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
-            {teams.map((team: Team) => (
+            {payload.values.map(team => (
               <Item key={team._id} team={team} />
             ))}
           </div>
-          <Pagination currentPage={currentPage} pages={pages} />
+          <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
         </div>
       </Authentized>
     </Page>
@@ -73,28 +72,22 @@ function AddTeamButton() {
   );
 }
 
-function Item({ team }: { team: Team }) {
+function Item({ team }: { team: WithID<Team> }) {
   return (
     <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
       <div className="flex flex-col flex-grow">
-        {team.active ? (
-          <h2 className="text-gray-900 font-medium">
-            {team.name}
-            <span className="text-gray-500 font-normal">'s group</span>
-          </h2>
-        ) : (
-          <h2 className="text-gray-400 font-medium">
-            {team.name}
-            <span className="text-gray-300 font-normal">'s group</span>
-          </h2>
-        )}
-        <p className="text-sm text-gray-600">#{team.code}</p>
+        <h2 className={c('font-medium', team.active ? 'text-gray-900' : 'text-gray-400')}>
+          {team.name}
+          <span className={c('font-normal', team.active ? 'text-gray-500' : 'text-gray-300')}>
+            's group
+          </span>
+        </h2>
+        <p className={c('text-sm', team.active ? 'text-gray-600' : 'text-gray-400')}>
+          #{team.code}
+        </p>
       </div>
       <Authorized roles={['Admin']}>
-        <Button.NormalLinked to={`${team._id}/edit`} classNames={['pl-2', 'pr-3']}>
-          <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
-          Edit
-        </Button.NormalLinked>
+        <Button.Edit id={team._id} />
       </Authorized>
     </div>
   );

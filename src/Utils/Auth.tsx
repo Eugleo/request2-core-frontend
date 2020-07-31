@@ -25,9 +25,9 @@ function headers(apiKey: string) {
 export function useAuth(): {
   auth: Auth;
   authGet: (url: string) => Promise<Response>;
-  authPut: (url: string, data: any) => Promise<Response>;
+  authPut: (url: string, data?: any) => Promise<Response>;
   authPost: (url: string, data: any) => Promise<Response>;
-  authDel: (url: string, data: any) => Promise<Response>;
+  authDel: (url: string, data?: any) => Promise<Response>;
 } {
   const maybeAuth = useContext(AuthContext);
 
