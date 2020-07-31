@@ -196,7 +196,11 @@ export default function EditRequestPage() {
       <div className="bg-white rounded-lg shadow-md mb-8 p-8">
         <Formik
           initialValues={initialValues}
-          onSubmit={values => submit(authPut, auth.userId, request, values)}
+          onSubmit={values => {
+            submit(authPut, auth.userId, request, values)
+              .then(() => navigate(-1))
+              .catch(console.log);
+          }}
           validate={validateSMR(
             fields.map(f => ({ ...f, name: makeFieldPath(f.section, f.name) })),
             getValidate

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import c from 'classnames';
 import { useParams, Navigate } from 'react-router-dom';
 import moment from 'moment';
@@ -11,8 +11,10 @@ import { useAsyncGet } from '../Utils/Api';
 import { idToCode, StatusLabel } from './RequestElements';
 
 import { maybe, capitalize } from '../Utils/Func';
-import { parseFieldName } from '../Utils/FieldPath';
+import { parseFieldName, makeFieldPath } from '../Utils/FieldPath';
 import StatusSelect from './Operator/StatusSelector';
+
+import fieldLib from './RequestTypes/field-library.json';
 
 function Property({ name, property: { propertyData, dateAdded } }) {
   return (
@@ -79,22 +81,15 @@ function ButtonArray() {
 }
 
 function RequestProperties({ properties, title, edit = false }) {
+  console.log(properties);
   return (
     <Card title={title} edit={edit}>
       {properties
-        .filter(p => p.active && p.propertyData !== '')
-        .reduce((acc, p, ix) => {
-          if (ix > 0 && acc[acc.length - 1].name === p.section) {
-            acc[acc.length - 1].fields.push(p);
-            return acc;
-          }
-          return acc.concat([{ name: p.section, fields: [p] }]);
-        }, [])
         .map(s => {
           return (
             <Section key={s.name} title={s.name}>
               {s.fields.map(f => (
-                <Property key={f.propertyName} name={f.field} property={f} />
+                <Property key={f.propertyName} name={f.label} property={f} />
               ))}
             </Section>
           );
@@ -142,6 +137,13 @@ function Card({ title, children, edit }) {
   );
 }
 
+function resolveInclude(preField) {
+  if (!preField.include) {
+    return preField;
+  }
+  return resolveInclude({ ...preField, include: undefined, ...fieldLib[preField.include] });
+}
+
 export default function RequestPage() {
   const { id } = useParams();
   const { auth } = useAuth();
@@ -152,11 +154,18 @@ export default function RequestPage() {
   const { data: team } = useAsyncGet(maybe(request, r => `/teams/${r.teamId}`));
   const { data: author } = useAsyncGet(maybe(request, r => `/users/${r.authorId}`));
 
+  const requestTypes = useMemo(() => {
+    const types = new Map();
+    const req = require.context('./RequestTypes', true, /^.*\.rcfg\.json$/im);
+    req.keys().forEach(fileName => types.set(fileName.match(/[^/]+(?=\.rcfg)/)[0], req(fileName)));
+    return types;
+  }, []);
+
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
-  if (pending) {
+  if (pending || !requestTypes) {
     return <Page />;
   }
 
@@ -165,13 +174,39 @@ export default function RequestPage() {
     request.dateCreated
   );
 
-  console.log(properties);
-
   const propertiesWithSections = properties
     .filter(p => p.active)
     .map(p => {
       return { ...p, ...parseFieldName(p.propertyName) };
     });
+
+  const schema = requestTypes.get(request.requestType);
+  const { sections } = schema;
+
+  const detailSections = sections
+    .map(s => ({
+      name: s.title,
+      fields: s.fields
+        .map(f => resolveInclude(f))
+        .map(f => {
+          const prop = properties.find(
+            p =>
+              p.active &&
+              p.propertyName === makeFieldPath(s.title, f.name) &&
+              p.propertyType === 'Detail'
+          );
+          return prop ? { label: f.name, ...prop } : f;
+        })
+        .filter(f => f.propertyData),
+    }))
+    .filter(s => s.fields.length > 0);
+
+  const resultSections = [
+    {
+      name: 'Result',
+      fields: properties.filter(p => p.propertyType === 'Result'),
+    },
+  ];
 
   if (propertiesWithSections.find(p => p.propertyType === 'Result')) {
     return (
@@ -179,16 +214,13 @@ export default function RequestPage() {
         <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
         <RequestProperties
           title="Results report"
-          properties={propertiesWithSections.filter(p => p.propertyType === 'Result')}
+          properties={detailSections}
           edit={auth.user.roles.includes('Operator')}
         />
 
         <RequestDetails request={request} author={author || {}} team={team || {}} />
 
-        <RequestProperties
-          title="Request details"
-          properties={propertiesWithSections.filter(p => p.propertyType === 'Detail')}
-        />
+        <RequestProperties title="Request details" properties={resultSections} />
         <Authorized roles={['Operator']}>
           {request.assigneeId === auth.userId && <ResultReportCard request={request} />}
         </Authorized>
@@ -205,10 +237,7 @@ export default function RequestPage() {
 
       <RequestDetails request={request} author={author || {}} team={team || {}} />
 
-      <RequestProperties
-        title="Request details"
-        properties={propertiesWithSections.filter(p => p.propertyType === 'Detail')}
-      />
+      <RequestProperties title="Request details" properties={detailSections} />
     </Page>
   );
 }
