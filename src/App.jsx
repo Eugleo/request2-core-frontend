@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 
 import { AtomSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import Navbar from './Page/Navbar';
+import Sidebar from './Page/Sidebar';
 import * as Api from './Utils/Api';
 import Footer from './Page/Footer';
 
@@ -73,7 +73,7 @@ function App() {
     <AuthContext.Provider value={{ auth, dispatch }}>
       <div className="App bg-gray-100 min-h-screen flex flex-col">
         <Router>
-          <Navbar />
+          <Sidebar />
           <AppBody backendAvailable={backendAvailable} />
         </Router>
         <div className="flex-none">
