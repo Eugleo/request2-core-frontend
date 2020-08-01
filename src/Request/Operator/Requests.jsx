@@ -28,12 +28,8 @@ export default function Requests() {
 function RequestList() {
   const { auth } = useAuth();
   const { setTotal, limit, offset } = usePagination(100);
-  const { data: payload, error, pending } = Api.useLoadResourcesWithLimit(
-    '/requests',
-    limit,
-    offset,
-    setTotal,
-    v => v.sort(comparator(r => r.dateCreated))
+  const { data: payload, error, pending } = Api.useAsyncGetMany('/requests', limit, offset, v =>
+    v.sort(comparator(r => r.dateCreated))
   );
   const requests = payload && payload.values.map(r => ({ ...r, status: statusToString(r.status) }));
 

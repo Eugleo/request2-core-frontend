@@ -9,8 +9,8 @@ import * as Button from '../Common/Buttons';
 import ResultReportCard from './Operator/ResultReportCard';
 import { useAsyncGet } from '../Utils/Api';
 import { idToCode, StatusLabel } from './RequestElements';
-
-import { maybe, capitalize } from '../Utils/Func';
+import { capitalize } from '../Utils/Func';
+import { maybe } from '../Utils/Maybe';
 import { parseFieldName, makeFieldPath } from '../Utils/FieldPath';
 import StatusSelect from './Operator/StatusSelector';
 
