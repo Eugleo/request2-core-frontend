@@ -1,67 +1,77 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { useField } from 'formik';
 import c from 'classnames';
-import { components } from 'react-select';
+import { components, PlaceholderProps, ControlProps } from 'react-select';
 import Creatable from 'react-select/creatable';
-
 import Tooltip from 'react-tooltip';
-
 import * as Icon from 'react-feather';
+import { Maybe, maybe } from '../Utils/Maybe';
 
-function TextField({ name, description, label = undefined, type = undefined, children, hint }) {
-  const [field, meta] = useField({ name, type });
+type FieldConfig = { name: string; description?: string; label?: string; hint?: string };
 
-  const classes = [
-    'border',
-    'shadow-sm',
-    'text-md',
-    'border-gray-300',
-    'text-gray-900',
-    'rounded-md',
-    'py-1',
-    'px-2',
-    'focus:outline-none',
-    'focus:shadow-outline-blue',
-    'focus:border-blue-600',
-    'focus:z-10',
-    'font-normal',
-  ];
+type FieldWithStyle = FieldConfig & { className?: string };
 
+const textFieldClasses = [
+  'border',
+  'shadow-sm',
+  'text-md',
+  'border-gray-300',
+  'text-gray-900',
+  'rounded-md',
+  'py-1',
+  'px-2',
+  'focus:outline-none',
+  'focus:shadow-outline-blue',
+  'focus:border-blue-600',
+  'focus:z-10',
+  'font-normal',
+];
+
+export function ShortText({
+  name,
+  description,
+  hint,
+  label,
+  className,
+  type = 'text',
+  ...props
+}: FieldWithStyle & { type?: string } & React.PropsWithoutRef<JSX.IntrinsicElements['input']>) {
+  const [field, meta] = useField<string>({ name, type });
   return (
     <Field touched={meta.touched} error={meta.error}>
       <FieldHeader hint={hint} label={label || name} />
-      {children(field, classes)}
+      <input type={type} {...field} {...props} className={c(textFieldClasses, className)} />
       <Description>{description}</Description>
     </Field>
   );
 }
 
-export function MultipleChoice({ name, description, label = undefined, choices, hint }) {
-  const [field, meta] = useField({ name, type: 'checkbox' });
-
+export function LongText({
+  name,
+  description,
+  hint,
+  label,
+  className,
+  ...props
+}: FieldWithStyle & React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>) {
+  const [field, meta] = useField<string>({ name });
   return (
     <Field touched={meta.touched} error={meta.error}>
       <FieldHeader hint={hint} label={label || name} />
-      <div>
-        {choices.map(choice => (
-          <ChoiceField key={choice}>
-            <input
-              {...field}
-              id={`${name}/${choice}`}
-              type="checkbox"
-              value={choice}
-              checked={meta.value.includes(choice)}
-            />
-            <ChoiceLabel htmlFor={`${name}/${choice}`}>{choice}</ChoiceLabel>
-          </ChoiceField>
-        ))}
-      </div>
+      <textarea
+        style={{ minHeight: '5rem' }}
+        className={c(textFieldClasses, 'h-20', className)}
+        {...field}
+        {...props}
+      />
       <Description>{description}</Description>
     </Field>
   );
 }
 
-export function SingleChoice({ name, description, label = undefined, hint, choices }) {
+type FieldWithChoices = FieldConfig & { choices: Array<string> };
+
+export function SingleChoice({ name, description, label, hint, choices }: FieldWithChoices) {
   const [field, meta] = useField({ name, type: 'radio' });
 
   return (
@@ -87,39 +97,35 @@ export function SingleChoice({ name, description, label = undefined, hint, choic
   );
 }
 
-export function ShortText({
-  name,
-  description = null,
-  hint = null,
-  label = undefined,
-  type = 'text',
-  ...props
-}) {
+export function MultipleChoice({ name, description, label, choices, hint }: FieldWithChoices) {
+  const [field, meta] = useField({ name, type: 'checkbox' });
+
   return (
-    <TextField name={name} description={description} hint={hint} type={type} label={label}>
-      {(field, classes) => {
-        return <input type={type} {...field} {...props} className={c(classes)} />;
-      }}
-    </TextField>
+    <Field touched={meta.touched} error={meta.error}>
+      <FieldHeader hint={hint} label={label || name} />
+      <div>
+        {choices.map(choice => (
+          <ChoiceField key={choice}>
+            <input
+              {...field}
+              id={`${name}/${choice}`}
+              type="checkbox"
+              value={choice}
+              checked={meta.value.includes(choice)}
+            />
+            <ChoiceLabel htmlFor={`${name}/${choice}`}>{choice}</ChoiceLabel>
+          </ChoiceField>
+        ))}
+      </div>
+      <Description>{description}</Description>
+    </Field>
   );
 }
 
-export function LongText({ name, description = '', hint = '', label = undefined, className = '' }) {
-  return (
-    <TextField name={name} description={description} hint={hint} label={label}>
-      {(field, classes) => (
-        <textarea
-          style={{ minHeight: '5rem' }}
-          {...field}
-          className={c(classes, 'h-20', className)}
-        />
-      )}
-    </TextField>
-  );
-}
+type OptionType = { value: string; label: string };
 
-export function TextWithHints({ name, description, label = undefined, hints, hint }) {
-  const [field, meta, helpers] = useField({ name, type: 'text' });
+export function TextWithHints({ name, description, label, choices, hint }: FieldWithChoices) {
+  const [field, meta, helpers] = useField<string>({ name, type: 'text' });
 
   const classes = [
     'border',
@@ -139,9 +145,12 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
     'text-gray-300',
   ];
 
-  const sortedHints = hints.sort();
+  const options = choices.sort().map(h => ({ value: h, label: h }));
 
-  const Placeholder = ({ children, ...props }) => {
+  const Placeholder = ({
+    children,
+    ...props
+  }: { children: ReactNode } & PlaceholderProps<{ value: string; label: string }>) => {
     return (
       <components.Placeholder {...props} className="text-gray-500">
         {children}
@@ -149,7 +158,10 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
     );
   };
 
-  const Control = ({ children, ...props }) => {
+  const Control = ({
+    children,
+    ...props
+  }: { children: ReactNode } & ControlProps<{ value: string; label: string }>) => {
     return (
       <components.Control {...props} className={c(classes)}>
         {children}
@@ -173,10 +185,10 @@ export function TextWithHints({ name, description, label = undefined, hints, hin
           }),
         }}
         onBlur={field.onBlur}
-        onChange={value => helpers.setValue(value)}
+        onChange={option => helpers.setValue((option as OptionType).value)}
+        options={options}
         isClearable
-        options={sortedHints.map(h => ({ value: h, label: h }))}
-        defaultValue={{ value: meta.initialValue, label: meta.initialValue }}
+        defaultValue={maybe(meta.initialValue, v => ({ value: v, label: v }), undefined)}
       />
       <Description>{description}</Description>
     </Field>
@@ -196,7 +208,15 @@ export function Image({ className = '' }) {
   );
 }
 
-export function Section({ title, children, description = null }) {
+export function Section({
+  title,
+  children,
+  description,
+}: {
+  title: string;
+  children: ReactNode;
+  description?: ReactNode;
+}) {
   return (
     <div className="grid grid-cols-4 gap-8">
       <div>
@@ -208,13 +228,13 @@ export function Section({ title, children, description = null }) {
   );
 }
 
-function ChoiceField({ children }) {
+function ChoiceField({ children }: { children: ReactNode }) {
   return (
     <div className="flex flex-row items-center px-2 rounded-md hover:bg-gray-200">{children}</div>
   );
 }
 
-function ChoiceLabel({ htmlFor, children }) {
+function ChoiceLabel({ htmlFor, children }: { htmlFor: string; children: ReactNode }) {
   return (
     <label htmlFor={htmlFor} className="w-full ml-2 py-1 text-gray-800">
       {children}
@@ -222,7 +242,15 @@ function ChoiceLabel({ htmlFor, children }) {
   );
 }
 
-function Field({ touched, error, children }) {
+function Field({
+  touched,
+  error,
+  children,
+}: {
+  touched: boolean;
+  error: Maybe<string>;
+  children: ReactNode;
+}) {
   const classNames = ['flex', 'flex-col', 'w-full', 'h-full', 'rounded-md', 'px-4', 'py-2'];
   return (
     <div className={c('flex', 'flex-row', 'w-full', error && touched && 'bg-yellow-100')}>
@@ -235,11 +263,11 @@ function Field({ touched, error, children }) {
   );
 }
 
-function Description({ children }) {
+function Description({ children }: { children: Maybe<ReactNode> }) {
   return children ? <p className="font-normal mt-2 text-sm text-gray-500">{children}</p> : null;
 }
 
-function FieldHeader({ hint, label }) {
+function FieldHeader({ hint, label }: { hint: Maybe<string>; label: string }) {
   return (
     <div className="flex flex-row items-center mb-1">
       <FieldLabel text={label} />
@@ -248,7 +276,7 @@ function FieldHeader({ hint, label }) {
   );
 }
 
-function FieldLabel({ text }) {
+function FieldLabel({ text }: { text: string }) {
   return (
     <label htmlFor={text} className="font-medium text-gray-800 mr-2">
       {text}
@@ -256,7 +284,7 @@ function FieldLabel({ text }) {
   );
 }
 
-function Hint({ hint }) {
+function Hint({ hint }: { hint: Maybe<string> }) {
   return hint ? (
     <>
       <Icon.HelpCircle data-tip={hint} className="h-5 text-gray-500" />

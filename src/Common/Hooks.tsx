@@ -1,14 +1,14 @@
 import { useEffect, useRef } from 'react';
 
-export default function useOnClickOutside(handler) {
-  const ref = useRef();
+export default function useOnClickOutside<T extends Node>(handler: () => void) {
+  const ref = useRef<T>(null);
 
   useEffect(() => {
-    const listener = event => {
-      if (!ref || !ref.current || ref.current.contains(event.target)) {
+    const listener: (ev: MouseEvent | TouchEvent) => void = event => {
+      if (!ref || !ref.current || ref.current.contains(event.target as Node)) {
         return;
       }
-      handler(event);
+      handler();
     };
 
     document.addEventListener('mousedown', listener);
