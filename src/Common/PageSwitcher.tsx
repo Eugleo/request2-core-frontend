@@ -30,10 +30,9 @@ function getPages(
       .map((p, i, a) => {
         const prevHidden = i === 0 || a[i - 1].hidden;
         const nextHidden = i === a.length - 1 || a[i + 1].hidden;
-        if (!p.hidden || !(prevHidden || nextHidden)) {
-          return { ...p, hidden: false };
-        }
-        return { ...p, hidden: true };
+        return !p.hidden || (!prevHidden && !nextHidden)
+          ? { ...p, hidden: false }
+          : { ...p, hidden: true };
       })
       // Collapse hidden pages to one
       .filter((p, i, a) => !p.hidden || i === 0 || !a[i - 1].hidden)
@@ -42,9 +41,9 @@ function getPages(
         p.hidden
           ? { ...p, hidden: p.hidden }
           : {
+              ...p,
               active: p.number === currentPage,
               link: urlWithParams(pathname, { page: p.number }),
-              ...p,
             }
       )
   );
