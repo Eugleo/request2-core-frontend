@@ -1,17 +1,7 @@
 import React, { useContext, useCallback } from 'react';
-import { Navigate } from 'react-router-dom';
-import { Team } from '../Team/Team';
+import { Role, UserDetails, UserInfo } from '../User/User';
 
-type Role = 'Admin' | 'Operator' | 'Client';
-type UserInfo = {
-  name: string;
-  roles: Array<Role>;
-  team: Team;
-  dateCreated: Date;
-  apiKey: string;
-  userId: number;
-};
-type Auth = { loggedIn: boolean; user: UserInfo };
+type Auth = { loggedIn: boolean; user: UserInfo & UserDetails };
 
 const AuthContext = React.createContext<{ auth: Auth; dispatch: Function } | null>(null);
 const hostname = 'http://localhost:9080';
@@ -22,12 +12,12 @@ function headers(apiKey: string) {
 }
 
 // TODO Save apiKey into localStorage
-export function useAuth(): {
+export function useAuth<T>(): {
   auth: Auth;
   authGet: (url: string) => Promise<Response>;
-  authPut: (url: string, data?: any) => Promise<Response>;
-  authPost: (url: string, data: any) => Promise<Response>;
-  authDel: (url: string, data?: any) => Promise<Response>;
+  authPut: (url: string, data: T) => Promise<Response>;
+  authPost: (url: string, data: T) => Promise<Response>;
+  authDel: (url: string) => Promise<Response>;
 } {
   const maybeAuth = useContext(AuthContext);
 
@@ -114,7 +104,7 @@ export function NotAuthentized({
 
 export function Authorized({
   roles = [],
-  otherwise = <Navigate to="/login" />,
+  otherwise = null,
   children,
 }: {
   otherwise?: JSX.Element | JSX.Element[] | null;

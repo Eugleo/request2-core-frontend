@@ -1,47 +1,49 @@
 import React from 'react';
 import * as Icon from 'react-feather';
-import { AtomSpinner } from 'react-epic-spinners';
-import { Link, useParams, Routes, Route, Navigate } from 'react-router-dom';
+import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import moment from 'moment';
+import c from 'classnames';
+import AnnouncementPage from './AnnouncementPage';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 
 import { Authentized, Authorized } from '../Utils/Auth';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import Page, { CenteredPage } from '../Page/Page';
+import Page from '../Page/Page';
 import MdRender from '../Common/MdRender';
 import NewAnnouncement from './NewAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
-import { maybe } from '../Utils/Func';
+import { maybe } from '../Utils/Maybe';
+import { Announcement } from './Announcement';
+import { WithID } from '../Utils/WithID';
+import { User } from '../User/User';
 
-export function Announcements() {
+export default function AnnouncementRouter() {
   return (
     <Routes>
-      <Route path="" element={<AnnList />} />
+      <Route path="" element={<AnnouncementList />} />
       <Route path="new" element={<NewAnnouncement />} />
       <Route path=":id/edit" element={<EditAnnouncement />} />
-      <Route path=":id" element={<AnnouncementFromUrl />} />
+      <Route path=":id" element={<AnnouncementPage />} />
     </Routes>
   );
 }
 
-function AnnList() {
-  const { setTotal, limit, offset, currentPage, pages } = usePagination(10);
-  const { data: payload, pending, error } = Api.useLoadResourcesWithLimit(
+function AnnouncementList() {
+  const { limit, offset, currentPage } = usePagination(10);
+  const { data: payload, pending, error } = Api.useAsyncGetMany<Announcement>(
     '/announcements',
     limit,
-    offset,
-    setTotal
+    offset
   );
-  const anns = payload && payload.values;
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
 
-  if (pending) {
+  if (pending || !payload) {
     return <Page title="Announcements" width="max-w-2xl" />;
   }
 
@@ -53,12 +55,12 @@ function AnnList() {
             <AddAnnButton />
           </Authorized>
           <div className="flex flex-col">
-            {anns.map(ann => (
-              <AnnouncementCard key={ann._id} ann={ann} />
+            {payload.values.map(ann => (
+              <Item key={ann._id} ann={ann} />
             ))}
           </div>
         </div>
-        <Pagination currentPage={currentPage} pages={pages} />
+        <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
       </Authentized>
     </Page>
   );
@@ -75,22 +77,27 @@ function AddAnnButton() {
   );
 }
 
-function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreated } }) {
-  const { data: author } = Api.useAsyncGet(maybe(authorId, id => `/users/${id}`));
+function Item({
+  ann: { _id, active, title, body, authorId, dateCreated },
+}: {
+  ann: WithID<Announcement>;
+}) {
+  const { data: author } = Api.useAsyncGet<User>(maybe(authorId, id => `/users/${id}`));
 
   return (
     <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link
-            to={`${_id}`}
-            className={`text-xl font-medium text-black hover:text-green-700 ${
+            to={_id.toString()}
+            className={c(
+              'text-xl font-medium text-black hover:text-green-700',
               active ? 'text-black' : 'text-gray-400'
-            }`}
+            )}
           >
             {title}
           </Link>
-          <p className={`text-sm ${active ? 'text-gray-500' : 'text-gray-300'}`}>
+          <p className={c('text-sm', active ? 'text-gray-500' : 'text-gray-300')}>
             {author && (
               <span>
                 Created by <span className="font-medium">{author.name}</span>{' '}
@@ -101,43 +108,13 @@ function AnnouncementCard({ ann: { _id, active, title, body, authorId, dateCreat
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.NormalLinked to={`${_id}/edit`} classNames={['pl-2', 'pr-3']}>
-            <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
-            Edit
-          </Button.NormalLinked>
+          <Button.Edit id={_id} />
         </Authorized>
       </div>
       <MdRender
         source={body}
-        className={`px-6 pt-3 pb-1 ${active ? 'text-gray-800' : 'text-gray-400'}`}
+        className={c('px-6 pt-3 pb-1', active ? 'text-gray-700' : 'text-gray-400')}
       />
     </div>
-  );
-}
-
-export function AnnouncementFromUrl() {
-  const { id } = useParams();
-  const { data: ann, error, pending } = Api.useAsyncGet(`/announcements/${id}`);
-  const { data: author } = Api.useAsyncGet(maybe(ann, a => `/users/${a.authorId}`));
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (pending) {
-    return (
-      <CenteredPage title="Loading announcement">
-        <div className="flex justify-center">
-          <AtomSpinner color="gray" />
-        </div>
-      </CenteredPage>
-    );
-  }
-
-  return (
-    <Page title={ann.title} width="max-w-2xl">
-      <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-2 pb-3 mb-12" />
-    </Page>
   );
 }

@@ -1,12 +1,8 @@
-export function maybe(x, f, def = undefined) {
-  return x ? f(x) : def || x;
-}
-
-export function capitalize(str) {
+export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);
 }
 
-export function comparator(f) {
+export function comparator<T, U>(f: (x: T) => U): (a: T, b: T) => -1 | 0 | 1 {
   return (a, b) => {
     if (f(a) < f(b)) {
       return -1;
