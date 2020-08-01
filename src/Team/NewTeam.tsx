@@ -2,9 +2,10 @@ import React from 'react';
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
 import TeamForm from './TeamForm';
+import { Team } from './Team';
 
 export default function NewTeam() {
-  const { authPost } = useAuth();
+  const { authPost } = useAuth<Team>();
   return (
     <TeamForm
       title="Create new team"
