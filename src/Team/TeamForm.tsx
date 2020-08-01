@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';
 import { Team } from './Team';
@@ -31,13 +31,13 @@ export default function TeamForm({
   title: string;
   team?: Maybe<Team>;
   onSubmit: (values: TeamStub) => Promise<Response>;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const navigate = useNavigate();
 
   return (
     <Page title={title} width="max-w-2xl">
-      <div className="bg-white rounded-md shadow-sm p-6">
+      <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
         <Formik
           initialValues={{ name: team?.name || '', code: team?.code || '' }}
           validate={validate}
@@ -48,9 +48,11 @@ export default function TeamForm({
           }}
         >
           <Form className="flex flex-col items-start">
-            <ShortText name="name" label="Team leader" />
-            <ShortText name="code" label="Institutional code" />
-            {children}
+            <div className="px-6 mt-4 mb-8 w-full">
+              <ShortText name="name" label="Team leader" />
+              <ShortText name="code" label="Institutional code" />
+            </div>
+            <div className="flex flex-row w-full px-6 py-3 bg-gray-200">{children}</div>
           </Form>
         </Formik>
       </div>

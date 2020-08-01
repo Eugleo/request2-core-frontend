@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import c from 'classnames';
 import * as Icon from 'react-feather';
@@ -6,7 +6,7 @@ import { To } from 'history';
 
 type BaseButtonParams = {
   title?: string;
-  children?: React.ReactNode;
+  children?: ReactNode;
   className?: string;
 };
 
@@ -22,7 +22,7 @@ function Button({
   className,
   onClick,
 }: {
-  children: React.ReactNode;
+  children: ReactNode;
   className?: string;
   onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
   type: 'button' | 'submit' | 'reset';
@@ -38,11 +38,10 @@ function Button({
     'border',
     'focus:outline-none',
     'hover:shadow-inner',
-    className,
   ];
 
   return (
-    <button type={type} onClick={onClick} className={c(classes)}>
+    <button type={type} onClick={onClick} className={c(classes, className)}>
       {children}
     </button>
   );
@@ -62,21 +61,7 @@ export function Cancel() {
   return <Plain title="Cancel" onClick={() => navigate(-1)} className="bg-white" />;
 }
 
-const plainClasses = [
-  'inline-flex',
-  'items-center',
-  'rounded-md',
-  'shadow-sm',
-  'text-sm',
-  'px-4',
-  'py-2',
-  'text-gray-700',
-  'border',
-  'border-gray-400',
-  'focus:outline-none',
-  'hover:border-gray-500',
-  'hover:shadow-inner',
-];
+const plainClasses = ['text-gray-700', 'border-gray-400', 'hover:border-gray-500'];
 
 export function Plain({ title, children = null, className, onClick }: ButtonParams) {
   return (
@@ -87,28 +72,27 @@ export function Plain({ title, children = null, className, onClick }: ButtonPara
 }
 
 export function PlainLink({ to, title, children, className }: LinkParams) {
+  const classes = [
+    'inline-flex',
+    'items-center',
+    'rounded-md',
+    'shadow-sm',
+    'text-sm',
+    'px-4',
+    'py-2',
+    'border',
+    'focus:outline-none',
+    'hover:shadow-inner',
+  ];
+
   return (
-    <Link to={to} className={c(plainClasses, className)}>
+    <Link to={to} className={c(classes, plainClasses, className)}>
       {title || children}
     </Link>
   );
 }
 
-const primaryClasses = [
-  'inline-flex',
-  'items-center',
-  'rounded-md',
-  'shadow-sm',
-  'text-sm',
-  'px-4',
-  'py-2',
-  'text-gray-700',
-  'border',
-  'border-gray-400',
-  'focus:outline-none',
-  'hover:border-gray-500',
-  'hover:shadow-inner',
-];
+const primaryClasses = ['text-white', 'bg-green-700', 'hover:bg-green-600'];
 
 export function Primary({ title, children, className, onClick }: ButtonParams) {
   return (

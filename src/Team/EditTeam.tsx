@@ -48,7 +48,7 @@ function ActivateButton({ team }: { team: WithID<Team> }) {
           .then(() => navigate(-1))
           .catch(console.log);
       }}
-      classNames={['mr-2']}
+      className="mr-2"
     />
   );
 }
@@ -64,7 +64,7 @@ function DeactivateButton({ id }: { id: number }) {
           .then(() => navigate(-1))
           .catch(console.log);
       }}
-      classNames={['mr-2']}
+      className="mr-2"
     />
   );
 }
