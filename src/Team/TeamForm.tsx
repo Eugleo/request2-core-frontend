@@ -37,7 +37,7 @@ export default function TeamForm({
 
   return (
     <Page title={title} width="max-w-2xl">
-      <div className="bg-white rounded-md shadow-sm p-6">
+      <div className="bg-white rounded-md shadow-sm pt-6">
         <Formik
           initialValues={{ name: team?.name || '', code: team?.code || '' }}
           validate={validate}
@@ -47,10 +47,12 @@ export default function TeamForm({
               .catch(console.log);
           }}
         >
-          <Form className="flex flex-col items-start">
-            <ShortText name="name" label="Team leader" />
-            <ShortText name="code" label="Institutional code" />
-            {children}
+          <Form>
+            <div className="px-6">
+              <ShortText name="name" label="Team leader" />
+              <ShortText name="code" label="Institutional code" />
+            </div>
+            <div className="px-6 flex mt-4 bg-gray-200 py-3">{children}</div>
           </Form>
         </Formik>
       </div>

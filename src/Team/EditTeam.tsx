@@ -26,16 +26,13 @@ export default function EditTeam() {
   return (
     <TeamForm
       team={team}
-      title="Create new team"
+      title={`Editing ${team.name}'s group`}
       onSubmit={values => authPut('/teams', { ...values, active: true })}
     >
-      <div className="flex justify-between w-full items-stretch pt-3">
-        <Button.Cancel />
-        <div className="flex">
-          {team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />}
-          <Button.PrimarySubmit title="Save changes" />
-        </div>
-      </div>
+      <Button.Cancel />
+      <span className="flex-grow" />
+      {team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />}
+      <Button.PrimarySubmit title="Save changes" />
     </TeamForm>
   );
 }

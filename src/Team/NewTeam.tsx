@@ -10,10 +10,9 @@ export default function NewTeam() {
       title="Create new team"
       onSubmit={values => authPost('/teams', { ...values, active: true })}
     >
-      <div className="flex justify-between w-full items-stretch pt-3">
-        <Button.PrimarySubmit title="Submit new team" />
-        <Button.Cancel />
-      </div>
+      <Button.Cancel />
+      <span className="flex-grow" />
+      <Button.PrimarySubmit title="Submit new team" />
     </TeamForm>
   );
 }

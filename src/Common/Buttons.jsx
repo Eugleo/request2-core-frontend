@@ -6,7 +6,7 @@ import * as Icon from 'react-feather';
 
 export function Edit({ id = null }) {
   return (
-    <NormalLinked to={id ? `${id}/edit` : 'edit'} classNames={['pl-2', 'pr-3']}>
+    <NormalLinked to={id ? `${id}/edit` : 'edit'} classNames={['pl-2', 'pr-3', 'bg-white']}>
       <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
       Edit
     </NormalLinked>
@@ -15,7 +15,7 @@ export function Edit({ id = null }) {
 
 export function Cancel() {
   const navigate = useNavigate();
-  return <Normal title="Cancel" onClick={() => navigate(-1)} />;
+  return <Normal title="Cancel" onClick={() => navigate(-1)} classNames={['bg-white']} />;
 }
 
 export function Normal({ title, children = null, classNames = [], onClick }) {
@@ -52,7 +52,8 @@ export function Danger({ classNames = [], title = null, children = null, onClick
     'text-sm',
     'px-4',
     'py-2',
-    'text-red-600',
+    'text-red-500',
+    'bg-red-100',
     'border',
     'border-red-300',
     'focus:outline-none',
@@ -78,6 +79,7 @@ export function Secondary({ classNames, title = null, children = null, onClick }
     'px-4',
     'py-2',
     'text-green-600',
+    'bg-green-100',
     'border',
     'border-green-300',
     'focus:outline-none',

@@ -13,7 +13,7 @@ import { Team } from './Team';
 import EditTeam from './EditTeam';
 import { WithID } from '../Utils/WithID';
 
-export default function Teams() {
+export default function TeamRouter() {
   return (
     <Routes>
       <Route path="" element={<TeamList />} />
