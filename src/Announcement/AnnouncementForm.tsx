@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { ReactNode } from 'react';
 import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import { Announcement } from './Announcement';
@@ -32,7 +32,7 @@ export default function AnnouncementForm({
   title: string;
   ann?: Announcement;
   onSubmit: (values: AnnStub) => Promise<Response>;
-  children: React.ReactNode;
+  children: ReactNode;
 }) {
   const navigate = useNavigate();
   return (
