@@ -3,7 +3,7 @@ import { Form, Formik } from 'formik';
 import { useNavigate } from 'react-router';
 import { Announcement } from './Announcement';
 import { ShortText, LongText } from '../Common/Forms';
-import MdRender from '../Common/MdRender';
+import Markdown from '../Common/MdRender';
 import Page from '../Page/Page';
 
 type AnnStub = { title: string; body: string };
@@ -56,7 +56,7 @@ export default function AnnouncementForm({
             </div>
             <div>
               <span className="text-sm text-gray-600 mb-1">Preview</span>
-              <MdRender
+              <Markdown
                 source={values.body}
                 className="border border-gray-300 rounded-sm pb-4 pt-6 px-6 mb-6"
               />

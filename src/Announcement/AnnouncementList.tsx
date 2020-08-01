@@ -11,7 +11,7 @@ import { Authentized, Authorized } from '../Utils/Auth';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
 import Page from '../Page/Page';
-import MdRender from '../Common/MdRender';
+import Markdown from '../Common/MdRender';
 import NewAnnouncement from './NewAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
 import { maybe } from '../Utils/Maybe';
@@ -111,7 +111,7 @@ function Item({
           <Button.Edit id={_id} />
         </Authorized>
       </div>
-      <MdRender
+      <Markdown
         source={body}
         className={c('px-6 pt-3 pb-1', active ? 'text-gray-700' : 'text-gray-400')}
       />

@@ -3,7 +3,7 @@ import { AtomSpinner } from 'react-epic-spinners';
 import { useParams, Navigate } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 import Page, { CenteredPage } from '../Page/Page';
-import MdRender from '../Common/MdRender';
+import Markdown from '../Common/MdRender';
 import { maybe } from '../Utils/Maybe';
 import { Announcement } from './Announcement';
 import { User } from '../User/User';
@@ -33,7 +33,7 @@ export default function AnnouncementPage() {
       <p className="ml-4 text-gray-700 text-sm">
         <span className="font-semibold">{author.name}</span> has updated this item
       </p>
-      <MdRender source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-2 pb-3 mb-12" />
+      <Markdown source={ann.body} className="bg-white rounded-md shadow-sm px-6 pt-2 pb-3 mb-12" />
     </Page>
   );
 }

@@ -9,5 +9,6 @@ module.exports = {
     'react/prop-types': 0,
     'react/no-unescaped-entities': 0,
     'prettier/prettier': 'error',
+    'react/button-has-type': 0,
   },
 };

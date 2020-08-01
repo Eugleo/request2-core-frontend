@@ -1,8 +1,7 @@
-/* eslint-disable react/display-name */
 import React from 'react';
 import ReactMarkdown from 'react-markdown';
 
-export default function MdRender({ source, className }) {
+export default function Markdown({ source, className }: { source: string; className?: string }) {
   return (
     <ReactMarkdown
       source={source}
