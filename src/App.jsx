@@ -10,11 +10,11 @@ import Page from './Page/Page';
 import AuthContext from './Utils/Auth';
 import NotFound404 from './Page/NotFound404';
 
-import { Announcements } from './Announcement/Announcements';
+import AnnouncementRouter from './Announcement/AnnouncementList';
 import { NewRegistrationPage, RegisterPage } from './Page/Registration';
 import LoginPage from './Page/LoginPage';
 
-import Teams from './Team/Teams';
+import TeamRouter from './Team/TeamList';
 import RequestsAsOperator from './Request/Operator/Requests';
 import RequestsAsClient from './Request/Client/Requests';
 
@@ -100,8 +100,8 @@ function AppBody(props) {
             <Route path="requests/*" element={<RequestsAsClient />} />
           </Route>
           <Route path="/requests/*" element={<RequestsAsOperator />} />
-          <Route path="/announcements/*" element={<Announcements />} />
-          <Route path="/teams/*" element={<Teams />} />
+          <Route path="/announcements/*" element={<AnnouncementRouter />} />
+          <Route path="/teams/*" element={<TeamRouter />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register">
             <Route path="new" element={<NewRegistrationPage />} />
