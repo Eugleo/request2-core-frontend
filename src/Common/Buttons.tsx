@@ -3,6 +3,9 @@ import { Link, useNavigate } from 'react-router-dom';
 import c from 'classnames';
 import * as Icon from 'react-feather';
 import { To } from 'history';
+import { ClassValue } from 'classnames/types';
+
+type Status = 'Normal' | 'Danger';
 
 type BaseButtonParams = {
   title?: string;
@@ -10,134 +13,118 @@ type BaseButtonParams = {
   className?: string;
 };
 
+type LinkParams = BaseButtonParams & { to: To; status?: Status };
+
 type ButtonParams = BaseButtonParams & {
   onClick: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
+  status?: Status;
 };
 
-type LinkParams = BaseButtonParams & { to: To };
+type SubmitButtonParams =
+  | (BaseButtonParams & { type: 'submit' | 'reset'; onClick?: undefined; status?: Status })
+  | (ButtonParams & { type?: 'button' });
 
-function Button({
-  type = 'button',
-  children,
-  className,
-  onClick,
-}: {
-  children: ReactNode;
-  className?: string;
-  onClick?: (event: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
-  type: 'button' | 'submit' | 'reset';
-}) {
-  const classes = [
-    'inline-flex',
-    'items-center',
+export function primaryClasses(status: Status) {
+  return [
+    'rounded-lg',
+    'text-white',
+    'shadow-sm',
+    status === 'Danger' && 'bg-red-400 hover:bg-red-500',
+    status === 'Normal' && 'bg-teal-400 hover:bg-teal-500',
+  ];
+}
+
+export function secondaryClasses(status: Status) {
+  return [
+    'border-2',
     'rounded-md',
     'shadow-sm',
-    'text-sm',
-    'px-4',
-    'py-2',
-    'border',
-    'focus:outline-none',
     'hover:shadow-inner',
+    'border-gray-400',
+    'hover:border-gray-500',
+    'border',
+    status === 'Danger' && 'text-red-800',
+    status === 'Normal' && 'text-gray-700 hover:text-gray-800',
   ];
+}
 
+export function tertiaryClasses(status: Status) {
+  return [
+    'text-gray-600',
+    'font-medium',
+    status === 'Danger' && 'hover:text-red-800',
+    status === 'Normal' && 'hover:text-gray-700',
+  ];
+}
+
+const baseClasses = [
+  'px-3',
+  'py-2',
+  'inline-flex',
+  'items-center',
+  'focus:outline-none',
+  'font-medium',
+  'text-sm',
+];
+
+function makeButton(
+  { status, className, title, children, onClick, type = 'button' }: SubmitButtonParams,
+  getClasses: (status: Status) => ClassValue[]
+) {
+  const cl = c(getClasses(status || 'Normal'), className);
   return (
-    <button type={type} onClick={onClick} className={c(classes, className)}>
-      {children}
+    <button type={type} onClick={onClick} className={c(baseClasses, cl)}>
+      {title || children}
     </button>
   );
 }
 
-export function Edit({ id }: { id?: number }) {
+function makeLinkedButton(p: LinkParams, getClasses: (status: Status) => ClassValue[]) {
+  const cl = c(getClasses(p.status || 'Normal'), p.className);
   return (
-    <PlainLink to={id ? `${id}/edit` : 'edit'} className="pl-2 pr-3 bg-white">
-      <Icon.Edit3 className="mr-1 text-gray-700 h-4 stroke-2" />
-      Edit
-    </PlainLink>
+    <Link to={p.to} className={c(baseClasses, cl)}>
+      {p.title || p.children}
+    </Link>
+  );
+}
+
+export function Create({ title }: { title: string }) {
+  return <PrimaryLinked to="new" title={title} />;
+}
+
+export function More({ id }: { id?: number }) {
+  return (
+    <TertiaryLinked to={id ? `${id}/edit` : 'edit'} className="p-1">
+      <Icon.MoreVertical className="text-gray-700 h-4 stroke-2" />
+    </TertiaryLinked>
   );
 }
 
 export function Cancel() {
   const navigate = useNavigate();
-  return <Plain title="Cancel" onClick={() => navigate(-1)} className="bg-white" />;
+  return <Tertiary title="Cancel" status="Normal" onClick={() => navigate(-1)} />;
 }
 
-const plainClasses = ['text-gray-700', 'border-gray-400', 'hover:border-gray-500'];
-
-export function Plain({ title, children = null, className, onClick }: ButtonParams) {
-  return (
-    <Button type="button" onClick={onClick} className={c(plainClasses, className)}>
-      {title || children}
-    </Button>
-  );
+export function Primary(props: SubmitButtonParams) {
+  return makeButton(props, primaryClasses);
 }
 
-export function PlainLink({ to, title, children, className }: LinkParams) {
-  const classes = [
-    'inline-flex',
-    'items-center',
-    'rounded-md',
-    'shadow-sm',
-    'text-sm',
-    'px-4',
-    'py-2',
-    'border',
-    'focus:outline-none',
-    'hover:shadow-inner',
-  ];
-
-  return (
-    <Link to={to} className={c(classes, plainClasses, className)}>
-      {title || children}
-    </Link>
-  );
+export function PrimaryLinked(props: LinkParams) {
+  return makeLinkedButton(props, primaryClasses);
 }
 
-const primaryClasses = ['text-white', 'bg-green-700', 'hover:bg-green-600'];
-
-export function Primary({ title, children, className, onClick }: ButtonParams) {
-  return (
-    <Button type="button" onClick={onClick} className={c(primaryClasses, className)}>
-      {title || children}
-    </Button>
-  );
+export function Secondary(props: ButtonParams) {
+  return makeButton(props, secondaryClasses);
 }
 
-export function PrimarySubmit({ title, children, className }: BaseButtonParams) {
-  return (
-    <Button type="submit" className={c(primaryClasses, className)}>
-      {title || children}
-    </Button>
-  );
+export function SecondaryLinked(props: LinkParams) {
+  return makeLinkedButton(props, secondaryClasses);
 }
 
-export function Danger({ className, title, children, onClick }: ButtonParams) {
-  const classes = [
-    'text-red-500',
-    'bg-red-100',
-    'border-red-300',
-    'hover:border-red-400',
-    className,
-  ];
-
-  return (
-    <Button type="button" onClick={onClick} className={c(classes)}>
-      {title || children}
-    </Button>
-  );
+export function Tertiary(props: ButtonParams) {
+  return makeButton(props, tertiaryClasses);
 }
 
-export function Secondary({ className, title, children, onClick }: ButtonParams) {
-  const classes = [
-    'text-green-600',
-    'bg-green-100',
-    'border-green-300',
-    'hover:border-green-400',
-    className,
-  ];
-
-  return (
-    <Button type="button" onClick={onClick} className={c(classes)}>
-      {title || children}
-    </Button>
-  );
+export function TertiaryLinked(props: LinkParams) {
+  return makeLinkedButton(props, tertiaryClasses);
 }

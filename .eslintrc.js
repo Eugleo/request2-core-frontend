@@ -1,6 +1,7 @@
 module.exports = {
   extends: ['airbnb-typescript-prettier'],
   rules: {
+    'import/no-unresolved': 0,
     '@typescript-eslint/explicit-function-return-type': 0,
     'no-underscore-dangle': 0,
     'import/extensions': 0,
