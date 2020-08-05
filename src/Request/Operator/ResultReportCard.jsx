@@ -5,20 +5,6 @@ import * as Button from '../../Common/Buttons';
 
 import { useAuth } from '../../Utils/Auth';
 
-function getValidate(fields) {
-  return values => {
-    return fields
-      .filter(f => f.required)
-      .reduce(
-        (er, f) =>
-          !values[f.name] || values[f.name].length === 0
-            ? { ...er, [f.name]: 'This field is required' }
-            : er,
-        {}
-      );
-  };
-}
-
 function stringify(value) {
   if (Array.isArray(value)) {
     return value.map(v => v.toString()).join(';;;');
@@ -30,7 +16,6 @@ function stringify(value) {
 }
 
 function submit(authorId, authPut, properties, request) {
-  console.log(properties);
   return authPut(`/requests/${request._id}`, {
     props: Object.entries(properties).map(([name, value]) => ({
       authorId,
@@ -114,7 +99,7 @@ export default function ResultReportCard({ request }) {
           </div>
 
           <div className="col-span-5 py-4 px-6 flex flex-row-reverse">
-            <Button.PrimarySubmit title="Submit results" />
+            <Button.Primary type="submit" title="Submit results" />
           </div>
         </Form>
       </Formik>

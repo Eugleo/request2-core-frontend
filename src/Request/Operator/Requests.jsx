@@ -1,17 +1,12 @@
 import React from 'react';
 import { Routes, Route, Navigate } from 'react-router-dom';
-import Page from '../../Page/Page';
-
+import { Page } from '../../Common/Layout';
 import { List } from '../../Common/List';
-import { useAuth } from '../../Utils/Auth';
-
 import { usePagination } from '../../Common/PageSwitcher';
-
 import * as Api from '../../Utils/Api';
 import RequestPage from '../RequestPage';
 import { EmptyLabel, Section, ListItem } from '../RequestElements';
 import { comparator } from '../../Utils/Func';
-
 import { statusToString } from '../Status';
 import EditRequestPage from '../Client/EditRequest';
 
@@ -26,8 +21,7 @@ export default function Requests() {
 }
 
 function RequestList() {
-  const { auth } = useAuth();
-  const { setTotal, limit, offset } = usePagination(100);
+  const { limit, offset } = usePagination(100);
   const { data: payload, error, pending } = Api.useAsyncGetMany('/requests', limit, offset, v =>
     v.sort(comparator(r => r.dateCreated))
   );

@@ -4,7 +4,7 @@ import { Formik, Form, Field } from 'formik';
 import { Link, useParams } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
-import { CenteredPage } from './Page';
+import { Page } from '../Common/Layout';
 import { ShortText } from '../Common/Forms';
 
 import * as Button from '../Common/Buttons';
@@ -22,7 +22,7 @@ export function NewRegistrationPage() {
   const [regState, setState] = useState('init');
 
   return (
-    <CenteredPage title="New registration" width="max-w-md">
+    <Page title="New registration" width="max-w-md">
       <Formik
         initialValues={{ email: '' }}
         validate={validate}
@@ -52,7 +52,7 @@ export function NewRegistrationPage() {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.PrimarySubmit title="Register" />
+                <Button.Primary type="submit" title="Register" />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">
@@ -63,7 +63,7 @@ export function NewRegistrationPage() {
           )}
         </Form>
       </Formik>
-    </CenteredPage>
+    </Page>
   );
 }
 
@@ -72,7 +72,7 @@ export function RegisterPage() {
   const [regState, setState] = useState('init');
 
   return (
-    <CenteredPage title="Registration" width="max-w-md">
+    <Page title="Registration" width="max-w-md">
       <Formik
         initialValues={{
           email,
@@ -128,7 +128,7 @@ export function RegisterPage() {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.PrimarySubmit title="Finish registration" />
+                <Button.Primary type="submit" title="Finish registration" />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">
@@ -139,6 +139,6 @@ export function RegisterPage() {
           )}
         </Form>
       </Formik>
-    </CenteredPage>
+    </Page>
   );
 }

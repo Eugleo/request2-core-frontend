@@ -13,7 +13,7 @@ import {
 import fieldLib from '../RequestTypes/field-library.json';
 import { makeFieldPath } from '../../Utils/FieldPath';
 import { useAsyncGet } from '../../Utils/Api';
-import Page from '../../Page/Page';
+import { Page } from '../../Common/Layout';
 import validateSMR from '../SmallMoleculeRequest';
 import * as Button from '../../Common/Buttons';
 import { useAuth } from '../../Utils/Auth';
@@ -225,12 +225,8 @@ export default function EditRequestPage() {
                 <div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />,
               ])}
             <div className="flex flex-row justify-between" key="submit">
-              <Button.PrimarySubmit>Save changes</Button.PrimarySubmit>
-              <Button.Normal
-                title="Cancel"
-                classNames={['bg-white']}
-                onClick={() => navigate(-1)}
-              />
+              <Button.Primary type="submit">Save changes</Button.Primary>
+              <Button.Cancel />
             </div>
           </Form>
         </Formik>

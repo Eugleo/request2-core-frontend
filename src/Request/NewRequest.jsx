@@ -2,7 +2,7 @@ import React, { useMemo, useState } from 'react';
 import { Formik, Form } from 'formik';
 import { useParams, useNavigate } from 'react-router-dom';
 import fieldLib from './RequestTypes/field-library.json';
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 import {
   Section,
   ShortText,
@@ -240,12 +240,8 @@ export default function NewRequestPage() {
                 <div key={`Sep${ix}`} className="border-t-2 bg-gray-400 w-full" />,
               ])}
             <div className="flex flex-row justify-between" key="submit">
-              <Button.PrimarySubmit>Submit the request</Button.PrimarySubmit>
-              <Button.Normal
-                title="Cancel"
-                classNames={['bg-white']}
-                onClick={() => navigate(-1)}
-              />
+              <Button.Primary type="submit">Submit the request</Button.Primary>
+              <Button.Cancel />
             </div>
           </Form>
         </Formik>

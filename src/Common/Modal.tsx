@@ -22,7 +22,7 @@ export default function Modal({
         <h1 className="text-xl font-medium px-6">{title}</h1>
         <div className="px-6">{children}</div>
         <div className="flex flex-row-reverse bg-gray-100 py-2 px-6">
-          <Button.Plain title={closeText} onClick={onClose} />
+          <Button.Primary status="Normal" title={closeText} onClick={onClose} />
         </div>
       </div>
     </div>

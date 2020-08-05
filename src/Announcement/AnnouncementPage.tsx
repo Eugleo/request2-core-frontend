@@ -2,7 +2,7 @@ import React from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 import { useParams, Navigate } from 'react-router-dom';
 import * as Api from '../Utils/Api';
-import Page, { CenteredPage } from '../Page/Page';
+import { Page } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
 import { maybe } from '../Utils/Maybe';
 import { Announcement } from './Announcement';
@@ -20,16 +20,16 @@ export default function AnnouncementPage() {
 
   if (pending || !ann || !author) {
     return (
-      <CenteredPage title="Loading announcement">
+      <Page title="Loading announcement">
         <div className="flex justify-center">
           <AtomSpinner color="gray" />
         </div>
-      </CenteredPage>
+      </Page>
     );
   }
 
   return (
-    <Page title={ann.title} width="max-w-2xl">
+    <Page title={ann.title}>
       <p className="ml-4 text-gray-700 text-sm">
         <span className="font-semibold">{author.name}</span> has updated this item
       </p>

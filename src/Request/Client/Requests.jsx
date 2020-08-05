@@ -1,7 +1,7 @@
 import React from 'react';
 import * as Icon from 'react-feather';
 import { Link, Routes, Route, Navigate } from 'react-router-dom';
-import Page from '../../Page/Page';
+import { Page } from '../../Common/Layout';
 
 import { List } from '../../Common/List';
 
@@ -26,7 +26,7 @@ export default function Requests() {
 }
 
 function RequestList() {
-  const { setTotal, limit, offset } = usePagination(100);
+  const { limit, offset } = usePagination(100);
   const { data: payload, error, pending } = Api.useAsyncGetMany('/requests', limit, offset, v =>
     v.sort(comparator(r => r.dateCreated))
   );

@@ -4,9 +4,8 @@ import { AtomSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
 import Sidebar from './Page/Sidebar';
 import * as Api from './Utils/Api';
-import Footer from './Page/Footer';
 
-import Page from './Page/Page';
+import { Page } from './Common/Layout';
 import AuthContext from './Utils/Auth';
 import NotFound404 from './Page/NotFound404';
 
@@ -17,6 +16,7 @@ import LoginPage from './Page/LoginPage';
 import TeamRouter from './Team/TeamList';
 import RequestsAsOperator from './Request/Operator/Requests';
 import RequestsAsClient from './Request/Client/Requests';
+import SearchSidebar from './Common/SearchSidebar';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -71,14 +71,14 @@ function App() {
 
   return (
     <AuthContext.Provider value={{ auth, dispatch }}>
-      <div className="App bg-gray-100 min-h-screen flex flex-col">
+      <div
+        style={{ gridTemplateColumns: 'auto 1fr' }}
+        className="App bg-gray-200 h-screen w-screen grid grid-cols-2"
+      >
         <Router>
           <Sidebar />
           <AppBody backendAvailable={backendAvailable} />
         </Router>
-        <div className="flex-none">
-          <Footer />
-        </div>
       </div>
     </AuthContext.Provider>
   );

@@ -3,7 +3,7 @@ import { Formik, Form } from 'formik';
 import { Link, Navigate } from 'react-router-dom';
 import * as Api from '../Utils/Api';
 
-import { CenteredPage } from './Page';
+import { Page } from '../Common/Layout';
 import { ShortText } from '../Common/Forms';
 import AuthContext, { NotAuthentized } from '../Utils/Auth';
 
@@ -61,7 +61,7 @@ export default function LoginPage() {
   const { dispatch } = useContext(AuthContext);
 
   return (
-    <CenteredPage title="Log in to reQuest" width="max-w-md">
+    <Page title="Log in to reQuest" width="max-w-md">
       <NotAuthentized otherwise={<Navigate to="-1" />}>
         <Formik
           initialValues={{
@@ -80,10 +80,10 @@ export default function LoginPage() {
             <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
               Forgot you password?
             </Link>
-            <Button.PrimarySubmit title="Log in" />
+            <Button.Primary type="submit" title="Log in" />
           </Form>
         </Formik>
       </NotAuthentized>
-    </CenteredPage>
+    </Page>
   );
 }

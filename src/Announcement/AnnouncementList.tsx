@@ -10,7 +10,7 @@ import * as Button from '../Common/Buttons';
 import { Authentized, Authorized } from '../Utils/Auth';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
 import NewAnnouncement from './NewAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
@@ -44,11 +44,11 @@ function AnnouncementList() {
   }
 
   if (pending || !payload) {
-    return <Page title="Announcements" width="max-w-2xl" />;
+    return <Page title="Announcements">Waiting for announcements</Page>;
   }
 
   return (
-    <Page title="Announcements" width="max-w-2xl">
+    <Page title="Announcements">
       <Authentized otherwise={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
           <Authorized roles={['Admin']}>
@@ -108,7 +108,7 @@ function Item({
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.Edit id={_id} />
+          <Button.More id={_id} />
         </Authorized>
       </div>
       <Markdown

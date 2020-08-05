@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router';
 import { Announcement } from './Announcement';
 import { ShortText, LongText } from '../Common/Forms';
 import Markdown from '../Common/MdRender';
-import Page from '../Page/Page';
+import { ContentWrapper, Page } from '../Common/Layout';
 
 type AnnStub = { title: string; body: string };
 
 function validate(values: AnnStub) {
-  const error: AnnStub = { title: '', body: '' };
+  const error: { title?: string; body?: string } = {};
 
   if (!values.title) {
     error.title = 'This field is required';
@@ -36,7 +36,7 @@ export default function AnnouncementForm({
 }) {
   const navigate = useNavigate();
   return (
-    <Page title={title} width="w-full">
+    <Page title={title}>
       <Formik
         initialValues={{ body: ann?.body || '', title: ann?.title || '' }}
         onSubmit={values => {

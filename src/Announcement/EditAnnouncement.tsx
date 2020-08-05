@@ -1,6 +1,6 @@
 import React from 'react';
 import { useParams, useNavigate, Navigate } from 'react-router-dom';
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
@@ -19,7 +19,7 @@ export default function EditAnnouncement() {
     return <Navigate to="/404" />;
   }
   if (pending || !ann) {
-    return <Page title="Edit announcement" width="max-w-2xl" />;
+    return <Page title="Edit announcement">Waiting for announcements</Page>;
   }
 
   return (
@@ -33,7 +33,7 @@ export default function EditAnnouncement() {
       <Button.Cancel />
       <span className="flex-grow" />
       {ann.active ? <DeactivateButton ann={ann} /> : <ActivateButton ann={ann} />}
-      <Button.PrimarySubmit title="Save changes" />
+      <Button.Primary type="submit" status="Normal" title="Save changes" />
     </AnnouncementForm>
   );
 }
@@ -45,6 +45,7 @@ function ActivateButton({ ann }: { ann: WithID<Announcement> }) {
   return (
     <Button.Secondary
       title="Reactivate"
+      status="Normal"
       onClick={() => {
         authPut(`/announcements/${ann._id}`, { ...ann, active: true })
           .then(() => navigate(-1))
@@ -60,8 +61,9 @@ function DeactivateButton({ ann }: { ann: WithID<Announcement> }) {
   const { authDel } = useAuth<Announcement>();
   const navigate = useNavigate();
   return (
-    <Button.Danger
+    <Button.Secondary
       title="Deactivate"
+      status="Danger"
       onClick={() => {
         authDel(`/announcements/${ann._id}`)
           .then(() => navigate(-1))

@@ -16,10 +16,10 @@ export default function UserView() {
   const ref = useOnClickOutside(() => setShowDetails(false));
 
   return (
-    <div className="h-full w-full relative" ref={showDetails ? ref : null}>
+    <div className="relative" ref={showDetails ? ref : null}>
       <button
         type="button"
-        className="p-2 bg-gray-400 text-white rounded-full hover:text-gray-200 focus:outline-none"
+        className="p-2 bg-gray-600 text-white rounded-full hover:text-gray-200 focus:outline-none"
         onClick={() => setShowDetails(!showDetails)}
       >
         <Icon.User className="h-5 w-5" />
@@ -53,8 +53,9 @@ function UserDetails() {
           </div>
         </Section>
         <Section title="Joined">{formatDate(user.created)}</Section>
-        <Button.Danger
+        <Button.Primary
           title="Log out"
+          status="Danger"
           onClick={() => dispatch({ type: 'LOGOUT' })}
           classNames={['mt-2', 'w-full', 'flex', 'justify-center']}
         />

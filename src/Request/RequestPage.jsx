@@ -75,7 +75,7 @@ function RequestHeader({ request, author, lastChange }) {
 function ButtonArray() {
   return (
     <div className="col-span-1 flex flex-row-reverse items-center">
-      <Button.NormalLinked to="edit" title="Edit" classNames={['mr-2']} />
+      <Button.TertiaryLinked to="edit" title="Edit" classNames={['mr-2']} />
     </div>
   );
 }
@@ -129,7 +129,7 @@ function Card({ title, children, edit }) {
       <div>
         <div className="flex px-6 flex-row items-center justify-between mb-8 border-b border-gray-200">
           <h2 className="text-2xl py-6 font-bold w-full">{title}</h2>
-          {edit && <Button.NormalLinked to="edit" title="Edit" />}
+          {edit && <Button.TertiaryLinked to="edit" title="Edit" />}
         </div>
       </div>
       <div className="px-6 pb-6 grid grid-cols-1 gap-8">{children}</div>

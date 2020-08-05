@@ -22,7 +22,7 @@ export default function NewAnnouncement() {
     >
       <Button.Cancel />
       <span className="flex-grow" />
-      <Button.PrimarySubmit title="Create new announcement" />
+      <Button.Primary type="submit" title="Create new announcement" status="Normal" />
     </AnnouncementForm>
   );
 }
