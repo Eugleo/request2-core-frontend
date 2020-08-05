@@ -6,7 +6,7 @@ import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 import { Authentized, Authorized } from '../Utils/Auth';
-import { Page } from '../Common/Layout';
+import { Page, Card } from '../Common/Layout';
 import NewTeam from './NewTeam';
 import { comparator } from '../Utils/Func';
 import { Team } from './Team';
@@ -52,7 +52,7 @@ function TeamList() {
       <SearchSidebar />
       <Page title="Teams" buttons={<Button.Create title="Create new" />}>
         <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
-          <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden">
+          <Card>
             <div className="flex flex-col">
               <div
                 style={{ gridTemplateColumns: '2fr 1fr 1fr 0.5fr' }}
@@ -66,7 +66,7 @@ function TeamList() {
                 <Item key={team._id} team={team} />
               ))}
             </div>
-          </div>
+          </Card>
         </Authentized>
         <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
       </Page>
