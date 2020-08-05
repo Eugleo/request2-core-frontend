@@ -6,35 +6,35 @@ import c from 'classnames';
 import { Authentized, NotAuthentized, Authorized } from '../Utils/Auth';
 import UserView from './UserView';
 import '../styles/tailwind.css';
+import logoSrc from '../assets/logoII.svg';
 
 export default function Sidebar() {
   return (
-    <nav className="h-screen w-20 bg-green-700 fixed border-gray-300 border-b top-0 left-0 p-4 z-10">
-      <div className="flex flex-col items-center justify-between h-full">
-        <div className="flex flex-col items-center justify-center">
-          <span className="text-green-900 font-extrabold text-xl mb-16">
-            rQ<sup>2</sup>
+    <div className="h-screen sticky border-r border-gray-300 w-20">
+      <nav className="h-full bg-gray-100 border-gray-300 p-4 border-b z-10">
+        <div className="flex flex-col items-center h-full">
+          <span className="mb-10 flex-grow-0">
+            <img alt="Request II logo" src={logoSrc} className="flex-grow-0" />
           </span>
           <Authentized otherwise={<Navigate to="/login" />}>
             <Authorized roles={['Client']}>
               <NavLink to="/me/requests">
-                <Icon.FileText className="text-white" />
+                <Icon.FileText />
               </NavLink>
             </Authorized>
             <Authorized roles={['Operator']}>
               <NavLink to="/requests">
-                <Icon.List className="text-white" />
+                <Icon.List />
               </NavLink>
             </Authorized>
             <NavLink to="/announcements">
-              <Icon.Globe className="text-white" />
+              <Icon.Globe />
             </NavLink>
             <NavLink to="/teams">
-              <Icon.Users className="text-white" />
+              <Icon.Users />
             </NavLink>
           </Authentized>
-        </div>
-        <div className="flex items-center justify-right">
+          <span className="flex-grow" />
           <Authentized otherwise={<Navigate to="/login" />}>
             <UserView />
           </Authentized>
@@ -43,8 +43,8 @@ export default function Sidebar() {
             <NavLink to="/login">Log in</NavLink>
           </NotAuthentized>
         </div>
-      </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 
@@ -52,8 +52,11 @@ function NavLink({ className, to, children }: { to: To; children: ReactNode; cla
   return (
     <RouterNavLink
       to={to}
-      className={c('mb-6 px-3 py-2 rounded-md text-sm hover:bg-green-600', className)}
-      activeClassName="bg-green-800"
+      className={c(
+        'text-gray-600 mb-6 px-3 py-2 rounded-md text-sm hover:text-gray-800',
+        className
+      )}
+      activeClassName="bg-gray-200"
     >
       {children}
     </RouterNavLink>
