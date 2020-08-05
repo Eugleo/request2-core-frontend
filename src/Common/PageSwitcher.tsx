@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
 import { To } from 'history';
@@ -10,13 +10,12 @@ type Page =
   | { hidden: true; number: number };
 
 function getPages(
+  currentPage: number,
   finalPage: number,
   pathname: string,
   bufferOnBoundary: number,
   bufferAround: number
 ): Array<Page> {
-  const currentPage = 0;
-
   const shouldBeHidden = (n: number) =>
     n >= 0 + bufferOnBoundary &&
     n <= finalPage - bufferOnBoundary &&
@@ -63,8 +62,8 @@ export default function Pagination({
   bufferAround?: number;
 }) {
   const location = useLocation();
-  const finalPage = Math.max(Math.floor(total / limit) - 1, 0);
-  const pages = getPages(finalPage, location.pathname, bufferOnBoundary, bufferAround);
+  const finalPage = Math.max(Math.floor(total / limit), 0);
+  const pages = getPages(currentPage, finalPage, location.pathname, bufferOnBoundary, bufferAround);
 
   if (pages.length <= 1) {
     return (
@@ -102,23 +101,22 @@ export default function Pagination({
 
   return (
     <div className="px-6 py-3 text-sm flex items-center justify-center">
-      <div className="flex border border-gray-300 rounded-md ">{buttons}</div>
+      <div className="flex border border-gray-300 rounded-md">{buttons}</div>
     </div>
   );
 }
 
-function useQuery() {
-  const loc = useLocation();
-  return useMemo(() => new URLSearchParams(loc.search), [loc.search]);
-}
-
 export function usePagination(initLimit = 10) {
-  const queryParams = useQuery();
-
   const [limit, setLimit] = useState(initLimit);
   const [offset, setOffset] = useState(0);
 
+  const loc = useLocation();
+  const queryParams = useMemo(() => new URLSearchParams(loc.search), [loc.search]);
   const currentPage = Number(queryParams.get('page') || 0);
+
+  useEffect(() => {
+    setOffset(currentPage * limit);
+  }, [currentPage, limit]);
 
   return { limit, setLimit, offset, setOffset, currentPage };
 }
@@ -134,10 +132,15 @@ function Ellipsis() {
 function ArrowButton({ dir, disabled, link }: { dir: 'L' | 'R'; disabled: boolean; link: To }) {
   const classes =
     'list-item px-3 py-1 border-r border-gray-200 focus:outline-none flex items-center';
-  return (
-    <Link key={dir} className={c(classes, disabled && 'text-gray-500')} to={link}>
-      {dir === 'L' ? <Icon.ChevronLeft className="h-4" /> : <Icon.ChevronRight className="h-4" />}
+  const content =
+    dir === 'L' ? <Icon.ChevronLeft className="h-4" /> : <Icon.ChevronRight className="h-4" />;
+
+  return !disabled ? (
+    <Link key={dir} className={classes} to={link}>
+      {content}
     </Link>
+  ) : (
+    <div className={c(classes, 'text-gray-500')}>{content}</div>
   );
 }
 
