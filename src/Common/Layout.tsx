@@ -1,4 +1,5 @@
 import React from 'react';
+import c from 'classnames';
 
 export function Spacer() {
   return <span className="flex-grow" />;
@@ -42,5 +43,22 @@ export function Page({
       </Header>
       <Body>{children}</Body>
     </ContentWrapper>
+  );
+}
+
+export function Card({
+  children,
+  className,
+  style,
+}: {
+  children: React.ReactNode;
+  className?: string;
+  style?: React.CSSProperties;
+}) {
+  const classes = 'flex flex-col bg-white rounded-lg shadow-sm overflow-hidden';
+  return (
+    <div style={style} className={c(classes, className)}>
+      {children}
+    </div>
   );
 }

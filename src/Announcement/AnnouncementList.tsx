@@ -10,7 +10,7 @@ import * as Button from '../Common/Buttons';
 import { Authentized, Authorized } from '../Utils/Auth';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 
-import { Page } from '../Common/Layout';
+import { Page, Card } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
 import NewAnnouncement from './NewAnnouncement';
 import EditAnnouncement from './EditAnnouncement';
@@ -48,12 +48,16 @@ function AnnouncementList() {
   }
 
   return (
-    <Page title="Announcements">
+    <Page
+      title="Announcements"
+      buttons={
+        <Authorized roles={['Admin']}>
+          <Button.Create title="Create new" />
+        </Authorized>
+      }
+    >
       <Authentized otherwise={<div>You need to be logged in to view announcements.</div>}>
         <div className="flex flex-col">
-          <Authorized roles={['Admin']}>
-            <AddAnnButton />
-          </Authorized>
           <div className="flex flex-col">
             {payload.values.map(ann => (
               <Item key={ann._id} ann={ann} />
@@ -66,17 +70,6 @@ function AnnouncementList() {
   );
 }
 
-function AddAnnButton() {
-  return (
-    <Link
-      to="new"
-      className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
-    >
-      <Icon.Plus className="stroke-2 mr-1" /> Add new announcement
-    </Link>
-  );
-}
-
 function Item({
   ann: { _id, active, title, body, authorId, dateCreated },
 }: {
@@ -85,7 +78,7 @@ function Item({
   const { data: author } = Api.useAsyncGet<User>(maybe(authorId, id => `/users/${id}`));
 
   return (
-    <div className="mb-6 w-full bg-white rounded-lg shadow-sm flex-col">
+    <Card className="mb-6">
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link
@@ -115,6 +108,6 @@ function Item({
         source={body}
         className={c('px-6 pt-3 pb-1', active ? 'text-gray-700' : 'text-gray-400')}
       />
-    </div>
+    </Card>
   );
 }

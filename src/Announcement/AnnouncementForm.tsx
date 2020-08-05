@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 import { Announcement } from './Announcement';
 import { ShortText, LongText } from '../Common/Forms';
 import Markdown from '../Common/MdRender';
-import { ContentWrapper, Page } from '../Common/Layout';
+import { Page, Card } from '../Common/Layout';
 
 type AnnStub = { title: string; body: string };
 
@@ -49,11 +49,14 @@ export default function AnnouncementForm({
       >
         {({ values }) => (
           <Form className="grid grid-cols-2 gap-8">
-            <div style={{ gridTemplateRows: 'auto 1fr auto' }} className="grid grid-rows-3">
+            <Card
+              style={{ gridTemplateRows: 'auto 1fr auto' }}
+              className="grid grid-rows-3 px-6 py-3"
+            >
               <ShortText name="title" label="Title" />
               <LongText name="body" label="Body" className="font-mono text-sm mb-4 h-full" />
               <div className="flex flex-row mb-4">{children}</div>
-            </div>
+            </Card>
             <div>
               <span className="text-sm text-gray-600 mb-1">Preview</span>
               <Markdown

@@ -16,7 +16,7 @@ export default function Markdown({ source, className }: { source: string; classN
           <div className="pl-4 border-l-4 border-gray-500 text-gray-700 mb-4 mt-4">{children}</div>
         ),
         code: ({ value }) => (
-          <pre className="bg-gray-200 font-mono text-xs rounded-md mb-4 mt-4 py-3 px-4 overflow-x-scroll">
+          <pre className="bg-gray-100 font-mono text-xs rounded-md mb-4 mt-4 py-3 px-4 overflow-x-scroll">
             <code>{value}</code>
           </pre>
         ),
