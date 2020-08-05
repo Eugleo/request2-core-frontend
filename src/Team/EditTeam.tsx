@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 
 import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
@@ -16,7 +16,7 @@ export default function EditTeam() {
   const { data: team, error, pending } = useAsyncGet<Team>(`/teams/${id}`);
 
   if (pending || !team) {
-    return <Page title="Edit team" width="max-w-2xl" />;
+    return <Page title="Edit team">Waiting for teams</Page>;
   }
   if (error) {
     console.log(error);
@@ -28,11 +28,12 @@ export default function EditTeam() {
       team={team}
       title={`Editing ${team.name}'s group`}
       onSubmit={values => authPut('/teams', { ...values, active: true })}
+      headerButtons={
+        team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />
+      }
     >
-      <Button.Cancel />
-      <span className="flex-grow" />
-      {team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />}
-      <Button.PrimarySubmit title="Save changes" />
+      <Button.Cancel className="mr-3" />
+      <Button.Primary type="submit" title="Save changes" status="Normal" />
     </TeamForm>
   );
 }
@@ -43,6 +44,7 @@ function ActivateButton({ team }: { team: WithID<Team> }) {
   return (
     <Button.Secondary
       title="Reactivate"
+      status="Normal"
       onClick={() => {
         authPut(`/teams/${team._id}`, { ...team, active: true })
           .then(() => navigate(-1))
@@ -57,8 +59,9 @@ function DeactivateButton({ id }: { id: number }) {
   const { authDel } = useAuth();
   const navigate = useNavigate();
   return (
-    <Button.Danger
+    <Button.Secondary
       title="Deactivate"
+      status="Danger"
       onClick={() => {
         authDel(`/teams/${id}`)
           .then(() => navigate(-1))

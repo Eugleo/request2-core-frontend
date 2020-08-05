@@ -1,17 +1,17 @@
 import React, { useCallback } from 'react';
-import * as Icon from 'react-feather';
-import { Link, Routes, Route, Navigate } from 'react-router-dom';
+import { Routes, Route, Navigate } from 'react-router-dom';
 import c from 'classnames';
 import * as Api from '../Utils/Api';
 import * as Button from '../Common/Buttons';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 import { Authentized, Authorized } from '../Utils/Auth';
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 import NewTeam from './NewTeam';
 import { comparator } from '../Utils/Func';
 import { Team } from './Team';
 import EditTeam from './EditTeam';
 import { WithID } from '../Utils/WithID';
+import SearchSidebar from '../Common/SearchSidebar';
 
 export default function TeamRouter() {
   return (
@@ -39,55 +39,47 @@ function TeamList() {
   }
 
   if (!payload || pending) {
-    return <Page title="Teams" width="max-w-2xl" />;
+    return <Page title="Teams">Waiting for teams</Page>;
   }
 
   return (
-    <Page title="Teams" width="max-w-2xl">
-      <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
-        <div className="flex flex-col">
-          <Authorized roles={['Admin']}>
-            <AddTeamButton />
-          </Authorized>
-          <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2">
-            {payload.values.map(team => (
-              <Item key={team._id} team={team} />
-            ))}
+    <div style={{ gridTemplateColumns: 'auto 1fr' }} className="grid grid-cols-2">
+      <SearchSidebar />
+      <Page title="Teams" buttons={<Button.Create title="Create new" />}>
+        <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
+          <div className="flex flex-col bg-white rounded-lg shadow-sm overflow-hidden">
+            <div className="flex flex-col">
+              <div className="grid grid-cols-4 col-gap-20 px-6 py-3 bg-gray-100 border-b border-gray-200">
+                <p className="col-span-2 text-xs text-gray-600 font-medium">TEAM LEADER</p>
+                <p className="text-xs text-gray-600 font-medium text-right">COMPANY CODE</p>
+              </div>
+              {payload.values.map(team => (
+                <Item key={team._id} team={team} />
+              ))}
+            </div>
           </div>
-          <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
-        </div>
-      </Authentized>
-    </Page>
-  );
-}
-
-function AddTeamButton() {
-  return (
-    <Link
-      to="new"
-      className="rounded-lg border-2 border-dashed text-gray-500 border-gray-300 mb-6 py-4 flex justify-center hover:text-gray-400"
-    >
-      <Icon.Plus className="stroke-2 mr-1" /> Add new team
-    </Link>
+        </Authentized>
+        <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
+      </Page>
+    </div>
   );
 }
 
 function Item({ team }: { team: WithID<Team> }) {
   return (
-    <div className="flex list-item px-6 py-3 items-center border-b border-gray-200 hover:bg-gray-200">
-      <div className="flex flex-col flex-grow">
-        <h2 className={c('font-medium', team.active ? 'text-gray-900' : 'text-gray-400')}>
-          {team.name}
-          <span className={c('font-normal', team.active ? 'text-gray-500' : 'text-gray-300')}>
-            's group
-          </span>
-        </h2>
-        <p className={c('text-sm', team.active ? 'text-gray-600' : 'text-gray-400')}>
+    <div className="border-b list-item border-gray-200 pl-6 pr-3 py-3 hover:bg-gray-100 grid grid-cols-4 col-gap-20">
+      <div className="flex flex-row items-center col-span-2">
+        <h2 className={c(team.active ? 'text-gray-900' : 'text-gray-400')}>{team.name}</h2>
+      </div>
+      <div className="flex items-center">
+        <p className={c('text-right w-full', team.active ? 'text-gray-700' : 'text-gray-400')}>
           #{team.code}
         </p>
       </div>
       <Authorized roles={['Admin']}>
-        <Button.Edit id={team._id} />
+        <div className="flex flex-row-reverse">
+          <Button.More id={team._id} />
+        </div>
       </Authorized>
     </div>
   );

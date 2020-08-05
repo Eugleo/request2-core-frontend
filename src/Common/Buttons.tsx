@@ -37,13 +37,13 @@ export function primaryClasses(status: Status) {
 export function secondaryClasses(status: Status) {
   return [
     'border-2',
-    'rounded-md',
+    'rounded-lg',
     'shadow-sm',
     'hover:shadow-inner',
     'border-gray-400',
     'hover:border-gray-500',
     'border',
-    status === 'Danger' && 'text-red-800',
+    status === 'Danger' && 'text-red-600',
     status === 'Normal' && 'text-gray-700 hover:text-gray-800',
   ];
 }
@@ -100,9 +100,11 @@ export function More({ id }: { id?: number }) {
   );
 }
 
-export function Cancel() {
+export function Cancel({ className }: { className?: string }) {
   const navigate = useNavigate();
-  return <Tertiary title="Cancel" status="Normal" onClick={() => navigate(-1)} />;
+  return (
+    <Tertiary className={className} title="Cancel" status="Normal" onClick={() => navigate(-1)} />
+  );
 }
 
 export function Primary(props: SubmitButtonParams) {

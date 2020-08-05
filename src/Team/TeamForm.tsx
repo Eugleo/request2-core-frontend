@@ -4,12 +4,12 @@ import { useNavigate } from 'react-router-dom';
 import { Team } from './Team';
 import { Maybe } from '../Utils/Maybe';
 import { ShortText } from '../Common/Forms';
-import Page from '../Page/Page';
+import { Page } from '../Common/Layout';
 
 type TeamStub = { name: string; code: string };
 
 function validate(values: TeamStub) {
-  const error: TeamStub = { name: '', code: '' };
+  const error: { name?: string; code?: string } = {};
 
   if (!values.name) {
     error.name = 'This field is required';
@@ -27,17 +27,19 @@ export default function TeamForm({
   team,
   onSubmit,
   children,
+  headerButtons,
 }: {
   title: string;
   team?: Maybe<Team>;
   onSubmit: (values: TeamStub) => Promise<Response>;
   children: ReactNode;
+  headerButtons?: React.ReactNode;
 }) {
   const navigate = useNavigate();
 
   return (
-    <Page title={title} width="max-w-2xl">
-      <div className="bg-white rounded-md border border-gray-200 overflow-hidden">
+    <Page title={title} buttons={headerButtons}>
+      <div className="bg-white rounded-md overflow-hidden shadow-xs mx-auto max-w-md">
         <Formik
           initialValues={{ name: team?.name || '', code: team?.code || '' }}
           validate={validate}
@@ -52,7 +54,7 @@ export default function TeamForm({
               <ShortText name="name" label="Team leader" />
               <ShortText name="code" label="Institutional code" />
             </div>
-            <div className="flex flex-row w-full px-6 py-3 bg-gray-200">{children}</div>
+            <div className="flex justify-end w-full px-6 py-3 bg-gray-100">{children}</div>
           </Form>
         </Formik>
       </div>

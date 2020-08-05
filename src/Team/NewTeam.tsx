@@ -11,9 +11,8 @@ export default function NewTeam() {
       title="Create new team"
       onSubmit={values => authPost('/teams', { ...values, active: true })}
     >
-      <Button.Cancel />
-      <span className="flex-grow" />
-      <Button.PrimarySubmit title="Submit new team" />
+      <Button.Cancel className="mr-3" />
+      <Button.Primary type="submit" title="Submit new team" status="Normal" />
     </TeamForm>
   );
 }
