@@ -61,3 +61,7 @@ export default function Table<T>({
     </Card>
   );
 }
+
+export function Pill({ text, className }: { text: string; className: string }) {
+  return <span className={c('py-1 px-3 text-xs rounded-full border', className)}>{text}</span>;
+}

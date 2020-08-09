@@ -5,15 +5,15 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
-import Table from '../../Common/Table';
+import Table, { Pill } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { comparator } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
 import NewRequestPage from '../NewRequest';
 import { idToStr, Request } from '../Request';
-import { StatusLabel } from '../RequestElements';
 import RequestPage from '../RequestPage';
+import { statusStyle, statusToStr } from '../Status';
 
 export default function Requests() {
   return (
@@ -36,7 +36,7 @@ function requestFields(request: WithID<Request>) {
       {idToStr(request)}
     </span>,
     <span className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</span>,
-    <StatusLabel status={request.status} />,
+    <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />,
   ];
 }
 

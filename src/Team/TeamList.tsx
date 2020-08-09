@@ -1,11 +1,10 @@
-import c from 'classnames';
 import React, { useCallback } from 'react';
 import { Navigate, Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
-import Table from '../Common/Table';
+import Table, { Pill } from '../Common/Table';
 import * as Api from '../Utils/Api';
 import { Authentized } from '../Utils/Auth';
 import { comparator } from '../Utils/Func';
@@ -22,10 +21,6 @@ export default function TeamRouter() {
       <Route path=":id/edit" element={<EditTeam />} />
     </Routes>
   );
-}
-
-function Pill({ text, className }: { text: string; className: string }) {
-  return <span className={c('py-1 px-3 text-xs rounded-full border', className)}>{text}</span>;
 }
 
 function teamFields(team: WithID<Team>) {

@@ -3,15 +3,15 @@ export type Status = 'Pending' | 'InProgress' | 'Done' | 'AwaitingInput' | 'Dele
 export function statusStyle(status: Status) {
   switch (status) {
     case 'Pending':
-      return 'bg-blue-100 text-blue-500 border border-blue-300 hover:border-blue-500';
+      return 'bg-blue-100 text-blue-500 border border-blue-300';
     case 'InProgress':
-      return 'bg-orange-100 text-orange-600 border border-orange-300 hover:border-orange-500';
+      return 'bg-orange-100 text-orange-600 border border-orange-300';
     case 'Done':
-      return 'bg-green-100 text-green-500 border border-green-300 hover:border-green-500';
+      return 'bg-green-100 text-green-500 border border-green-300';
     case 'AwaitingInput':
-      return 'bg-red-100 text-red-400 border border-red-300 hover:border-red-500';
+      return 'bg-red-100 text-red-400 border border-red-300';
     default:
-      return 'bg-purple-100 text-purple-400 border border-purple-300 hover:border-purple-500';
+      return 'bg-purple-100 text-purple-400 border border-purple-300';
   }
 }
 
