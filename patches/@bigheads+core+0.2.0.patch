@@ -1,0 +1,14 @@
+diff --git a/node_modules/@bigheads/core/src/theme.ts b/node_modules/@bigheads/core/src/theme.ts
+index ea31b0f..d4f8d20 100755
+--- a/node_modules/@bigheads/core/src/theme.ts
++++ b/node_modules/@bigheads/core/src/theme.ts
+@@ -100,7 +100,8 @@ export const colors = {
+     },
+   },
+   bgColors: {
+-    blue: '#85c5e5',
++    blue: '#4fd1c5',
++    teal: '#4fd1c5'
+     // green: '#89D86F',
+     // red: '#ED9191',
+   },

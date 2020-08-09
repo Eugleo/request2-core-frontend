@@ -3,12 +3,78 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import React, { useContext, useState } from 'react';
 
-import * as Icon from 'react-feather';
+import {
+  theme,
+  eyesMap,
+  eyebrowsMap,
+  mouthsMap,
+  hairMap,
+  facialHairMap,
+  clothingMap,
+  accessoryMap,
+  graphicsMap,
+  hatMap,
+  bodyMap,
+  BigHead,
+} from '@bigheads/core';
+
 import * as Button from '../Common/Buttons';
 import AuthContext from '../Utils/Auth';
 
 import formatDate from '../Utils/Date';
 import useOnClickOutside from '../Common/Hooks';
+
+function selectRandomKey(object) {
+  return Object.keys(object)[Math.floor(Math.random() * Object.keys(object).length)];
+}
+
+function getRandomOptions() {
+  const skinTone = selectRandomKey(theme.colors.skin);
+  const eyes = selectRandomKey(eyesMap);
+  const eyebrows = selectRandomKey(eyebrowsMap);
+  const mouth = selectRandomKey(mouthsMap);
+  const hair = selectRandomKey(hairMap);
+  const facialHair = selectRandomKey(facialHairMap);
+  const clothing = selectRandomKey(clothingMap);
+  const accessory = selectRandomKey(accessoryMap);
+  const graphic = selectRandomKey(graphicsMap);
+  const hat = selectRandomKey(hatMap);
+  const body = selectRandomKey(bodyMap);
+
+  const hairColor = selectRandomKey(theme.colors.hair);
+  const clothingColor = selectRandomKey(theme.colors.clothing);
+  const circleColor = selectRandomKey(theme.colors.bgColors);
+  const lipColor = selectRandomKey(theme.colors.lipColors);
+  const hatColor = selectRandomKey(theme.colors.clothing);
+
+  const mask = true;
+  const lashes = Math.random() > 0.5;
+
+  return {
+    skinTone,
+    eyes,
+    eyebrows,
+    mouth,
+    hair,
+    facialHair,
+    clothing,
+    accessory,
+    graphic,
+    hat,
+    body,
+    hairColor,
+    clothingColor,
+    circleColor,
+    lipColor,
+    hatColor,
+    mask,
+    lashes,
+  };
+}
+
+function RandomAvatar() {
+  return <BigHead {...getRandomOptions()} circleColor="teal400" />;
+}
 
 // TODO Fix accessibility
 export default function UserView() {
@@ -19,10 +85,12 @@ export default function UserView() {
     <div className="relative" ref={showDetails ? ref : null}>
       <button
         type="button"
-        className="p-2 bg-gray-600 text-white rounded-full hover:text-gray-200 focus:outline-none"
+        className="hover:text-gray-200 focus:outline-none"
         onClick={() => setShowDetails(!showDetails)}
       >
-        <Icon.User className="h-5 w-5" />
+        <div style={{ padding: '-1px' }} className="flex w-full h-full items-stretch">
+          <RandomAvatar />
+        </div>
       </button>
       {showDetails ? <UserDetails /> : null}
     </div>
