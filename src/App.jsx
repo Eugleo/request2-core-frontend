@@ -1,21 +1,18 @@
-import React, { useState, useEffect, useReducer } from 'react';
-
+import React, { useEffect, useReducer, useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Route, Routes } from 'react-router-dom';
-import Sidebar from './Page/Sidebar';
-import * as Api from './Utils/Api';
-
-import { Page } from './Common/Layout';
-import AuthContext from './Utils/Auth';
-import NotFound404 from './Page/NotFound404';
 
 import AnnouncementRouter from './Announcement/AnnouncementList';
-import { NewRegistrationPage, RegisterPage } from './Page/Registration';
+import { Page } from './Common/Layout';
 import LoginPage from './Page/LoginPage';
-
-import TeamRouter from './Team/TeamList';
-import RequestsAsOperator from './Request/Operator/RequestList';
+import NotFound404 from './Page/NotFound404';
+import { NewRegistrationPage, RegisterPage } from './Page/Registration';
+import Sidebar from './Page/Sidebar';
 import RequestsAsClient from './Request/Client/RequestList';
+import RequestsAsOperator from './Request/Operator/RequestList';
+import TeamRouter from './Team/TeamList';
+import * as Api from './Utils/Api';
+import AuthContext from './Utils/Auth';
 
 function reducer(state, action) {
   switch (action.type) {

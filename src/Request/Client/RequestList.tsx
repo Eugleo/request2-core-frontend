@@ -1,20 +1,19 @@
-import React from 'react';
-import moment from 'moment';
-import { Link, Routes, Route, Navigate } from 'react-router-dom';
 import { To } from 'history';
-import { Page, SidebarWrapper } from '../../Common/Layout';
-import Table from '../../Common/Table';
+import moment from 'moment';
+import React from 'react';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
-import * as Api from '../../Utils/Api';
+import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
-import RequestPage from '../RequestPage';
-import NewRequestPage from '../NewRequest';
-import { Section, StatusLabel } from '../RequestElements';
+import Table from '../../Common/Table';
+import * as Api from '../../Utils/Api';
 import { comparator } from '../../Utils/Func';
-import EditRequestPage from '../EditRequest';
-import { Request, idToStr } from '../Request';
 import { WithID } from '../../Utils/WithID';
-import SearchSidebar from '../../Common/SearchSidebar';
+import EditRequestPage from '../EditRequest';
+import NewRequestPage from '../NewRequest';
+import { idToStr, Request } from '../Request';
+import { StatusLabel } from '../RequestElements';
+import RequestPage from '../RequestPage';
 
 export default function Requests() {
   return (

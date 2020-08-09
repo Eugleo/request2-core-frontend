@@ -1,4 +1,5 @@
 import React from 'react';
+
 import { ContentWrapper } from '../Common/Layout';
 
 export default function NotFound404() {

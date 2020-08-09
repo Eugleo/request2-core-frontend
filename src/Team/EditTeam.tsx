@@ -1,13 +1,13 @@
 import React from 'react';
-import { useNavigate, useParams, Navigate } from 'react-router-dom';
-import { Page } from '../Common/Layout';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
-import { useAuth } from '../Utils/Auth';
 import * as Button from '../Common/Buttons';
+import { Page } from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
-import TeamForm from './TeamForm';
-import { Team } from './Team';
+import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
+import { Team } from './Team';
+import TeamForm from './TeamForm';
 
 // TODO Add error handling
 export default function EditTeam() {

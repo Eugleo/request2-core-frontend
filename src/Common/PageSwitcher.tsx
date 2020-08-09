@@ -1,8 +1,9 @@
-import React, { useState, useMemo, useEffect } from 'react';
+import c from 'classnames';
+import { To } from 'history';
+import React, { useEffect, useMemo, useState } from 'react';
 import * as Icon from 'react-feather';
 import { Link, useLocation } from 'react-router-dom';
-import { To } from 'history';
-import c from 'classnames';
+
 import { urlWithParams } from '../Utils/Api';
 
 type Page =

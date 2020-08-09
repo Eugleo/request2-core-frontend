@@ -1,13 +1,15 @@
-import React, { ReactNode } from 'react';
-import { NavLink as RouterNavLink, Navigate } from 'react-router-dom';
-import * as Icon from 'react-feather';
-import { To } from 'history';
-import c from 'classnames';
-import { Authentized, NotAuthentized, Authorized } from '../Utils/Auth';
-import UserView from './UserView';
 import '../styles/tailwind.css';
+
+import c from 'classnames';
+import { To } from 'history';
+import React, { ReactNode } from 'react';
+import * as Icon from 'react-feather';
+import { Navigate, NavLink as RouterNavLink } from 'react-router-dom';
+
 import logoSrc from '../assets/logoII.svg';
 import { Spacer } from '../Common/Layout';
+import { Authentized, Authorized, NotAuthentized } from '../Utils/Auth';
+import UserView from './UserView';
 
 export default function Sidebar() {
   return (

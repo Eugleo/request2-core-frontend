@@ -1,23 +1,21 @@
-import React from 'react';
-import * as Icon from 'react-feather';
-import { Link, Routes, Route, Navigate } from 'react-router-dom';
-import moment from 'moment';
 import c from 'classnames';
-import AnnouncementPage from './AnnouncementPage';
-import * as Api from '../Utils/Api';
+import moment from 'moment';
+import React from 'react';
+import { Link, Navigate, Route, Routes } from 'react-router-dom';
+
 import * as Button from '../Common/Buttons';
-
-import { Authentized, Authorized } from '../Utils/Auth';
-import Pagination, { usePagination } from '../Common/PageSwitcher';
-
-import { Page, Card } from '../Common/Layout';
+import { Card, Page } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
-import NewAnnouncement from './NewAnnouncement';
-import EditAnnouncement from './EditAnnouncement';
-import { maybe } from '../Utils/Maybe';
-import { Announcement } from './Announcement';
-import { WithID } from '../Utils/WithID';
+import Pagination, { usePagination } from '../Common/PageSwitcher';
 import { User } from '../User/User';
+import * as Api from '../Utils/Api';
+import { Authentized, Authorized } from '../Utils/Auth';
+import { maybe } from '../Utils/Maybe';
+import { WithID } from '../Utils/WithID';
+import { Announcement } from './Announcement';
+import AnnouncementPage from './AnnouncementPage';
+import EditAnnouncement from './EditAnnouncement';
+import NewAnnouncement from './NewAnnouncement';
 
 export default function AnnouncementRouter() {
   return (

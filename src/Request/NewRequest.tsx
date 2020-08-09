@@ -1,28 +1,14 @@
-import React, { useMemo, useState } from 'react';
-import { Formik, Form } from 'formik';
-import { useParams, useNavigate } from 'react-router-dom';
-import fieldLib from './RequestTypes/field-library.json';
-import { Page } from '../Common/Layout';
-import {
-  ShortText,
-  LongText,
-  TextWithHints,
-  SingleChoice,
-  MultipleChoice,
-  Image,
-} from '../Common/Forms';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import fieldTransformSM from './SmallMoleculeRequest';
-import { useAuth } from '../Utils/Auth';
-import * as Button from '../Common/Buttons';
-import { makeFieldPath } from '../Utils/FieldPath';
 import Modal from '../Common/Modal';
-import { idToStr, Request } from './Request';
-import requestSchemas from './RequestTypes';
-import RequestDetailForm from './RequestDetailForm';
-import { stringify, FieldValue } from './RequestSchema';
+import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
+import { idToStr, Request } from './Request';
+import RequestDetailForm from './RequestDetailForm';
+import { FieldValue, stringify } from './RequestSchema';
+import requestSchemas from './RequestTypes';
 
 function submit(
   authPost: (url: string, data: any) => Promise<Response>,

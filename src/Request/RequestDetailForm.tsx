@@ -1,23 +1,24 @@
-import React from 'react';
-import { Formik, Form } from 'formik';
-import { Navigate } from 'react-router';
 import c from 'classnames';
+import { Form, Formik } from 'formik';
+import React from 'react';
+import { Navigate } from 'react-router';
+
 import * as Button from '../Common/Buttons';
-import { Request, Property } from './Request';
-import { Page, Card } from '../Common/Layout';
-import requestSchemas, { requestValidations } from './RequestTypes';
-import { Field, IndirectField, isField, FieldValue, isEmpty, DetailField } from './RequestSchema';
-import { Maybe } from '../Utils/Maybe';
-import fieldLib from './RequestTypes/field-library.json';
 import {
-  ShortText,
-  LongText,
-  TextWithHints,
-  SingleChoice,
-  MultipleChoice,
   Image,
+  LongText,
+  MultipleChoice,
+  ShortText,
+  SingleChoice,
+  TextWithHints,
 } from '../Common/Forms';
+import { Card, Page } from '../Common/Layout';
 import { makeFieldPath } from '../Utils/FieldPath';
+import { Maybe } from '../Utils/Maybe';
+import { Property, Request } from './Request';
+import { DetailField, Field, FieldValue, IndirectField, isEmpty, isField } from './RequestSchema';
+import requestSchemas, { requestValidations } from './RequestTypes';
+import fieldLib from './RequestTypes/field-library.json';
 
 export default function RequestDetailForm<T>({
   title,

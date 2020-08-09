@@ -1,6 +1,6 @@
+import { To } from 'history';
 import React, { ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { To } from 'history';
 
 export function List({ elements, empty }: { elements: Array<ReactNode>; empty: JSX.Element }) {
   return elements.length > 0 ? (

@@ -1,25 +1,12 @@
-import React, { useMemo } from 'react';
-import { useParams, Navigate, useNavigate } from 'react-router';
-import { Form, Formik, FieldValidator } from 'formik';
-import {
-  LongText,
-  ShortText,
-  TextWithHints,
-  SingleChoice,
-  MultipleChoice,
-  Image,
-} from '../Common/Forms';
-import fieldLib from './RequestTypes/field-library.json';
-import { makeFieldPath } from '../Utils/FieldPath';
-import { useAsyncGet } from '../Utils/Api';
+import React from 'react';
+import { Navigate, useNavigate, useParams } from 'react-router';
+
 import { Page } from '../Common/Layout';
-import fieldTransformSM from './SmallMoleculeRequest';
-import * as Button from '../Common/Buttons';
+import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
-import RequestDetailForm from './RequestDetailForm';
-import { Request, Property } from './Request';
 import { WithID } from '../Utils/WithID';
-import requestTypes from './RequestTypes';
+import { Property, Request } from './Request';
+import RequestDetailForm from './RequestDetailForm';
 import { FieldValue, stringify } from './RequestSchema';
 
 function submit(

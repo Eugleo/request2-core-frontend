@@ -1,12 +1,13 @@
 import React from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
-import { useParams, Navigate } from 'react-router-dom';
-import * as Api from '../Utils/Api';
+import { Navigate, useParams } from 'react-router-dom';
+
 import { Page } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
+import { User } from '../User/User';
+import * as Api from '../Utils/Api';
 import { maybe } from '../Utils/Maybe';
 import { Announcement } from './Announcement';
-import { User } from '../User/User';
 
 export default function AnnouncementPage() {
   const { id } = useParams();

@@ -1,22 +1,13 @@
-import React, { useMemo } from 'react';
-import c from 'classnames';
-import { useParams, Navigate } from 'react-router-dom';
-import moment from 'moment';
-import formatDate from '../Utils/Date';
-import { useAuth, Authorized } from '../Utils/Auth';
-import * as Button from '../Common/Buttons';
-import ResultReportCard from './Operator/ResultReportCard';
-import { useAsyncGet } from '../Utils/Api';
-import { StatusLabel } from './RequestElements';
-import { capitalize } from '../Utils/Func';
-import { maybe } from '../Utils/Maybe';
-import { parseFieldName, makeFieldPath } from '../Utils/FieldPath';
-import StatusSelect from './Operator/StatusSelector';
+import React from 'react';
+import { Navigate, useParams } from 'react-router-dom';
 
-import fieldLib from './RequestTypes/field-library.json';
-import { idToStr, Property, Request } from './Request';
+import * as Button from '../Common/Buttons';
 import * as Page from '../Common/Layout';
+import { useAsyncGet } from '../Utils/Api';
+import { useAuth } from '../Utils/Auth';
+import { maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
+import { idToStr, Property, Request } from './Request';
 import RequestDetails from './RequestDetails';
 
 // function HeaderItem({ label, children }: { label: string; children: React.ReactNode }) {

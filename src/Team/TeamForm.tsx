@@ -1,10 +1,11 @@
+import { Form, Formik } from 'formik';
 import React, { ReactNode } from 'react';
-import { Formik, Form } from 'formik';
 import { useNavigate } from 'react-router-dom';
-import { Team } from './Team';
-import { Maybe } from '../Utils/Maybe';
+
 import { ShortText } from '../Common/Forms';
-import { Page, Card } from '../Common/Layout';
+import { Card, Page } from '../Common/Layout';
+import { Maybe } from '../Utils/Maybe';
+import { Team } from './Team';
 
 type TeamStub = { name: string; code: string };
 

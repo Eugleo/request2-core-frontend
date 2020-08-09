@@ -1,4 +1,5 @@
-import React, { useContext, useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
+
 import { Role, UserDetails, UserInfo } from '../User/User';
 
 type Auth = { loggedIn: boolean; userId: number; user: UserInfo & UserDetails };

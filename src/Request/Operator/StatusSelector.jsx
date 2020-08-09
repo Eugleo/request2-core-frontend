@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
 import c from 'classnames';
-import { statusStyle, statusStyleHover, strToStatus } from '../Status';
-import { useAuth } from '../../Utils/Auth';
+import React, { useState } from 'react';
+
 import useOnClickOutside from '../../Common/Hooks';
+import { useAuth } from '../../Utils/Auth';
+import { statusStyle, statusStyleHover, strToStatus } from '../Status';
 
 function StatusButton({ title, onClick, active }) {
   return (

@@ -1,6 +1,6 @@
 import { capitalize } from '../Utils/Func';
-import { Status } from './Status';
 import { WithID } from '../Utils/WithID';
+import { Status } from './Status';
 
 export type Request = {
   name: string;

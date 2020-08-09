@@ -1,4 +1,4 @@
-import { Maybe, isJust } from './Maybe';
+import { isJust, Maybe } from './Maybe';
 
 export function capitalize(str: string) {
   return str.charAt(0).toUpperCase() + str.slice(1);

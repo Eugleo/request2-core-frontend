@@ -1,11 +1,12 @@
+import c from 'classnames';
 import React from 'react';
 import { Navigate } from 'react-router';
-import c from 'classnames';
-import { Property, Request } from './Request';
-import { parseFieldName, makeFieldPath } from '../Utils/FieldPath';
-import requestTypes from './RequestTypes';
+
 import { Card } from '../Common/Layout';
+import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
+import { Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
+import requestTypes from './RequestTypes';
 
 export default function RequestDetails({
   request,

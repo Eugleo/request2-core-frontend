@@ -1,10 +1,11 @@
-import React from 'react';
 import c from 'classnames';
+import React from 'react';
+
 import { ItemContainer, LinkedItemTitle } from '../Common/List';
-import formatDate from '../Utils/Date';
 import { useAsyncGet } from '../Utils/Api';
-import { statusStyle, statusToStr } from './Status';
+import formatDate from '../Utils/Date';
 import { idToStr } from './Request';
+import { statusStyle, statusToStr } from './Status';
 
 export function EmptyLabel({ text }) {
   return (

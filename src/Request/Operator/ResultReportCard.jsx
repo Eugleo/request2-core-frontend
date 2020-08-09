@@ -1,8 +1,8 @@
-import React from 'react';
 import { Form, Formik } from 'formik';
-import { LongText, Image, ShortText } from '../../Common/Forms';
-import * as Button from '../../Common/Buttons';
+import React from 'react';
 
+import * as Button from '../../Common/Buttons';
+import { Image, LongText, ShortText } from '../../Common/Forms';
 import { useAuth } from '../../Utils/Auth';
 
 function stringify(value) {

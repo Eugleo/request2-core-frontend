@@ -1,5 +1,6 @@
-import React from 'react';
 import c from 'classnames';
+import React from 'react';
+
 import { WithID } from '../Utils/WithID';
 import { Card } from './Layout';
 

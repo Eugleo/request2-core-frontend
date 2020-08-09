@@ -1,11 +1,12 @@
-import React, { ReactNode } from 'react';
-import { useField } from 'formik';
 import c from 'classnames';
-import { components, PlaceholderProps, ControlProps } from 'react-select';
+import { useField } from 'formik';
+import React, { ReactNode } from 'react';
+import * as Icon from 'react-feather';
+import { components, ControlProps, PlaceholderProps } from 'react-select';
 import Creatable from 'react-select/creatable';
 import Tooltip from 'react-tooltip';
-import * as Icon from 'react-feather';
-import { Maybe, maybe } from '../Utils/Maybe';
+
+import { Maybe } from '../Utils/Maybe';
 
 type FieldConfig = { path: string; description?: string; label?: string; hint?: string };
 

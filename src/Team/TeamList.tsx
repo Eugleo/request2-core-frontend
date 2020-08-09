@@ -1,18 +1,18 @@
-import React, { useCallback } from 'react';
-import { Routes, Route, Navigate } from 'react-router-dom';
 import c from 'classnames';
-import * as Api from '../Utils/Api';
+import React, { useCallback } from 'react';
+import { Navigate, Route, Routes } from 'react-router-dom';
+
 import * as Button from '../Common/Buttons';
+import { Page } from '../Common/Layout';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
-import { Authentized, Authorized } from '../Utils/Auth';
-import { Page, Card, SidebarWrapper } from '../Common/Layout';
-import NewTeam from './NewTeam';
-import { comparator } from '../Utils/Func';
-import { Team } from './Team';
-import EditTeam from './EditTeam';
-import { WithID } from '../Utils/WithID';
-import SearchSidebar from '../Common/SearchSidebar';
 import Table from '../Common/Table';
+import * as Api from '../Utils/Api';
+import { Authentized } from '../Utils/Auth';
+import { comparator } from '../Utils/Func';
+import { WithID } from '../Utils/WithID';
+import EditTeam from './EditTeam';
+import NewTeam from './NewTeam';
+import { Team } from './Team';
 
 export default function TeamRouter() {
   return (

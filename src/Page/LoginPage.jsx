@@ -1,13 +1,12 @@
+import { Form, Formik } from 'formik';
 import React, { useContext, useState } from 'react';
-import { Formik, Form } from 'formik';
 import { Link, Navigate } from 'react-router-dom';
-import * as Api from '../Utils/Api';
-
-import { Page } from '../Common/Layout';
-import { ShortText } from '../Common/Forms';
-import AuthContext, { NotAuthentized } from '../Utils/Auth';
 
 import * as Button from '../Common/Buttons';
+import { ShortText } from '../Common/Forms';
+import { Page } from '../Common/Layout';
+import * as Api from '../Utils/Api';
+import AuthContext, { NotAuthentized } from '../Utils/Auth';
 
 function getUserInfo(apiKey) {
   return Api.get('/me', { Authorization: apiKey })

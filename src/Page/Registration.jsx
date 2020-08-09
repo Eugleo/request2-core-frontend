@@ -1,13 +1,12 @@
+import { Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
-import { Formik, Form, Field } from 'formik';
 import { Link, useParams } from 'react-router-dom';
-import * as Api from '../Utils/Api';
-
-import { Page } from '../Common/Layout';
-import { ShortText } from '../Common/Forms';
 
 import * as Button from '../Common/Buttons';
+import { ShortText } from '../Common/Forms';
+import { Page } from '../Common/Layout';
+import * as Api from '../Utils/Api';
 
 function validate(values) {
   const errors = {};

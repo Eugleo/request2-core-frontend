@@ -1,28 +1,26 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import {
+  accessoryMap,
+  BigHead,
+  bodyMap,
+  clothingMap,
+  eyebrowsMap,
+  eyesMap,
+  facialHairMap,
+  graphicsMap,
+  hairMap,
+  hatMap,
+  mouthsMap,
+  theme,
+} from '@bigheads/core';
 import React, { useContext, useState } from 'react';
 
-import {
-  theme,
-  eyesMap,
-  eyebrowsMap,
-  mouthsMap,
-  hairMap,
-  facialHairMap,
-  clothingMap,
-  accessoryMap,
-  graphicsMap,
-  hatMap,
-  bodyMap,
-  BigHead,
-} from '@bigheads/core';
-
 import * as Button from '../Common/Buttons';
-import AuthContext from '../Utils/Auth';
-
-import formatDate from '../Utils/Date';
 import useOnClickOutside from '../Common/Hooks';
+import AuthContext from '../Utils/Auth';
+import formatDate from '../Utils/Date';
 
 function selectRandomKey(object) {
   return Object.keys(object)[Math.floor(Math.random() * Object.keys(object).length)];

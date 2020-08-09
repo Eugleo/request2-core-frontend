@@ -1,4 +1,4 @@
-import { Schema, isSchema, FieldValue } from './RequestSchema';
+import { FieldValue, isSchema, Schema } from './RequestSchema';
 import fieldTransformSM from './SmallMoleculeRequest';
 
 const requestTypes: Map<string, Schema> = new Map();
