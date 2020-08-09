@@ -1,34 +1,36 @@
-export function statusStyle(status) {
+export type Status = 'Pending' | 'InProgress' | 'Done' | 'AwaitingInput' | 'Deleted';
+
+export function statusStyle(status: Status) {
   switch (status) {
     case 'Pending':
       return 'bg-blue-100 text-blue-500 border border-blue-300 hover:border-blue-500';
-    case 'In Progress':
+    case 'InProgress':
       return 'bg-orange-100 text-orange-600 border border-orange-300 hover:border-orange-500';
     case 'Done':
       return 'bg-green-100 text-green-500 border border-green-300 hover:border-green-500';
-    case 'Awaiting Input':
+    case 'AwaitingInput':
       return 'bg-red-100 text-red-400 border border-red-300 hover:border-red-500';
     default:
       return 'bg-purple-100 text-purple-400 border border-purple-300 hover:border-purple-500';
   }
 }
 
-export function statusStyleHover(status) {
+export function statusStyleHover(status: Status) {
   switch (status) {
     case 'Pending':
       return 'hover:bg-blue-100 hover:text-blue-500';
-    case 'In Progress':
+    case 'InProgress':
       return 'hover:bg-orange-100 hover:text-orange-600';
     case 'Done':
       return 'hover:bg-green-100 hover:text-green-500';
-    case 'Awaiting Input':
+    case 'AwaitingInput':
       return 'hover:bg-red-100 hover:text-red-400';
     default:
       return 'hover:bg-purple-100 hover:text-purple-400';
   }
 }
 
-export function statusToString(status) {
+export function statusToString(status: Status) {
   switch (status) {
     case 'InProgress':
       return 'In Progress';
@@ -39,6 +41,32 @@ export function statusToString(status) {
   }
 }
 
-export function statusFromString(str) {
-  return str.replace(' ', '');
+export function statusToStr(status: Status) {
+  switch (status) {
+    case 'InProgress':
+      return 'In Progress';
+    case 'Done':
+      return 'Done';
+    case 'Pending':
+      return 'Pending';
+    case 'AwaitingInput':
+      return 'Awaiting Input';
+    default:
+      return 'Deleted';
+  }
+}
+
+export function strToStatus(str: string): Status {
+  switch (str.replace(' ', '')) {
+    case 'InProgress':
+      return 'InProgress';
+    case 'Done':
+      return 'Done';
+    case 'Pending':
+      return 'Pending';
+    case 'AwaitingInput':
+      return 'AwaitingInput';
+    default:
+      return 'Deleted';
+  }
 }
