@@ -7,11 +7,9 @@ import { ClassValue } from 'classnames/types';
 
 type Status = 'Normal' | 'Danger';
 
-type BaseButtonParams = {
-  title?: string;
-  children?: ReactNode;
-  className?: string;
-};
+type BaseButtonParams =
+  | { title: string; children?: ReactNode; className?: string }
+  | { children: ReactNode; title?: string; className?: string };
 
 type LinkParams = BaseButtonParams & { to: To; status?: Status };
 

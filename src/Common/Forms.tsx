@@ -7,7 +7,7 @@ import Tooltip from 'react-tooltip';
 import * as Icon from 'react-feather';
 import { Maybe, maybe } from '../Utils/Maybe';
 
-type FieldConfig = { name: string; description?: string; label?: string; hint?: string };
+type FieldConfig = { path: string; description?: string; label?: string; hint?: string };
 
 type FieldWithStyle = FieldConfig & { className?: string };
 
@@ -28,7 +28,7 @@ const textFieldClasses = [
 ];
 
 export function ShortText({
-  name,
+  path: name,
   description,
   hint,
   label,
@@ -47,7 +47,7 @@ export function ShortText({
 }
 
 export function LongText({
-  name,
+  path: name,
   description,
   hint,
   label,
@@ -71,7 +71,7 @@ export function LongText({
 
 type FieldWithChoices = FieldConfig & { choices: Array<string> };
 
-export function SingleChoice({ name, description, label, hint, choices }: FieldWithChoices) {
+export function SingleChoice({ path: name, description, label, hint, choices }: FieldWithChoices) {
   const [field, meta] = useField({ name, type: 'radio' });
 
   return (
@@ -97,7 +97,13 @@ export function SingleChoice({ name, description, label, hint, choices }: FieldW
   );
 }
 
-export function MultipleChoice({ name, description, label, choices, hint }: FieldWithChoices) {
+export function MultipleChoice({
+  path: name,
+  description,
+  label,
+  choices,
+  hint,
+}: FieldWithChoices) {
   const [field, meta] = useField({ name, type: 'checkbox' });
 
   return (
@@ -124,8 +130,8 @@ export function MultipleChoice({ name, description, label, choices, hint }: Fiel
 
 type OptionType = { value: string; label: string };
 
-export function TextWithHints({ name, description, label, choices, hint }: FieldWithChoices) {
-  const [field, meta, helpers] = useField<string>({ name, type: 'text' });
+export function TextWithHints({ path: name, description, label, choices, hint }: FieldWithChoices) {
+  const [field, meta, helpers] = useField<OptionType>({ name, type: 'text' });
 
   const classes = [
     'border',
@@ -185,10 +191,10 @@ export function TextWithHints({ name, description, label, choices, hint }: Field
           }),
         }}
         onBlur={field.onBlur}
-        onChange={option => helpers.setValue((option as OptionType).value)}
+        onChange={option => helpers.setValue(option as OptionType)}
         options={options}
         isClearable
-        defaultValue={maybe(meta.initialValue, v => ({ value: v, label: v }), undefined)}
+        defaultValue={meta.initialValue}
       />
       <Description>{description}</Description>
     </Field>
@@ -204,26 +210,6 @@ export function Image({ className = '' }) {
       )}
     >
       Drop thee images here
-    </div>
-  );
-}
-
-export function Section({
-  title,
-  children,
-  description,
-}: {
-  title: string;
-  children: ReactNode;
-  description?: ReactNode;
-}) {
-  return (
-    <div className="grid grid-cols-4 gap-8">
-      <div>
-        <h2 className="text-xl text-gray-900 font-bold">{title}</h2>
-        <Description>{description}</Description>
-      </div>
-      <div className="col-span-3 grid grid-cols-1 gap-4">{children}</div>
     </div>
   );
 }

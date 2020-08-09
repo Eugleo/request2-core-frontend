@@ -1,4 +1,5 @@
 import { Team } from '../Team/Team';
+import { WithID } from '../Utils/WithID';
 
 export type Role = 'Admin' | 'Operator' | 'Client';
 
@@ -15,7 +16,7 @@ export type User = {
 export type UserDetails = {
   name: string;
   roles: Array<Role>;
-  team: Team;
+  team: WithID<Team>;
   dateCreated: Date;
 };
 

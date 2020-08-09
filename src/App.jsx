@@ -14,9 +14,8 @@ import { NewRegistrationPage, RegisterPage } from './Page/Registration';
 import LoginPage from './Page/LoginPage';
 
 import TeamRouter from './Team/TeamList';
-import RequestsAsOperator from './Request/Operator/Requests';
-import RequestsAsClient from './Request/Client/Requests';
-import SearchSidebar from './Common/SearchSidebar';
+import RequestsAsOperator from './Request/Operator/RequestList';
+import RequestsAsClient from './Request/Client/RequestList';
 
 function reducer(state, action) {
   switch (action.type) {

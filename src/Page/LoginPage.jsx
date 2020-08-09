@@ -75,8 +75,8 @@ export default function LoginPage() {
             {loginFailed ? (
               <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
             ) : null}
-            <ShortText name="email" label="Email address" />
-            <ShortText type="password" name="password" label="Password" />
+            <ShortText path="email" label="Email address" />
+            <ShortText type="password" path="password" label="Password" />
             <Link to="/" className="text-green-700 text-sm hover:text-green-600 mb-6">
               Forgot you password?
             </Link>

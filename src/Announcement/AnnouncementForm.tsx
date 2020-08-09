@@ -53,8 +53,8 @@ export default function AnnouncementForm({
               style={{ gridTemplateRows: 'auto 1fr auto' }}
               className="grid grid-rows-3 px-6 py-3"
             >
-              <ShortText name="title" label="Title" />
-              <LongText name="body" label="Body" className="font-mono text-sm mb-4 h-full" />
+              <ShortText path="title" label="Title" />
+              <LongText path="body" label="Body" className="font-mono text-sm mb-4 h-full" />
               <div className="flex flex-row mb-4">{children}</div>
             </Card>
             <div>

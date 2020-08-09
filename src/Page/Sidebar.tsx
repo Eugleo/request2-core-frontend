@@ -7,13 +7,14 @@ import { Authentized, NotAuthentized, Authorized } from '../Utils/Auth';
 import UserView from './UserView';
 import '../styles/tailwind.css';
 import logoSrc from '../assets/logoII.svg';
+import { Spacer } from '../Common/Layout';
 
 export default function Sidebar() {
   return (
     <div className="h-screen sticky border-r border-gray-300 w-20">
-      <nav className="h-full bg-gray-100 border-gray-300 p-4 border-b z-10">
+      <nav className="h-full bg-gray-100 border-gray-300 py-4 px-2 border-b z-10">
         <div className="flex flex-col items-center h-full">
-          <span className="mb-10 flex-grow-0">
+          <span className="mb-10 flex-grow-0 px-3">
             <img alt="Request II logo" src={logoSrc} className="flex-grow-0" />
           </span>
           <Authentized otherwise={<Navigate to="/login" />}>
@@ -34,7 +35,7 @@ export default function Sidebar() {
               <Icon.Users />
             </NavLink>
           </Authentized>
-          <span className="flex-grow" />
+          <Spacer />
           <Authentized otherwise={<Navigate to="/login" />}>
             <UserView />
           </Authentized>

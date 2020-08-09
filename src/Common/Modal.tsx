@@ -10,7 +10,7 @@ export default function Modal({
 }: {
   title: string;
   closeText: string;
-  onClose: () => null;
+  onClose: () => void;
   children: ReactNode;
 }) {
   return (

@@ -33,7 +33,7 @@ function Filter({ title, choices }: { title: string; choices: Array<string> }) {
       <h2 className="font-medium text-gray-500 mb-3">{title}</h2>
       {choices.map(ch => (
         <div key={ch} className="mb-1">
-          <input id={ch} name={ch} type="checkbox" className="mr-2" />
+          <input id={ch} path={ch} type="checkbox" className="mr-2" />
           <label htmlFor={ch} className="text-gray-700">
             {ch}
           </label>

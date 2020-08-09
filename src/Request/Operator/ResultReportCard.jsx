@@ -66,7 +66,7 @@ export default function ResultReportCard({ request }) {
             <div className="col-span-4 grid grid-cols-4 px-6 py-4">
               <div className="row-span-2 col-span-3 flex flex-row items-stretch w-full h-full">
                 <LongText
-                  name="result/files-description"
+                  path="result/files-description"
                   label="Description"
                   className="h-full w-full"
                 />
@@ -79,7 +79,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="result/time-spent-(operator)"
+                    path="result/time-spent-(operator)"
                     label="Time (operator)"
                   />
                 </div>
@@ -90,7 +90,7 @@ export default function ResultReportCard({ request }) {
                     step="15"
                     min="0"
                     placeholder="0"
-                    name="result/time-spent-(machine)"
+                    path="result/time-spent-(machine)"
                     label="Time (machine)"
                   />
                 </div>

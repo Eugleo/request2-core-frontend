@@ -5,8 +5,10 @@ export function Spacer() {
   return <span className="flex-grow" />;
 }
 
-export function Title({ children }: { children: React.ReactNode }) {
-  return <h1 className="text-2xl font-bold leading-tight text-black">{children}</h1>;
+export function Title({ children, className }: { children: React.ReactNode; className?: string }) {
+  return (
+    <h1 className={c('text-2xl font-bold leading-tight text-black', className)}>{children}</h1>
+  );
 }
 
 export function Header({ children }: { children: React.ReactNode }) {
@@ -43,6 +45,14 @@ export function Page({
       </Header>
       <Body>{children}</Body>
     </ContentWrapper>
+  );
+}
+
+export function SidebarWrapper({ children }: { children: React.ReactNode }) {
+  return (
+    <div style={{ gridTemplateColumns: 'auto 1fr' }} className="grid grid-cols-2">
+      {children}
+    </div>
   );
 }
 

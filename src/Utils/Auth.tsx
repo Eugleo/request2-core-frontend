@@ -1,7 +1,7 @@
 import React, { useContext, useCallback } from 'react';
 import { Role, UserDetails, UserInfo } from '../User/User';
 
-type Auth = { loggedIn: boolean; user: UserInfo & UserDetails };
+type Auth = { loggedIn: boolean; userId: number; user: UserInfo & UserDetails };
 
 const AuthContext = React.createContext<{ auth: Auth; dispatch: Function } | null>(null);
 const hostname = 'http://localhost:9080';

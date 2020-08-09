@@ -46,7 +46,7 @@ export function NewRegistrationPage() {
             </p>
           ) : (
             <>
-              <ShortText name="email" label="Email address" />
+              <ShortText path="email" label="Email address" />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
@@ -117,12 +117,12 @@ export function RegisterPage() {
             </p>
           ) : (
             <>
-              <ShortText name="email" label="Email address" disabled />
+              <ShortText path="email" label="Email address" disabled />
               <Field name="token" type="hidden" />
-              <ShortText name="name" label="User name" placeholder="Name Surname" />
-              <ShortText name="team" label="Team ID" disabled />
-              <ShortText name="password" type="password" label="Password" />
-              <ShortText name="passwordCheck" type="password" label="Password (again)" />
+              <ShortText path="name" label="User name" placeholder="Name Surname" />
+              <ShortText path="team" label="Team ID" disabled />
+              <ShortText path="password" type="password" label="Password" />
+              <ShortText path="passwordCheck" type="password" label="Password (again)" />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />

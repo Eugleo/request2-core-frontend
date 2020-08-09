@@ -51,8 +51,8 @@ export default function TeamForm({
         >
           <Form className="flex flex-col items-start">
             <div className="px-6 mt-4 mb-8 w-full">
-              <ShortText name="name" label="Team leader" />
-              <ShortText name="code" label="Institutional code" />
+              <ShortText path="name" label="Team leader" />
+              <ShortText path="code" label="Institutional code" />
             </div>
             <div className="flex justify-end w-full px-6 py-3 bg-gray-100">{children}</div>
           </Form>
