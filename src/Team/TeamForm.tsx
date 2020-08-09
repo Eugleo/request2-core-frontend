@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { Team } from './Team';
 import { Maybe } from '../Utils/Maybe';
 import { ShortText } from '../Common/Forms';
-import { Page } from '../Common/Layout';
+import { Page, Card } from '../Common/Layout';
 
 type TeamStub = { name: string; code: string };
 
@@ -39,7 +39,7 @@ export default function TeamForm({
 
   return (
     <Page title={title} buttons={headerButtons}>
-      <div className="bg-white rounded-md overflow-hidden shadow-xs mx-auto max-w-md">
+      <Card className="mx-auto max-w-md">
         <Formik
           initialValues={{ name: team?.name || '', code: team?.code || '' }}
           validate={validate}
@@ -57,7 +57,7 @@ export default function TeamForm({
             <div className="flex justify-end w-full px-6 py-3 bg-gray-100">{children}</div>
           </Form>
         </Formik>
-      </div>
+      </Card>
     </Page>
   );
 }
