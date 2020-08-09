@@ -14,5 +14,7 @@ module.exports = {
     'react/no-unescaped-entities': 0,
     'prettier/prettier': 'error',
     'react/button-has-type': 0,
+    '@typescript-eslint/no-use-before-define': 0,
+    'no-extend-native': ['error', { exceptions: ['Array'] }],
   },
 };
