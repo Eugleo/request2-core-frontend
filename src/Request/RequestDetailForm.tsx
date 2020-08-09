@@ -59,7 +59,7 @@ export default function RequestDetailForm<T>({
 
   return (
     <Page title={title}>
-      <Card className="mb-12">
+      <Card className="mb-12 max-w-2xl mx-auto">
         <Formik
           initialValues={initialValues}
           onSubmit={values => {

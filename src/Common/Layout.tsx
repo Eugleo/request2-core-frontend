@@ -13,14 +13,14 @@ export function Title({ children, className }: { children: React.ReactNode; clas
 
 export function Header({ children }: { children: React.ReactNode }) {
   return (
-    <div className="flex flex-row space-between items-center w-full sticky px-6 py-3 bg-white shadow-sm top-0">
+    <div className="flex flex-row space-between items-center w-full sticky px-6 py-5 bg-white border-b border-gray-300 top-0">
       {children}
     </div>
   );
 }
 
 export function Body({ children }: { children: React.ReactNode }) {
-  return <div className="mt-6 px-3">{children}</div>;
+  return <div className="mt-6">{children}</div>;
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }) {
@@ -65,7 +65,7 @@ export function Card({
   className?: string;
   style?: React.CSSProperties;
 }) {
-  const classes = 'flex flex-col bg-white rounded-lg shadow-sm overflow-hidden';
+  const classes = 'flex flex-col bg-white overflow-hidden';
   return (
     <div style={style} className={c(classes, className)}>
       {children}

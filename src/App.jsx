@@ -72,7 +72,7 @@ function App() {
     <AuthContext.Provider value={{ auth, dispatch }}>
       <div
         style={{ gridTemplateColumns: 'auto 1fr' }}
-        className="App bg-gray-200 h-screen w-screen grid grid-cols-2"
+        className="App bg-white h-screen w-screen grid grid-cols-2"
       >
         <Router>
           <Sidebar />

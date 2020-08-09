@@ -43,7 +43,7 @@ export default function Table<T>({
     <Card>
       <div
         style={{ gridTemplateColumns: `2fr ${'1fr '.repeat(width - 1)}` }}
-        className={`grid grid-cols-${width} px-6 col-gap-12 py-3 bg-gray-100 border-b border-gray-200`}
+        className={`grid grid-cols-${width} px-6 col-gap-12 py-3 bg-gray-100 border-b border-t border-gray-200`}
       >
         <p className="flex items-center text-xs text-gray-600 font-medium justify-start">
           {columns[0].toLocaleUpperCase()}
@@ -52,9 +52,11 @@ export default function Table<T>({
           <TableHeading text={col} key={col} />
         ))}
       </div>
-      {source.map(item => (
-        <Item key={item._id} columnCount={width} elements={getRow(item)} />
-      ))}
+      <div className="border-b border-gray-300">
+        {source.map(item => (
+          <Item key={item._id} columnCount={width} elements={getRow(item)} />
+        ))}
+      </div>
     </Card>
   );
 }

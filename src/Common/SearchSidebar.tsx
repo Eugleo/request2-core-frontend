@@ -2,7 +2,7 @@ import React from 'react';
 
 export default function SearchSidebar() {
   return (
-    <div className="bg-gray-100 sticky h-screen flex flex-col col-span-1 py-4 border-r border-gray-300">
+    <div className="bg-teal-600 sticky h-screen flex flex-col col-span-1 py-4 border-r border-gray-300">
       <h2
         style={{ fontVariant: 'small-caps' }}
         className="text-gray-700 font-medium text-sm mb-6 px-6"

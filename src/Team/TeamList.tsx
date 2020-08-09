@@ -63,18 +63,15 @@ function TeamList() {
   }
 
   return (
-    <SidebarWrapper>
-      <SearchSidebar />
-      <Page title="Teams" buttons={<Button.Create title="Create new" />}>
-        <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
-          <Table
-            source={payload.values}
-            columns={['Name', 'Company code', 'Status']}
-            getRow={teamFields}
-          />
-        </Authentized>
-        <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
-      </Page>
-    </SidebarWrapper>
+    <Page title="Teams" buttons={<Button.Create title="Create new" />}>
+      <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
+        <Table
+          source={payload.values}
+          columns={['Name', 'Company code', 'Status']}
+          getRow={teamFields}
+        />
+      </Authentized>
+      <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
+    </Page>
   );
 }

@@ -15,12 +15,7 @@ export function EmptyLabel({ text }) {
 }
 
 export function Section({ title, children }) {
-  return (
-    <div>
-      <h2 className="text-xl font-bold mb-4 mt-8">{title}</h2>
-      {children}
-    </div>
-  );
+  return null;
 }
 
 export function ListItem({

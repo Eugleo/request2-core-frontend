@@ -60,21 +60,19 @@ function RequestList() {
   }
 
   return (
-    <SidebarWrapper>
-      <SearchSidebar />
-      <Page title="Home">
-        <Section title="Create new request">
-          <NewRequestSection />
-        </Section>
-        <Section title="My requests">
-          <Table
-            columns={['Name', 'ID number', 'Uploaded', 'Status']}
-            source={payload.values}
-            getRow={requestFields}
-          />
-        </Section>
-      </Page>
-    </SidebarWrapper>
+    <Page title="Home">
+      <div className="mb-8">
+        <h2 className="font-medium text-xs text-gray-600 mb-4 mt-8 px-6 uppercase">
+          Create new request
+        </h2>
+        <NewRequestSection />
+      </div>
+      <Table
+        columns={['Name', 'ID number', 'Uploaded', 'Status']}
+        source={payload.values}
+        getRow={requestFields}
+      />
+    </Page>
   );
 }
 
@@ -94,7 +92,7 @@ function NewRequestSection() {
         gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
         gridAutoRows: '1fr',
       }}
-      className="grid gap-5"
+      className="grid gap-5 px-6"
     >
       {requestTypes.map(rt => (
         <NewRequestButton key={rt.title} link={`new/${rt.type}`} name={rt.title} />
@@ -106,7 +104,7 @@ function NewRequestSection() {
 function NewRequestButton({ name, link }: { name: string; link: To }) {
   return (
     <Link to={link} className="h-full w-full">
-      <div className="h-full w-full relative duration-150 shadow-sm hover:shadow-lg rounded-lg bg-white border-gray-300 p-4 flex flex-col-reverse">
+      <div className="h-full w-full relative duration-150 shadow-sm hover:shadow-md rounded-lg bg-white border border-gray-300 p-4 flex flex-col-reverse">
         <span className="lg:mt-10 mt-6 text-lg font-medium">{name}</span>
       </div>
     </Link>

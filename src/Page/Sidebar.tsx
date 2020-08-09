@@ -11,8 +11,8 @@ import { Spacer } from '../Common/Layout';
 
 export default function Sidebar() {
   return (
-    <div className="h-screen sticky border-r border-gray-300 w-20">
-      <nav className="h-full bg-gray-100 border-gray-300 py-4 px-2 border-b z-10">
+    <div className="h-screen sticky border-gray-300 w-20">
+      <nav className="h-full bg-teal-500 border-gray-300 py-4 px-2 z-10">
         <div className="flex flex-col items-center h-full">
           <span className="mb-10 flex-grow-0 px-3">
             <img alt="Request II logo" src={logoSrc} className="flex-grow-0" />
@@ -53,11 +53,8 @@ function NavLink({ className, to, children }: { to: To; children: ReactNode; cla
   return (
     <RouterNavLink
       to={to}
-      className={c(
-        'text-gray-600 mb-6 px-3 py-2 rounded-md text-sm hover:text-gray-800',
-        className
-      )}
-      activeClassName="bg-gray-200"
+      className={c('text-white mb-6 px-3 py-2 rounded-md text-sm hover:bg-teal-600', className)}
+      activeClassName="bg-teal-800"
     >
       {children}
     </RouterNavLink>
