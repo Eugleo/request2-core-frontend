@@ -1150,9 +1150,9 @@
     lodash "^4.17.19"
     to-fast-properties "^2.0.0"
 
-"@bigheads/core@file:../../../bigheads/core/bigheads-core-v0.2.0.tgz":
+"@bigheads/core@file:bigheads/bigheads-core-v0.2.0.tgz":
   version "0.2.0"
-  resolved "file:../../../bigheads/core/bigheads-core-v0.2.0.tgz#91eb38e7a45427492f41079eaac460618107e6ed"
+  resolved "file:bigheads/bigheads-core-v0.2.0.tgz#91eb38e7a45427492f41079eaac460618107e6ed"
 
 "@cnakazawa/watch@^1.0.3":
   version "1.0.4"

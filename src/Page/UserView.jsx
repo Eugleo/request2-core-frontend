@@ -70,7 +70,7 @@ function getRandomOptions() {
   };
 }
 
-function RandomAvatar() {
+export function RandomAvatar() {
   return <BigHead {...getRandomOptions()} circleColor="teal400" />;
 }
 

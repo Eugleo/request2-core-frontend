@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
-    "@bigheads/core": "/Users/eugen/code/bigheads/core/bigheads-core-v0.2.0.tgz",
+    "@bigheads/core": "file:bigheads/bigheads-core-v0.2.0.tgz",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
