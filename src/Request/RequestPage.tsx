@@ -7,6 +7,7 @@ import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
+import CommentSidebar from './CommentSidebar';
 import { idToStr, Property, Request } from './Request';
 import RequestDetails from './RequestDetails';
 
@@ -89,6 +90,10 @@ export default function RequestPage() {
     request.dateCreated
   );
 
+  const RequestContext = React.createContext<{ request: WithID<Request> }>({ request });
+
+  // const RequestContext = React.createContext<{ dispatch: Function }>();
+
   // if (propertiesWithSections.find(p => p.propertyType === 'Result')) {
   //   return (
   //     <Page>
@@ -110,18 +115,25 @@ export default function RequestPage() {
   // }
 
   return (
-    <Page.ContentWrapper>
-      <Page.Header>
-        <Page.Title className="mr-3">{request.name}</Page.Title>
-        <Page.Title className="text-gray-500">#{idToStr(request)}</Page.Title>
-        <Page.Spacer />
-        <Button.SecondaryLinked to="edit" title="Edit" />
-      </Page.Header>
-      <Page.Body>
-        <RequestDetails request={request} properties={properties} />
-      </Page.Body>
-    </Page.ContentWrapper>
+    <RequestContext.Provider value={{ request }}>
+      <div
+        style={{ gridTemplateRows: 'auto 1fr', gridTemplateColumns: '3fr 1fr' }}
+        className="max-h-screen grid grid-rows-2 grid-cols-2"
+      >
+        <Page.Header className="col-span-2">
+          <Page.Title className="mr-3">{request.name}</Page.Title>
+          <Page.Title className="text-gray-500">#{idToStr(request)}</Page.Title>
+          <Page.Spacer />
+          <Button.SecondaryLinked to="edit" title="Edit" />
+        </Page.Header>
 
+        <div className="pt-6 overflow-auto">
+          <RequestDetails request={request} properties={properties} />
+        </div>
+
+        <CommentSidebar requestId={request._id} />
+      </div>
+    </RequestContext.Provider>
     // <Page>
     //   <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
     //   <Authorized roles={['Operator']}>

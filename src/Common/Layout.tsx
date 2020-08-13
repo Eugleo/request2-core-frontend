@@ -11,9 +11,14 @@ export function Title({ children, className }: { children: React.ReactNode; clas
   );
 }
 
-export function Header({ children }: { children: React.ReactNode }) {
+export function Header({ children, className }: { children: React.ReactNode; className?: string }) {
   return (
-    <div className="flex flex-row space-between items-center w-full sticky px-6 py-5 bg-white border-b border-gray-300 top-0">
+    <div
+      className={c(
+        'flex flex-row space-between items-center w-full sticky px-6 py-4 bg-white border-b border-gray-300 top-0',
+        className
+      )}
+    >
       {children}
     </div>
   );
@@ -24,7 +29,7 @@ export function Body({ children }: { children: React.ReactNode }) {
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }) {
-  return <div className="pb-10 max-h-screen overflow-auto">{children}</div>;
+  return <div className="pb-10 max-h-full overflow-x-hidden overflow-y-auto">{children}</div>;
 }
 
 export function Page({
@@ -65,7 +70,7 @@ export function Card({
   className?: string;
   style?: React.CSSProperties;
 }) {
-  const classes = 'flex flex-col bg-white overflow-hidden';
+  const classes = 'flex flex-col bg-white overflow-hidden shadow-xs rounded-lg mx-6';
   return (
     <div style={style} className={c(classes, className)}>
       {children}

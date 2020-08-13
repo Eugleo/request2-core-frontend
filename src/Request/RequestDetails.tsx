@@ -50,10 +50,10 @@ export default function RequestDetails({
 function Section({ title, properties }: { title: string; properties: Property[] }) {
   return (
     <div>
-      <div className={c('px-6 py-6 flex items-center border-b border-gray-300')}>
+      <div className={c('px-6 py-6 flex items-center border-gray-300')}>
         <h2 className="text-lg font-medium text-black">{title}</h2>
       </div>
-      <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="grid border-b border-gray-300">
+      <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-gray-300">
         {properties.map((p, ix) => (
           <PropertyView
             name={parseFieldName(p.propertyName).field}
