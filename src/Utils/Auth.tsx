@@ -1,11 +1,11 @@
 import React, { useCallback, useContext } from 'react';
 
 import { Role, UserDetails, UserInfo } from '../User/User';
+import { apiBase } from './ApiBase';
 
 type Auth = { loggedIn: boolean; userId: number; user: UserInfo & UserDetails };
 
 const AuthContext = React.createContext<{ auth: Auth; dispatch: Function } | null>(null);
-const hostname = 'http://localhost:9080';
 export default AuthContext;
 
 function headers(apiKey: string) {
@@ -38,14 +38,14 @@ export function useAuth<T>(): {
   );
 
   const authGet = useCallback(
-    url => withUser(fetch(hostname + url, { method: 'GET', headers: headers(auth.user.apiKey) })),
+    url => withUser(fetch(apiBase + url, { method: 'GET', headers: headers(auth.user.apiKey) })),
     [withUser, auth.user.apiKey]
   );
 
   const authPost = useCallback(
     (url, data) => {
       return withUser(
-        fetch(hostname + url, {
+        fetch(apiBase + url, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json', ...headers(auth.user.apiKey) },
           body: JSON.stringify(data),
@@ -57,14 +57,14 @@ export function useAuth<T>(): {
 
   const authDel = useCallback(
     url =>
-      withUser(fetch(hostname + url, { method: 'DELETE', headers: headers(auth.user.apiKey) })),
+      withUser(fetch(apiBase + url, { method: 'DELETE', headers: headers(auth.user.apiKey) })),
     [withUser, auth.user.apiKey]
   );
 
   const authPut = useCallback(
     (url, data) => {
       return withUser(
-        fetch(hostname + url, {
+        fetch(apiBase + url, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json', ...headers(auth.user.apiKey) },
           body: JSON.stringify(data),
