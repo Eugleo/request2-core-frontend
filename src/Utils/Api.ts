@@ -78,7 +78,7 @@ export function del(url: string) {
 }
 
 export function put(url: string, data: RequestInit) {
-  return fetch(hostname + url, {
+  return fetch(apiBase + url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
