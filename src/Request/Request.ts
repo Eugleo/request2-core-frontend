@@ -11,10 +11,21 @@ export type Request = {
   dateCreated: number;
 };
 
+export type PropertyType = 'Comment' | 'Note' | 'Result' | 'General' | 'Detail';
+
 export type Property = {
   requestId: number;
   authorId: number;
-  propertyType: 'Comment' | 'Note' | 'Result' | 'General' | 'Detail';
+  propertyType: PropertyType;
+  propertyName: string;
+  propertyData: string;
+  dateAdded: number;
+  active: boolean;
+};
+
+export type BareProperty = {
+  authorId: number;
+  propertyType: PropertyType;
   propertyName: string;
   propertyData: string;
   dateAdded: number;

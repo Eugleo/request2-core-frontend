@@ -5,19 +5,25 @@ import Modal from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
-import { idToStr, Request } from './Request';
+import { BareProperty, idToStr, PropertyType, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
 import { FieldValue, stringify } from './RequestSchema';
 import requestSchemas from './RequestTypes';
 
 function submit(
-  authPost: (url: string, data: any) => Promise<Response>,
+  authPost: (
+    url: string,
+    data: {
+      req: Request;
+      props: BareProperty[];
+    }
+  ) => Promise<Response>,
   type: string,
   formValues: { [_: string]: FieldValue },
   authorId: number,
   teamId: number
 ) {
-  const mkProp = (n: string, t: string, d: string) => ({
+  const mkProp = (n: string, t: PropertyType, d: string) => ({
     authorId,
     dateAdded: Math.round(Date.now() / 1000),
     active: true,
@@ -35,7 +41,7 @@ function submit(
   return authPost('/requests', {
     props: [status, title, ...details],
     req: {
-      name: formValues.title,
+      name: stringify(formValues.title),
       authorId,
       teamId,
       status: 'Pending',
@@ -52,7 +58,7 @@ export default function NewRequestPage() {
     request: undefined,
   });
   const { requestType } = useParams();
-  const { auth, authPost } = useAuth();
+  const { auth, authPost } = useAuth<{ req: Request; props: BareProperty[] }>();
   const navigate = useNavigate();
 
   const schema = requestSchemas.get(requestType);
@@ -72,7 +78,7 @@ export default function NewRequestPage() {
       ) : null}
 
       <RequestDetailForm
-        title={`New ${schema?.title || 'request'}`}
+        title={`New ${schema?.title || 'request'} request`}
         requestType={requestType}
         onSubmit={values =>
           submit(authPost, requestType, values, auth.user.userId, auth.user.team._id)
