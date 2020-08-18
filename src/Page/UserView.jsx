@@ -18,7 +18,7 @@ import {
 import React, { useContext, useState } from 'react';
 
 import * as Button from '../Common/Buttons';
-import useOnClickOutside from '../Common/Hooks';
+import { useOnClickOutside } from '../Common/Hooks';
 import AuthContext from '../Utils/Auth';
 import formatDate from '../Utils/Date';
 
