@@ -59,9 +59,10 @@ export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const { dispatch } = useContext(AuthContext);
 
+  // TODO Rozhodnout, kam navigovat
   return (
     <Page title="Log in to reQuest" width="max-w-md">
-      <NotAuthentized otherwise={<Navigate to="-1" />}>
+      <NotAuthentized otherwise={<Navigate to="/me/requests" />}>
         <Formik
           initialValues={{
             email: '',
