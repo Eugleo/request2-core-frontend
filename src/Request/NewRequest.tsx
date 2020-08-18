@@ -81,7 +81,7 @@ export default function NewRequestPage() {
         title={`New ${schema?.title || 'request'} request`}
         requestType={requestType}
         onSubmit={values =>
-          submit(authPost, requestType, values, auth.user.userId, auth.user.team._id)
+          submit(authPost, requestType, values, auth.userId, auth.user.team._id)
             .then(r =>
               r.status === 201
                 ? r.json()
