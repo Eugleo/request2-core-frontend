@@ -1,6 +1,6 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export default function useOnClickOutside<T extends Node>(handler: () => void) {
+export function useOnClickOutside<T extends Node>(handler: () => void) {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -21,4 +21,9 @@ export default function useOnClickOutside<T extends Node>(handler: () => void) {
   }, [ref, handler]);
 
   return ref;
+}
+
+export function useRefresh() {
+  const [, setS] = useState(0);
+  return () => setS(s => s + 1);
 }

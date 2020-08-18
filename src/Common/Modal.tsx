@@ -1,7 +1,7 @@
 import React, { ReactNode } from 'react';
 
 import * as Button from './Buttons';
-import useOnClickOutside from './Hooks';
+import { useOnClickOutside } from './Hooks';
 
 export default function Modal({
   title,

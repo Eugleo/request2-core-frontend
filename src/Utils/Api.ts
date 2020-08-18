@@ -47,9 +47,10 @@ export function useAsyncGetMany<T>(
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet<T>(url: Maybe<string>): Resource<T> {
+export function useAsyncGet<T>(url: Maybe<string>): Resource<T> & { refresh: () => void } {
   const { authGet } = useAuth();
   const [item, setItem] = useState({ pending: true, data: null, error: null });
+  const [ref, setRefresh] = useState(0);
 
   useEffect(() => {
     if (url) {
@@ -57,9 +58,9 @@ export function useAsyncGet<T>(url: Maybe<string>): Resource<T> {
         .then(r => r.json())
         .then(json => setItem({ ...json, pending: false }));
     }
-  }, [authGet, url]);
+  }, [authGet, url, ref]);
 
-  return item;
+  return { ...item, refresh: () => setRefresh(refresh => refresh + 1) };
 }
 
 export function get(url: string, headers = {}) {
