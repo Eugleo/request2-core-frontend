@@ -47,7 +47,7 @@ export function useAsyncGetMany<T>(
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet<T>(url: Maybe<string>): Resource<WithID<T>> {
+export function useAsyncGet<T>(url: Maybe<string>): Resource<T> {
   const { authGet } = useAuth();
   const [item, setItem] = useState({ pending: true, data: null, error: null });
 

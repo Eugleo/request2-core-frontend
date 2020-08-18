@@ -13,7 +13,7 @@ import TeamForm from './TeamForm';
 export default function EditTeam() {
   const { id } = useParams();
   const { authPut } = useAuth();
-  const { data: team, error, pending } = useAsyncGet<Team>(`/teams/${id}`);
+  const { data: team, error, pending } = useAsyncGet<WithID<Team>>(`/teams/${id}`);
 
   if (pending || !team) {
     return <Page title="Edit team">Waiting for teams</Page>;

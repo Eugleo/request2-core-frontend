@@ -12,7 +12,7 @@ import AnnouncementForm from './AnnouncementForm';
 export default function EditAnnouncement() {
   const { id } = useParams();
   const { authPut } = useAuth<Announcement>();
-  const { data: ann, error, pending } = useAsyncGet<Announcement>(`/announcements/${id}`);
+  const { data: ann, error, pending } = useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
 
   if (error) {
     console.log(error);
