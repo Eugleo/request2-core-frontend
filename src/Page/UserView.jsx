@@ -80,17 +80,19 @@ export default function UserView() {
   const ref = useOnClickOutside(() => setShowDetails(false));
 
   return (
-    <div className="relative" ref={showDetails ? ref : null}>
+    <div>
+      <div className="relative mx-2" ref={showDetails ? ref : null}>
+        {showDetails ? <UserDetails /> : null}
+      </div>
       <button
         type="button"
         className="hover:text-gray-200 focus:outline-none"
-        onClick={() => setShowDetails(!showDetails)}
+        onClick={() => !showDetails && setShowDetails(true)}
       >
         <div style={{ padding: '-1px' }} className="flex w-full h-full items-stretch">
           <RandomAvatar />
         </div>
       </button>
-      {showDetails ? <UserDetails /> : null}
     </div>
   );
 }
@@ -102,7 +104,7 @@ function UserDetails() {
   return (
     <div
       className={
-        'details-dropdown absolute flex text-sm flex-col w-56 right-0 border border-gray-300 ' +
+        'details-dropdown absolute flex text-sm flex-col w-56 left-0 bottom-0 border border-gray-300 ' +
         'bg-white text-gray-900 shadow-md rounded-md mt-2 transition duration-150'
       }
     >
