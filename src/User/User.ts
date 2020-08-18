@@ -22,6 +22,5 @@ export type UserDetails = {
 
 export type UserInfo = {
   apiKey: string;
-  userId: number;
   roles: Array<Role>;
 };
