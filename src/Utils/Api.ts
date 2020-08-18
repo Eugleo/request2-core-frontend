@@ -3,8 +3,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from './Auth';
 import { Maybe } from './Maybe';
 import { WithID } from './WithID';
-
-const hostname = 'http://localhost:9080';
+import { apiBase } from './ApiBase';
 
 export function urlWithParams(url: string, params: Record<string, any>) {
   const strParams = Object.keys(params).map(k => `${k}=${params[k]}`);
@@ -64,11 +63,11 @@ export function useAsyncGet<T>(url: Maybe<string>): Resource<T> & { refresh: () 
 }
 
 export function get(url: string, headers = {}) {
-  return fetch(hostname + url, { method: 'GET', headers });
+  return fetch(apiBase + url, { method: 'GET', headers });
 }
 
 export function post(url: string, data: any, headers = {}) {
-  return fetch(hostname + url, {
+  return fetch(apiBase + url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', ...headers },
     body: JSON.stringify(data),
@@ -76,11 +75,11 @@ export function post(url: string, data: any, headers = {}) {
 }
 
 export function del(url: string) {
-  return fetch(hostname + url, { method: 'DELETE' });
+  return fetch(apiBase + url, { method: 'DELETE' });
 }
 
 export function put(url: string, data: RequestInit) {
-  return fetch(hostname + url, {
+  return fetch(apiBase + url, {
     method: 'PUT',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(data),
