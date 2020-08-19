@@ -6,21 +6,25 @@ import * as Button from '../Common/Buttons';
 import { RandomAvatar } from '../Page/UserView';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
+import { parseFieldName } from '../Utils/FieldPath';
 import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
-import { Property } from './Request';
+import { DetailProperty, Property } from './Request';
 
-export default function CommentSidebar({ requestId }: { requestId: number }) {
+export default function CommentSidebar({
+  requestId,
+  details,
+}: {
+  requestId: number;
+  details: WithID<DetailProperty>[];
+}) {
   const { auth } = useAuth();
-  const { data, error, pending, refresh } = useAsyncGet<WithID<Property>[]>(
-    `/requests/${requestId}/comments`
-  );
+  const { data, error, pending, refresh } = useAsyncGet<
+    WithID<Property & { propertyType: 'Comment' }>[]
+  >(`/requests/${requestId}/comments`);
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => messageEndRef?.current?.scrollIntoView({ behavior: 'smooth' }), [data]);
-
-  console.log('load');
-  console.log({ data, error, pending, refresh });
 
   if (error) {
     return <div>Encountered an error when fetching comments</div>;
@@ -30,16 +34,45 @@ export default function CommentSidebar({ requestId }: { requestId: number }) {
     return <div>Loading comments</div>;
   }
 
+  const sortedProps = details.sort(comparator(p => p.dateAdded));
+  const updatedProps = sortedProps
+    .filter(p => !p.active)
+    .mapMaybe(p =>
+      sortedProps.find(q => p.propertyName === q.propertyName && q.dateAdded > p.dateAdded)
+    );
+
   return (
     <div
       style={{ gridTemplateRows: '1fr auto' }}
       className="bg-white border-l border-gray-300 relative grid grid-rows-2 max-h-full overflow-auto"
     >
       <div className="p-6 flex flex-col overflow-scroll">
-        {data.sort(comparator(p => p.dateAdded)).map(prop => (
-          <Comment isMine={prop.authorId === auth.userId} text={prop.propertyData} key={prop._id} />
-        ))}
-        <div ref={messageEndRef} />
+        {[...updatedProps, ...data]
+          .sort(comparator(p => p.dateAdded))
+          .map(prop =>
+            prop.propertyType === 'Detail' ? (
+              <Change
+                key={prop._id}
+                date={prop.dateAdded}
+                authorName="Evžen"
+                fieldPath={prop.propertyName}
+              />
+            ) : (
+              <Comment
+                isMine={prop.authorId === auth.userId}
+                text={prop.propertyData}
+                key={prop._id}
+              />
+            )
+          )
+          .intersperse(ix => (
+            <div
+              key={ix}
+              style={{ width: '1px', margin: '-1px auto -1px auto' }}
+              className="h-4 bg-gray-200 flex-shrink-0"
+            />
+          ))}
+        <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
       </div>
       <CommentComposer requestId={requestId} refresh={refresh} />
     </div>
@@ -102,17 +135,17 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
 }
 
 function Comment({ isMine, text }: { isMine: boolean; text: string }) {
-  const avatar = (
+  const Avatar = () => (
     <div className="flex flex-col items-stretch col-span-1 justify-start h-full">
       <RandomAvatar />
     </div>
   );
 
-  const body = (
+  const Body = () => (
     <p
       className={c(
-        'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-lg border-gray-200 border p-3 mb-6',
-        isMine ? 'text-left mr-6' : 'text-right ml-6'
+        'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-lg border-gray-200 border p-3',
+        isMine ? 'text-left' : 'text-right'
       )}
     >
       {text}
@@ -121,7 +154,36 @@ function Comment({ isMine, text }: { isMine: boolean; text: string }) {
 
   return (
     <div className={c('grid grid-cols-5 gap-2 max-w-sm w-full')}>
-      {isMine ? [avatar, body] : [body, avatar]}
+      {isMine ? (
+        <>
+          <Avatar />
+          <Body />
+        </>
+      ) : (
+        <>
+          <Body />
+          <Avatar />
+        </>
+      )}
+    </div>
+  );
+}
+
+function Change({
+  date,
+  authorName,
+  fieldPath,
+}: {
+  date: number;
+  authorName: string;
+  fieldPath: string;
+}) {
+  const { field } = parseFieldName(fieldPath);
+  return (
+    <div className="text-xs text-gray-400 border-t border-b border-gray-200 w-full p-3 hover:text-gray-600">
+      <p className="text-center w-full">
+        <span className="font-semibold">{authorName}</span> changed {field}
+      </p>
     </div>
   );
 }
