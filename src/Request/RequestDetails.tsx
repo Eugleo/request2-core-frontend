@@ -4,6 +4,7 @@ import { Navigate } from 'react-router';
 
 import { Card } from '../Common/Layout';
 import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
+import { WithID } from '../Utils/WithID';
 import { Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
 import requestTypes from './RequestTypes';
@@ -13,19 +14,19 @@ export default function RequestDetails({
   properties,
 }: {
   request: Request;
-  properties: Property[];
+  properties: WithID<Property>[];
 }) {
   // TODO Is there a better way?
   const schema = requestTypes.get(request.requestType);
 
   if (!schema) {
     // TODO Handle this better
-    console.log("Can't find schema for the provided request.requestType: ");
+    console.log(`Can't find schema for the provided request type: ${request.requestType}`);
     return <Navigate to="/404" />;
   }
 
   const relevantProperties = properties.filter(p => p.active && p.propertyType === 'Detail');
-  const sections: Array<{ title: string; properties: Property[] }> = schema.sections
+  const sections: Array<{ title: string; properties: WithID<Property>[] }> = schema.sections
     .map(s => ({
       title: s.title,
       properties: s.fields
@@ -47,7 +48,7 @@ export default function RequestDetails({
   );
 }
 
-function Section({ title, properties }: { title: string; properties: Property[] }) {
+function Section({ title, properties }: { title: string; properties: WithID<Property>[] }) {
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-gray-300')}>
@@ -59,6 +60,7 @@ function Section({ title, properties }: { title: string; properties: Property[] 
             name={parseFieldName(p.propertyName).field}
             propertyData={p.propertyData}
             isEven={ix % 2 === 0}
+            key={p._id}
           />
         ))}
       </dl>

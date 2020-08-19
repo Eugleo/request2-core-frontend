@@ -1,6 +1,6 @@
 import c from 'classnames';
 import { Field, Form, Formik } from 'formik';
-import React, { useEffect, useRef } from 'react';
+import React, { useRef } from 'react';
 
 import * as Button from '../Common/Buttons';
 import { RandomAvatar } from '../Page/UserView';
@@ -23,8 +23,6 @@ export default function CommentSidebar({
     WithID<Property & { propertyType: 'Comment' }>[]
   >(`/requests/${requestId}/comments`);
   const messageEndRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => messageEndRef?.current?.scrollIntoView({ behavior: 'smooth' }), [data]);
 
   if (error) {
     return <div>Encountered an error when fetching comments</div>;

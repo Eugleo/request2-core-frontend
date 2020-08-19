@@ -53,9 +53,14 @@ export function useAsyncGet<T>(url: Maybe<string>): Resource<T> & { refresh: () 
 
   useEffect(() => {
     if (url) {
+      console.log(`GET ${url}`);
+
       authGet(url)
         .then(r => r.json())
-        .then(json => setItem({ ...json, pending: false }));
+        .then(json => {
+          console.log(`SET ${url}`);
+          setItem({ ...json, pending: false });
+        });
     }
   }, [authGet, url, ref]);
 

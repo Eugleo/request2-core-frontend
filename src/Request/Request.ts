@@ -23,6 +23,7 @@ export type Property = {
   active: boolean;
 };
 
+export type ResultProperty = Property & { propertyType: 'Result' };
 export type DetailProperty = Property & { propertyType: 'Detail' };
 
 export type BareProperty = {

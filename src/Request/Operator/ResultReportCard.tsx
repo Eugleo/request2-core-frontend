@@ -1,21 +1,21 @@
 import { Form, Formik } from 'formik';
 import React from 'react';
 
-import * as Button from '../../Common/Buttons';
 import { Image, LongText, ShortText } from '../../Common/Forms';
+import { Card } from '../../Common/Layout';
 import { useAuth } from '../../Utils/Auth';
+import { WithID } from '../../Utils/WithID';
+import { Property, Request } from '../Request';
+import { FieldValue, stringify } from '../RequestSchema';
 
-function stringify(value) {
-  if (Array.isArray(value)) {
-    return value.map(v => v.toString()).join(';;;');
-  }
-  if (typeof value === 'object') {
-    return value.value;
-  }
-  return value.toString();
-}
+type ResultProperty = Property & { propertyType: 'Result' };
 
-function submit(authorId, authPut, properties, request) {
+function submit(
+  authorId: number,
+  authPut: (url: string, data: { req: Request; props: ResultProperty[] }) => Promise<Response>,
+  properties: { [k: string]: FieldValue },
+  request: WithID<Request>
+) {
   return authPut(`/requests/${request._id}`, {
     props: Object.entries(properties).map(([name, value]) => ({
       authorId,
@@ -30,17 +30,17 @@ function submit(authorId, authPut, properties, request) {
   });
 }
 
-function Card({ title, children }) {
-  return (
-    <div className="col-span-3 w-full shadow-md rounded-md bg-white">
-      <h2 className="px-6 text-2xl border-b border-gray-200 py-6 font-bold w-full">{title}</h2>
-      {children}
-    </div>
-  );
-}
+// function Card({ title, children }) {
+//   return (
+//     <div className="col-span-3 w-full shadow-md rounded-md bg-white">
+//       <h2 className="px-6 text-2xl border-b border-gray-200 py-6 font-bold w-full">{title}</h2>
+//       {children}
+//     </div>
+//   );
+// }
 
-export default function ResultReportCard({ request }) {
-  const { auth, authPut } = useAuth();
+export default function ResultReportCard({ request }: { request: WithID<Request> }) {
+  const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
 
   const initialValues = {
     'result/time-spent-(operator)': '',
@@ -50,17 +50,17 @@ export default function ResultReportCard({ request }) {
   };
 
   return (
-    <Card title="Results">
+    <Card className="mb-4 border border-green-300 shadow-none">
       <Formik
         initialValues={initialValues}
         onSubmit={values => {
           submit(auth.userId, authPut, values, request).then(r => console.log(r));
         }}
       >
-        <Form className="col-span-3 bg-white rounded-md shadow-sm">
-          <div className="border-b border-gray-200 grid grid-cols-5">
-            <div className="col-span-1 bg-gray-200">
-              <Image className="h-full border-none rounded-none shadow-none" />
+        <Form className="bg-white rounded-md shadow-sm">
+          <div className="grid grid-cols-4">
+            <div className="col-span-4 mx-6 mt-6">
+              <Image className="h-full" />
             </div>
 
             <div className="col-span-4 grid grid-cols-4 px-6 py-4">
@@ -98,8 +98,13 @@ export default function ResultReportCard({ request }) {
             </div>
           </div>
 
-          <div className="col-span-5 py-4 px-6 flex flex-row-reverse">
-            <Button.Primary type="submit" title="Submit results" />
+          <div className="col-span-5 bg-green-100 py-3 px-6 flex flex-row-reverse">
+            <button
+              type="submit"
+              className="rounded-lg text-white shadow-sm bg-green-400 hover:bg-green-500 px-3 py-2 inline-flex items-center focus:outline-none font-medium text-sm"
+            >
+              Submit results
+            </button>
           </div>
         </Form>
       </Formik>

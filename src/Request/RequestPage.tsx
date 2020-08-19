@@ -4,12 +4,14 @@ import { Navigate, useParams } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
-import { useAuth } from '../Utils/Auth';
+import { Authorized, useAuth } from '../Utils/Auth';
 import { maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
-import { DetailProperty, idToStr, Property, Request } from './Request';
+import ResultReportCard from './Operator/ResultReportCard';
+import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Request';
 import RequestDetails from './RequestDetails';
+import RequestResults from './RequestResults';
 
 // function HeaderItem({ label, children }: { label: string; children: React.ReactNode }) {
 //   return (
@@ -71,13 +73,18 @@ export default function RequestPage() {
     request: WithID<Request>;
     properties: WithID<Property>[];
   }>(`/requests/${id}`);
+
   const { data: team } = useAsyncGet(maybe(payload?.request, r => `/teams/${r.teamId}`));
   const { data: author } = useAsyncGet(maybe(payload?.request, r => `/users/${r.authorId}`));
+
+  console.log('After hooks');
+  console.log({ payload, team, author });
 
   if (error) {
     console.log(error);
     return <Navigate to="/404" />;
   }
+
   if (pending || !payload) {
     return <Page.Page title="Request details">Loading requests</Page.Page>;
   }
@@ -90,7 +97,11 @@ export default function RequestPage() {
     request.dateCreated
   );
 
+  console.log('After everything');
+  console.log({ payload, team, author });
+
   const RequestContext = React.createContext<{ request: WithID<Request> }>({ request });
+  const hasResults = properties.find(p => p.propertyType === 'Result') !== undefined;
 
   // const RequestContext = React.createContext<{ dispatch: Function }>();
 
@@ -114,8 +125,6 @@ export default function RequestPage() {
   //   );
   // }
 
-  const f = properties.filter(p => p.propertyType === 'Detail');
-
   return (
     <RequestContext.Provider value={{ request }}>
       <div
@@ -130,23 +139,24 @@ export default function RequestPage() {
         </Page.Header>
 
         <div className="pt-6 overflow-auto">
+          {hasResults ? (
+            <RequestResults properties={properties.filter(isResult)} />
+          ) : (
+            <Authorized roles={['Operator']}>
+              <ResultReportCard request={request} />
+            </Authorized>
+          )}
           <RequestDetails request={request} properties={properties} />
         </div>
 
         <CommentSidebar details={properties.filter(isDetail)} requestId={request._id} />
       </div>
     </RequestContext.Provider>
-    // <Page>
-    //   <RequestHeader request={request} author={author || {}} lastChange={lastChange} />
-    //   <Authorized roles={['Operator']}>
-    //     <ResultReportCard request={request} />
-    //   </Authorized>
-
-    //   <RequestDetails request={request} author={author || {}} team={team || {}} />
-
-    //   <RequestProperties title="Request details" properties={detailSections} />
-    // </Page>
   );
+}
+
+function isResult(p: WithID<Property>): p is WithID<ResultProperty> {
+  return p?.propertyType === 'Result';
 }
 
 function isDetail(p: WithID<Property>): p is WithID<DetailProperty> {
