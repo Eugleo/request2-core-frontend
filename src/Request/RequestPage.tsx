@@ -8,7 +8,7 @@ import { useAuth } from '../Utils/Auth';
 import { maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
-import { idToStr, Property, Request } from './Request';
+import { DetailProperty, idToStr, Property, Request } from './Request';
 import RequestDetails from './RequestDetails';
 
 // function HeaderItem({ label, children }: { label: string; children: React.ReactNode }) {
@@ -114,6 +114,8 @@ export default function RequestPage() {
   //   );
   // }
 
+  const f = properties.filter(p => p.propertyType === 'Detail');
+
   return (
     <RequestContext.Provider value={{ request }}>
       <div
@@ -121,8 +123,8 @@ export default function RequestPage() {
         className="max-h-screen grid grid-rows-2 grid-cols-2"
       >
         <Page.Header className="col-span-2">
-          <Page.Title className="mr-3">{request.name}</Page.Title>
-          <Page.Title className="text-gray-500">#{idToStr(request)}</Page.Title>
+          <Page.Title className="mr-6">{request.name}</Page.Title>
+          <h2 className="text-gray-500 font-mono text-2xl leading-tight">#{idToStr(request)}</h2>
           <Page.Spacer />
           <Button.SecondaryLinked to="edit" title="Edit" />
         </Page.Header>
@@ -131,7 +133,7 @@ export default function RequestPage() {
           <RequestDetails request={request} properties={properties} />
         </div>
 
-        <CommentSidebar requestId={request._id} />
+        <CommentSidebar details={properties.filter(isDetail)} requestId={request._id} />
       </div>
     </RequestContext.Provider>
     // <Page>
@@ -145,4 +147,8 @@ export default function RequestPage() {
     //   <RequestProperties title="Request details" properties={detailSections} />
     // </Page>
   );
+}
+
+function isDetail(p: WithID<Property>): p is WithID<DetailProperty> {
+  return p?.propertyType === 'Detail';
 }

@@ -5,7 +5,7 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
-import Table, { Pill } from '../../Common/Table';
+import Table, { Cell, Pill, Row } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { comparator } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
@@ -26,18 +26,24 @@ export default function Requests() {
   );
 }
 
-function requestFields(request: WithID<Request>) {
-  return [
-    <Link to={request._id.toString()} className="text-md font text-black hover:text-green-700">
-      {request.name}
-    </Link>,
-    <span className="text-gray-700">
-      <span className="text-gray-500">#</span>
-      {idToStr(request)}
-    </span>,
-    <span className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</span>,
-    <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />,
-  ];
+function RequestTableItem({ request }: { request: WithID<Request> }) {
+  return (
+    <Row>
+      <Cell align="left">
+        <Link to={request._id.toString()} className="text-black hover:text-green-700">
+          {request.name}
+        </Link>
+      </Cell>
+      <Cell className="font-mono text-gray-700">
+        <span className="text-gray-500">#</span>
+        {idToStr(request)}
+      </Cell>
+      <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
+      <Cell>
+        <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />
+      </Cell>
+    </Row>
+  );
 }
 
 function RequestList() {
@@ -66,11 +72,11 @@ function RequestList() {
         </h2>
         <NewRequestSection />
       </div>
-      <Table
-        columns={['Name', 'ID number', 'Uploaded', 'Status']}
-        source={payload.values}
-        getRow={requestFields}
-      />
+      <Table columns={['Name', 'ID number', 'Uploaded', 'Status']}>
+        {payload.values.map(v => (
+          <RequestTableItem request={v} />
+        ))}
+      </Table>
     </Page>
   );
 }

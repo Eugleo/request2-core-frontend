@@ -4,7 +4,7 @@ import { Navigate, Route, Routes } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
-import Table, { Pill } from '../Common/Table';
+import Table, { Cell, Pill, Row } from '../Common/Table';
 import * as Api from '../Utils/Api';
 import { Authentized } from '../Utils/Auth';
 import { comparator } from '../Utils/Func';
@@ -23,19 +23,23 @@ export default function TeamRouter() {
   );
 }
 
-function teamFields(team: WithID<Team>) {
-  return [
-    <span>{team.name}</span>,
-    <p className="text-gray-700">
-      <span className="text-gray-500">#</span>
-      {team.code}
-    </p>,
-    team.active ? (
-      <Pill text="Active" className="text-green-500 bg-green-100 border-green-300" />
-    ) : (
-      <Pill text="Inactive" className="text-red-500 bg-red-100 border-red-300" />
-    ),
-  ];
+function TeamTableItem({ team }: { team: WithID<Team> }) {
+  return (
+    <Row>
+      <Cell align="left">{team.name}</Cell>
+      <Cell className="text-gray-700">
+        <span className="text-gray-500">#</span>
+        {team.code}
+      </Cell>
+      <Cell>
+        {team.active ? (
+          <Pill text="Active" className="text-green-500 bg-green-100 border-green-300" />
+        ) : (
+          <Pill text="Inactive" className="text-red-500 bg-red-100 border-red-300" />
+        )}
+      </Cell>
+    </Row>
+  );
 }
 
 function TeamList() {
@@ -60,11 +64,11 @@ function TeamList() {
   return (
     <Page title="Teams" buttons={<Button.Create title="Create new" />}>
       <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
-        <Table
-          source={payload.values}
-          columns={['Name', 'Company code', 'Status']}
-          getRow={teamFields}
-        />
+        <Table columns={['Name', 'Company code', 'Status']}>
+          {payload.values.map(v => (
+            <TeamTableItem team={v} />
+          ))}
+        </Table>
       </Authentized>
       <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
     </Page>
