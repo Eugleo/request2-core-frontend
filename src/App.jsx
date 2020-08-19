@@ -12,7 +12,7 @@ import RequestsAsClient from './Request/Client/RequestList';
 import RequestsAsOperator from './Request/Operator/RequestList';
 import TeamRouter from './Team/TeamList';
 import * as Api from './Utils/Api';
-import AuthContext from './Utils/Auth';
+import AuthContext, { authHeaders } from './Utils/Auth';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -23,7 +23,7 @@ function reducer(state, action) {
       };
     case 'LOGOUT':
       // TODO check that the logout succeeded
-      Api.post('/logout', { Authorization: state.user.apiKey });
+      Api.post('/logout', authHeaders(state.user.apiKey));
       return {
         loggedIn: false,
         user: null,

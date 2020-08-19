@@ -8,8 +8,8 @@ type Auth = { loggedIn: boolean; userId: number; user: UserInfo & UserDetails };
 const AuthContext = React.createContext<{ auth: Auth; dispatch: Function } | null>(null);
 export default AuthContext;
 
-function headers(apiKey: string) {
-  return { Authorization: apiKey };
+export function authHeaders(apiKey: string) {
+  return { Authorization: "Bearer "+apiKey };
 }
 
 // TODO Save apiKey into localStorage
@@ -38,7 +38,7 @@ export function useAuth<T>(): {
   );
 
   const authGet = useCallback(
-    url => withUser(fetch(apiBase + url, { method: 'GET', headers: headers(auth.user.apiKey) })),
+    url => withUser(fetch(apiBase + url, { method: 'GET', headers: authHeaders(auth.user.apiKey) })),
     [withUser, auth.user.apiKey]
   );
 
@@ -47,7 +47,7 @@ export function useAuth<T>(): {
       return withUser(
         fetch(apiBase + url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...headers(auth.user.apiKey) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.user.apiKey) },
           body: JSON.stringify(data),
         })
       );
@@ -57,7 +57,7 @@ export function useAuth<T>(): {
 
   const authDel = useCallback(
     url =>
-      withUser(fetch(apiBase + url, { method: 'DELETE', headers: headers(auth.user.apiKey) })),
+      withUser(fetch(apiBase + url, { method: 'DELETE', headers: authHeaders(auth.user.apiKey) })),
     [withUser, auth.user.apiKey]
   );
 
@@ -66,7 +66,7 @@ export function useAuth<T>(): {
       return withUser(
         fetch(apiBase + url, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', ...headers(auth.user.apiKey) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.user.apiKey) },
           body: JSON.stringify(data),
         })
       );
