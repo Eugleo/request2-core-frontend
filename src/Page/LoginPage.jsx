@@ -6,10 +6,10 @@ import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
 import * as Api from '../Utils/Api';
-import AuthContext, { NotAuthentized } from '../Utils/Auth';
+import AuthContext, { authHeaders, NotAuthentized } from '../Utils/Auth';
 
 function getUserInfo(apiKey) {
-  return Api.get('/me', { Authorization: apiKey })
+  return Api.get('/me', authHeaders(apiKey))
     .then(r => {
       if (r.ok) {
         return r.json();
