@@ -38,7 +38,8 @@ function App() {
     loggedIn: true,
     userId: 2,
     user: {
-      apiKey: 'QoQDUskRXisjpRktY0f.yhh0U/Of0B5r/0j9Nivicw4',
+      apiKey: 'fYa5KGDOQdBNzw5wC7UMGjqhtkmGczG8tMG4jWOdmBY=',
+      //the corresponding hash for DB: fb70583ce558ad846ed92991566a4beab3665ddb416c68953571d30c8b5cc266
       name: 'Evžen Wybitul',
       roles: ['Admin', 'Client', 'Operator'],
       team: { name: 'Jiří Vondrášek', _id: 2 },
