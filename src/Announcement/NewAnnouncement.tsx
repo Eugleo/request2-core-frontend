@@ -15,7 +15,7 @@ export default function NewAnnouncement() {
         authPost('/announcements', {
           title: values.title,
           body: values.body,
-          authorId: auth.userId,
+          authorId: auth.user._id,
           dateCreated: Math.floor(Date.now() / 1000),
           active: true,
         })

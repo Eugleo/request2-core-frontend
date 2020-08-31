@@ -14,13 +14,9 @@ export type User = {
 };
 
 export type UserDetails = {
+  _id: number;
   name: string;
   roles: Array<Role>;
   team: WithID<Team>;
   dateCreated: Date;
-};
-
-export type UserInfo = {
-  apiKey: string;
-  roles: Array<Role>;
 };

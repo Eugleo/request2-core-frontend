@@ -66,7 +66,7 @@ function TeamList() {
       <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
         <Table columns={['Name', 'Company code', 'Status']}>
           {payload.values.map(v => (
-            <TeamTableItem team={v} />
+            <TeamTableItem key={v._id} team={v} />
           ))}
         </Table>
       </Authentized>

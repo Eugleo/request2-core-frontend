@@ -5,10 +5,11 @@ import { Link, useNavigate } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
+import { UserDetails } from '../User/User';
 import * as Api from '../Utils/Api';
 import AuthContext, { authHeaders } from '../Utils/Auth';
 
-function getUserInfo(apiKey) {
+export function getUserInfo(apiKey: string): Promise<UserDetails> {
   return Api.get('/me', authHeaders(apiKey))
     .then(r => {
       if (r.ok) {
@@ -20,7 +21,7 @@ function getUserInfo(apiKey) {
     .catch(error => console.log(error));
 }
 
-function verifyLogin(email, password, authDispatch, setFailed) {
+function verifyLogin(email: string, password: string, authDispatch: Function, setFailed: Function) {
   return Api.post('/login', { email, password })
     .then(r => {
       if (r.ok) {
@@ -32,18 +33,18 @@ function verifyLogin(email, password, authDispatch, setFailed) {
     })
     .then(js => {
       getUserInfo(js.apiKey).then(userDetails => {
-        console.log({ ...js, user: userDetails });
+        console.log({ apiKey: `.${js.apiKey}.`, user: userDetails });
         authDispatch({
           type: 'LOGIN',
-          payload: { ...js, ...userDetails },
+          payload: { apiKey: js.apiKey, user: userDetails },
         });
       });
     })
     .catch(error => console.log(error));
 }
 
-function validate(values) {
-  const errors = {};
+function validate(values: { email: string; password: string }) {
+  const errors: { email?: string; password?: string } = {};
   if (!values.email) {
     errors.email = 'This field is required';
   }
@@ -60,6 +61,10 @@ export default function LoginPage() {
   const { dispatch } = useContext(AuthContext);
   const navigate = useNavigate();
 
+  if (!dispatch) {
+    throw Error("This shouldn't happen, ever: dispatch is null, but we're trying to log in");
+  }
+
   // TODO Rozhodnout, kam navigovat
   return (
     <Page title="Log in to Request II">
@@ -70,12 +75,7 @@ export default function LoginPage() {
             password: '',
           }}
           validate={validate}
-          onSubmit={values =>
-            verifyLogin(values.email, values.password, dispatch, setLoginFailed).then(() => {
-              console.log('hey');
-              navigate('/me/requests');
-            })
-          }
+          onSubmit={values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)}
         >
           <Form className="rounded-lg shadow-xs bg-white mx-auto max-w-2xl">
             <div className="px-6 py-3">

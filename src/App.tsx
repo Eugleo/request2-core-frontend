@@ -6,7 +6,7 @@ import NewUser from './Admin/NewUser';
 import UserList from './Admin/UserList';
 import AnnouncementRouter from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
-import LoginPage from './Page/LoginPage';
+import LoginPage, { getUserInfo } from './Page/LoginPage';
 import NotFound404 from './Page/NotFound404';
 import { NewRegistrationPage, RegisterPage } from './Page/Registration';
 import Sidebar from './Page/Sidebar';
@@ -14,26 +14,24 @@ import RequestsAsClient from './Request/Client/RequestList';
 import RequestsAsOperator from './Request/Operator/RequestList';
 import TeamRouter from './Team/TeamList';
 import * as Api from './Utils/Api';
-import AuthContext, { Authentized, authHeaders } from './Utils/Auth';
+import AuthContext, { Auth, Authentized, LoginDispatch, UserAction } from './Utils/Auth';
 
-function reducer(state, action) {
+function reducer(state: Auth, action: UserAction): Auth {
   switch (action.type) {
     case 'LOGIN':
+      localStorage.setItem('apiKey', action.payload.apiKey);
       return {
+        ...action.payload,
         loggedIn: true,
-        user: action.payload,
       };
     case 'LOGOUT':
-      // TODO check that the logout succeeded
-      Api.post('/logout', authHeaders(state.user.apiKey));
-      return {
-        loggedIn: false,
-        user: null,
-      };
+      return { loggedIn: false };
     default:
       return state;
   }
 }
+
+type BackendState = 'available' | 'unavailable' | 'loading';
 
 function App() {
   // const initialAuth = {
@@ -49,24 +47,40 @@ function App() {
   //   },
   // };
 
-  const [backendAvailable, setBackendAvailable] = useState(null);
-  const [auth, dispatch] = useReducer(reducer);
+  const [backendState, setBackendState] = useState<BackendState>('loading');
+  const [auth, dispatch] = useReducer<LoginDispatch>(reducer, { loggedIn: false });
 
   useEffect(() => {
     Api.get('/capability')
       .then(r => r.json())
       .then(js => {
         if (js.includes('request2')) {
-          setBackendAvailable(true);
+          setBackendState('available');
         } else {
           throw Error('Unsupported backend');
         }
       })
       .catch(e => {
         console.log(e);
-        setBackendAvailable(false);
+        setBackendState('unavailable');
       });
   }, []);
+
+  const apiKey = localStorage.getItem('apiKey');
+  useEffect(() => {
+    if (apiKey) {
+      console.log(apiKey);
+      getUserInfo(apiKey)
+        .then(userDetails => {
+          dispatch({
+            type: 'LOGIN',
+            payload: { apiKey, user: userDetails },
+          });
+          console.log(userDetails);
+        })
+        .catch(e => localStorage.removeItem('apiKey'));
+    }
+  }, [apiKey]);
 
   return (
     <AuthContext.Provider value={{ auth, dispatch }}>
@@ -76,23 +90,23 @@ function App() {
       >
         <Router>
           <Sidebar />
-          <AppBody backendAvailable={backendAvailable} />
+          <AppBody backendState={backendState} />
         </Router>
       </div>
     </AuthContext.Provider>
   );
 }
 
-function AppBody(props) {
+function AppBody({ backendState }: { backendState: BackendState }) {
   // TODO Add timeout
-  switch (props.backendAvailable) {
-    case null:
+  switch (backendState) {
+    case 'loading':
       return (
         <div className="m-auto">
           <AtomSpinner color="forest-green" />
         </div>
       );
-    case true:
+    case 'available':
       return (
         <Authentized
           otherwise={
@@ -126,8 +140,9 @@ function AppBody(props) {
         </Authentized>
       );
     default:
+      // case unavailable
       return (
-        <Page title="Error" width="max-w-lg">
+        <Page title="Error">
           <p className="text-gray-800">
             Something seems to be wrong with the server. Try again later.
           </p>

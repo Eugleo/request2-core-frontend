@@ -64,7 +64,7 @@ export default function EditRequestPage() {
       requestType={request.requestType}
       request={request}
       properties={properties}
-      onSubmit={values => submit(authPut, request, values, auth.userId).then(() => navigate(-1))}
+      onSubmit={values => submit(authPut, request, values, auth.user._id).then(() => navigate(-1))}
     />
   );
 }

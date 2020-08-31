@@ -1,29 +1,40 @@
 import React, { useCallback, useContext } from 'react';
+import { useNavigate } from 'react-router';
 
-import { Role, UserDetails, UserInfo } from '../User/User';
+import { Role, UserDetails } from '../User/User';
 import { apiBase } from './ApiBase';
+import { Maybe } from './Maybe';
 
-type Auth = { loggedIn: boolean; userId: number; user: UserInfo & UserDetails };
+export type UserAction =
+  | { type: 'LOGIN'; payload: { apiKey: string; user: UserDetails } }
+  | { type: 'LOGOUT' };
 
-const AuthContext = React.createContext<{ auth: Auth; dispatch: Function } | null>(null);
+export type LoginDispatch = (state: Auth, action: UserAction) => Auth;
+
+export type Auth = { loggedIn: false } | { loggedIn: true; apiKey: string; user: UserDetails };
+
+const AuthContext = React.createContext<{
+  auth: Auth;
+  dispatch: Maybe<React.Dispatch<UserAction>>;
+}>({ auth: { loggedIn: false }, dispatch: null });
 export default AuthContext;
 
 export function authHeaders(apiKey: string) {
-  return { Authorization: "Bearer "+apiKey };
+  return { Authorization: `Bearer ${apiKey}` };
 }
 
-// TODO Save apiKey into localStorage
 export function useAuth<T>(): {
-  auth: Auth;
+  auth: { loggedIn: true; apiKey: string; user: UserDetails };
   authGet: (url: string) => Promise<Response>;
   authPut: (url: string, data: T) => Promise<Response>;
   authPost: (url: string, data: T) => Promise<Response>;
   authDel: (url: string) => Promise<Response>;
 } {
-  const maybeAuth = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
+  const navigate = useNavigate();
 
-  const auth = maybeAuth?.auth;
-  if (!auth) {
+  if (!auth.loggedIn) {
+    navigate('/login');
     throw new Error("The user isn't logged in, how do you want to authenticate");
   }
 
@@ -38,8 +49,8 @@ export function useAuth<T>(): {
   );
 
   const authGet = useCallback(
-    url => withUser(fetch(apiBase + url, { method: 'GET', headers: authHeaders(auth.user.apiKey) })),
-    [withUser, auth.user.apiKey]
+    url => withUser(fetch(apiBase + url, { method: 'GET', headers: authHeaders(auth.apiKey) })),
+    [auth.apiKey, withUser]
   );
 
   const authPost = useCallback(
@@ -47,18 +58,17 @@ export function useAuth<T>(): {
       return withUser(
         fetch(apiBase + url, {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.user.apiKey) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
           body: JSON.stringify(data),
         })
       );
     },
-    [withUser, auth.user.apiKey]
+    [auth.apiKey, withUser]
   );
 
   const authDel = useCallback(
-    url =>
-      withUser(fetch(apiBase + url, { method: 'DELETE', headers: authHeaders(auth.user.apiKey) })),
-    [withUser, auth.user.apiKey]
+    url => withUser(fetch(apiBase + url, { method: 'DELETE', headers: authHeaders(auth.apiKey) })),
+    [auth.apiKey, withUser]
   );
 
   const authPut = useCallback(
@@ -66,12 +76,12 @@ export function useAuth<T>(): {
       return withUser(
         fetch(apiBase + url, {
           method: 'PUT',
-          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.user.apiKey) },
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
           body: JSON.stringify(data),
         })
       );
     },
-    [withUser, auth.user.apiKey]
+    [auth.apiKey, withUser]
   );
 
   return {
@@ -112,9 +122,11 @@ export function Authorized({
   children: JSX.Element | JSX.Element[] | null;
   roles?: Array<Role>;
 }) {
-  const auth = useContext(AuthContext)?.auth;
+  const { auth } = useContext(AuthContext);
 
-  if (!auth?.loggedIn || !roles.every(r => auth.user.roles.includes(r))) {
+  console.log(auth);
+
+  if (!auth.loggedIn || !roles.every(r => auth.user.roles.includes(r))) {
     return <>{otherwise}</>;
   }
 

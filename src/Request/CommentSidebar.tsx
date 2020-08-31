@@ -57,7 +57,7 @@ export default function CommentSidebar({
               />
             ) : (
               <Comment
-                isMine={prop.authorId === auth.userId}
+                isMine={prop.authorId === auth.user._id}
                 text={prop.propertyData}
                 key={prop._id}
               />
@@ -103,7 +103,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
       initialValues={{ comment: '' }}
       onSubmit={({ comment }) =>
         authPost(`/requests/${requestId}/comments`, {
-          authorId: auth.userId,
+          authorId: auth.user._id,
           requestId,
           propertyType: 'Comment',
           propertyName: 'comment',

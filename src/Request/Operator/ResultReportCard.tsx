@@ -76,7 +76,7 @@ export default function ResultReportCard({
         <Formik
           initialValues={initialValues}
           onSubmit={values => {
-            submit(auth.userId, authPut, values, request)
+            submit(auth.user._id, authPut, values, request)
               .then(r => console.log(r))
               .then(refresh);
           }}

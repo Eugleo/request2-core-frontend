@@ -48,7 +48,7 @@ export default function UserList() {
     <Page title="Admin Panel: Users" buttons={<Button.Create title="Create new" />}>
       <Table columns={['Name', 'Email', 'Team Leader', 'Roles']}>
         {payload.values.map(v => (
-          <UserTableItem user={v} />
+          <UserTableItem key={v._id} user={v} />
         ))}
       </Table>
       <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
