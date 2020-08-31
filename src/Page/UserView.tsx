@@ -3,7 +3,6 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
 import {
   accessoryMap,
-  BigHead,
   bodyMap,
   clothingMap,
   eyebrowsMap,
@@ -16,18 +15,21 @@ import {
   theme,
 } from '@bigheads/core';
 import React, { useContext, useState } from 'react';
+import { User } from 'react-feather';
 
 import * as Button from '../Common/Buttons';
 import { useOnClickOutside } from '../Common/Hooks';
 import AuthContext from '../Utils/Auth';
 import formatDate from '../Utils/Date';
 
-function selectRandomKey(object) {
+function selectRandomKey(object: Record<string, any>) {
   return Object.keys(object)[Math.floor(Math.random() * Object.keys(object).length)];
 }
 
+type SkinTone = 'light' | 'yellow' | 'brown' | 'dark' | 'red' | 'black' | undefined;
+
 function getRandomOptions() {
-  const skinTone = selectRandomKey(theme.colors.skin);
+  const skinTone = selectRandomKey(theme.colors.skin) as SkinTone;
   const eyes = selectRandomKey(eyesMap);
   const eyebrows = selectRandomKey(eyebrowsMap);
   const mouth = selectRandomKey(mouthsMap);
@@ -71,13 +73,17 @@ function getRandomOptions() {
 }
 
 export function RandomAvatar() {
-  return <BigHead {...getRandomOptions()} circleColor="teal400" />;
+  return (
+    <div className="bg-teal-700 rounded-full h-10 w-10 flex justify-center items-center">
+      <User className="text-white" />
+    </div>
+  );
 }
 
 // TODO Fix accessibility
 export default function UserView() {
   const [showDetails, setShowDetails] = useState(false);
-  const ref = useOnClickOutside(() => setShowDetails(false));
+  const ref = useOnClickOutside<HTMLDivElement>(() => setShowDetails(false));
 
   return (
     <div>
@@ -98,14 +104,15 @@ export default function UserView() {
 }
 
 function UserDetails() {
-  const { auth, dispatch } = useContext(AuthContext);
+  const context = useContext(AuthContext);
+  const { auth, dispatch } = context!;
   const { user } = auth;
 
   return (
     <div
       className={
         'details-dropdown absolute flex text-sm flex-col w-56 left-0 bottom-0 border border-gray-300 ' +
-        'bg-white text-gray-900 shadow-md rounded-md mt-2 transition duration-150'
+        'bg-white text-gray-900 shadow-md rounded-md mt-2 transition duration-150 z-50'
       }
     >
       <div className="font-semibold px-4 py-2 mb-2 border-b border-gray-300">{user.name}</div>
@@ -120,19 +127,18 @@ function UserDetails() {
             ))}
           </div>
         </Section>
-        <Section title="Joined">{formatDate(user.created)}</Section>
+        <Section title="Joined">{formatDate(user.dateCreated.valueOf())}</Section>
         <Button.Primary
           title="Log out"
           status="Danger"
           onClick={() => dispatch({ type: 'LOGOUT' })}
-          classNames={['mt-2', 'w-full', 'flex', 'justify-center']}
         />
       </div>
     </div>
   );
 }
 
-function Section({ title, children }) {
+function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="mb-2">
       <h4 className="text-xs text-gray-600">{title}</h4>

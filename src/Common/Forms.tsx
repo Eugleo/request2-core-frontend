@@ -210,8 +210,18 @@ export function Image({ className = '' }) {
         className
       )}
     >
-      Drop thee images here
+      <span>Images & files don't work properly yet</span>
     </div>
+    // <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} autoUpload={false}>
+    //   <div
+    //     className={c(
+    //       'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
+    //       className
+    //     )}
+    //   >
+    //     <span>Drag&Drop File(s) Here</span>
+    //   </div>
+    // </UploadDropZone>
   );
 }
 

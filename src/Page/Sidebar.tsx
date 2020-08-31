@@ -4,7 +4,7 @@ import c from 'classnames';
 import { To } from 'history';
 import React, { ReactNode } from 'react';
 import * as Icon from 'react-feather';
-import { Navigate, NavLink as RouterNavLink } from 'react-router-dom';
+import { NavLink as RouterNavLink } from 'react-router-dom';
 
 import logoSrc from '../assets/logoII.svg';
 import { Spacer } from '../Common/Layout';
@@ -18,7 +18,7 @@ export default function Sidebar() {
         <span className="mb-10 flex-grow-0 px-3">
           <img alt="Request II logo" src={logoSrc} className="flex-grow-0" />
         </span>
-        <Authentized otherwise={<Navigate to="/login" />}>
+        <Authentized>
           <Authorized roles={['Client']}>
             <NavLink to="/me/requests">
               <Icon.FileText />
@@ -36,13 +36,20 @@ export default function Sidebar() {
             <Icon.Users />
           </NavLink>
         </Authentized>
+        <Authorized roles={['Admin']}>
+          <NavLink to="/admin/users">
+            <Icon.UserPlus />
+          </NavLink>
+        </Authorized>
         <Spacer />
-        <Authentized otherwise={<Navigate to="/login" />}>
+        <Authentized>
           <UserView />
         </Authentized>
         <NotAuthentized>
-          <NavLink to="/register/new">Register</NavLink>
-          <NavLink to="/login">Log in</NavLink>
+          {/* <NavLink to="/register/new">Register</NavLink> */}
+          <NavLink to="/login">
+            <Icon.User />
+          </NavLink>
         </NotAuthentized>
       </div>
     </nav>

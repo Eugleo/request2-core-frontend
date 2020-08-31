@@ -2,6 +2,7 @@ import React from 'react';
 import { Navigate, useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
+import { useRefresh } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { Authorized, useAuth } from '../Utils/Auth';
@@ -77,8 +78,7 @@ export default function RequestPage() {
   const { data: team } = useAsyncGet(maybe(payload?.request, r => `/teams/${r.teamId}`));
   const { data: author } = useAsyncGet(maybe(payload?.request, r => `/users/${r.authorId}`));
 
-  console.log('After hooks');
-  console.log({ payload, team, author });
+  const refresh = useRefresh();
 
   if (error) {
     console.log(error);
@@ -96,9 +96,6 @@ export default function RequestPage() {
     ...properties.filter(p => p.active).map(p => p.dateAdded),
     request.dateCreated
   );
-
-  console.log('After everything');
-  console.log({ payload, team, author });
 
   const RequestContext = React.createContext<{ request: WithID<Request> }>({ request });
   const hasResults = properties.find(p => p.propertyType === 'Result') !== undefined;
@@ -143,7 +140,7 @@ export default function RequestPage() {
             <RequestResults properties={properties.filter(isResult)} />
           ) : (
             <Authorized roles={['Operator']}>
-              <ResultReportCard request={request} />
+              <ResultReportCard request={request} refresh={refresh} />
             </Authorized>
           )}
           <RequestDetails request={request} properties={properties} />

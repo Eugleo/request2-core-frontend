@@ -1,7 +1,9 @@
 import React, { useEffect, useReducer, useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
-import { HashRouter as Router, Route, Routes } from 'react-router-dom';
+import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
+import NewUser from './Admin/NewUser';
+import UserList from './Admin/UserList';
 import AnnouncementRouter from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
 import LoginPage from './Page/LoginPage';
@@ -12,7 +14,7 @@ import RequestsAsClient from './Request/Client/RequestList';
 import RequestsAsOperator from './Request/Operator/RequestList';
 import TeamRouter from './Team/TeamList';
 import * as Api from './Utils/Api';
-import AuthContext, { authHeaders } from './Utils/Auth';
+import AuthContext, { Authentized, authHeaders } from './Utils/Auth';
 
 function reducer(state, action) {
   switch (action.type) {
@@ -34,21 +36,21 @@ function reducer(state, action) {
 }
 
 function App() {
-  const initialAuth = {
-    loggedIn: true,
-    userId: 2,
-    user: {
-      apiKey: 'fYa5KGDOQdBNzw5wC7UMGjqhtkmGczG8tMG4jWOdmBY=',
-      //the corresponding hash for DB: fb70583ce558ad846ed92991566a4beab3665ddb416c68953571d30c8b5cc266
-      name: 'Evžen Wybitul',
-      roles: ['Admin', 'Client', 'Operator'],
-      team: { name: 'Jiří Vondrášek', _id: 2 },
-      created: 115151,
-    },
-  };
+  // const initialAuth = {
+  //   loggedIn: true,
+  //   userId: 2,
+  //   user: {
+  //     apiKey: 'fYa5KGDOQdBNzw5wC7UMGjqhtkmGczG8tMG4jWOdmBY=',
+  //     // the corresponding hash for DB: fb70583ce558ad846ed92991566a4beab3665ddb416c68953571d30c8b5cc266
+  //     name: 'Evžen Wybitul',
+  //     roles: ['Admin', 'Client', 'Operator'],
+  //     team: { name: 'Jiří Vondrášek', _id: 2 },
+  //     created: 115151,
+  //   },
+  // };
 
   const [backendAvailable, setBackendAvailable] = useState(null);
-  const [auth, dispatch] = useReducer(reducer, initialAuth);
+  const [auth, dispatch] = useReducer(reducer);
 
   useEffect(() => {
     Api.get('/capability')
@@ -92,21 +94,36 @@ function AppBody(props) {
       );
     case true:
       return (
-        <Routes>
-          <Route path="/me/*">
-            <Route path="requests/*" element={<RequestsAsClient />} />
-          </Route>
-          <Route path="/requests/*" element={<RequestsAsOperator />} />
-          <Route path="/announcements/*" element={<AnnouncementRouter />} />
-          <Route path="/teams/*" element={<TeamRouter />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register">
-            <Route path="new" element={<NewRegistrationPage />} />
-            <Route path=":email/:token" element={<RegisterPage />} />
-          </Route>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/*" element={<NotFound404 />} />
-        </Routes>
+        <Authentized
+          otherwise={
+            <Routes>
+              <Route path="/login" element={<LoginPage />} />
+              <Route path="/*" element={<Navigate to="/login" />} />
+            </Routes>
+          }
+        >
+          <Routes>
+            <Route path="/login" element={<Navigate to="/me/requests" />} />
+            <Route path="/admin/users">
+              <UserList />
+            </Route>
+            <Route path="/admin/users/new">
+              <NewUser />
+            </Route>
+            <Route path="/me/*">
+              <Route path="requests/*" element={<RequestsAsClient />} />
+            </Route>
+            <Route path="/requests/*" element={<RequestsAsOperator />} />
+            <Route path="/announcements/*" element={<AnnouncementRouter />} />
+            <Route path="/teams/*" element={<TeamRouter />} />
+            <Route path="/register">
+              <Route path="new" element={<NewRegistrationPage />} />
+              <Route path=":email/:token" element={<RegisterPage />} />
+            </Route>
+            <Route path="/" element={<Navigate to="/me/requests" />} />
+            <Route path="/*" element={<NotFound404 />} />
+          </Routes>
+        </Authentized>
       );
     default:
       return (

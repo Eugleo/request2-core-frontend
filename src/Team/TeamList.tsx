@@ -58,11 +58,11 @@ function TeamList() {
   }
 
   if (!payload || pending) {
-    return <Page title="Teams">Waiting for teams</Page>;
+    return <Page title="Admin Panel: Teams">Waiting for teams</Page>;
   }
 
   return (
-    <Page title="Teams" buttons={<Button.Create title="Create new" />}>
+    <Page title="Admin Panel: Teams" buttons={<Button.Create title="Create new" />}>
       <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
         <Table columns={['Name', 'Company code', 'Status']}>
           {payload.values.map(v => (

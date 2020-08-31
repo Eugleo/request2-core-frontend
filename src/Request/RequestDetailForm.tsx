@@ -1,3 +1,4 @@
+import { Uploady } from '@rpldy/chunked-uploady';
 import c from 'classnames';
 import { Form, Formik } from 'formik';
 import React from 'react';
@@ -15,6 +16,7 @@ import {
 import { Card, Page } from '../Common/Layout';
 import { makeFieldPath } from '../Utils/FieldPath';
 import { Maybe } from '../Utils/Maybe';
+import { WithID } from '../Utils/WithID';
 import { Property, Request } from './Request';
 import { DetailField, Field, FieldValue, IndirectField, isEmpty, isField } from './RequestSchema';
 import requestSchemas, { requestValidations } from './RequestTypes';
@@ -29,7 +31,7 @@ export default function RequestDetailForm<T>({
 }: {
   title: string;
   requestType: string;
-  request?: Maybe<Request>;
+  request?: Maybe<WithID<Request>>;
   properties?: Property[];
   onSubmit: (values: { [_: string]: FieldValue }) => Promise<T>;
 }) {
@@ -61,37 +63,39 @@ export default function RequestDetailForm<T>({
   return (
     <Page title={title}>
       <Card className="mb-12 max-w-2xl mx-auto">
-        <Formik
-          initialValues={initialValues}
-          onSubmit={values => {
-            onSubmit(values).catch(console.log);
-          }}
-          validate={values => ({
-            ...specificValidate(values),
-            ...generalValidate(values),
-          })}
-          validateOnChange
-        >
-          <Form className="flex flex-col items-start">
-            <Section title="General information">
-              <ShortText
-                path="title"
-                label="Request title"
-                description="How the request will be called in your requests overview"
-              />
-            </Section>
-            {sections.map((s, ix) => (
-              <Section title={s.title} key={s.title} isLast={ix + 1 === sections.length}>
-                {s.fields.map(f => makeField(f, title))}
+        <Uploady destination={{ url: 'http://localhost:9080/requests/data' }}>
+          <Formik
+            initialValues={initialValues}
+            onSubmit={values => {
+              onSubmit(values).catch(console.log);
+            }}
+            validate={values => ({
+              ...specificValidate(values),
+              ...generalValidate(values),
+            })}
+            validateOnChange
+          >
+            <Form className="flex flex-col items-start">
+              <Section title="General information">
+                <ShortText
+                  path="title"
+                  label="Request title"
+                  description="How the request will be called in your requests overview"
+                />
               </Section>
-            ))}
+              {sections.map((s, ix) => (
+                <Section title={s.title} key={s.title} isLast={ix + 1 === sections.length}>
+                  {s.fields.map(f => makeField(f, title))}
+                </Section>
+              ))}
 
-            <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
-              <Button.Cancel />
-              <Button.Primary type="submit">Save changes</Button.Primary>
-            </div>
-          </Form>
-        </Formik>
+              <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
+                <Button.Cancel />
+                <Button.Primary type="submit">Save changes</Button.Primary>
+              </div>
+            </Form>
+          </Formik>
+        </Uploady>
       </Card>
     </Page>
   );

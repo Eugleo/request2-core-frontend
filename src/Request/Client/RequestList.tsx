@@ -7,6 +7,7 @@ import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import Table, { Cell, Pill, Row } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
+import { Authorized } from '../../Utils/Auth';
 import { comparator } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
@@ -65,19 +66,21 @@ function RequestList() {
   }
 
   return (
-    <Page title="Home">
-      <div className="mb-8">
-        <h2 className="font-medium text-xs text-gray-600 mb-4 mt-8 px-6 uppercase">
-          Create new request
-        </h2>
-        <NewRequestSection />
-      </div>
-      <Table columns={['Name', 'ID number', 'Uploaded', 'Status']}>
-        {payload.values.map(v => (
-          <RequestTableItem request={v} />
-        ))}
-      </Table>
-    </Page>
+    <Authorized roles={['Client']} otherwise={<Navigate to="/requests" />}>
+      <Page title="My requests">
+        <div className="mb-8">
+          <h2 className="font-medium text-xs text-gray-600 mb-4 mt-8 px-6 uppercase">
+            Create new request
+          </h2>
+          <NewRequestSection />
+        </div>
+        <Table columns={['Name', 'ID number', 'Uploaded', 'Status']}>
+          {payload.values.map(v => (
+            <RequestTableItem request={v} />
+          ))}
+        </Table>
+      </Page>
+    </Authorized>
   );
 }
 
