@@ -12,7 +12,7 @@ import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
 import { idToStr, Request } from '../Request';
 import RequestPage from '../RequestPage';
-import { statusStyle, statusToStr, statusToString } from '../Status';
+import { statusStyle, statusToStr } from '../Status';
 
 export default function Requests() {
   return (
@@ -55,7 +55,6 @@ function RequestList() {
     offset,
     v => v.sort(comparator(r => r.dateCreated))
   );
-  const requests = payload && payload.values.map(r => ({ ...r, status: statusToString(r.status) }));
 
   if (error) {
     console.log(error);

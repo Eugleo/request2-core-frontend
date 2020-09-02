@@ -1,6 +1,6 @@
 import { Form, Formik } from 'formik';
 import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
@@ -59,7 +59,6 @@ function validate(values: { email: string; password: string }) {
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const { dispatch } = useContext(AuthContext);
-  const navigate = useNavigate();
 
   if (!dispatch) {
     throw Error("This shouldn't happen, ever: dispatch is null, but we're trying to log in");

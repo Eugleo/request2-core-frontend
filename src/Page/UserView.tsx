@@ -1,19 +1,6 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import {
-  accessoryMap,
-  bodyMap,
-  clothingMap,
-  eyebrowsMap,
-  eyesMap,
-  facialHairMap,
-  graphicsMap,
-  hairMap,
-  hatMap,
-  mouthsMap,
-  theme,
-} from '@bigheads/core';
 import React, { useContext, useState } from 'react';
 import { User } from 'react-feather';
 
@@ -21,56 +8,6 @@ import * as Button from '../Common/Buttons';
 import { useOnClickOutside } from '../Common/Hooks';
 import AuthContext, { useAuth } from '../Utils/Auth';
 import formatDate from '../Utils/Date';
-
-function selectRandomKey(object: Record<string, any>) {
-  return Object.keys(object)[Math.floor(Math.random() * Object.keys(object).length)];
-}
-
-type SkinTone = 'light' | 'yellow' | 'brown' | 'dark' | 'red' | 'black' | undefined;
-
-function getRandomOptions() {
-  const skinTone = selectRandomKey(theme.colors.skin) as SkinTone;
-  const eyes = selectRandomKey(eyesMap);
-  const eyebrows = selectRandomKey(eyebrowsMap);
-  const mouth = selectRandomKey(mouthsMap);
-  const hair = selectRandomKey(hairMap);
-  const facialHair = selectRandomKey(facialHairMap);
-  const clothing = selectRandomKey(clothingMap);
-  const accessory = selectRandomKey(accessoryMap);
-  const graphic = selectRandomKey(graphicsMap);
-  const hat = selectRandomKey(hatMap);
-  const body = selectRandomKey(bodyMap);
-
-  const hairColor = selectRandomKey(theme.colors.hair);
-  const clothingColor = selectRandomKey(theme.colors.clothing);
-  const circleColor = selectRandomKey(theme.colors.bgColors);
-  const lipColor = selectRandomKey(theme.colors.lipColors);
-  const hatColor = selectRandomKey(theme.colors.clothing);
-
-  const mask = true;
-  const lashes = Math.random() > 0.5;
-
-  return {
-    skinTone,
-    eyes,
-    eyebrows,
-    mouth,
-    hair,
-    facialHair,
-    clothing,
-    accessory,
-    graphic,
-    hat,
-    body,
-    hairColor,
-    clothingColor,
-    circleColor,
-    lipColor,
-    hatColor,
-    mask,
-    lashes,
-  };
-}
 
 export function RandomAvatar() {
   return (
