@@ -14,12 +14,13 @@ import {
   mouthsMap,
   theme,
 } from '@bigheads/core';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { User } from 'react-feather';
 
 import * as Button from '../Common/Buttons';
 import { useOnClickOutside } from '../Common/Hooks';
-import AuthContext, { useAuth } from '../Utils/Auth';
+import { useAuth } from '../Utils/Auth';
+import { useAuthDispatch } from '../Utils/AuthContext';
 import formatDate from '../Utils/Date';
 
 function selectRandomKey(object: Record<string, any>) {
@@ -105,13 +106,7 @@ export default function UserView() {
 
 function UserDetails() {
   const { auth, authPost } = useAuth();
-  const { dispatch } = useContext(AuthContext);
-
-  if (!dispatch) {
-    throw Error(
-      "This shouldn't happen, ever: dispatch is null, but we're trying to show user details"
-    );
-  }
+  const dispatch = useAuthDispatch();
 
   return (
     <div

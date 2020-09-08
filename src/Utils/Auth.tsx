@@ -1,23 +1,9 @@
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
 import { Role, UserDetails } from '../User/User';
 import { apiBase } from './ApiBase';
-import { Maybe } from './Maybe';
-
-export type UserAction =
-  | { type: 'LOGIN'; payload: { apiKey: string; user: UserDetails } }
-  | { type: 'LOGOUT' };
-
-export type LoginDispatch = (state: Auth, action: UserAction) => Auth;
-
-export type Auth = { loggedIn: false } | { loggedIn: true; apiKey: string; user: UserDetails };
-
-const AuthContext = React.createContext<{
-  auth: Auth;
-  dispatch: Maybe<React.Dispatch<UserAction>>;
-}>({ auth: { loggedIn: false }, dispatch: null });
-export default AuthContext;
+import { useAuthState } from './AuthContext';
 
 export function authHeaders(apiKey: string) {
   return { Authorization: `Bearer ${apiKey}` };
@@ -30,7 +16,7 @@ export function useAuth<T>(): {
   authPost: (url: string, data: T) => Promise<Response>;
   authDel: (url: string) => Promise<Response>;
 } {
-  const { auth } = useContext(AuthContext);
+  const auth = useAuthState();
   const navigate = useNavigate();
 
   if (!auth.loggedIn) {
@@ -122,9 +108,7 @@ export function Authorized({
   children: JSX.Element | JSX.Element[] | null;
   roles?: Array<Role>;
 }) {
-  const { auth } = useContext(AuthContext);
-
-  console.log(auth);
+  const auth = useAuthState();
 
   if (!auth.loggedIn || !roles.every(r => auth.user.roles.includes(r))) {
     return <>{otherwise}</>;

@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import React, { useContext, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
@@ -7,7 +7,8 @@ import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
 import { UserDetails } from '../User/User';
 import * as Api from '../Utils/Api';
-import AuthContext, { authHeaders } from '../Utils/Auth';
+import { authHeaders } from '../Utils/Auth';
+import { useAuthDispatch } from '../Utils/AuthContext';
 
 export function getUserInfo(apiKey: string): Promise<UserDetails> {
   return Api.get('/me', authHeaders(apiKey))
@@ -58,12 +59,8 @@ function validate(values: { email: string; password: string }) {
 
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
-  const { dispatch } = useContext(AuthContext);
+  const dispatch = useAuthDispatch();
   const navigate = useNavigate();
-
-  if (!dispatch) {
-    throw Error("This shouldn't happen, ever: dispatch is null, but we're trying to log in");
-  }
 
   // TODO Rozhodnout, kam navigovat
   return (
