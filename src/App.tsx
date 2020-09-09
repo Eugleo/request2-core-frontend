@@ -1,5 +1,5 @@
-import React, { useEffect, useReducer, useState } from 'react';
-import { AtomSpinner } from 'react-epic-spinners';
+import React, { useCallback, useEffect } from 'react';
+import { AtomSpinner, TrinityRingsSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import NewUser from './Admin/NewUser';
@@ -14,90 +14,80 @@ import RequestsAsClient from './Request/Client/RequestList';
 import RequestsAsOperator from './Request/Operator/RequestList';
 import TeamRouter from './Team/TeamList';
 import * as Api from './Utils/Api';
-import AuthContext, { Auth, Authentized, LoginDispatch, UserAction } from './Utils/Auth';
-
-function reducer(state: Auth, action: UserAction): Auth {
-  switch (action.type) {
-    case 'LOGIN':
-      localStorage.setItem('apiKey', action.payload.apiKey);
-      return {
-        ...action.payload,
-        loggedIn: true,
-      };
-    case 'LOGOUT':
-      return { loggedIn: false };
-    default:
-      return state;
-  }
-}
+import { Authentized } from './Utils/Auth';
+import { AuthProvider, useAuthDispatch } from './Utils/AuthContext';
+import { useAsync } from './Utils/Loader';
 
 type BackendState = 'available' | 'unavailable' | 'loading';
 
-function App() {
-  // const initialAuth = {
-  //   loggedIn: true,
-  //   userId: 2,
-  //   user: {
-  //     apiKey: 'fYa5KGDOQdBNzw5wC7UMGjqhtkmGczG8tMG4jWOdmBY=',
-  //     // the corresponding hash for DB: fb70583ce558ad846ed92991566a4beab3665ddb416c68953571d30c8b5cc266
-  //     name: 'Evžen Wybitul',
-  //     roles: ['Admin', 'Client', 'Operator'],
-  //     team: { name: 'Jiří Vondrášek', _id: 2 },
-  //     created: 115151,
-  //   },
-  // };
+async function getAvailability() {
+  return Api.get('/capability').then(r => r.json());
+}
 
-  const [backendState, setBackendState] = useState<BackendState>('loading');
-  const [auth, dispatch] = useReducer<LoginDispatch>(reducer, { loggedIn: false });
+function useBackendState(): BackendState {
+  const { result } = useAsync<string>(getAvailability);
 
-  useEffect(() => {
-    Api.get('/capability')
-      .then(r => r.json())
-      .then(js => {
-        if (js.includes('request2')) {
-          setBackendState('available');
-        } else {
-          throw Error('Unsupported backend');
-        }
-      })
-      .catch(e => {
-        console.log(e);
-        setBackendState('unavailable');
-      });
-  }, []);
+  switch (result.status) {
+    case 'Pending':
+      return 'loading';
+    case 'Success':
+      if (result.data.includes('request2')) {
+        return 'available';
+      }
+      throw Error('Unsupported backend');
+    default:
+      return 'unavailable';
+  }
+}
 
+function useLogin() {
   const apiKey = localStorage.getItem('apiKey');
-  useEffect(() => {
-    if (apiKey) {
-      console.log(apiKey);
-      getUserInfo(apiKey)
-        .then(userDetails => {
-          dispatch({
-            type: 'LOGIN',
-            payload: { apiKey, user: userDetails },
-          });
-          console.log(userDetails);
-        })
-        .catch(e => localStorage.removeItem('apiKey'));
-    }
-  }, [apiKey]);
+  const dispatch = useAuthDispatch();
 
+  const getUserDetails = useCallback(() => {
+    if (apiKey) {
+      return getUserInfo(apiKey).then(userDetails => {
+        dispatch({
+          type: 'LOGIN',
+          payload: { apiKey, user: userDetails },
+        });
+        return null;
+      });
+    }
+    return Promise.resolve(null);
+  }, [apiKey, dispatch]);
+
+  const { result } = useAsync<null>(getUserDetails);
+
+  useEffect(() => {
+    if (result.status === 'Error') {
+      localStorage.removeItem('apiKey');
+    }
+  }, [result.status]);
+
+  return result;
+}
+
+function App() {
   return (
-    <AuthContext.Provider value={{ auth, dispatch }}>
+    <AuthProvider>
       <div
         style={{ gridTemplateColumns: 'auto 1fr' }}
         className="App bg-white h-screen max-h-screen w-screen grid grid-cols-2"
       >
         <Router>
           <Sidebar />
-          <AppBody backendState={backendState} />
+          <AppBody />
         </Router>
       </div>
-    </AuthContext.Provider>
+    </AuthProvider>
   );
 }
 
-function AppBody({ backendState }: { backendState: BackendState }) {
+function AppBody() {
+  const backendState = useBackendState();
+  const login = useLogin();
+
   // TODO Add timeout
   switch (backendState) {
     case 'loading':
@@ -107,38 +97,13 @@ function AppBody({ backendState }: { backendState: BackendState }) {
         </div>
       );
     case 'available':
-      return (
-        <Authentized
-          otherwise={
-            <Routes>
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/*" element={<Navigate to="/login" />} />
-            </Routes>
-          }
-        >
-          <Routes>
-            <Route path="/login" element={<Navigate to="/me/requests" />} />
-            <Route path="/admin/users">
-              <UserList />
-            </Route>
-            <Route path="/admin/users/new">
-              <NewUser />
-            </Route>
-            <Route path="/me/*">
-              <Route path="requests/*" element={<RequestsAsClient />} />
-            </Route>
-            <Route path="/requests/*" element={<RequestsAsOperator />} />
-            <Route path="/announcements/*" element={<AnnouncementRouter />} />
-            <Route path="/teams/*" element={<TeamRouter />} />
-            <Route path="/register">
-              <Route path="new" element={<NewRegistrationPage />} />
-              <Route path=":email/:token" element={<RegisterPage />} />
-            </Route>
-            <Route path="/" element={<Navigate to="/me/requests" />} />
-            <Route path="/*" element={<NotFound404 />} />
-          </Routes>
-        </Authentized>
-      );
+      if (login.status === 'Pending') {
+        return <LoadingRoutes />;
+      }
+      if (login.status === 'Error') {
+        return <LoadingRoutes />;
+      }
+      return <NormalRoutes />;
     default:
       // case unavailable
       return (
@@ -149,6 +114,49 @@ function AppBody({ backendState }: { backendState: BackendState }) {
         </Page>
       );
   }
+}
+
+function LoadingRoutes() {
+  return (
+    <Routes>
+      <Route path="/*" element={<TrinityRingsSpinner />} />
+    </Routes>
+  );
+}
+
+function NormalRoutes() {
+  return (
+    <Authentized
+      otherwise={
+        <Routes>
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/*" element={<Navigate to="/login" />} />
+        </Routes>
+      }
+    >
+      <Routes>
+        <Route path="/login" element={<Navigate to="/me/requests" />} />
+        <Route path="/admin/users">
+          <UserList />
+        </Route>
+        <Route path="/admin/users/new">
+          <NewUser />
+        </Route>
+        <Route path="/me/*">
+          <Route path="requests/*" element={<RequestsAsClient />} />
+        </Route>
+        <Route path="/requests/*" element={<RequestsAsOperator />} />
+        <Route path="/announcements/*" element={<AnnouncementRouter />} />
+        <Route path="/teams/*" element={<TeamRouter />} />
+        <Route path="/register">
+          <Route path="new" element={<NewRegistrationPage />} />
+          <Route path=":email/:token" element={<RegisterPage />} />
+        </Route>
+        <Route path="/" element={<Navigate to="/me/requests" />} />
+        <Route path="/*" element={<NotFound404 />} />
+      </Routes>
+    </Authentized>
+  );
 }
 
 export default App;

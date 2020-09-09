@@ -13,6 +13,7 @@ import EditRequestPage from '../EditRequest';
 import { idToStr, Request } from '../Request';
 import RequestPage from '../RequestPage';
 import { statusStyle, statusToStr, statusToString } from '../Status';
+import { ok } from '../../Utils/Loader';
 
 export default function Requests() {
   return (
@@ -25,7 +26,7 @@ export default function Requests() {
 }
 
 function RequestTableItem({ request }: { request: WithID<Request> }) {
-  const { data: author } = Api.useAsyncGet<User>(`/users/${request.authorId}`);
+  const { result } = Api.useAsyncGet<User>(`/users/${request.authorId}`);
 
   return (
     <Row>
@@ -38,7 +39,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
         <span className="text-gray-500">#</span>
         {idToStr(request)}
       </Cell>
-      <Cell className="text-gray-700">{author ? author.name : 'Loading'}</Cell>
+      <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading'}</Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
         <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />
@@ -49,30 +50,19 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 
 function RequestList() {
   const { limit, offset } = usePagination(100);
-  const { data: payload, error, pending } = Api.useAsyncGetMany<Request>(
-    '/requests',
-    limit,
-    offset,
-    v => v.sort(comparator(r => r.dateCreated))
-  );
-  const requests = payload && payload.values.map(r => ({ ...r, status: statusToString(r.status) }));
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (pending || !payload) {
-    return <Page title="Client's Requests">Loading requests</Page>;
-  }
+  const { Loader } = Api.useAsyncGetMany<WithID<Request>>('/requests', limit, offset);
 
   return (
     <Page title="Clients' requests">
-      <Table columns={['Name', 'ID number', 'Author', 'Requested', 'Status']}>
-        {payload.values.map(v => (
-          <RequestTableItem request={v} />
-        ))}
-      </Table>
+      <Loader>
+        {({ values }) => (
+          <Table columns={['Name', 'ID number', 'Author', 'Requested', 'Status']}>
+            {values.map(v => (
+              <RequestTableItem request={v} />
+            ))}
+          </Table>
+        )}
+      </Loader>
     </Page>
   );
 }

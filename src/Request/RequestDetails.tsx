@@ -40,7 +40,7 @@ export default function RequestDetails({
   return (
     <div>
       {sections.map(s => (
-        <Card className="mb-4">
+        <Card className="mb-4" key={s.title}>
           <Section title={s.title} properties={s.properties} />
         </Card>
       ))}

@@ -9,32 +9,27 @@ import { WithID } from '../Utils/WithID';
 import { Team } from './Team';
 import TeamForm from './TeamForm';
 
-// TODO Add error handling
 export default function EditTeam() {
   const { id } = useParams();
   const { authPut } = useAuth();
-  const { data: team, error, pending } = useAsyncGet<WithID<Team>>(`/teams/${id}`);
-
-  if (pending || !team) {
-    return <Page title="Edit team">Waiting for teams</Page>;
-  }
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
+  const { Loader } = useAsyncGet<WithID<Team>>(`/teams/${id}`);
 
   return (
-    <TeamForm
-      team={team}
-      title={`Editing ${team.name}'s group`}
-      onSubmit={values => authPut('/teams', { ...values, active: true })}
-      headerButtons={
-        team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />
-      }
-    >
-      <Button.Cancel className="mr-3" />
-      <Button.Primary type="submit" title="Save changes" status="Normal" />
-    </TeamForm>
+    <Loader>
+      {team => (
+        <TeamForm
+          team={team}
+          title={`Editing ${team.name}'s group`}
+          onSubmit={values => authPut('/teams', { ...values, active: true })}
+          headerButtons={
+            team.active ? <DeactivateButton id={team._id} /> : <ActivateButton team={team} />
+          }
+        >
+          <Button.Cancel className="mr-3" />
+          <Button.Primary type="submit" title="Save changes" status="Normal" />
+        </TeamForm>
+      )}
+    </Loader>
   );
 }
 

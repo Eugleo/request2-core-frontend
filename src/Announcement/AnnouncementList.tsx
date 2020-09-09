@@ -1,7 +1,7 @@
 import c from 'classnames';
 import moment from 'moment';
 import React from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Card, Page } from '../Common/Layout';
@@ -9,8 +9,7 @@ import Markdown from '../Common/MdRender';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 import { User } from '../User/User';
 import * as Api from '../Utils/Api';
-import { Authentized, Authorized } from '../Utils/Auth';
-import { maybe } from '../Utils/Maybe';
+import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
 import AnnouncementPage from './AnnouncementPage';
@@ -30,20 +29,7 @@ export default function AnnouncementRouter() {
 
 function AnnouncementList() {
   const { limit, offset, currentPage } = usePagination(10);
-  const { data: payload, pending, error } = Api.useAsyncGetMany<Announcement>(
-    '/announcements',
-    limit,
-    offset
-  );
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (pending || !payload) {
-    return <Page title="Announcements">Waiting for announcements</Page>;
-  }
+  const { Loader } = Api.useAsyncGetMany<WithID<Announcement>>('/announcements', limit, offset);
 
   return (
     <Page
@@ -54,16 +40,20 @@ function AnnouncementList() {
         </Authorized>
       }
     >
-      <Authentized otherwise={<div>You need to be logged in to view announcements.</div>}>
+      <div className="flex flex-col">
         <div className="flex flex-col">
-          <div className="flex flex-col">
-            {payload.values.map(ann => (
-              <Item key={ann._id} ann={ann} />
-            ))}
-          </div>
+          <Loader>
+            {({ values, total }) => (
+              <>
+                {values.map(ann => (
+                  <Item key={ann._id} ann={ann} />
+                ))}
+                <Pagination currentPage={currentPage} limit={limit} total={total} />
+              </>
+            )}
+          </Loader>
         </div>
-        <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
-      </Authentized>
+      </div>
     </Page>
   );
 }
@@ -73,7 +63,7 @@ function Item({
 }: {
   ann: WithID<Announcement>;
 }) {
-  const { data: author } = Api.useAsyncGet<User>(maybe(authorId, id => `/users/${id}`));
+  const { Loader } = Api.useAsyncGet<WithID<User>>(`/users/${authorId}`);
 
   return (
     <Card className="mb-6">
@@ -89,12 +79,16 @@ function Item({
             {title}
           </Link>
           <p className={c('text-sm', active ? 'text-gray-500' : 'text-gray-300')}>
-            {author && (
-              <span>
-                Created by <span className="font-medium">{author.name}</span>{' '}
-              </span>
-            )}
-            {moment.unix(dateCreated).fromNow()}
+            <Loader>
+              {data => (
+                <>
+                  <span>
+                    Created by <span className="font-medium">{data.name}</span>{' '}
+                  </span>
+                  {moment.unix(dateCreated).fromNow()}
+                </>
+              )}
+            </Loader>
           </p>
         </div>
         <div className="flex-grow" />

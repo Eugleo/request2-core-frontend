@@ -32,11 +32,13 @@ export default function Sidebar() {
           <NavLink to="/announcements">
             <Icon.Globe />
           </NavLink>
-          <NavLink to="/teams">
-            <Icon.Users />
-          </NavLink>
+          <Authorized roles={['Operator', 'Admin']}>
+            <NavLink to="/teams">
+              <Icon.Users />
+            </NavLink>
+          </Authorized>
         </Authentized>
-        <Authorized roles={['Admin']}>
+        <Authorized roles={['Operator', 'Admin']}>
           <NavLink to="/admin/users">
             <Icon.UserPlus />
           </NavLink>

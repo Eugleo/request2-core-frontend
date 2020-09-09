@@ -19,18 +19,10 @@ export default function CommentSidebar({
   details: WithID<DetailProperty>[];
 }) {
   const { auth } = useAuth();
-  const { data, error, pending, refresh } = useAsyncGet<
-    WithID<Property & { propertyType: 'Comment' }>[]
-  >(`/requests/${requestId}/comments`);
+  const { Loader, refresh } = useAsyncGet<WithID<Property & { propertyType: 'Comment' }>[]>(
+    `/requests/${requestId}/comments`
+  );
   const messageEndRef = useRef<HTMLDivElement>(null);
-
-  if (error) {
-    return <div>Encountered an error when fetching comments</div>;
-  }
-
-  if (pending || !data) {
-    return <div>Loading comments</div>;
-  }
 
   const sortedProps = details.sort(comparator(p => p.dateAdded));
   const updatedProps = sortedProps
@@ -45,32 +37,38 @@ export default function CommentSidebar({
       className="bg-white border-l border-gray-300 relative grid grid-rows-2 max-h-full overflow-auto"
     >
       <div className="p-6 flex flex-col overflow-scroll">
-        {[...updatedProps, ...data]
-          .sort(comparator(p => p.dateAdded))
-          .map(prop =>
-            prop.propertyType === 'Detail' ? (
-              <Change
-                key={prop._id}
-                date={prop.dateAdded}
-                authorName="Evžen"
-                fieldPath={prop.propertyName}
-              />
-            ) : (
-              <Comment
-                isMine={prop.authorId === auth.user._id}
-                text={prop.propertyData}
-                key={prop._id}
-              />
-            )
-          )
-          .intersperse(ix => (
-            <div
-              key={ix}
-              style={{ width: '1px', margin: '-1px auto -1px auto' }}
-              className="h-4 bg-gray-200 flex-shrink-0"
-            />
-          ))}
-        <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
+        <Loader>
+          {comments => (
+            <>
+              {[...updatedProps, ...comments]
+                .sort(comparator(p => p.dateAdded))
+                .map(prop =>
+                  prop.propertyType === 'Detail' ? (
+                    <Change
+                      key={prop._id}
+                      date={prop.dateAdded}
+                      authorName="Evžen"
+                      fieldPath={prop.propertyName}
+                    />
+                  ) : (
+                    <Comment
+                      isMine={prop.authorId === auth.user._id}
+                      text={prop.propertyData}
+                      key={prop._id}
+                    />
+                  )
+                )
+                .intersperse(ix => (
+                  <div
+                    key={ix}
+                    style={{ width: '1px', margin: '-1px auto -1px auto' }}
+                    className="h-4 bg-gray-200 flex-shrink-0"
+                  />
+                ))}
+              <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
+            </>
+          )}
+        </Loader>
       </div>
       <CommentComposer requestId={requestId} refresh={refresh} />
     </div>

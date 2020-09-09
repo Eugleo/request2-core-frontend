@@ -1,70 +1,50 @@
-import { useEffect, useState } from 'react';
+import { useCallback } from 'react';
 
+import { useRefresh } from '../Common/Hooks';
 import { apiBase } from './ApiBase';
 import { useAuth } from './Auth';
-import { Maybe } from './Maybe';
-import { WithID } from './WithID';
+import { useAsync } from './Loader';
 
 export function urlWithParams(url: string, params: Record<string, any>) {
   const strParams = Object.keys(params).map(k => `${k}=${params[k]}`);
   return `${url}?${strParams.join('&')}`;
 }
 
-type Resource<T> = {
-  data: Maybe<T>;
-  error: Maybe<string>;
-  pending: boolean;
-};
-
-export function useAsyncGetMany<T>(
-  url: string,
-  limit: number,
-  offset: number,
-  transform = (x: Array<WithID<T>>) => x
-): Resource<{ values: Array<WithID<T>>; total: number }> {
+export function useAsyncGetMany<T>(url: string, limit: number, offset: number) {
   const { authGet } = useAuth();
-  const [pending, setPending] = useState<boolean>(true);
-  const [error, setError] = useState<Maybe<string>>(null);
-  const [data, setData] = useState<Maybe<{ values: Array<WithID<T>>; total: number }>>(null);
 
-  useEffect(() => {
+  const getThings = useCallback(async () => {
     const urlWithLimit = urlWithParams(url, { limit, offset });
-    authGet(urlWithLimit)
-      .then(r => r.json())
-      .then(json => {
-        setError(json.error);
-        setData(json.data);
-        setPending(false);
-      });
+    const r = await authGet(urlWithLimit);
+    const json = await r.json();
+
+    if (json.error) {
+      throw new Error(json.error);
+    }
+    return json.data;
   }, [authGet, url, limit, offset]);
 
-  return {
-    error,
-    pending,
-    data: data && { total: data.total, values: transform(data.values) },
-  };
+  return useAsync<{ values: T[]; total: number }>(getThings);
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet<T>(url: Maybe<string>): Resource<T> & { refresh: () => void } {
+export function useAsyncGet<T>(url: string) {
   const { authGet } = useAuth();
-  const [item, setItem] = useState({ pending: true, data: null, error: null });
-  const [ref, setRefresh] = useState(0);
+  const refresh = useRefresh();
 
-  useEffect(() => {
-    if (url) {
-      console.log(`GET ${url}`);
+  const getThing = useCallback(() => {
+    return authGet(url)
+      .then(r => r.json())
+      .then(json => {
+        if (json.data) {
+          return json.data;
+        }
+        throw new Error(json.error);
+      });
+  }, [authGet, url]);
+  const thing = useAsync<T>(getThing);
 
-      authGet(url)
-        .then(r => r.json())
-        .then(json => {
-          console.log(`SET ${url}`);
-          setItem({ ...json, pending: false });
-        });
-    }
-  }, [authGet, url, ref]);
-
-  return { ...item, refresh: () => setRefresh(refresh => refresh + 1) };
+  return { ...thing, refresh };
 }
 
 export function get(url: string, headers = {}) {

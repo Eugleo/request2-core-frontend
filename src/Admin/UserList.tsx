@@ -1,5 +1,4 @@
 import React, { useCallback } from 'react';
-import { Navigate } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
@@ -9,16 +8,17 @@ import { Team } from '../Team/Team';
 import { User } from '../User/User';
 import * as Api from '../Utils/Api';
 import { comparator } from '../Utils/Func';
+import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 
 function UserTableItem({ user }: { user: WithID<User> }) {
-  const { data: team } = Api.useAsyncGet<Team>(`/teams/${user.teamId}`);
+  const { result } = Api.useAsyncGet<Team>(`/teams/${user.teamId}`);
 
   return (
     <Row>
       <Cell align="left">{user.name}</Cell>
       <Cell className="text-gray-700">{user.email}</Cell>
-      <Cell className="text-gray-700">{team?.name || 'Loading team'}</Cell>
+      <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading team'}</Cell>
       <Cell>
         <div className="grid grid-flow-col gap-2">
           {user.roles.map(r => (
@@ -33,25 +33,22 @@ function UserTableItem({ user }: { user: WithID<User> }) {
 export default function UserList() {
   const { limit, offset, currentPage } = usePagination(5);
   const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
-  const { data: payload, error, pending } = Api.useAsyncGetMany<User>('/users', 1000, 0, sort);
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (!payload || pending) {
-    return <Page title="Admin Panel: Users">Waiting for users</Page>;
-  }
+  const { Loader } = Api.useAsyncGetMany<WithID<User>>('/users', 1000, 0);
 
   return (
     <Page title="Admin Panel: Users" buttons={<Button.Create title="Create new" />}>
-      <Table columns={['Name', 'Email', 'Team Leader', 'Roles']}>
-        {payload.values.map(v => (
-          <UserTableItem key={v._id} user={v} />
-        ))}
-      </Table>
-      <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
+      <Loader>
+        {({ values, total }) => (
+          <>
+            <Table columns={['Name', 'Email', 'Team Leader', 'Roles']}>
+              {values.map(v => (
+                <UserTableItem key={v._id} user={v} />
+              ))}
+            </Table>
+            <Pagination currentPage={currentPage} limit={limit} total={total} />
+          </>
+        )}
+      </Loader>
     </Page>
   );
 }

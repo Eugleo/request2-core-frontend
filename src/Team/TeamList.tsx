@@ -44,33 +44,22 @@ function TeamTableItem({ team }: { team: WithID<Team> }) {
 
 function TeamList() {
   const { limit, offset, currentPage } = usePagination(5);
-  const sort = useCallback(v => v.sort(comparator((t: Team) => t.name)), []);
-  const { data: payload, error, pending } = Api.useAsyncGetMany<Team>(
-    '/teams',
-    limit,
-    offset,
-    sort
-  );
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (!payload || pending) {
-    return <Page title="Admin Panel: Teams">Waiting for teams</Page>;
-  }
+  const { Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', limit, offset);
 
   return (
     <Page title="Admin Panel: Teams" buttons={<Button.Create title="Create new" />}>
-      <Authentized otherwise={<div>You need to be logged in to view teams.</div>}>
-        <Table columns={['Name', 'Company code', 'Status']}>
-          {payload.values.map(v => (
-            <TeamTableItem key={v._id} team={v} />
-          ))}
-        </Table>
-      </Authentized>
-      <Pagination currentPage={currentPage} limit={limit} total={payload.total} />
+      <Loader>
+        {({ values, total }) => (
+          <>
+            <Table columns={['Name', 'Company code', 'Status']}>
+              {values.map(v => (
+                <TeamTableItem key={v._id} team={v} />
+              ))}
+            </Table>
+            <Pagination currentPage={currentPage} limit={limit} total={total} />
+          </>
+        )}
+      </Loader>
     </Page>
   );
 }

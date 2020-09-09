@@ -8,7 +8,6 @@ import { usePagination } from '../../Common/PageSwitcher';
 import Table, { Cell, Pill, Row } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
-import { comparator } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
 import NewRequestPage from '../NewRequest';
@@ -49,21 +48,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 
 function RequestList() {
   const { limit, offset } = usePagination(100);
-  const { data: payload, error, pending } = Api.useAsyncGetMany<Request>(
-    '/requests',
-    limit,
-    offset,
-    v => v.sort(comparator(r => r.dateCreated))
-  );
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-
-  if (pending || !payload) {
-    return <Page title="My requests">Loading requests</Page>;
-  }
+  const { Loader } = Api.useAsyncGetMany<WithID<Request>>('/requests', limit, offset);
 
   return (
     <Authorized roles={['Client']} otherwise={<Navigate to="/requests" />}>
@@ -74,11 +59,15 @@ function RequestList() {
           </h2>
           <NewRequestSection />
         </div>
-        <Table columns={['Name', 'ID number', 'Uploaded', 'Status']}>
-          {payload.values.map(v => (
-            <RequestTableItem request={v} />
-          ))}
-        </Table>
+        <Loader>
+          {({ values }) => (
+            <Table columns={['Name', 'ID number', 'Uploaded', 'Status']}>
+              {values.map(r => (
+                <RequestTableItem key={r._id} request={r} />
+              ))}
+            </Table>
+          )}
+        </Loader>
       </Page>
     </Authorized>
   );

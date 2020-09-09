@@ -10,6 +10,10 @@ type Page =
   | { hidden: false; link: To; number: number; active: boolean }
   | { hidden: true; number: number };
 
+function isHidden(p: Page): p is { hidden: true; number: number } {
+  return p.hidden;
+}
+
 function getPages(
   currentPage: number,
   finalPage: number,
@@ -75,7 +79,7 @@ export default function Pagination({
   }
 
   const pageButons = pages.map(p => {
-    return p.hidden ? (
+    return isHidden(p) ? (
       <Ellipsis key={p.number} />
     ) : (
       <PaginationItem number={p.number} active={p.active} link={p.link} key={p.number} />

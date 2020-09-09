@@ -1,8 +1,7 @@
 import React from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
-import { Page } from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
@@ -12,29 +11,25 @@ import AnnouncementForm from './AnnouncementForm';
 export default function EditAnnouncement() {
   const { id } = useParams();
   const { authPut } = useAuth<Announcement>();
-  const { data: ann, error, pending } = useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
-
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-  if (pending || !ann) {
-    return <Page title="Edit announcement">Waiting for announcements</Page>;
-  }
+  const { Loader } = useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
 
   return (
-    <AnnouncementForm
-      title={`Editing ${ann.title}`}
-      onSubmit={values =>
-        authPut(`/announcements/${id}`, { ...ann, title: values.title, body: values.body })
-      }
-      ann={ann}
-    >
-      <Button.Cancel />
-      <span className="flex-grow" />
-      {ann.active ? <DeactivateButton ann={ann} /> : <ActivateButton ann={ann} />}
-      <Button.Primary type="submit" status="Normal" title="Save changes" />
-    </AnnouncementForm>
+    <Loader>
+      {ann => (
+        <AnnouncementForm
+          title={`Editing ${ann.title}`}
+          onSubmit={values =>
+            authPut(`/announcements/${id}`, { ...ann, title: values.title, body: values.body })
+          }
+          ann={ann}
+        >
+          <Button.Cancel />
+          <span className="flex-grow" />
+          {ann.active ? <DeactivateButton ann={ann} /> : <ActivateButton ann={ann} />}
+          <Button.Primary type="submit" status="Normal" title="Save changes" />
+        </AnnouncementForm>
+      )}
+    </Loader>
   );
 }
 

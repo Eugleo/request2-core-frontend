@@ -1,6 +1,8 @@
 import Uploady, { UploadyContext } from '@rpldy/uploady';
 import { Form, Formik } from 'formik';
-import React, { useContext } from 'react';
+import React, { useContext, useState } from 'react';
+import { TrinityRingsSpinner } from 'react-epic-spinners';
+import { Check, X } from 'react-feather';
 
 import { Image, LongText, ShortText } from '../../Common/Forms';
 import { Card } from '../../Common/Layout';
@@ -40,7 +42,20 @@ function submit(
 //   );
 // }
 
-function SubmitButton() {
+function SubmitButtonBody({ status }: { status: Status }) {
+  switch (status) {
+    case 'Default':
+      return <p>Submit results</p>;
+    case 'Pending':
+      return <TrinityRingsSpinner size={10} className="w-3 h-3" />;
+    case 'Success':
+      return <Check />;
+    default:
+      return <X />;
+  }
+}
+
+function SubmitButton({ status }: { status: Status }) {
   const uploady = useContext(UploadyContext);
 
   return (
@@ -49,10 +64,12 @@ function SubmitButton() {
       onClick={() => uploady && uploady.processPending()}
       className="rounded-lg text-white shadow-sm bg-green-400 hover:bg-green-500 px-3 py-2 inline-flex items-center focus:outline-none font-medium text-sm"
     >
-      Submit results
+      <SubmitButtonBody status={status} />
     </button>
   );
 }
+
+type Status = 'Default' | 'Pending' | 'Success' | 'Error';
 
 export default function ResultReportCard({
   request,
@@ -62,6 +79,7 @@ export default function ResultReportCard({
   refresh: () => void;
 }) {
   const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
+  const [status, setStatus] = useState<Status>('Default');
 
   const initialValues = {
     'result/time-spent-(operator)': '',
@@ -76,9 +94,14 @@ export default function ResultReportCard({
         <Formik
           initialValues={initialValues}
           onSubmit={values => {
-            submit(auth.user._id, authPut, values, request)
-              .then(r => console.log(r))
-              .then(refresh);
+            setStatus('Pending');
+            submit(auth.user._id, authPut, values, request).then(r => {
+              if (r.ok) {
+                setStatus('Success');
+              } else {
+                setStatus('Error');
+              }
+            });
           }}
         >
           <Form className="bg-white rounded-md shadow-sm">
@@ -123,7 +146,7 @@ export default function ResultReportCard({
             </div>
 
             <div className="col-span-5 bg-green-100 py-3 px-6 flex flex-row-reverse">
-              <SubmitButton />
+              <SubmitButton status={status} />
             </div>
           </Form>
         </Formik>

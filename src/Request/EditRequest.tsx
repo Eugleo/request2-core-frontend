@@ -1,7 +1,6 @@
 import React from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router';
+import { useNavigate, useParams } from 'react-router';
 
-import { Page } from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
@@ -40,31 +39,24 @@ export default function EditRequestPage() {
   const navigate = useNavigate();
   const { id } = useParams();
   const { auth, authPut } = useAuth();
-  // TODO Fix types
-  const { data: payload, error, pending } = useAsyncGet<{
+  const { Loader } = useAsyncGet<{
     request: WithID<Request>;
     properties: WithID<Property>[];
   }>(`/requests/${id}`);
 
-  if (pending || !payload) {
-    return <Page title="Editing request">Loading requests</Page>;
-  }
-  if (error) {
-    console.log(error);
-    return <Navigate to="/404" />;
-  }
-  const { request } = payload;
-  const { properties } = payload;
-
-  console.log(auth);
-
   return (
-    <RequestDetailForm
-      title={`Editing ${request.name}`}
-      requestType={request.requestType}
-      request={request}
-      properties={properties}
-      onSubmit={values => submit(authPut, request, values, auth.user._id).then(() => navigate(-1))}
-    />
+    <Loader>
+      {({ request, properties }) => (
+        <RequestDetailForm
+          title={`Editing ${request.name}`}
+          requestType={request.requestType}
+          request={request}
+          properties={properties}
+          onSubmit={values =>
+            submit(authPut, request, values, auth.user._id).then(() => navigate(-1))
+          }
+        />
+      )}
+    </Loader>
   );
 }

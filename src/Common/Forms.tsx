@@ -1,3 +1,4 @@
+import UploadDropZone from '@rpldy/upload-drop-zone';
 import c from 'classnames';
 import { useField } from 'formik';
 import React, { ReactNode } from 'react';
@@ -204,24 +205,16 @@ export function TextWithHints({ path: name, description, label, choices, hint }:
 
 export function Image({ className = '' }) {
   return (
-    <div
-      className={c(
-        'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
-        className
-      )}
-    >
-      <span>Images & files don't work properly yet</span>
-    </div>
-    // <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} autoUpload={false}>
-    //   <div
-    //     className={c(
-    //       'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
-    //       className
-    //     )}
-    //   >
-    //     <span>Drag&Drop File(s) Here</span>
-    //   </div>
-    // </UploadDropZone>
+    <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} autoUpload={false}>
+      <div
+        className={c(
+          'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
+          className
+        )}
+      >
+        <span>Drag & Drop File(s) Here</span>
+      </div>
+    </UploadDropZone>
   );
 }
 
