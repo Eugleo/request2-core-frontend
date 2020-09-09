@@ -33,6 +33,7 @@ function intersperse<T>(this: T[], mkT: (ix: number) => T): T[] {
   return this.reduce((acc: T[], d, ix) => [...acc, mkT(ix), d], []).slice(1);
 }
 
+/* eslint no-extend-native: "off" */
 if (!Array.prototype.mapMaybe) {
   Array.prototype.mapMaybe = mapMaybe;
   Array.prototype.intersperse = intersperse;

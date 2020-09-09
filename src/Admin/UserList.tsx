@@ -31,7 +31,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
 }
 
 export default function UserList() {
-  const { limit, offset, currentPage } = usePagination(5);
+  const { limit, currentPage } = usePagination(5);
   const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
   const { Loader } = Api.useAsyncGetMany<WithID<User>>('/users', 1000, 0);
 

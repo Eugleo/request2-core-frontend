@@ -60,7 +60,6 @@ function validate(values: { email: string; password: string }) {
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const dispatch = useAuthDispatch();
-  const navigate = useNavigate();
 
   // TODO Rozhodnout, kam navigovat
   return (

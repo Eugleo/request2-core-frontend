@@ -5,8 +5,7 @@ import * as Button from '../Common/Buttons';
 import { useRefresh } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
-import { Authorized, useAuth } from '../Utils/Auth';
-import { maybe } from '../Utils/Maybe';
+import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
 import ResultReportCard from './Operator/ResultReportCard';
@@ -14,58 +13,6 @@ import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Re
 import RequestDetails from './RequestDetails';
 import RequestResults from './RequestResults';
 import { request } from 'http';
-
-// function HeaderItem({ label, children }: { label: string; children: React.ReactNode }) {
-//   return (
-//     <div className="text-sm mb-4 col-span-1">
-//       <h3 className="text-sm font-medium text-gray-600">{label}</h3>
-//       {children}
-//     </div>
-//   );
-// }
-
-// function RequestHeader({ request, author, lastChange }) {
-//   return (
-//     <div className="col-span-4 grid grid-cols-4">
-//       <div className="col-span-3">
-//         <div className="flex flex-row items-center mb-2">
-//           <h1 className="text-3xl font-bold leading-tight text-black">{request.name}</h1>
-//           <span className="ml-4 text-3xl text-gray-500">#{idToStr(request)}</span>
-//         </div>
-//         <div className="flex flex-row items-center">
-//           <Authorized roles={['Operator']} otherwise={<StatusLabel status={request.status} />}>
-//             <StatusSelect request={request} />
-//           </Authorized>
-//           <p className="ml-4 text-gray-700 text-sm">
-//             <span className="font-semibold">{author.name}</span> has updated this item{' '}
-//             <span>{moment.unix(lastChange).fromNow()}</span>
-//           </p>
-//         </div>
-//       </div>
-//       <ButtonArray />
-//     </div>
-//   );
-// }
-
-// function RequestDetails({ request, author, team }) {
-//   const type = request.requestType.split(/-/g).join(' ');
-
-//   return (
-//     <div className="flex flex-col items-start row-span-2">
-//       <HeaderItem label="Author">
-//         <p className="text-sm text-gray-800">
-//           {author.name} @ {team.name}
-//         </p>
-//       </HeaderItem>
-//       <HeaderItem label="Date requested">
-//         <p className="text-sm text-gray-800">{formatDate(request.dateCreated)}</p>
-//       </HeaderItem>
-//       <HeaderItem label="Type">
-//         <p className="text-sm text-gray-800">{capitalize(type)}</p>
-//       </HeaderItem>
-//     </div>
-//   );
-// }
 
 export default function RequestPage() {
   const { id } = useParams();
