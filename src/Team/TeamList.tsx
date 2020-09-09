@@ -1,13 +1,11 @@
-import React, { useCallback } from 'react';
-import { Navigate, Route, Routes } from 'react-router-dom';
+import React from 'react';
+import { Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
 import Table, { Cell, Pill, Row } from '../Common/Table';
 import * as Api from '../Utils/Api';
-import { Authentized } from '../Utils/Auth';
-import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import EditTeam from './EditTeam';
 import NewTeam from './NewTeam';

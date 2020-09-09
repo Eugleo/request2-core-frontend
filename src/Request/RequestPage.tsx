@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { useRefresh } from '../Common/Hooks';
@@ -12,7 +12,6 @@ import ResultReportCard from './Operator/ResultReportCard';
 import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Request';
 import RequestDetails from './RequestDetails';
 import RequestResults from './RequestResults';
-import { request } from 'http';
 
 export default function RequestPage() {
   const { id } = useParams();
@@ -51,10 +50,10 @@ export default function RequestPage() {
   return (
     <Loader>
       {({ request, properties }) => {
-        const lastChange = Math.max(
-          ...properties.filter(p => p.active).map(p => p.dateAdded),
-          request.dateCreated
-        );
+        // const lastChange = Math.max(
+        //   ...properties.filter(p => p.active).map(p => p.dateAdded),
+        //   request.dateCreated
+        // );
 
         const hasResults = properties.find(p => p.propertyType === 'Result') !== undefined;
         return (

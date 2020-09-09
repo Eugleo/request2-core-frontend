@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { TrinityRingsSpinner, AtomSpinner } from 'react-epic-spinners';
+import { AtomSpinner } from 'react-epic-spinners';
 
 export type Result<T> =
   | { status: 'Pending' }

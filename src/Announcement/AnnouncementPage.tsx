@@ -10,7 +10,7 @@ import { Announcement } from './Announcement';
 
 export default function AnnouncementPage() {
   const { id } = useParams();
-  const { Loader, result } = Api.useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
+  const { Loader } = Api.useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
 
   return (
     <Loader>

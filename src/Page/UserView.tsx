@@ -1,19 +1,6 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import {
-  accessoryMap,
-  bodyMap,
-  clothingMap,
-  eyebrowsMap,
-  eyesMap,
-  facialHairMap,
-  graphicsMap,
-  hairMap,
-  hatMap,
-  mouthsMap,
-  theme,
-} from '@bigheads/core';
 import React, { useState } from 'react';
 import { User } from 'react-feather';
 

@@ -1,18 +1,17 @@
 import moment from 'moment';
 import React from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import Table, { Cell, Pill, Row } from '../../Common/Table';
 import { User } from '../../User/User';
 import * as Api from '../../Utils/Api';
-import { comparator } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
 import { idToStr, Request } from '../Request';
 import RequestPage from '../RequestPage';
-import { statusStyle, statusToStr, statusToString } from '../Status';
+import { statusStyle, statusToStr } from '../Status';
 import { ok } from '../../Utils/Loader';
 
 export default function Requests() {

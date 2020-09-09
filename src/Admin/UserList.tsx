@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react';
+import React from 'react';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
@@ -7,7 +7,6 @@ import Table, { Cell, Pill, Row } from '../Common/Table';
 import { Team } from '../Team/Team';
 import { User } from '../User/User';
 import * as Api from '../Utils/Api';
-import { comparator } from '../Utils/Func';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 
@@ -32,7 +31,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
 
 export default function UserList() {
   const { limit, currentPage } = usePagination(5);
-  const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
+  // const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
   const { Loader } = Api.useAsyncGetMany<WithID<User>>('/users', 1000, 0);
 
   return (
