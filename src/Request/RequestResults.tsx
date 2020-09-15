@@ -3,7 +3,7 @@ import React from 'react';
 import { Download, File } from 'react-feather';
 
 import { Card } from '../Common/Layout';
-import { useAsyncGet } from '../Utils/Api';
+import { apiBase } from '../Utils/ApiBase';
 import { useAuth } from '../Utils/Auth';
 import { parseFieldName } from '../Utils/FieldPath';
 import { WithID } from '../Utils/WithID';
@@ -82,19 +82,14 @@ function stringToFileDesc(str: string) {
 
 function FileView({ file }: { file: ResultFileProperty }) {
   const { hash, name } = stringToFileDesc(file.propertyData);
-  const { Loader } = useAsyncGet<string>(`/requests/files/${hash}`);
 
   return (
     <div className="flex flex-row py-1 px-2 rounded-sm hover:bg-gray-100">
       <File className="w-5 h-5 text-green-500 mr-2"></File>
       <p className="mr-2">{name}</p>
-      <Loader>
-        {url => (
-          <a href={url} className="text-blue-500 hover:text-blue-700">
-            <Download className="w-5 h-5"></Download>
-          </a>
-        )}
-      </Loader>
+      <a href={`${apiBase}/file/${hash}`} className="text-blue-500 hover:text-blue-700">
+        <Download className="w-5 h-5"></Download>
+      </a>
     </div>
   );
 }
