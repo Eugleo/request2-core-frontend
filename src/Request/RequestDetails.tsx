@@ -7,7 +7,7 @@ import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
 import { WithID } from '../Utils/WithID';
 import { Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
-import requestTypes from './RequestTypes';
+import { requestSchemas } from './RequestTypes';
 
 export default function RequestDetails({
   request,
@@ -17,7 +17,7 @@ export default function RequestDetails({
   properties: WithID<Property>[];
 }) {
   // TODO Is there a better way?
-  const schema = requestTypes.get(request.requestType);
+  const schema = requestSchemas.get(request.requestType);
 
   if (!schema) {
     // TODO Handle this better

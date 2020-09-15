@@ -19,7 +19,7 @@ import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import { Property, Request } from './Request';
 import { DetailField, Field, FieldValue, IndirectField, isEmpty, isField } from './RequestSchema';
-import requestSchemas, { requestValidations } from './RequestTypes';
+import { requestSchemas, requestValidations } from './RequestTypes';
 import fieldLib from './RequestTypes/field-library.json';
 
 export default function RequestDetailForm<T>({

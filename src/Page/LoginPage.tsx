@@ -9,6 +9,7 @@ import { UserDetails } from '../User/User';
 import * as Api from '../Utils/Api';
 import { authHeaders } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
+import { Errors } from '../Utils/Errors';
 
 export function getUserInfo(apiKey: string): Promise<UserDetails> {
   return Api.get('/me', authHeaders(apiKey))
@@ -44,8 +45,10 @@ function verifyLogin(email: string, password: string, authDispatch: Function, se
     .catch(error => console.log(error));
 }
 
-function validate(values: { email: string; password: string }) {
-  const errors: { email?: string; password?: string } = {};
+type LoginValues = { email: string; password: string };
+
+function validate(values: LoginValues) {
+  const errors: Errors<LoginValues> = {};
   if (!values.email) {
     errors.email = 'This field is required';
   }

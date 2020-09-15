@@ -1,6 +1,6 @@
 import { FieldValue, isEmpty } from './RequestSchema';
 
-export default function fieldTransformSM(values: { [_: string]: FieldValue }) {
+export function fieldTransformSM(values: { [_: string]: FieldValue }) {
   const err: { [_: string]: FieldValue } = {};
 
   const key = 'structure-or-gel-image/image-file';

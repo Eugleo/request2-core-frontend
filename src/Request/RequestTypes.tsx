@@ -3,7 +3,7 @@ import { isSchema } from './RequestSchema';
 import { fieldTransformSM } from './SmallMoleculeRequest';
 
 const req = require.context('./RequestTypes', true, /^.*\.rcfg\.json$/imu);
-export const requestTypes: Map<string, Schema> = new Map(
+export const requestSchemas: Map<string, Schema> = new Map(
   req
     .keys()
     .map(req)

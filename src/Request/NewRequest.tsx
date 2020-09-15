@@ -8,7 +8,7 @@ import { WithID } from '../Utils/WithID';
 import { BareProperty, idToStr, PropertyType, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
 import { FieldValue, stringify } from './RequestSchema';
-import requestSchemas from './RequestTypes';
+import { requestSchemas } from './RequestTypes';
 
 function submit(
   authPost: (
