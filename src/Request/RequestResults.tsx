@@ -1,22 +1,43 @@
 import c from 'classnames';
 import React from 'react';
+import { Download, File } from 'react-feather';
 
 import { Card } from '../Common/Layout';
+import { useAsyncGet } from '../Utils/Api';
+import { useAuth } from '../Utils/Auth';
 import { parseFieldName } from '../Utils/FieldPath';
 import { WithID } from '../Utils/WithID';
-import { Property, ResultProperty } from './Request';
+import { Property, ResultFileProperty, ResultProperty } from './Request';
 
-export default function RequestResults({ properties }: { properties: WithID<ResultProperty>[] }) {
+export default function RequestResults({
+  properties,
+  files,
+}: {
+  properties: WithID<ResultProperty>[];
+  files: WithID<ResultFileProperty>[];
+}) {
   return (
     <div>
       <Card className="mb-4 border border-green-300 shadow-none">
-        <Section title="Results" properties={properties.filter(p => p.propertyData !== '')} />
+        <Section
+          title="Results"
+          properties={properties.filter(p => p.propertyData !== '')}
+          files={files}
+        />
       </Card>
     </div>
   );
 }
 
-function Section({ title, properties }: { title: string; properties: WithID<Property>[] }) {
+function Section({
+  title,
+  properties,
+  files,
+}: {
+  title: string;
+  properties: WithID<Property>[];
+  files: WithID<ResultFileProperty>[];
+}) {
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-green-300')}>
@@ -31,7 +52,49 @@ function Section({ title, properties }: { title: string; properties: WithID<Prop
             key={p._id}
           />
         ))}
+        <FilesView files={files} isEven={false}></FilesView>
       </dl>
+    </div>
+  );
+}
+
+function FilesView({ files, isEven }: { files: WithID<ResultFileProperty>[]; isEven: boolean }) {
+  return (
+    <div
+      style={{ gridTemplateColumns: '1fr 2fr' }}
+      className={c('gap-10 py-4 px-6 grid grid-cols-2', isEven ? 'bg-green-100' : 'bg-white')}
+    >
+      <dt className="text-sm font-medium text-green-500 flex-grow leading-5">Files</dt>
+      <dd className="break-words text-sm text-green-700">
+        {files.map(f => (
+          <FileView key={f.propertyData} file={f} />
+        ))}
+      </dd>
+    </div>
+  );
+}
+
+// TODO Make this safer
+function stringToFileDesc(str: string) {
+  const fields = str.split(':');
+  return { hash: fields[0], mime: fields[1], name: fields[2] };
+}
+
+function FileView({ file }: { file: ResultFileProperty }) {
+  const { hash, name } = stringToFileDesc(file.propertyData);
+  const { Loader } = useAsyncGet<string>(`/requests/files/${hash}`);
+
+  return (
+    <div className="flex flex-row py-1 px-2 rounded-sm hover:bg-gray-100">
+      <File className="w-5 h-5 text-green-500 mr-2"></File>
+      <p className="mr-2">{name}</p>
+      <Loader>
+        {url => (
+          <a href={url} className="text-blue-500 hover:text-blue-700">
+            <Download className="w-5 h-5"></Download>
+          </a>
+        )}
+      </Loader>
     </div>
   );
 }

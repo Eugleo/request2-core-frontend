@@ -1,7 +1,8 @@
 import UploadDropZone from '@rpldy/upload-drop-zone';
+import { useItemFinishListener, useItemStartListener } from '@rpldy/uploady';
 import c from 'classnames';
 import { useField } from 'formik';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import * as Icon from 'react-feather';
 import { components, ControlProps, PlaceholderProps } from 'react-select';
 import Creatable from 'react-select/creatable';
@@ -203,18 +204,77 @@ export function TextWithHints({ path: name, description, label, choices, hint }:
   );
 }
 
-export function Image({ className = '' }) {
+function DivWithTitle({
+  title,
+  children,
+  className,
+}: {
+  title: string;
+  children: React.ReactNode;
+  className?: string;
+}) {
   return (
-    <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} autoUpload={false}>
-      <div
-        className={c(
-          'flex flex-col justify-center rounded-md shadow-inner border-dashed border-2 border-gray-500 h-32 text-center text-lg text-gray-500 p-6',
-          className
-        )}
-      >
-        <span>Drag & Drop File(s) Here</span>
-      </div>
-    </UploadDropZone>
+    <div>
+      <h3 className="font-bold mb-2">{title}</h3>
+      <div className={c('shadow-xs rounded-sm', className)}>{children}</div>
+    </div>
+  );
+}
+
+type File = { hash: string; name: string; mime: string };
+
+export function Image({ name, className = '' }: { name: string; className?: string }) {
+  const [field, meta, helpers] = useField<string[]>({ name });
+  const [files, setFiles] = useState<File[]>([]);
+  const [inProgress, setInProgress] = useState<number>(0);
+
+  useItemStartListener(() => {
+    setInProgress(n => n + 1);
+  });
+
+  useItemFinishListener(item => {
+    // Uwrap the response from Proxy
+    const r = JSON.parse(JSON.stringify(item.uploadResponse));
+    const items = r?.data?.files;
+    if (items) {
+      setInProgress(n => n - items.length);
+      setFiles(fs => fs.concat(items));
+      helpers.setValue(field.value.concat(items.map((f: File) => `${f.hash}:${f.mime}:${f.name}`)));
+    }
+  });
+
+  console.log('VALUE', meta.value);
+
+  const dndClasses = c('flex flex-col justify-center text-center text-gray-800 p-4', className);
+
+  return (
+    <div className="grid grid-cols-3 gap-4">
+      <DivWithTitle title="Upload zone">
+        <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} className={dndClasses}>
+          <span>Drag & drop your files here</span>
+        </UploadDropZone>
+      </DivWithTitle>
+      <DivWithTitle title="In progress">
+        <div className="p-4 flex flex-col justify-center text-sm text-center text-gray-500">
+          {inProgress === 0 ? (
+            <p>No item is being uploaded</p>
+          ) : (
+            <p>
+              <span className="font-medium">{inProgress}</span> items being uploaded
+            </p>
+          )}
+        </div>
+      </DivWithTitle>
+      <DivWithTitle title="Uploaded">
+        <div className="p-4">
+          {files.map(f => (
+            <div className="rounded-sm text-sm hover:bg-gray-100 px-2 py-1 flex flex-row items-center">
+              <Icon.File className="h-5 w-5 text-gray-700 mr-2"></Icon.File> <p>{f.name}</p>
+            </div>
+          ))}
+        </div>
+      </DivWithTitle>
+    </div>
   );
 }
 

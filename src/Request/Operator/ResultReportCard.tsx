@@ -11,7 +11,7 @@ import { WithID } from '../../Utils/WithID';
 import { Property, Request } from '../Request';
 import { FieldValue, stringify } from '../RequestSchema';
 
-type ResultProperty = Property & { propertyType: 'Result' };
+type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
 
 function submit(
   authorId: number,
@@ -19,8 +19,9 @@ function submit(
   properties: { [k: string]: FieldValue },
   request: WithID<Request>
 ) {
-  return authPut(`/requests/${request._id}`, {
-    props: Object.entries(properties).map(([name, value]) => ({
+  const normalProps: ResultProperty[] = Object.entries(properties)
+    .filter(([name]) => name !== 'result/files')
+    .map(([name, value]) => ({
       authorId,
       requestId: request._id,
       propertyType: 'Result',
@@ -28,7 +29,20 @@ function submit(
       propertyData: stringify(value),
       dateAdded: Math.round(Date.now() / 1000),
       active: true,
-    })),
+    }));
+
+  const fileProps: ResultProperty[] = (properties['result/files'] as string[]).map((value, ix) => ({
+    authorId,
+    requestId: request._id,
+    propertyType: 'ResultFile',
+    propertyName: `file-${ix}`,
+    propertyData: value,
+    dateAdded: Math.round(Date.now() / 1000),
+    active: true,
+  }));
+
+  return authPut(`/requests/${request._id}`, {
+    props: normalProps.concat(fileProps),
     req: request,
   });
 }
@@ -84,7 +98,7 @@ export default function ResultReportCard({
   const initialValues = {
     'result/time-spent-(operator)': '',
     'result/time-spent-(machine)': '',
-    'result/files': '',
+    'result/files': [],
     'result/files-description': '',
   };
 
@@ -107,7 +121,7 @@ export default function ResultReportCard({
           <Form className="bg-white rounded-md shadow-sm">
             <div className="grid grid-cols-4">
               <div className="col-span-4 mx-6 mt-6">
-                <Image className="h-full" />
+                <Image name="result/files" className="h-full" />
               </div>
 
               <div className="col-span-4 grid grid-cols-4 px-6 py-4">

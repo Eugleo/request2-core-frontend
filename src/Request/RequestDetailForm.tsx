@@ -178,6 +178,6 @@ function makeField(f: DetailField, sectionTitle: string) {
     case 'multiple-choice':
       return <MultipleChoice choices={f.choices} {...propsPack} />;
     default:
-      return <Image key={makeFieldPath(sectionTitle, f.name)} />;
+      return <Image name={f.name} key={makeFieldPath(sectionTitle, f.name)} />;
   }
 }

@@ -9,7 +9,14 @@ import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
 import ResultReportCard from './Operator/ResultReportCard';
-import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Request';
+import {
+  DetailProperty,
+  idToStr,
+  Property,
+  Request,
+  ResultProperty,
+  ResultFileProperty,
+} from './Request';
 import RequestDetails from './RequestDetails';
 import RequestResults from './RequestResults';
 
@@ -72,7 +79,10 @@ export default function RequestPage() {
 
             <div className="pt-6 overflow-auto">
               {hasResults ? (
-                <RequestResults properties={properties.filter(isResult)} />
+                <RequestResults
+                  properties={properties.filter(isResult)}
+                  files={properties.filter(isResultFile)}
+                />
               ) : (
                 <Authorized roles={['Operator']}>
                   <ResultReportCard request={request} refresh={refresh} />
@@ -91,6 +101,10 @@ export default function RequestPage() {
 
 function isResult(p: WithID<Property>): p is WithID<ResultProperty> {
   return p?.propertyType === 'Result';
+}
+
+function isResultFile(p: WithID<Property>): p is WithID<ResultFileProperty> {
+  return p?.propertyType === 'ResultFile';
 }
 
 function isDetail(p: WithID<Property>): p is WithID<DetailProperty> {

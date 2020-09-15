@@ -11,7 +11,14 @@ export type Request = {
   dateCreated: number;
 };
 
-export type PropertyType = 'Comment' | 'Note' | 'Result' | 'General' | 'Detail';
+export type PropertyType =
+  | 'Comment'
+  | 'Note'
+  | 'Result'
+  | 'General'
+  | 'Detail'
+  | 'File'
+  | 'ResultFile';
 
 export type Property = {
   requestId: number;
@@ -24,7 +31,8 @@ export type Property = {
 };
 
 export type ResultProperty = Property & { propertyType: 'Result' };
-export type DetailProperty = Property & { propertyType: 'Detail' };
+export type ResultFileProperty = Property & { propertyType: 'ResultFile' };
+export type DetailProperty = Property & { propertyType: 'Detail' | 'File' };
 
 export type BareProperty = {
   authorId: number;
