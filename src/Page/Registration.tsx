@@ -6,7 +6,7 @@ import { Link, useParams } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
-import * as Api from '../Utils/Api';
+import { post } from '../Utils/Api';
 
 function validate(values) {
   const errors = {};
@@ -27,14 +27,17 @@ export function NewRegistrationPage() {
         validate={validate}
         onSubmit={values => {
           setState('loading');
-          Api.post('/register-init', { email: values.email })
+          post('/register-init', { email: values.email })
             .then(r => {
-              if (r.ok) setState('success');
-              else throw new Error('register-init failed');
+              if (r.ok) {
+                setState('success');
+              } else {
+                throw new Error('register-init failed');
+              }
             })
-            .catch(e => {
+            .catch(error => {
               setState('problem');
-              console.log(e);
+              console.log(error);
             });
         }}
       >
@@ -66,47 +69,54 @@ export function NewRegistrationPage() {
   );
 }
 
-export function RegisterPage() {
+export function RegisterPage(): JSX.Element {
   const { email, token } = useParams();
   const [regState, setState] = useState('init');
 
   return (
-    <Page title="Registration" width="max-w-md">
+    <Page title="Registration">
       <Formik
         initialValues={{
           email,
-          token,
           name: '',
           password: '',
           passwordCheck: '',
           team: 1,
+          token,
         }}
         validate={values => {
           const errors = {};
-          if (!values.email) errors.email = 'This field is required'; // should not happen but whatever
+          if (!values.email) {
+            errors.email = 'This field is required';
+          } // should not happen but whatever
 
-          if (!values.password) errors.password = 'Password is required';
-          else if (values.password.length < 8)
+          if (!values.password) {
+            errors.password = 'Password is required';
+          } else if (values.password.length < 8) {
             errors.password = 'Please use a reasonably long password';
-          if (values.password && values.passwordCheck && values.password !== values.passwordCheck)
+          }
+          if (values.password && values.passwordCheck && values.password !== values.passwordCheck) {
             errors.passwordCheck = 'Passwords do not match';
+          }
 
-          if (!values.name) errors.name = 'User name is required';
-          if (values.name && (values.name.length < 3 || values.name.split(' ').length < 2))
+          if (!values.name) {
+            errors.name = 'User name is required';
+          }
+          if (values.name && (values.name.length < 3 || values.name.split(' ').length < 2)) {
             errors.name = 'Please provide full name and surname';
+          }
           return errors;
         }}
-        onSubmit={values => {
+        onSubmit={async values => {
           setState('loading');
-          Api.post('/register', values)
-            .then(r => {
-              if (r.ok) setState('success');
-              else throw new Error('register failed');
-            })
-            .catch(e => {
-              setState('problem');
-              console.log(e);
-            });
+          const r = await post('/register', values);
+
+          if (r.ok) {
+            setState('success');
+          } else {
+            setState('problem');
+            console.log(r);
+          }
         }}
       >
         <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">

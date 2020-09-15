@@ -2,7 +2,7 @@ import React from 'react';
 
 import { ContentWrapper } from '../Common/Layout';
 
-export default function NotFound404() {
+export function NotFound404(): JSX.Element {
   return (
     <ContentWrapper>
       <div className="text-center text-gray-700">
