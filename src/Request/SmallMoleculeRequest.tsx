@@ -1,10 +1,10 @@
-import { FieldValue, isEmpty } from './RequestSchema';
+import { FieldValue, isEmpty } from './FieldValue';
 
 export function fieldTransformSM(values: { [_: string]: FieldValue }) {
-  const err: { [_: string]: FieldValue } = {};
+  const err: { [_: string]: string } = {};
 
   const key = 'structure-or-gel-image/image-file';
-  if (values.Polarity === "Operator's Choice" && isEmpty(values[key])) {
+  if (values.Polarity?.content === "Operator's Choice" && isEmpty(values[key])) {
     err[key] = "This field is required, because Polarity is set on Operator's Choice";
   }
 

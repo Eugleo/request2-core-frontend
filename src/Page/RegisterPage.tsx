@@ -6,10 +6,20 @@ import { Link, useParams } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
+import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { post } from '../Utils/Api';
 import { Errors } from '../Utils/Errors';
 
 type RegState = 'init' | 'loading' | 'success' | 'problem';
+
+type RegistrationStub = {
+  email: ShortTextFieldValue;
+  name: ShortTextFieldValue;
+  password: ShortTextFieldValue;
+  passwordCheck: ShortTextFieldValue;
+  team: ShortTextFieldValue;
+  token: ShortTextFieldValue;
+};
 
 export function RegisterPage(): JSX.Element {
   const { email, token } = useParams();
@@ -19,15 +29,15 @@ export function RegisterPage(): JSX.Element {
     <Page title="Registration">
       <Formik
         initialValues={{
-          email,
-          name: '',
-          password: '',
-          passwordCheck: '',
-          team: 1,
-          token,
+          email: createShortTextValue(email),
+          name: createShortTextValue(),
+          password: createShortTextValue(),
+          passwordCheck: createShortTextValue(),
+          team: createShortTextValue('1'),
+          token: createShortTextValue(token),
         }}
         validate={validate}
-        onSubmit={async values => {
+        onSubmit={async (values: RegistrationStub) => {
           setState('loading');
           const r = await post('/register', values);
 
@@ -72,22 +82,15 @@ export function RegisterPage(): JSX.Element {
   );
 }
 
-type RegValues = {
-  email: string;
-  password: string;
-  passwordCheck: string;
-  name: string;
-};
-
-function validate(values: RegValues) {
-  const errors: Errors<RegValues> = {};
+function validate(values: RegistrationStub) {
+  const errors: Errors<RegistrationStub> = {};
   if (!values.email) {
     errors.email = 'This field is required';
   } // should not happen but whatever
 
   if (!values.password) {
     errors.password = 'Password is required';
-  } else if (values.password.length < 8) {
+  } else if (values.password.content.length < 8) {
     errors.password = 'Please use a reasonably long password';
   }
   if (values.password && values.passwordCheck && values.password !== values.passwordCheck) {
@@ -97,7 +100,10 @@ function validate(values: RegValues) {
   if (!values.name) {
     errors.name = 'User name is required';
   }
-  if (values.name && (values.name.length < 3 || values.name.split(' ').length < 2)) {
+  if (
+    values.name &&
+    (values.name.content.length < 3 || values.name.content.split(' ').length < 2)
+  ) {
     errors.name = 'Please provide full name and surname';
   }
   return errors;

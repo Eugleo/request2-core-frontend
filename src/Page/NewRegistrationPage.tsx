@@ -1,18 +1,16 @@
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
-import { Link, useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
+import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { post } from '../Utils/Api';
 import { Errors } from '../Utils/Errors';
 
-type RegValues = { email: string };
-
-function validate(values: RegValues) {
-  const errors: Errors<RegValues> = {};
+function validate(values: { email: ShortTextFieldValue }) {
+  const errors: Errors<{ email: ShortTextFieldValue }> = {};
   if (!values.email) {
     // TODO check e-maility of the e-mail
     errors.email = 'This field is required';
@@ -26,11 +24,11 @@ export function NewRegistrationPage() {
   return (
     <Page title="New registration">
       <Formik
-        initialValues={{ email: '' }}
+        initialValues={{ email: createShortTextValue() }}
         validate={validate}
-        onSubmit={values => {
+        onSubmit={(values: { email: ShortTextFieldValue }) => {
           setState('loading');
-          post('/register-init', { email: values.email })
+          post('/register-init', { email: values.email.content })
             .then(r => {
               if (r.ok) {
                 setState('success');

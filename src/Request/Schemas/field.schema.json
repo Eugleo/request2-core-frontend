@@ -139,7 +139,7 @@
         "text-short",
         "text-long",
         "text-with-hints",
-        "image"
+        "files"
       ]
     },
     "choices": {

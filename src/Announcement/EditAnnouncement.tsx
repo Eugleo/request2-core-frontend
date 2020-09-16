@@ -19,7 +19,11 @@ export default function EditAnnouncement() {
         <AnnouncementForm
           title={`Editing ${ann.title}`}
           onSubmit={values =>
-            authPut(`/announcements/${id}`, { ...ann, title: values.title, body: values.body })
+            authPut(`/announcements/${id}`, {
+              ...ann,
+              title: values.title.content,
+              body: values.body.content,
+            })
           }
           ann={ann}
         >

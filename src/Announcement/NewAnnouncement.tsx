@@ -13,8 +13,8 @@ export default function NewAnnouncement() {
       title="New announcement"
       onSubmit={values =>
         authPost('/announcements', {
-          title: values.title,
-          body: values.body,
+          title: values.title.content,
+          body: values.body.content,
           authorId: auth.user._id,
           dateCreated: Math.floor(Date.now() / 1000),
           active: true,

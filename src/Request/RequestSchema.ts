@@ -1,7 +1,11 @@
-type NormalFieldType = 'text-short' | 'text-long' | 'image';
+export type FieldType = NormalFieldType | ChoiceFieldType;
+type NormalFieldType = 'text-short' | 'text-long' | 'files';
 type ChoiceFieldType = 'multiple-choice' | 'single-choice' | 'text-with-hints';
 
-export type FieldValue = string | string[] | { value: string; label: string };
+type ChoiceField = BaseField & { type: ChoiceFieldType; choices: string[] };
+type NormalField = BaseField & { type: NormalFieldType };
+export type Field = ChoiceField | NormalField;
+export type DetailField = Field & { path: string };
 
 export type IndirectField = {
   include: string;
@@ -13,28 +17,6 @@ type BaseField = {
   hint?: string;
   required?: boolean;
 };
-
-type ChoiceField = BaseField & { type: ChoiceFieldType; choices: string[] };
-type NormalField = BaseField & { type: NormalFieldType };
-export type Field = ChoiceField | NormalField;
-export type DetailField = Field & { path: string };
-
-export function isEmpty(val: FieldValue): boolean {
-  if (typeof val === 'string' || val instanceof Array) {
-    return val.length === 0;
-  }
-  return val.value === '';
-}
-
-export function stringify(value: FieldValue) {
-  if (Array.isArray(value)) {
-    return value.map(v => v.toString()).join(';;;');
-  }
-  if (typeof value === 'object') {
-    return value.value;
-  }
-  return value.toString();
-}
 
 export type Section = {
   title: string;

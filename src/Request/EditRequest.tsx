@@ -6,7 +6,7 @@ import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Property, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
-import { FieldValue, stringify } from './RequestSchema';
+import { FieldValue, fieldValueToString } from './FieldValue';
 
 function submit(
   authPut: (url: string, data: any) => Promise<Response>,
@@ -24,10 +24,10 @@ function submit(
     requestId: request._id,
   });
 
-  const title = mkProp('title', 'General', stringify(formValues.title));
+  const title = mkProp('title', 'General', fieldValueToString(formValues.title));
   const details = Object.entries(formValues)
     .filter(([name]) => name !== 'title')
-    .map(([name, value]) => mkProp(name, 'Detail', stringify(value)));
+    .map(([name, value]) => mkProp(name, 'Detail', fieldValueToString(value)));
 
   return authPut(`/requests/${request._id}`, {
     props: [title, ...details],

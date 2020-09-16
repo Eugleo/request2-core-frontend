@@ -14,11 +14,22 @@ import {
   TextWithHints,
 } from '../Common/Forms';
 import { Card, Page } from '../Common/Layout';
+import { apiBase } from '../Utils/ApiBase';
 import { makeFieldPath } from '../Utils/FieldPath';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
+import {
+  createFilesValue,
+  createLongTextValue,
+  createMultipleChoiceValue,
+  createShortTextValue,
+  createSingleChoiceValue,
+  createTextWithHintsValue,
+  FieldValue,
+  isEmpty,
+} from './FieldValue';
 import { Property, Request } from './Request';
-import { DetailField, Field, FieldValue, IndirectField, isEmpty, isField } from './RequestSchema';
+import { DetailField, Field, IndirectField, isField } from './RequestSchema';
 import { requestSchemas, requestValidations } from './RequestTypes';
 import fieldLib from './RequestTypes/field-library.json';
 
@@ -55,15 +66,17 @@ export default function RequestDetailForm<T>({
       ...acc,
       [f.path]: getDefValue(f, properties),
     }),
-    { title: request?.name || '' }
+    { title: { type: 'text-short', content: request?.name || '' } }
   );
   const specificValidate = requestValidations.get(requestType) || (() => ({}));
   const generalValidate = getValidateForFields(fields);
 
+  console.log(initialValues);
+
   return (
     <Page title={title}>
       <Card className="mb-12 max-w-2xl mx-auto">
-        <Uploady destination={{ url: 'http://localhost:9080/requests/data' }}>
+        <Uploady destination={{ url: `${apiBase}/files` }}>
           <Formik
             initialValues={initialValues}
             onSubmit={values => {
@@ -129,12 +142,18 @@ function getDefValue(field: DetailField, properties: Maybe<Property[]>): FieldVa
   const currentValue = properties?.find(p => p.active && p.propertyName === field.path)
     ?.propertyData;
   switch (field.type) {
-    case 'multiple-choice':
-      return currentValue?.split(';;;') || [];
+    case 'text-short':
+      return createShortTextValue(currentValue);
     case 'text-with-hints':
-      return currentValue ? { label: currentValue, value: currentValue } : { label: '', value: '' };
+      return createTextWithHintsValue(currentValue);
+    case 'single-choice':
+      return createSingleChoiceValue(currentValue);
+    case 'multiple-choice':
+      return createMultipleChoiceValue(currentValue);
+    case 'text-long':
+      return createLongTextValue(currentValue);
     default:
-      return currentValue || '';
+      return createFilesValue(currentValue);
   }
 }
 
@@ -178,6 +197,7 @@ function makeField(f: DetailField, sectionTitle: string) {
     case 'multiple-choice':
       return <MultipleChoice choices={f.choices} {...propsPack} />;
     default:
-      return <Files name={f.name} key={makeFieldPath(sectionTitle, f.name)} />;
+      console.log(f);
+      return <Files name={f.path} key={f.path} />;
   }
 }

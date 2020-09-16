@@ -7,8 +7,9 @@ import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import { BareProperty, idToStr, PropertyType, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
-import { FieldValue, stringify } from './RequestSchema';
+import { FieldValue, fieldValueToString, isFilesField } from './FieldValue';
 import { requestSchemas } from './RequestTypes';
+import { fileToString } from '../Utils/File';
 
 function submit(
   authPost: (
@@ -33,15 +34,22 @@ function submit(
   });
 
   const status = mkProp('status', 'General', 'Pending');
-  const title = mkProp('title', 'General', stringify(formValues.title));
-  const details = Object.entries(formValues)
-    .filter(([name]) => name !== 'title')
-    .map(([name, value]) => mkProp(name, 'Detail', stringify(value)));
+  const title = mkProp('title', 'General', fieldValueToString(formValues.title));
+
+  const normalProps = Object.entries(formValues)
+    .filter(([name, value]) => name !== 'title' && !isFilesField(value))
+    .map(([name, value]) => mkProp(name, 'Detail', fieldValueToString(value)));
+
+  const fileProps = Object.entries(formValues)
+    .map(([, value]) => value)
+    .filter(isFilesField)
+    .flatMap(val => val.content)
+    .map((f, ix) => mkProp(`file-${ix}`, 'File', fileToString(f)));
 
   return authPost('/requests', {
-    props: [status, title, ...details],
+    props: [status, title, ...normalProps, ...fileProps],
     req: {
-      name: stringify(formValues.title),
+      name: fieldValueToString(formValues.title),
       authorId,
       teamId,
       status: 'Pending',

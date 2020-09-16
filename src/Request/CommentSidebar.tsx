@@ -1,5 +1,5 @@
 import c from 'classnames';
-import { Field, Form, Formik } from 'formik';
+import { Form, Formik, useField } from 'formik';
 import React, { useRef } from 'react';
 
 import * as Button from '../Common/Buttons';
@@ -9,6 +9,7 @@ import { useAuth } from '../Utils/Auth';
 import { parseFieldName } from '../Utils/FieldPath';
 import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
+import { createLongTextValue, LongTextFieldValue } from './FieldValue';
 import { DetailProperty, Property } from './Request';
 
 export default function CommentSidebar({
@@ -98,14 +99,14 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
 
   return (
     <Formik
-      initialValues={{ comment: '' }}
+      initialValues={{ comment: createLongTextValue() }}
       onSubmit={({ comment }) =>
         authPost(`/requests/${requestId}/comments`, {
           authorId: auth.user._id,
           requestId,
           propertyType: 'Comment',
           propertyName: 'comment',
-          propertyData: comment,
+          propertyData: comment.content,
           dateAdded: Math.round(Date.now() / 1000),
           active: true,
         }).then(r => {
@@ -116,17 +117,26 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
       }
     >
       <Form className="px-6 py-3 border-t border-gray-300 shadow-md">
-        <Field
-          name="comment"
-          as="textarea"
-          placeholder="Enter your comment here..."
-          className={c(textFieldClasses, 'h-20')}
-        />
+        <CommentTextField />
         <div className="flex flex-row-reverse">
           <Button.Primary type="submit">Post comment</Button.Primary>
         </div>
       </Form>
     </Formik>
+  );
+}
+
+function CommentTextField() {
+  const [field, meta, helpers] = useField<LongTextFieldValue>({ name: 'comment' });
+  return (
+    <textarea
+      name={field.name}
+      onBlur={field.onBlur}
+      onChange={e => helpers.setValue(createLongTextValue(e.target.value))}
+      value={meta.value.content}
+      className={c(textFieldClasses, 'h-20')}
+      placeholder="Enter your comment here..."
+    />
   );
 }
 

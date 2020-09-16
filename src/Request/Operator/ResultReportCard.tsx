@@ -6,12 +6,31 @@ import { Check, X } from 'react-feather';
 
 import { Files, LongText, ShortText } from '../../Common/Forms';
 import { Card } from '../../Common/Layout';
+import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
+import { File, fileToString } from '../../Utils/File';
 import { WithID } from '../../Utils/WithID';
 import { Property, Request } from '../Request';
-import { FieldValue, stringify } from '../RequestSchema';
+import {
+  createFilesValue,
+  createLongTextValue,
+  createShortTextValue,
+  FieldValue,
+  fieldValueToString,
+  FilesFieldValue,
+  isFilesField,
+  LongTextFieldValue,
+  ShortTextFieldValue,
+} from '../FieldValue';
 
 type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
+
+type ResultStub = {
+  'time-spent-(operator)': ShortTextFieldValue;
+  'time-spent-(machine)': ShortTextFieldValue;
+  files: FilesFieldValue;
+  'files-description': LongTextFieldValue;
+};
 
 function submit(
   authorId: number,
@@ -20,26 +39,30 @@ function submit(
   request: WithID<Request>
 ) {
   const normalProps: ResultProperty[] = Object.entries(properties)
-    .filter(([name]) => name !== 'files')
+    .filter(([, value]) => !isFilesField(value))
     .map(([name, value]) => ({
       authorId,
       requestId: request._id,
       propertyType: 'Result',
       propertyName: name,
-      propertyData: stringify(value),
+      propertyData: fieldValueToString(value),
       dateAdded: Math.round(Date.now() / 1000),
       active: true,
     }));
 
-  const fileProps: ResultProperty[] = (properties['files'] as string[]).map((value, ix) => ({
-    authorId,
-    requestId: request._id,
-    propertyType: 'ResultFile',
-    propertyName: `file-${ix}`,
-    propertyData: value,
-    dateAdded: Math.round(Date.now() / 1000),
-    active: true,
-  }));
+  const fileProps: ResultProperty[] = Object.entries(properties)
+    .map(([, val]) => val)
+    .filter<{ type: 'files'; content: File[] }>(isFilesField)
+    .flatMap(v => v.content)
+    .map((f, ix) => ({
+      authorId,
+      requestId: request._id,
+      propertyType: 'ResultFile',
+      propertyName: `file-${ix}`,
+      propertyData: fileToString(f),
+      dateAdded: Math.round(Date.now() / 1000),
+      active: true,
+    }));
 
   return authPut(`/requests/${request._id}`, {
     props: normalProps.concat(fileProps),
@@ -96,18 +119,18 @@ export default function ResultReportCard({
   const [status, setStatus] = useState<Status>('Default');
 
   const initialValues = {
-    'time-spent-(operator)': '',
-    'time-spent-(machine)': '',
-    files: [],
-    'files-description': '',
+    'time-spent-(operator)': createShortTextValue(),
+    'time-spent-(machine)': createShortTextValue(),
+    files: createFilesValue(),
+    'files-description': createLongTextValue(),
   };
 
   return (
     <Card className="mb-4 border border-green-300 shadow-none">
-      <Uploady destination={{ url: `http://localhost:9080/requests/${request._id}/data/results` }}>
+      <Uploady destination={{ url: `${apiBase}/files` }}>
         <Formik
           initialValues={initialValues}
-          onSubmit={values => {
+          onSubmit={(values: ResultStub) => {
             setStatus('Pending');
             submit(auth.user._id, authPut, values, request).then(r => {
               if (r.ok) {

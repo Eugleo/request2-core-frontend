@@ -7,6 +7,12 @@ import * as Icon from 'react-feather';
 import { components, ControlProps, PlaceholderProps } from 'react-select';
 import Creatable from 'react-select/creatable';
 import Tooltip from 'react-tooltip';
+import {
+  createTextWithHintsValue,
+  FilesFieldValue,
+  LongTextFieldValue,
+  TextWithHintsFieldValue,
+} from '../Request/FieldValue';
 
 import { Maybe } from '../Utils/Maybe';
 
@@ -39,11 +45,19 @@ export function ShortText({
   type = 'text',
   ...props
 }: FieldWithStyle & { type?: string } & React.PropsWithoutRef<JSX.IntrinsicElements['input']>) {
-  const [field, meta] = useField<string>({ name, type });
+  const [field, meta, helpers] = useField<{ type: 'text-short'; content: string }>({ name, type });
   return (
     <Field touched={meta.touched} error={meta.error}>
       <FieldHeader hint={hint} label={label || name} />
-      <input type={type} {...field} {...props} className={c(textFieldClasses, className)} />
+      <input
+        type={type}
+        name={field.name}
+        onBlur={field.onBlur}
+        value={field.value.content}
+        onChange={e => helpers.setValue({ type: 'text-short', content: e.target.value })}
+        {...props}
+        className={c(textFieldClasses, className)}
+      />
       <Description>{description}</Description>
     </Field>
   );
@@ -57,14 +71,17 @@ export function LongText({
   className,
   ...props
 }: FieldWithStyle & React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>) {
-  const [field, meta] = useField<string>({ name });
+  const [field, meta, helpers] = useField<LongTextFieldValue>({ name });
   return (
     <Field touched={meta.touched} error={meta.error}>
       <FieldHeader hint={hint} label={label || name} />
       <textarea
         style={{ minHeight: '5rem' }}
         className={c(textFieldClasses, 'h-20', className)}
-        {...field}
+        name={field.name}
+        onBlur={field.onBlur}
+        value={field.value.content}
+        onChange={e => helpers.setValue({ type: 'text-long', content: e.target.value })}
         {...props}
       />
       <Description>{description}</Description>
@@ -75,7 +92,10 @@ export function LongText({
 type FieldWithChoices = FieldConfig & { choices: Array<string> };
 
 export function SingleChoice({ path: name, description, label, hint, choices }: FieldWithChoices) {
-  const [field, meta] = useField({ name, type: 'radio' });
+  const [field, meta, helpers] = useField<{ type: 'single-choice'; content: string }>({
+    name,
+    type: 'radio',
+  });
 
   return (
     <Field touched={meta.touched} error={meta.error}>
@@ -84,12 +104,14 @@ export function SingleChoice({ path: name, description, label, hint, choices }: 
         {choices.map(choice => (
           <ChoiceField key={choice}>
             <input
-              {...{ ...field, checked: undefined }}
+              name={field.name}
+              onBlur={field.onBlur}
+              onChange={e => helpers.setValue({ type: 'single-choice', content: e.target.value })}
               type="radio"
               id={`${name}/${choice}`}
               value={choice}
               key={choice}
-              defaultChecked={meta.initialValue === choice}
+              defaultChecked={meta.initialValue?.content === choice}
             />
             <ChoiceLabel htmlFor={`${name}/${choice}`}>{choice}</ChoiceLabel>
           </ChoiceField>
@@ -107,7 +129,10 @@ export function MultipleChoice({
   choices,
   hint,
 }: FieldWithChoices) {
-  const [field, meta] = useField({ name, type: 'checkbox' });
+  const [field, meta, helpers] = useField<{ type: 'multiple-choice'; content: string[] }>({
+    name,
+    type: 'checkbox',
+  });
 
   return (
     <Field touched={meta.touched} error={meta.error}>
@@ -116,11 +141,20 @@ export function MultipleChoice({
         {choices.map(choice => (
           <ChoiceField key={choice}>
             <input
-              {...field}
+              name={field.name}
+              onBlur={field.onBlur}
+              onChange={e =>
+                helpers.setValue({
+                  type: 'multiple-choice',
+                  content: e.target.checked
+                    ? meta.value.content.concat(e.target.value)
+                    : meta.value.content.filter(s => s !== e.target.value),
+                })
+              }
               id={`${name}/${choice}`}
               type="checkbox"
               value={choice}
-              checked={meta.value.includes(choice)}
+              checked={meta.value.content.includes(choice)}
             />
             <ChoiceLabel htmlFor={`${name}/${choice}`}>{choice}</ChoiceLabel>
           </ChoiceField>
@@ -134,7 +168,10 @@ export function MultipleChoice({
 type OptionType = { value: string; label: string };
 
 export function TextWithHints({ path: name, description, label, choices, hint }: FieldWithChoices) {
-  const [field, meta, helpers] = useField<OptionType>({ name, type: 'text' });
+  const [field, meta, helpers] = useField<TextWithHintsFieldValue>({
+    name,
+    type: 'text',
+  });
 
   const classes = [
     'border',
@@ -194,10 +231,19 @@ export function TextWithHints({ path: name, description, label, choices, hint }:
           }),
         }}
         onBlur={field.onBlur}
-        onChange={option => helpers.setValue(option as OptionType)}
+        onChange={option => {
+          if (option) {
+            helpers.setValue(createTextWithHintsValue((option as OptionType).value));
+          } else {
+            helpers.setValue(createTextWithHintsValue());
+          }
+        }}
         options={options}
         isClearable
-        defaultValue={meta.initialValue}
+        defaultValue={{
+          label: meta.initialValue?.content ?? '',
+          value: meta.initialValue?.content ?? '',
+        }}
       />
       <Description>{description}</Description>
     </Field>
@@ -221,11 +267,8 @@ function DivWithTitle({
   );
 }
 
-type File = { hash: string; name: string; mime: string };
-
 export function Files({ name, className = '' }: { name: string; className?: string }) {
-  const [field, meta, helpers] = useField<string[]>({ name });
-  const [files, setFiles] = useState<File[]>([]);
+  const [field, meta, helpers] = useField<FilesFieldValue>({ name });
   const [inProgress, setInProgress] = useState<number>(0);
 
   useItemStartListener(() => {
@@ -238,12 +281,9 @@ export function Files({ name, className = '' }: { name: string; className?: stri
     const items = r?.data?.files;
     if (items) {
       setInProgress(n => n - items.length);
-      setFiles(fs => fs.concat(items));
-      helpers.setValue(field.value.concat(items.map((f: File) => `${f.hash}:${f.mime}:${f.name}`)));
+      helpers.setValue({ type: 'files', content: field.value.content.concat(items) });
     }
   });
-
-  console.log('VALUE', meta.value);
 
   const dndClasses = c('flex flex-col justify-center text-center text-gray-800 p-4', className);
 
@@ -267,7 +307,7 @@ export function Files({ name, className = '' }: { name: string; className?: stri
       </DivWithTitle>
       <DivWithTitle title="Uploaded">
         <div className="p-4">
-          {files.map(f => (
+          {meta.value.content.map(f => (
             <div className="rounded-sm text-sm hover:bg-gray-100 px-2 py-1 flex flex-row items-center">
               <Icon.File className="h-5 w-5 text-gray-700 mr-2"></Icon.File> <p>{f.name}</p>
             </div>

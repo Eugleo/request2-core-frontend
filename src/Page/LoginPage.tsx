@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { ShortText } from '../Common/Forms';
 import { Page } from '../Common/Layout';
+import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { UserDetails } from '../User/User';
 import * as Api from '../Utils/Api';
 import { authHeaders } from '../Utils/Auth';
@@ -45,10 +46,8 @@ function verifyLogin(email: string, password: string, authDispatch: Function, se
     .catch(error => console.log(error));
 }
 
-type LoginValues = { email: string; password: string };
-
-function validate(values: LoginValues) {
-  const errors: Errors<LoginValues> = {};
+function validate(values: LoginStub) {
+  const errors: Errors<LoginStub> = {};
   if (!values.email) {
     errors.email = 'This field is required';
   }
@@ -60,6 +59,8 @@ function validate(values: LoginValues) {
   return errors;
 }
 
+type LoginStub = { email: ShortTextFieldValue; password: ShortTextFieldValue };
+
 export default function LoginPage() {
   const [loginFailed, setLoginFailed] = useState(false);
   const dispatch = useAuthDispatch();
@@ -70,11 +71,13 @@ export default function LoginPage() {
       <div className="">
         <Formik
           initialValues={{
-            email: '',
-            password: '',
+            email: createShortTextValue(),
+            password: createShortTextValue(),
           }}
           validate={validate}
-          onSubmit={values => verifyLogin(values.email, values.password, dispatch, setLoginFailed)}
+          onSubmit={(values: LoginStub) =>
+            verifyLogin(values.email.content, values.password.content, dispatch, setLoginFailed)
+          }
         >
           <Form className="rounded-lg shadow-xs bg-white mx-auto max-w-2xl">
             <div className="px-6 py-3">

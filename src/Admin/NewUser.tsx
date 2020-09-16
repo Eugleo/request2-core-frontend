@@ -5,12 +5,29 @@ import { useNavigate } from 'react-router';
 import * as Button from '../Common/Buttons';
 import { MultipleChoice, ShortText, SingleChoice } from '../Common/Forms';
 import { Page } from '../Common/Layout';
+import {
+  createMultipleChoiceValue,
+  createShortTextValue,
+  createSingleChoiceValue,
+  fieldValueToString,
+  MultipleChoiceFieldValue,
+  ShortTextFieldValue,
+  SingleChoiceFieldValue,
+} from '../Request/FieldValue';
 import { Team } from '../Team/Team';
-import { User } from '../User/User';
+import { Role, User } from '../User/User';
 import * as Api from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
+
+type UserStub = {
+  name: ShortTextFieldValue;
+  email: ShortTextFieldValue;
+  password: ShortTextFieldValue;
+  roles: MultipleChoiceFieldValue;
+  team: SingleChoiceFieldValue;
+};
 
 export default function NewUser() {
   const { authPost } = useAuth<User>();
@@ -25,17 +42,20 @@ export default function NewUser() {
     <Page title="Add new user">
       <Formik
         initialValues={{
-          name: '',
-          email: '',
-          password: '',
-          roles: [],
-          team: '',
+          name: createShortTextValue(),
+          email: createShortTextValue(),
+          password: createShortTextValue(),
+          roles: createMultipleChoiceValue(),
+          team: createSingleChoiceValue(),
         }}
-        onSubmit={values => {
-          const teamId = teams.get(values.team);
+        onSubmit={(values: UserStub) => {
+          const teamId = teams.get(values.team.content);
           if (teamId) {
             authPost('/users', {
-              ...values,
+              name: fieldValueToString(values.name),
+              email: fieldValueToString(values.email),
+              password: fieldValueToString(values.password),
+              roles: values.roles.content as Role[],
               dateCreated: Math.round(Date.now() / 1000),
               active: true,
               teamId,

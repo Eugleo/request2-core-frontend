@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { ShortText } from '../Common/Forms';
 import { Card, Page } from '../Common/Layout';
+import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { Maybe } from '../Utils/Maybe';
 import { Team } from './Team';
 
-type TeamStub = { name: string; code: string };
+type TeamStub = { name: ShortTextFieldValue; code: ShortTextFieldValue };
 
 function validate(values: TeamStub) {
   const error: { name?: string; code?: string } = {};
@@ -42,7 +43,10 @@ export default function TeamForm({
     <Page title={title} buttons={headerButtons}>
       <Card className="mx-auto max-w-md">
         <Formik
-          initialValues={{ name: team?.name || '', code: team?.code || '' }}
+          initialValues={{
+            name: createShortTextValue(team?.name),
+            code: createShortTextValue(team?.code),
+          }}
           validate={validate}
           onSubmit={values => {
             onSubmit(values)
