@@ -4,8 +4,7 @@ import { Download, File } from 'react-feather';
 
 import { Card } from '../Common/Layout';
 import { apiBase } from '../Utils/ApiBase';
-import { useAuth } from '../Utils/Auth';
-import { parseFieldName } from '../Utils/FieldPath';
+import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { Property, ResultFileProperty, ResultProperty } from './Request';
 
@@ -38,6 +37,7 @@ function Section({
   properties: WithID<Property>[];
   files: WithID<ResultFileProperty>[];
 }) {
+  const prettifyName = (name: string) => capitalize(name.replaceAll('-', ' '));
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-green-300')}>
@@ -46,7 +46,7 @@ function Section({
       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-green-300">
         {properties.map((p, ix) => (
           <PropertyView
-            name={parseFieldName(p.propertyName).field}
+            name={prettifyName(p.propertyName)}
             propertyData={p.propertyData}
             isEven={ix % 2 === 0}
             key={p._id}
@@ -84,13 +84,12 @@ function FileView({ file }: { file: ResultFileProperty }) {
   const { hash, name } = stringToFileDesc(file.propertyData);
 
   return (
-    <div className="flex flex-row py-1 px-2 rounded-sm hover:bg-gray-100">
-      <File className="w-5 h-5 text-green-500 mr-2"></File>
-      <p className="mr-2">{name}</p>
-      <a href={`${apiBase}/file/${hash}`} className="text-blue-500 hover:text-blue-700">
-        <Download className="w-5 h-5"></Download>
-      </a>
-    </div>
+    <a href={`${apiBase}/file/${hash}`} className="text-gray-800">
+      <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:bg-gray-100">
+        <File className="w-4 h-4 text-gray-500 mr-1"></File>
+        <p className="mr-2">{name}</p>
+      </div>
+    </a>
   );
 }
 

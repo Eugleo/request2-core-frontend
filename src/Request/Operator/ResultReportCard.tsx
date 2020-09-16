@@ -4,7 +4,7 @@ import React, { useContext, useState } from 'react';
 import { TrinityRingsSpinner } from 'react-epic-spinners';
 import { Check, X } from 'react-feather';
 
-import { Image, LongText, ShortText } from '../../Common/Forms';
+import { Files, LongText, ShortText } from '../../Common/Forms';
 import { Card } from '../../Common/Layout';
 import { useAuth } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
@@ -20,7 +20,7 @@ function submit(
   request: WithID<Request>
 ) {
   const normalProps: ResultProperty[] = Object.entries(properties)
-    .filter(([name]) => name !== 'result/files')
+    .filter(([name]) => name !== 'files')
     .map(([name, value]) => ({
       authorId,
       requestId: request._id,
@@ -31,7 +31,7 @@ function submit(
       active: true,
     }));
 
-  const fileProps: ResultProperty[] = (properties['result/files'] as string[]).map((value, ix) => ({
+  const fileProps: ResultProperty[] = (properties['files'] as string[]).map((value, ix) => ({
     authorId,
     requestId: request._id,
     propertyType: 'ResultFile',
@@ -96,10 +96,10 @@ export default function ResultReportCard({
   const [status, setStatus] = useState<Status>('Default');
 
   const initialValues = {
-    'result/time-spent-(operator)': '',
-    'result/time-spent-(machine)': '',
-    'result/files': [],
-    'result/files-description': '',
+    'time-spent-(operator)': '',
+    'time-spent-(machine)': '',
+    files: [],
+    'files-description': '',
   };
 
   return (
@@ -121,13 +121,13 @@ export default function ResultReportCard({
           <Form className="bg-white rounded-md shadow-sm">
             <div className="grid grid-cols-4">
               <div className="col-span-4 mx-6 mt-6">
-                <Image name="result/files" className="h-full" />
+                <Files name="files" className="h-full" />
               </div>
 
               <div className="col-span-4 grid grid-cols-4 px-6 py-4">
                 <div className="row-span-2 col-span-3 flex flex-row items-stretch w-full h-full">
                   <LongText
-                    path="result/files-description"
+                    path="files-description"
                     label="Description"
                     className="h-full w-full"
                   />
@@ -140,7 +140,7 @@ export default function ResultReportCard({
                       step="15"
                       min="0"
                       placeholder="0"
-                      path="result/time-spent-(operator)"
+                      path="time-spent-(operator)"
                       label="Time (operator)"
                     />
                   </div>
@@ -151,7 +151,7 @@ export default function ResultReportCard({
                       step="15"
                       min="0"
                       placeholder="0"
-                      path="result/time-spent-(machine)"
+                      path="time-spent-(machine)"
                       label="Time (machine)"
                     />
                   </div>

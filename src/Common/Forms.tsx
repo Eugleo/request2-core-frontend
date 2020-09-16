@@ -223,7 +223,7 @@ function DivWithTitle({
 
 type File = { hash: string; name: string; mime: string };
 
-export function Image({ name, className = '' }: { name: string; className?: string }) {
+export function Files({ name, className = '' }: { name: string; className?: string }) {
   const [field, meta, helpers] = useField<string[]>({ name });
   const [files, setFiles] = useState<File[]>([]);
   const [inProgress, setInProgress] = useState<number>(0);

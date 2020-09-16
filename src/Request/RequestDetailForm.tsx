@@ -6,7 +6,7 @@ import { Navigate } from 'react-router';
 
 import * as Button from '../Common/Buttons';
 import {
-  Image,
+  Files,
   LongText,
   MultipleChoice,
   ShortText,
@@ -178,6 +178,6 @@ function makeField(f: DetailField, sectionTitle: string) {
     case 'multiple-choice':
       return <MultipleChoice choices={f.choices} {...propsPack} />;
     default:
-      return <Image name={f.name} key={makeFieldPath(sectionTitle, f.name)} />;
+      return <Files name={f.name} key={makeFieldPath(sectionTitle, f.name)} />;
   }
 }
