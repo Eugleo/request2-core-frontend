@@ -30,14 +30,12 @@ export default function AnnouncementPage() {
 function Author({ id }: { id: number }) {
   const { Loader } = Api.useAsyncGet<WithID<User>>(`/users/${id}`);
   return (
-    <p className="ml-4 text-gray-700 text-sm">
-      <Loader>
-        {author => (
-          <>
-            <span className="font-semibold">{author.name}</span> has updated this item
-          </>
-        )}
-      </Loader>
-    </p>
+    <Loader>
+      {author => (
+        <p className="ml-4 text-gray-700 text-sm">
+          <span className="font-semibold">{author.name}</span> has updated this item
+        </p>
+      )}
+    </Loader>
   );
 }

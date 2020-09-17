@@ -57,7 +57,7 @@ function RequestList() {
         {({ values }) => (
           <Table columns={['Name', 'ID number', 'Author', 'Requested', 'Status']}>
             {values.map(v => (
-              <RequestTableItem request={v} />
+              <RequestTableItem key={v._id} request={v} />
             ))}
           </Table>
         )}
