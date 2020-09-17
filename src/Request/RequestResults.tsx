@@ -1,14 +1,11 @@
 import c from 'classnames';
 import React from 'react';
-import { File } from 'react-feather';
 
 import { Card } from '../Common/Layout';
-import { apiBase } from '../Utils/ApiBase';
-import { stringToFile } from '../Utils/File';
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
-import { Property, FileProperty, ResultProperty } from './Request';
+import { FileProperty, Property, ResultProperty } from './Request';
 
 export default function RequestResults({
   properties,

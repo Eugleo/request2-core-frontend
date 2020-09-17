@@ -4,9 +4,9 @@ import { useNavigate, useParams } from 'react-router';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
+import { FieldValue, fieldValueToString } from './FieldValue';
 import { Property, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
-import { FieldValue, fieldValueToString } from './FieldValue';
 
 function submit(
   authPut: (url: string, data: any) => Promise<Response>,

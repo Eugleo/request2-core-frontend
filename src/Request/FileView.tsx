@@ -1,10 +1,11 @@
+import c from 'classnames';
 import React from 'react';
 import { File } from 'react-feather';
+
 import { apiBase } from '../Utils/ApiBase';
 import { stringToFile } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import { FileProperty } from './Request';
-import c from 'classnames';
 
 export function FilesView({ files, isEven }: { files: WithID<FileProperty>[]; isEven: boolean }) {
   return (
@@ -30,7 +31,7 @@ export function FileView({ file }: { file: FileProperty }) {
   return (
     <a href={`${apiBase}/files/${hash}`} className="text-gray-800">
       <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:bg-gray-100">
-        <File className="w-4 h-4 text-gray-500 mr-1"></File>
+        <File className="w-4 h-4 text-gray-500 mr-1" />
         <p className="mr-2">{name}</p>
       </div>
     </a>

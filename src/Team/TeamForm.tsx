@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { ShortText } from '../Common/Forms';
+import { ShortText } from '../Common/Form/TextField';
 import { Card, Page } from '../Common/Layout';
 import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { Maybe } from '../Utils/Maybe';

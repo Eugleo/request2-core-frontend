@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import React, { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
-import { LongText, ShortText } from '../Common/Forms';
+import { LongText, ShortText } from '../Common/Form/TextField';
 import { Card, Page } from '../Common/Layout';
 import Markdown from '../Common/MdRender';
 import {

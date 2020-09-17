@@ -4,7 +4,7 @@ import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
-import { ShortText } from '../Common/Forms';
+import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { post } from '../Utils/Api';

@@ -5,14 +5,10 @@ import React from 'react';
 import { Navigate } from 'react-router';
 
 import * as Button from '../Common/Buttons';
-import {
-  Files,
-  LongText,
-  MultipleChoice,
-  ShortText,
-  SingleChoice,
-  TextWithHints,
-} from '../Common/Forms';
+import { MultipleChoice, SingleChoice } from '../Common/Form/ChoiceField';
+import { Files } from '../Common/Form/Files';
+import { LongText, ShortText } from '../Common/Form/TextField';
+import { TextWithHints } from '../Common/Form/TextWithHintsField';
 import { Card, Page } from '../Common/Layout';
 import { apiBase } from '../Utils/ApiBase';
 import { makeFieldPath } from '../Utils/FieldPath';

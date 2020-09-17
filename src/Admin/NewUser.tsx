@@ -3,7 +3,8 @@ import React from 'react';
 import { useNavigate } from 'react-router';
 
 import * as Button from '../Common/Buttons';
-import { MultipleChoice, ShortText, SingleChoice } from '../Common/Forms';
+import { MultipleChoice, SingleChoice } from '../Common/Form/ChoiceField';
+import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import {
   createMultipleChoiceValue,

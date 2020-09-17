@@ -10,7 +10,7 @@ function Spinner() {
   console.log('SPIN IT UP');
   return (
     <span className="mx-auto">
-      <AtomSpinner color="gray"></AtomSpinner>
+      <AtomSpinner color="gray" />
     </span>
   );
 }

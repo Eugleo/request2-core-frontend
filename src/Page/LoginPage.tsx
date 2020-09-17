@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
-import { ShortText } from '../Common/Forms';
+import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { UserDetails } from '../User/User';

@@ -4,13 +4,13 @@ import React, { useContext, useState } from 'react';
 import { TrinityRingsSpinner } from 'react-epic-spinners';
 import { Check, X } from 'react-feather';
 
-import { Files, LongText, ShortText } from '../../Common/Forms';
+import { Files } from '../../Common/Form/Files';
+import { LongText, ShortText } from '../../Common/Form/TextField';
 import { Card } from '../../Common/Layout';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { File, fileToString } from '../../Utils/File';
 import { WithID } from '../../Utils/WithID';
-import { Property, Request } from '../Request';
 import {
   createFilesValue,
   createLongTextValue,
@@ -22,6 +22,7 @@ import {
   LongTextFieldValue,
   ShortTextFieldValue,
 } from '../FieldValue';
+import { Property, Request } from '../Request';
 
 type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
 

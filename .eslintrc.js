@@ -16,6 +16,7 @@ module.exports = {
       1,
       { exceptions: ['input', 'textarea', 'components.Placeholder', 'components.Control'] },
     ],
+    'import/prefer-default-export': 0,
     'react/jsx-filename-extension': [2, { extensions: ['.jsx', '.tsx'] }],
     'react/prop-types': 0,
     'react/no-unescaped-entities': 0,

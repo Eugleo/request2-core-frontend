@@ -7,12 +7,12 @@ import { usePagination } from '../../Common/PageSwitcher';
 import Table, { Cell, Pill, Row } from '../../Common/Table';
 import { User } from '../../User/User';
 import * as Api from '../../Utils/Api';
+import { ok } from '../../Utils/Loader';
 import { WithID } from '../../Utils/WithID';
 import EditRequestPage from '../EditRequest';
 import { idToStr, Request } from '../Request';
 import RequestPage from '../RequestPage';
 import { statusStyle, statusToStr } from '../Status';
-import { ok } from '../../Utils/Loader';
 
 export default function Requests() {
   return (

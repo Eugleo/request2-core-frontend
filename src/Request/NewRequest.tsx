@@ -3,13 +3,13 @@ import { useNavigate, useParams } from 'react-router-dom';
 
 import Modal from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
+import { fileToString } from '../Utils/File';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
+import { FieldValue, fieldValueToString, isFilesField } from './FieldValue';
 import { BareProperty, idToStr, PropertyType, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
-import { FieldValue, fieldValueToString, isFilesField } from './FieldValue';
 import { requestSchemas } from './RequestTypes';
-import { fileToString } from '../Utils/File';
 
 function submit(
   authPost: (
