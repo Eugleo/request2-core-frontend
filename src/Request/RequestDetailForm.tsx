@@ -71,8 +71,6 @@ export default function RequestDetailForm<T>({
   const specificValidate = requestValidations.get(requestType) || (() => ({}));
   const generalValidate = getValidateForFields(fields);
 
-  console.log(initialValues);
-
   return (
     <Page title={title}>
       <Card className="mb-12 max-w-2xl mx-auto">

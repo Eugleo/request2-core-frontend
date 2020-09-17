@@ -31,7 +31,7 @@ export type Property = {
 };
 
 export type ResultProperty = Property & { propertyType: 'Result' };
-export type ResultFileProperty = Property & { propertyType: 'ResultFile' };
+export type FileProperty = Property & { propertyType: 'ResultFile' | 'File' };
 export type DetailProperty = Property & { propertyType: 'Detail' | 'File' };
 
 export type BareProperty = {

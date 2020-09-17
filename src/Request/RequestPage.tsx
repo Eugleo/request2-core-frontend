@@ -6,17 +6,11 @@ import { useRefresh } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
+import { isFileProperty } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
 import ResultReportCard from './Operator/ResultReportCard';
-import {
-  DetailProperty,
-  idToStr,
-  Property,
-  Request,
-  ResultProperty,
-  ResultFileProperty,
-} from './Request';
+import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Request';
 import RequestDetails from './RequestDetails';
 import RequestResults from './RequestResults';
 
@@ -81,7 +75,9 @@ export default function RequestPage() {
               {hasResults ? (
                 <RequestResults
                   properties={properties.filter(isResult)}
-                  files={properties.filter(isResultFile)}
+                  files={properties
+                    .filter(p => p.propertyType === 'ResultFile')
+                    .filter(isFileProperty)}
                 />
               ) : (
                 <Authorized roles={['Operator']}>
@@ -101,10 +97,6 @@ export default function RequestPage() {
 
 function isResult(p: WithID<Property>): p is WithID<ResultProperty> {
   return p?.propertyType === 'Result';
-}
-
-function isResultFile(p: WithID<Property>): p is WithID<ResultFileProperty> {
-  return p?.propertyType === 'ResultFile';
 }
 
 function isDetail(p: WithID<Property>): p is WithID<DetailProperty> {

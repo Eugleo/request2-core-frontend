@@ -4,7 +4,9 @@ import { Navigate } from 'react-router';
 
 import { Card } from '../Common/Layout';
 import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
+import { isFileProperty } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
+import { FilesView } from './FileView';
 import { Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
@@ -25,14 +27,17 @@ export default function RequestDetails({
     return <Navigate to="/404" />;
   }
 
-  const relevantProperties = properties.filter(p => p.active && p.propertyType === 'Detail');
+  const relevantProperties = properties.filter(
+    p => p.active && ['Detail', 'File'].includes(p.propertyType)
+  );
+  console.log(relevantProperties);
   const sections: Array<{ title: string; properties: WithID<Property>[] }> = schema.sections
     .map(s => ({
       title: s.title,
       properties: s.fields
         .mapMaybe(f => resolveInclude(f))
         .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-        .mapMaybe(f => relevantProperties.find(p => p.propertyName === f.fieldPath))
+        .mapMaybe(f => relevantProperties.find(p => p.propertyName.startsWith(f.fieldPath)))
         .filter(p => p.propertyData !== ''),
     }))
     .filter(s => s.properties.length > 0);
@@ -49,20 +54,26 @@ export default function RequestDetails({
 }
 
 function Section({ title, properties }: { title: string; properties: WithID<Property>[] }) {
+  const files = properties.filter(p => p.propertyType === 'File').filter(isFileProperty);
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-gray-300')}>
         <h2 className="text-lg font-medium text-black">{title}</h2>
       </div>
       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-gray-300">
-        {properties.map((p, ix) => (
-          <PropertyView
-            name={parseFieldName(p.propertyName).field}
-            propertyData={p.propertyData}
-            isEven={ix % 2 === 0}
-            key={p._id}
-          />
-        ))}
+        {properties
+          .filter(p => !isFileProperty(p))
+          .map((p, ix) => (
+            <PropertyView
+              name={parseFieldName(p.propertyName).field}
+              propertyData={p.propertyData}
+              isEven={ix % 2 === 0}
+              key={p._id}
+            />
+          ))}
+        {files.length > 0 ? (
+          <FilesView files={files} isEven={properties.length % 2 === 1}></FilesView>
+        ) : null}
       </dl>
     </div>
   );

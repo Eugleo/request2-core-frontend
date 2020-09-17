@@ -41,10 +41,10 @@ function submit(
     .map(([name, value]) => mkProp(name, 'Detail', fieldValueToString(value)));
 
   const fileProps = Object.entries(formValues)
-    .map(([, value]) => value)
-    .filter(isFilesField)
-    .flatMap(val => val.content)
-    .map((f, ix) => mkProp(`file-${ix}`, 'File', fileToString(f)));
+    .flatMap(([name, value]) =>
+      isFilesField(value) ? value.content.map(file => ({ name, file })) : []
+    )
+    .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
 
   return authPost('/requests', {
     props: [status, title, ...normalProps, ...fileProps],
