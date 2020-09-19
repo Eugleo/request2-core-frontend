@@ -30,16 +30,24 @@ export default function RequestDetails({
   const relevantProperties = properties.filter(
     p => p.active && ['Detail', 'File'].includes(p.propertyType)
   );
-  console.log(relevantProperties);
   const sections: Array<{ title: string; properties: WithID<Property>[] }> = schema.sections
-    .map(s => ({
-      title: s.title,
-      properties: s.fields
-        .mapMaybe(f => resolveInclude(f))
+    .map(s => {
+      const fields = s.fields.mapMaybe(f => resolveInclude(f));
+      const normalProps = fields
+        .filter(f => f.type !== 'files')
         .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-        .mapMaybe(f => relevantProperties.find(p => p.propertyName.startsWith(f.fieldPath)))
-        .filter(p => p.propertyData !== ''),
-    }))
+        .mapMaybe(f => relevantProperties.find(p => p.propertyName === f.fieldPath))
+        .filter(p => p.propertyData !== '');
+      const fileProps = fields
+        .filter(f => f.type === 'files')
+        .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
+        .flatMap(f => relevantProperties.filter(p => p.propertyName.startsWith(f.fieldPath)))
+        .filter(p => p.propertyData !== '');
+      return {
+        title: s.title,
+        properties: [...normalProps, ...fileProps],
+      };
+    })
     .filter(s => s.properties.length > 0);
 
   return (
@@ -54,7 +62,7 @@ export default function RequestDetails({
 }
 
 function Section({ title, properties }: { title: string; properties: WithID<Property>[] }) {
-  const files = properties.filter(p => p.propertyType === 'File').filter(isFileProperty);
+  const files = properties.filter(isFileProperty);
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-gray-300')}>
@@ -71,7 +79,7 @@ function Section({ title, properties }: { title: string; properties: WithID<Prop
               key={p._id}
             />
           ))}
-        {files.length > 0 ? <FilesView files={files} isEven={properties.length % 2 === 1} /> : null}
+        {files.length > 0 ? <FilesView files={files} isEven={properties.length % 2 === 0} /> : null}
       </dl>
     </div>
   );
