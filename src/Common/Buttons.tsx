@@ -55,7 +55,7 @@ export function tertiaryClasses(status: Status) {
   ];
 }
 
-const baseClasses = [
+export const baseClasses = [
   'px-3',
   'py-2',
   'inline-flex',
