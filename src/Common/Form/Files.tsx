@@ -51,6 +51,8 @@ export function Files({ name, className = '' }: { name: string; className?: stri
     }
   });
 
+  const initialHashes = meta.initialValue?.content.map(f => f.hash) ?? [];
+
   return (
     <UploadDropZone
       onDragOverClassName="bg-green-100"
@@ -66,7 +68,12 @@ export function Files({ name, className = '' }: { name: string; className?: stri
           <div className="pt-3 pb-3 px-4 ">
             {meta.value.content.length > 0 ? (
               meta.value.content.map(f => (
-                <FileComponent onRemove={removeFile} file={f} key={f.hash} />
+                <FileComponent
+                  editable={!initialHashes.includes(f.hash)}
+                  onRemove={removeFile}
+                  file={f}
+                  key={f.hash}
+                />
               ))
             ) : (
               <div className="h-32 flex flex-row items-center justify-center text-sm text-gray-700">
@@ -88,15 +95,28 @@ export function Files({ name, className = '' }: { name: string; className?: stri
   );
 }
 
-function FileComponent({ file, onRemove }: { file: File; onRemove: (file: File) => void }) {
+function FileComponent({
+  file,
+  onRemove,
+  editable,
+}: {
+  file: File;
+  onRemove: (file: File) => void;
+  editable: boolean;
+}) {
   const { authDel } = useAuth<File>();
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+
   return (
     <div
       ref={hoverRef}
-      className="rounded-sm text-sm hover:bg-gray-100 px-2 py-1 flex flex-row items-center"
+      className={c(
+        'rounded-sm text-sm px-2 py-1 flex flex-row items-center',
+        editable && 'hover:bg-gray-100'
+      )}
     >
-      <Icon.File className="h-3 w-3 text-gray-700 mr-2" /> <p>{file.name}</p> <Spacer />
+      <Icon.File className={c('h-3 w-3 mr-2', editable ? 'text-gray-700' : 'text-gray-500')} />
+      <p className={c(editable ? 'text-gray-900' : 'text-gray-600')}>{file.name}</p> <Spacer />
       <button
         type="button"
         onClick={async () => {
@@ -106,7 +126,9 @@ function FileComponent({ file, onRemove }: { file: File; onRemove: (file: File) 
           }
         }}
       >
-        {isHovered ? <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" /> : null}
+        {editable && isHovered ? (
+          <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" />
+        ) : null}
       </button>
     </div>
   );
