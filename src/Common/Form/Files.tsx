@@ -17,8 +17,8 @@ type RefEl =
 
 const UploadButton = asUploadButton(
   forwardRef((props, ref) => (
-    <div ref={ref} {...props}>
-      <Button.Tertiary title="Add more files" onClick={() => console.log('Choosing files')} />
+    <div ref={ref} {...props} className="cursor-pointer ">
+      <p className="text-sm text-gray-500 hover:text-gray-700">Add more files</p>
     </div>
   ))
 );
@@ -56,8 +56,8 @@ export function Files({ name, className = '' }: { name: string; className?: stri
       className={c('rounded-md p-2', className)}
     >
       <div>
-        <div className="flex flex-row justify-between items-center">
-          <h4 className="font-medium text-gray-800 mb-1">File upload</h4>
+        <div className="flex flex-row justify-between items-baseline mb-1">
+          <h4 className="font-medium text-gray-800">File upload</h4>
           {meta.value.content.length > 0 ? <UploadButton /> : null}
         </div>
         <div className="shadow-xs rounded-lg overflow-hidden">
