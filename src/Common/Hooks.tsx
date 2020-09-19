@@ -43,3 +43,31 @@ export function useTraceUpdate<T extends Record<string, any>>(props: T) {
     prev.current = props;
   });
 }
+
+export function useHover<T extends Node>(): [React.RefObject<T>, boolean] {
+  const [value, setValue] = useState(false);
+
+  const ref = useRef<T>(null);
+
+  const handleMouseOver = () => setValue(true);
+
+  const handleMouseOut = () => setValue(false);
+
+  useEffect(() => {
+    const node = ref.current;
+
+    if (node) {
+      node.addEventListener('mouseenter', handleMouseOver);
+      node.addEventListener('mouseleave', handleMouseOut);
+    }
+
+    return () => {
+      if (node) {
+        node.removeEventListener('mouseenter', handleMouseOver);
+        node.removeEventListener('mouseleave', handleMouseOut);
+      }
+    };
+  }, [ref]);
+
+  return [ref, value];
+}

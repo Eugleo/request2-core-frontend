@@ -14,7 +14,7 @@ export function useAuth<T>(): {
   authGet: (url: string) => Promise<Response>;
   authPut: (url: string, data: T) => Promise<Response>;
   authPost: (url: string, data: T) => Promise<Response>;
-  authDel: (url: string) => Promise<Response>;
+  authDel: (url: string, data?: T) => Promise<Response>;
 } {
   const auth = useAuthState();
   const navigate = useNavigate();
@@ -53,7 +53,16 @@ export function useAuth<T>(): {
   );
 
   const authDel = useCallback(
-    url => withUser(fetch(apiBase + url, { method: 'DELETE', headers: authHeaders(auth.apiKey) })),
+    (url, data) =>
+      withUser(
+        fetch(apiBase + url, {
+          method: 'DELETE',
+          headers: data
+            ? { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) }
+            : authHeaders(auth.apiKey),
+          body: data ? JSON.stringify(data) : undefined,
+        })
+      ),
     [auth.apiKey, withUser]
   );
 

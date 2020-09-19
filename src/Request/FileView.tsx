@@ -30,9 +30,9 @@ export function FileView({ file }: { file: FileProperty }) {
 
   return (
     <a href={`${apiBase}/files/${hash}`} className="text-gray-800">
-      <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:bg-gray-100">
-        <File className="w-4 h-4 text-gray-500 mr-1" />
-        <p className="mr-2">{name}</p>
+      <div className="flex flex-row items-center py-1 px-2 rounded-sm hover:text-gray-600">
+        <File className="h-3 w-3 text-gray-700 mr-2" />
+        <p>{name}</p>
       </div>
     </a>
   );

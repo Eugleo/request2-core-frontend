@@ -147,7 +147,12 @@ function getDefValue(field: DetailField, properties: Maybe<Property[]>): FieldVa
     case 'text-long':
       return createLongTextValue(currentValue);
     default:
-      return createFilesValue(currentValue);
+      return createFilesValue(
+        properties
+          ?.filter(p => p.active && p.propertyName.startsWith(field.path))
+          .map(p => p.propertyData)
+          .join(';;;')
+      );
   }
 }
 

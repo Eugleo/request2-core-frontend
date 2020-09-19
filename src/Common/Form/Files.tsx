@@ -8,12 +8,11 @@ import React, { forwardRef, useState } from 'react';
 import * as Icon from 'react-feather';
 
 import { FilesFieldValue } from '../../Request/FieldValue';
+import { useAuth } from '../../Utils/Auth';
+import { File } from '../../Utils/File';
 import * as Button from '../Buttons';
-
-type RefEl =
-  | ((instance: HTMLButtonElement | null) => void)
-  | React.MutableRefObject<HTMLButtonElement | null>
-  | null;
+import { useHover } from '../Hooks';
+import { Spacer } from '../Layout';
 
 const UploadButton = asUploadButton(
   forwardRef((props, ref) => (
@@ -34,6 +33,9 @@ const UploadButton2 = asUploadButton(
 export function Files({ name, className = '' }: { name: string; className?: string }) {
   const [field, meta, helpers] = useField<FilesFieldValue>({ name });
   const [inProgress, setInProgress] = useState<number>(0);
+
+  const removeFile = (file: File) =>
+    helpers.setValue({ type: 'files', content: field.value.content.filter(f => f !== file) });
 
   useItemStartListener(() => {
     setInProgress(n => n + 1);
@@ -64,12 +66,7 @@ export function Files({ name, className = '' }: { name: string; className?: stri
           <div className="pt-3 pb-3 px-4 ">
             {meta.value.content.length > 0 ? (
               meta.value.content.map(f => (
-                <div
-                  key={f.hash}
-                  className="rounded-sm text-sm hover:bg-gray-100 px-2 py-1 flex flex-row items-center"
-                >
-                  <Icon.File className="h-3 w-3 text-gray-700 mr-2" /> <p>{f.name}</p>
-                </div>
+                <FileComponent onRemove={removeFile} file={f} key={f.hash} />
               ))
             ) : (
               <div className="h-32 flex flex-row items-center justify-center text-sm text-gray-700">
@@ -88,5 +85,29 @@ export function Files({ name, className = '' }: { name: string; className?: stri
         </div>
       </div>
     </UploadDropZone>
+  );
+}
+
+function FileComponent({ file, onRemove }: { file: File; onRemove: (file: File) => void }) {
+  const { authDel } = useAuth<File>();
+  const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+  return (
+    <div
+      ref={hoverRef}
+      className="rounded-sm text-sm hover:bg-gray-100 px-2 py-1 flex flex-row items-center"
+    >
+      <Icon.File className="h-3 w-3 text-gray-700 mr-2" /> <p>{file.name}</p> <Spacer />
+      <button
+        type="button"
+        onClick={async () => {
+          const r = await authDel(`/files/${file.hash}`, file);
+          if (r.ok) {
+            onRemove(file);
+          }
+        }}
+      >
+        {isHovered ? <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" /> : null}
+      </button>
+    </div>
   );
 }
