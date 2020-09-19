@@ -3,18 +3,25 @@ import { useNavigate, useParams } from 'react-router';
 
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
+import { fileToString } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
-import { FieldValue, fieldValueToString } from './FieldValue';
-import { Property, Request } from './Request';
+import { FieldValue, fieldValueToString, isFilesField } from './FieldValue';
+import { BareProperty, Property, PropertyType, Request } from './Request';
 import RequestDetailForm from './RequestDetailForm';
 
 function submit(
-  authPut: (url: string, data: any) => Promise<Response>,
+  authPut: (
+    url: string,
+    data: {
+      req: Request;
+      props: BareProperty[];
+    }
+  ) => Promise<Response>,
   request: WithID<Request>,
   formValues: { [_: string]: FieldValue },
   authorId: number
 ) {
-  const mkProp = (n: string, t: string, d: string) => ({
+  const mkProp = (n: string, t: PropertyType, d: string) => ({
     authorId,
     dateAdded: Math.round(Date.now() / 1000),
     active: true,
@@ -25,13 +32,19 @@ function submit(
   });
 
   const title = mkProp('title', 'General', fieldValueToString(formValues.title));
-  const details = Object.entries(formValues)
-    .filter(([name]) => name !== 'title')
+  const normalProps = Object.entries(formValues)
+    .filter(([name, value]) => name !== 'title' && !isFilesField(value))
     .map(([name, value]) => mkProp(name, 'Detail', fieldValueToString(value)));
 
+  const fileProps = Object.entries(formValues)
+    .flatMap(([name, value]) =>
+      isFilesField(value) ? value.content.map(file => ({ name, file })) : []
+    )
+    .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
+
   return authPut(`/requests/${request._id}`, {
-    props: [title, ...details],
-    req: { ...request, name: formValues.title },
+    props: [title, ...normalProps, ...fileProps],
+    req: { ...request, name: fieldValueToString(formValues.title) },
   });
 }
 

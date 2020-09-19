@@ -8,6 +8,7 @@ import React, { forwardRef, useState } from 'react';
 import * as Icon from 'react-feather';
 
 import { FilesFieldValue } from '../../Request/FieldValue';
+import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { File } from '../../Utils/File';
 import * as Button from '../Buttons';
@@ -104,32 +105,49 @@ function FileComponent({
   onRemove: (file: File) => void;
   editable: boolean;
 }) {
-  const { authDel } = useAuth<File>();
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
+
+  function SideButton() {
+    return editable ? (
+      <RemoveButton file={file} onRemove={onRemove} />
+    ) : (
+      <PreviewButton file={file} />
+    );
+  }
 
   return (
     <div
       ref={hoverRef}
-      className={c(
-        'rounded-sm text-sm px-2 py-1 flex flex-row items-center',
-        editable && 'hover:bg-gray-100'
-      )}
+      className="rounded-sm text-sm px-2 py-1 flex flex-row items-center hover:bg-gray-100"
     >
       <Icon.File className={c('h-3 w-3 mr-2', editable ? 'text-gray-700' : 'text-gray-500')} />
       <p className={c(editable ? 'text-gray-900' : 'text-gray-600')}>{file.name}</p> <Spacer />
-      <button
-        type="button"
-        onClick={async () => {
-          const r = await authDel(`/files/${file.hash}`, file);
-          if (r.ok) {
-            onRemove(file);
-          }
-        }}
-      >
-        {editable && isHovered ? (
-          <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" />
-        ) : null}
-      </button>
+      {isHovered ? <SideButton /> : null}
     </div>
+  );
+}
+
+function PreviewButton({ file }: { file: File }) {
+  return (
+    <a href={`${apiBase}/files/${file.hash}`}>
+      <Icon.Eye className="stroke-2 text-gray-500 w-4 h-4 hover:text-gray-600" />
+    </a>
+  );
+}
+
+function RemoveButton({ file, onRemove }: { file: File; onRemove: (file: File) => void }) {
+  const { authDel } = useAuth<File>();
+  return (
+    <button
+      type="button"
+      onClick={async () => {
+        const r = await authDel(`/files/${file.hash}`, file);
+        if (r.ok) {
+          onRemove(file);
+        }
+      }}
+    >
+      <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" />
+    </button>
   );
 }
