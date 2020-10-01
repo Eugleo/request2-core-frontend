@@ -23,9 +23,9 @@ export function useOnClickOutside<T extends Node>(handler: () => void) {
   return ref;
 }
 
-export function useRefresh() {
-  const [, setS] = useState(0);
-  return () => setS(s => s + 1);
+export function useRefresh(): [number, () => void] {
+  const [st, setS] = useState(0);
+  return [st, () => setS(s => s + 1)];
 }
 
 export function useTraceUpdate<T extends Record<string, any>>(props: T) {

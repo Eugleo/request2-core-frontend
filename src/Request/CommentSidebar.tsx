@@ -1,6 +1,6 @@
 import c from 'classnames';
 import { Form, Formik, useField } from 'formik';
-import React, { useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 import * as Button from '../Common/Buttons';
 import { RandomAvatar } from '../Page/UserView';
@@ -24,6 +24,12 @@ export default function CommentSidebar({
     `/requests/${requestId}/comments`
   );
   const messageEndRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (messageEndRef?.current) {
+      messageEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+  });
 
   const sortedProps = details.sort(comparator(p => p.dateAdded));
   const updatedProps = sortedProps
@@ -100,7 +106,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   return (
     <Formik
       initialValues={{ comment: createLongTextValue() }}
-      onSubmit={({ comment }) =>
+      onSubmit={({ comment }, { resetForm }) =>
         authPost(`/requests/${requestId}/comments`, {
           authorId: auth.user._id,
           requestId,
@@ -112,6 +118,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
         }).then(r => {
           if (r.status === 201) {
             refresh();
+            resetForm();
           }
         })
       }

@@ -30,9 +30,10 @@ export function useAsyncGetMany<T>(url: string, limit: number, offset: number) {
 // The server returns either { error: ... } or { data: ... }
 export function useAsyncGet<T>(url: string) {
   const { authGet } = useAuth();
-  const refresh = useRefresh();
+  const [refState, refresh] = useRefresh();
 
   const getThing = useCallback(() => {
+    console.log(refState);
     return authGet(url)
       .then(r => r.json())
       .then(json => {
@@ -41,7 +42,7 @@ export function useAsyncGet<T>(url: string) {
         }
         throw new Error(json.error);
       });
-  }, [authGet, url]);
+  }, [authGet, refState, url]);
   const thing = useAsync<T>(getThing);
 
   return { ...thing, refresh };

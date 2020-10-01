@@ -24,7 +24,7 @@ export default function RequestPage() {
   // const { data: team } = useAsyncGet(maybe(payload?.request, r => `/teams/${r.teamId}`));
   // const { data: author } = useAsyncGet(maybe(payload?.request, r => `/users/${r.authorId}`));
 
-  const refresh = useRefresh();
+  const [, refresh] = useRefresh();
 
   // const RequestContext = React.createContext<{ dispatch: Function }>();
 
