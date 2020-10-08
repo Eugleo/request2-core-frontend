@@ -30,9 +30,17 @@ export type Property = {
   active: boolean;
 };
 
-export type ResultProperty = Property & { propertyType: 'Result' };
+export type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
 export type FileProperty = Property & { propertyType: 'ResultFile' | 'File' };
 export type DetailProperty = Property & { propertyType: 'Detail' | 'File' };
+
+export function isResultProperty(p: WithID<Property>): p is WithID<ResultProperty> {
+  return p?.propertyType === 'Result' || p?.propertyType === 'ResultFile';
+}
+
+export function isDetailProperty(p: WithID<Property>): p is WithID<DetailProperty> {
+  return p?.propertyType === 'Detail';
+}
 
 export type BareProperty = {
   authorId: number;

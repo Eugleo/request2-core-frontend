@@ -2,17 +2,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
-import { useRefresh } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
-import { Authorized } from '../Utils/Auth';
-import { isFileProperty } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import CommentSidebar from './CommentSidebar';
-import ResultReportCard from './Operator/ResultReportCard';
-import { DetailProperty, idToStr, Property, Request, ResultProperty } from './Request';
+import { ResultComponent } from './Operator/ResultComponent';
+import { idToStr, isDetailProperty, isResultProperty, Property, Request } from './Request';
 import RequestDetails from './RequestDetails';
-import RequestResults from './RequestResults';
 
 export default function RequestPage() {
   const { id } = useParams();
@@ -23,8 +19,6 @@ export default function RequestPage() {
 
   // const { data: team } = useAsyncGet(maybe(payload?.request, r => `/teams/${r.teamId}`));
   // const { data: author } = useAsyncGet(maybe(payload?.request, r => `/users/${r.authorId}`));
-
-  const [, refresh] = useRefresh();
 
   // const RequestContext = React.createContext<{ dispatch: Function }>();
 
@@ -50,55 +44,46 @@ export default function RequestPage() {
 
   return (
     <Loader>
-      {({ request, properties }) => {
-        // const lastChange = Math.max(
-        //   ...properties.filter(p => p.active).map(p => p.dateAdded),
-        //   request.dateCreated
-        // );
-
-        const hasResults = properties.find(p => p.propertyType === 'Result') !== undefined;
-        return (
-          <div
-            style={{ gridTemplateRows: 'auto 1fr', gridTemplateColumns: '3fr 1fr' }}
-            className="max-h-screen grid grid-rows-2 grid-cols-2"
-          >
-            <Page.Header className="col-span-2">
-              <Page.Title className="mr-6">{request.name}</Page.Title>
-              <h2 className="text-gray-500 font-mono text-2xl leading-tight">
-                #{idToStr(request)}
-              </h2>
-              <Page.Spacer />
-              <Button.SecondaryLinked to="edit" title="Edit" />
-            </Page.Header>
-
-            <div className="pt-6 overflow-auto">
-              {hasResults ? (
-                <RequestResults
-                  properties={properties.filter(isResult)}
-                  files={properties
-                    .filter(p => p.propertyType === 'ResultFile')
-                    .filter(isFileProperty)}
-                />
-              ) : (
-                <Authorized roles={['Operator']}>
-                  <ResultReportCard request={request} refresh={refresh} />
-                </Authorized>
-              )}
-              <RequestDetails request={request} properties={properties} />
-            </div>
-
-            <CommentSidebar details={properties.filter(isDetail)} requestId={request._id} />
-          </div>
-        );
-      }}
+      {({ request, properties }) => <RequestComponent request={request} properties={properties} />}
     </Loader>
   );
 }
 
-function isResult(p: WithID<Property>): p is WithID<ResultProperty> {
-  return p?.propertyType === 'Result';
-}
+function RequestComponent({
+  request,
+  properties,
+}: {
+  request: WithID<Request>;
+  properties: WithID<Property>[];
+}) {
+  // const lastChange = Math.max(
+  //   ...properties.filter(p => p.active).map(p => p.dateAdded),
+  //   request.dateCreated
+  // );
 
-function isDetail(p: WithID<Property>): p is WithID<DetailProperty> {
-  return p?.propertyType === 'Detail';
+  const activeProps = properties.filter(p => p.active);
+
+  return (
+    <div
+      style={{ gridTemplateRows: 'auto 1fr', gridTemplateColumns: '3fr 1fr' }}
+      className="max-h-screen grid grid-rows-2 grid-cols-2"
+    >
+      <Page.Header className="col-span-2">
+        <Page.Title className="mr-6">{request.name}</Page.Title>
+        <h2 className="text-gray-500 font-mono text-2xl leading-tight">#{idToStr(request)}</h2>
+        <Page.Spacer />
+        <Button.SecondaryLinked to="edit" title="Edit" />
+      </Page.Header>
+
+      <div className="pt-6 overflow-auto">
+        <ResultComponent request={request} properties={activeProps} />
+        <RequestDetails request={request} properties={activeProps} />
+      </div>
+
+      <CommentSidebar
+        details={properties.filter(p => isDetailProperty(p) || isResultProperty(p))}
+        requestId={request._id}
+      />
+    </div>
+  );
 }

@@ -1,7 +1,9 @@
 import c from 'classnames';
 import React from 'react';
 
-import { Card } from '../Common/Layout';
+import * as Button from '../Common/Buttons';
+import { Card, Spacer } from '../Common/Layout';
+import { isFileProperty } from '../Utils/File';
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
@@ -9,18 +11,22 @@ import { FileProperty, Property, ResultProperty } from './Request';
 
 export default function RequestResults({
   properties,
-  files,
+  startEditing,
 }: {
   properties: WithID<ResultProperty>[];
-  files: WithID<FileProperty>[];
+  startEditing: () => void;
 }) {
+  const files = properties.map(p => p as WithID<Property>).filter(isFileProperty);
   return (
     <div>
       <Card className="mb-4 border border-green-300 shadow-none">
         <Section
           title="Results"
-          properties={properties.filter(p => p.propertyData !== '')}
+          properties={properties
+            .filter(p => p.propertyType === 'Result')
+            .filter(p => p.propertyData !== '')}
           files={files}
+          startEditing={startEditing}
         />
       </Card>
     </div>
@@ -31,16 +37,20 @@ function Section({
   title,
   properties,
   files,
+  startEditing,
 }: {
   title: string;
   properties: WithID<Property>[];
   files: WithID<FileProperty>[];
+  startEditing: () => void;
 }) {
   const prettifyName = (name: string) => capitalize(name.replaceAll('-', ' '));
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-green-300')}>
         <h2 className="text-lg font-medium text-green-500">{title}</h2>
+        <Spacer />
+        <Button.Secondary onClick={startEditing}>Edit</Button.Secondary>
       </div>
       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-green-300">
         {properties.map((p, ix) => (

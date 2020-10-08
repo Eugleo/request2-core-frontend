@@ -10,14 +10,14 @@ import { parseFieldName } from '../Utils/FieldPath';
 import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { createLongTextValue, LongTextFieldValue } from './FieldValue';
-import { DetailProperty, Property } from './Request';
+import { Property } from './Request';
 
 export default function CommentSidebar({
   requestId,
   details,
 }: {
   requestId: number;
-  details: WithID<DetailProperty>[];
+  details: WithID<Property>[];
 }) {
   const { auth } = useAuth();
   const { Loader, refresh } = useAsyncGet<WithID<Property & { propertyType: 'Comment' }>[]>(
@@ -50,7 +50,7 @@ export default function CommentSidebar({
               {[...updatedProps, ...comments]
                 .sort(comparator(p => p.dateAdded))
                 .map(prop =>
-                  prop.propertyType === 'Detail' ? (
+                  ['Detail', 'Result', 'File', 'ResultFile'].includes(prop.propertyType) ? (
                     <Change
                       key={prop._id}
                       date={prop.dateAdded}

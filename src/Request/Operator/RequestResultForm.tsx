@@ -9,7 +9,7 @@ import { LongText, ShortText } from '../../Common/Form/TextField';
 import { Card } from '../../Common/Layout';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
-import { File, fileToString } from '../../Utils/File';
+import { File, fileToString, isFileProperty } from '../../Utils/File';
 import { WithID } from '../../Utils/WithID';
 import {
   createFilesValue,
@@ -93,6 +93,8 @@ function SubmitButtonBody({ status }: { status: Status }) {
   }
 }
 
+type Status = 'Default' | 'Pending' | 'Success' | 'Error';
+
 function SubmitButton({ status }: { status: Status }) {
   const uploady = useContext(UploadyContext);
 
@@ -107,23 +109,36 @@ function SubmitButton({ status }: { status: Status }) {
   );
 }
 
-type Status = 'Default' | 'Pending' | 'Success' | 'Error';
-
-export default function ResultReportCard({
+export default function RequestResultForm({
   request,
-  refresh,
+  stopEditing,
+  resultProperties,
 }: {
   request: WithID<Request>;
-  refresh: () => void;
+  stopEditing: () => void;
+  resultProperties?: WithID<ResultProperty>[];
 }) {
   const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
   const [status, setStatus] = useState<Status>('Default');
 
+  const getData = (name: string) => {
+    return resultProperties?.find(p => p.propertyName === name)?.propertyData;
+  };
+
+  const files = resultProperties
+    ?.filter(p => p.active && isFileProperty(p))
+    .map(p => p.propertyData)
+    .join(';;;');
+
+  console.log(resultProperties);
+  console.log(getData('files'));
+  console.log(createFilesValue(files));
+
   const initialValues = {
-    'time-spent-(operator)': createShortTextValue(),
-    'time-spent-(machine)': createShortTextValue(),
-    files: createFilesValue(),
-    'files-description': createLongTextValue(),
+    'time-spent-(operator)': createShortTextValue(getData('time-spent-(operator)')),
+    'time-spent-(machine)': createShortTextValue(getData('time-spent-(machine)')),
+    files: createFilesValue(files),
+    'files-description': createLongTextValue(getData('files-description')),
   };
 
   return (
@@ -136,6 +151,7 @@ export default function ResultReportCard({
             submit(auth.user._id, authPut, values, request).then(r => {
               if (r.ok) {
                 setStatus('Success');
+                stopEditing();
               } else {
                 setStatus('Error');
               }
