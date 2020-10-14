@@ -93,7 +93,7 @@ function Item({
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.More id={_id} />
+          <Button.Edit link="" />
         </Authorized>
       </div>
       <Markdown

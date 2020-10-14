@@ -41,7 +41,7 @@ export default function TeamForm({
 
   return (
     <Page title={title} buttons={headerButtons}>
-      <Card className="mx-auto max-w-md">
+      <Card className="max-w-md w-full mx-auto">
         <Formik
           initialValues={{
             name: createShortTextValue(team?.name),

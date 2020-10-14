@@ -2,7 +2,6 @@ import c from 'classnames';
 import { ClassValue } from 'classnames/types';
 import { To } from 'history';
 import React, { ReactNode } from 'react';
-import * as Icon from 'react-feather';
 import { Link, useNavigate } from 'react-router-dom';
 
 type Status = 'Normal' | 'Danger';
@@ -65,6 +64,14 @@ export const baseClasses = [
   'text-sm',
 ];
 
+export function Activate({ onClick }: { onClick: () => void }) {
+  return <Secondary title="Reactivate" status="Normal" onClick={onClick} />;
+}
+
+export function Deactivate({ onClick }: { onClick: () => void }) {
+  return <Secondary title="Deactivate" status="Danger" onClick={onClick} />;
+}
+
 function makeButton(
   { status, className, title, children, onClick, type = 'button' }: SubmitButtonParams,
   getClasses: (status: Status) => ClassValue[]
@@ -90,11 +97,21 @@ export function Create({ title }: { title: string }) {
   return <PrimaryLinked to="new" title={title} />;
 }
 
-export function More({ id }: { id?: number }) {
+export function Edit({ link }: { link: string }) {
   return (
-    <TertiaryLinked to={id ? `${id}/edit` : 'edit'} className="p-1">
-      <Icon.MoreVertical className="text-gray-700 h-4 stroke-2" />
-    </TertiaryLinked>
+    <Link
+      to={link}
+      className={c(
+        'inline-flex',
+        'items-center',
+        'focus:outline-none',
+        'font-medium',
+        'text-sm',
+        tertiaryClasses('Normal')
+      )}
+    >
+      Edit
+    </Link>
   );
 }
 

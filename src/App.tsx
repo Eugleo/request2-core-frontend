@@ -2,8 +2,6 @@ import React, { useCallback, useEffect } from 'react';
 import { AtomSpinner, TrinityRingsSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
-import NewUser from './Admin/NewUser';
-import UserList from './Admin/UserList';
 import AnnouncementRouter from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
 import LoginPage, { getUserInfo } from './Page/LoginPage';
@@ -14,6 +12,7 @@ import Sidebar from './Page/Sidebar';
 import RequestsAsClient from './Request/Client/RequestList';
 import RequestsAsOperator from './Request/Operator/RequestList';
 import TeamRouter from './Team/TeamList';
+import { UserRouter } from './User/UserRouter';
 import * as Api from './Utils/Api';
 import { Authentized } from './Utils/Auth';
 import { AuthProvider, useAuthDispatch } from './Utils/AuthContext';
@@ -137,12 +136,7 @@ function NormalRoutes() {
     >
       <Routes>
         <Route path="/login" element={<Navigate to="/me/requests" />} />
-        <Route path="/admin/users">
-          <UserList />
-        </Route>
-        <Route path="/admin/users/new">
-          <NewUser />
-        </Route>
+        <Route path="/admin/users/*" element={<UserRouter />} />
         <Route path="/me/*">
           <Route path="requests/*" element={<RequestsAsClient />} />
         </Route>

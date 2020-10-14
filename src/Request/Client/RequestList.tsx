@@ -5,7 +5,7 @@ import { Link, Navigate, Route, Routes } from 'react-router-dom';
 
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
-import Table, { Cell, Pill, Row } from '../../Common/Table';
+import { Cell, Pill, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
@@ -29,7 +29,7 @@ export default function Requests() {
 function RequestTableItem({ request }: { request: WithID<Request> }) {
   return (
     <Row>
-      <Cell align="left">
+      <Cell>
         <Link to={request._id.toString()} className="text-black hover:text-green-700">
           {request.name}
         </Link>

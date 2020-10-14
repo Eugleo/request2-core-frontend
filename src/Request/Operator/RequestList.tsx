@@ -4,7 +4,7 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
-import Table, { Cell, Pill, Row } from '../../Common/Table';
+import { Cell, Pill, Row, Table } from '../../Common/Table';
 import { User } from '../../User/User';
 import * as Api from '../../Utils/Api';
 import { ok } from '../../Utils/Loader';
@@ -29,7 +29,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 
   return (
     <Row>
-      <Cell align="left">
+      <Cell>
         <Link to={request._id.toString()} className="font text-black hover:text-green-700">
           {request.name}
         </Link>

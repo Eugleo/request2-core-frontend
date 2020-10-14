@@ -4,8 +4,9 @@ import { Route, Routes } from 'react-router-dom';
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
 import Pagination, { usePagination } from '../Common/PageSwitcher';
-import Table, { Cell, Pill, Row } from '../Common/Table';
+import { Cell, Pill, Row, Table } from '../Common/Table';
 import * as Api from '../Utils/Api';
+import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import EditTeam from './EditTeam';
 import NewTeam from './NewTeam';
@@ -24,7 +25,7 @@ export default function TeamRouter() {
 function TeamTableItem({ team }: { team: WithID<Team> }) {
   return (
     <Row>
-      <Cell align="left">{team.name}</Cell>
+      <Cell>{team.name}</Cell>
       <Cell className="text-gray-700">
         <span className="text-gray-500">#</span>
         {team.code}
@@ -36,12 +37,17 @@ function TeamTableItem({ team }: { team: WithID<Team> }) {
           <Pill text="Inactive" className="text-red-500 bg-red-100 border-red-300" />
         )}
       </Cell>
+      <Cell className="w-2">
+        <div className="flex justify-right">
+          <Button.Edit link={`/teams/${team._id}/edit`} />
+        </div>
+      </Cell>
     </Row>
   );
 }
 
 function TeamList() {
-  const { limit, offset, currentPage } = usePagination(5);
+  const { limit, offset, currentPage } = usePagination(10);
   const { Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', limit, offset);
 
   return (
@@ -49,8 +55,8 @@ function TeamList() {
       <Loader>
         {({ values, total }) => (
           <>
-            <Table columns={['Name', 'Company code', 'Status']}>
-              {values.map(v => (
+            <Table columns={['Name', 'Company code', 'Status', '']}>
+              {values.sort(comparator(t => t.name)).map(v => (
                 <TeamTableItem key={v._id} team={v} />
               ))}
             </Table>
