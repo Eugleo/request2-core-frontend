@@ -1,5 +1,5 @@
 import Uploady, { UploadyContext } from '@rpldy/uploady';
-import { Form, Formik } from 'formik';
+import { Form, Formik, useFormikContext } from 'formik';
 import React, { useContext, useState } from 'react';
 import { TrinityRingsSpinner } from 'react-epic-spinners';
 import { Check, X } from 'react-feather';
@@ -27,8 +27,8 @@ import { Property, Request } from '../Request';
 type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
 
 type ResultStub = {
-  'time-spent-(operator)': ShortTextFieldValue;
-  'time-spent-(machine)': ShortTextFieldValue;
+  'human-time': ShortTextFieldValue;
+  'machine-time': ShortTextFieldValue;
   files: FilesFieldValue;
   'files-description': LongTextFieldValue;
 };
@@ -111,11 +111,11 @@ function SubmitButton({ status }: { status: Status }) {
 
 export default function RequestResultForm({
   request,
-  stopEditing,
+  refreshResults: stopEditing,
   resultProperties,
 }: {
   request: WithID<Request>;
-  stopEditing: () => void;
+  refreshResults: () => void;
   resultProperties?: WithID<ResultProperty>[];
 }) {
   const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
@@ -130,13 +130,9 @@ export default function RequestResultForm({
     .map(p => p.propertyData)
     .join(';;;');
 
-  console.log(resultProperties);
-  console.log(getData('files'));
-  console.log(createFilesValue(files));
-
   const initialValues = {
-    'time-spent-(operator)': createShortTextValue(getData('time-spent-(operator)')),
-    'time-spent-(machine)': createShortTextValue(getData('time-spent-(machine)')),
+    'human-time': createShortTextValue(getData('human-time')),
+    'machine-time': createShortTextValue(getData('machine-time')),
     files: createFilesValue(files),
     'files-description': createLongTextValue(getData('files-description')),
   };
@@ -159,13 +155,13 @@ export default function RequestResultForm({
           }}
         >
           <Form className="bg-white rounded-md shadow-sm">
-            <div className="grid grid-cols-4">
-              <div className="col-span-4 mx-6 mt-6">
+            <div>
+              <div className="mx-6 mt-6">
                 <Files name="files" className="h-full" />
               </div>
 
-              <div className="col-span-4 grid grid-cols-4 px-6 py-4">
-                <div className="row-span-2 col-span-3 flex flex-row items-stretch w-full h-full">
+              <div className="grid grid-cols-4 px-6 py-4">
+                <div className="row-span-2 col-span-4 flex flex-row items-stretch w-full h-full">
                   <LongText
                     path="files-description"
                     label="Description"
@@ -173,38 +169,48 @@ export default function RequestResultForm({
                   />
                 </div>
 
-                <div className="col-span-1">
-                  <div className="col-span-1">
-                    <ShortText
-                      type="number"
-                      step="15"
-                      min="0"
-                      placeholder="0"
-                      path="time-spent-(operator)"
-                      label="Time (operator)"
-                    />
-                  </div>
-
-                  <div className="col-span-1">
-                    <ShortText
-                      type="number"
-                      step="15"
-                      min="0"
-                      placeholder="0"
-                      path="time-spent-(machine)"
-                      label="Time (machine)"
-                    />
-                  </div>
+                <div className="col-span-4 grid grid-cols-3">
+                  <ShortText
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    path="human-time"
+                    label="Human time"
+                    description="Enter time in minutes"
+                  />
+                  <ShortText
+                    type="number"
+                    min="0"
+                    placeholder="0"
+                    path="machine-time"
+                    label="Machine time"
+                    description="Enter time in minutes"
+                  />
+                  <TimeLabel />
                 </div>
               </div>
             </div>
 
-            <div className="col-span-5 bg-green-100 py-3 px-6 flex flex-row-reverse">
+            <div className="bg-green-100 py-3 px-6 flex flex-row-reverse">
               <SubmitButton status={status} />
             </div>
           </Form>
         </Formik>
       </Uploady>
     </Card>
+  );
+}
+
+function TimeLabel() {
+  const { values } = useFormikContext<ResultStub>();
+  const humanTime = Number(values['human-time'].content);
+  const machineTime = Number(values['machine-time'].content);
+
+  return (
+    <div className="flex items-center text-gray-500 text-sm">
+      <p>
+        Total time is <span className="font-bold">{humanTime + machineTime} minutes</span>
+      </p>
+    </div>
   );
 }

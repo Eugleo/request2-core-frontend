@@ -1,4 +1,5 @@
 import { File, stringToFile } from '../Utils/File';
+import { Maybe } from '../Utils/Maybe';
 
 export type ShortTextFieldValue = { type: 'text-short'; content: string };
 export type LongTextFieldValue = { type: 'text-long'; content: string };
@@ -26,7 +27,7 @@ export function isFilesField(val: FieldValue): val is { type: 'files'; content: 
   return val.type === 'files';
 }
 
-export function createShortTextValue(def?: string): ShortTextFieldValue {
+export function createShortTextValue(def?: Maybe<string>): ShortTextFieldValue {
   return { type: 'text-short', content: def ?? '' };
 }
 

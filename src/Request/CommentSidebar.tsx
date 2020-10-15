@@ -12,7 +12,7 @@ import { WithID } from '../Utils/WithID';
 import { createLongTextValue, LongTextFieldValue } from './FieldValue';
 import { Property } from './Request';
 
-export default function CommentSidebar({
+export function RequestComments({
   requestId,
   details,
 }: {
@@ -20,9 +20,8 @@ export default function CommentSidebar({
   details: WithID<Property>[];
 }) {
   const { auth } = useAuth();
-  const { Loader, refresh } = useAsyncGet<WithID<Property & { propertyType: 'Comment' }>[]>(
-    `/requests/${requestId}/comments`
-  );
+  type Comment = WithID<Property & { propertyType: 'Comment' }>;
+  const { Loader, refresh } = useAsyncGet<Comment[]>(`/requests/${requestId}/props/comments`);
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

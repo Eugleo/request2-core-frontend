@@ -5,8 +5,8 @@ import * as Button from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { WithID } from '../Utils/WithID';
-import CommentSidebar from './CommentSidebar';
-import { ResultComponent } from './Operator/ResultComponent';
+import { RequestComments } from './CommentSidebar';
+import { ResultWidget } from './Operator/ResultComponent';
 import { idToStr, isDetailProperty, isResultProperty, Property, Request } from './Request';
 import RequestDetails from './RequestDetails';
 
@@ -76,11 +76,11 @@ function RequestComponent({
       </Page.Header>
 
       <div className="pt-6 overflow-auto">
-        <ResultComponent request={request} properties={activeProps} />
+        <ResultWidget request={request} />
         <RequestDetails request={request} properties={activeProps} />
       </div>
 
-      <CommentSidebar
+      <RequestComments
         details={properties.filter(p => isDetailProperty(p) || isResultProperty(p))}
         requestId={request._id}
       />
