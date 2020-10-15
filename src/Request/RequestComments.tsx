@@ -10,18 +10,24 @@ import { parseFieldName } from '../Utils/FieldPath';
 import { comparator } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { createLongTextValue, LongTextFieldValue } from './FieldValue';
-import { Property } from './Request';
+import { DetailProperty, Property, ResultProperty } from './Request';
 
-export function RequestComments({
-  requestId,
-  details,
-}: {
-  requestId: number;
-  details: WithID<Property>[];
-}) {
+export function RequestComments({ requestId }: { requestId: number }) {
   const { auth } = useAuth();
+
   type Comment = WithID<Property & { propertyType: 'Comment' }>;
-  const { Loader, refresh } = useAsyncGet<Comment[]>(`/requests/${requestId}/props/comments`);
+  const { Loader, refresh: refreshComments } = useAsyncGet<Comment[]>(
+    `/requests/${requestId}/props/comments`
+  );
+
+  const { result: details } = useAsyncGet<WithID<DetailProperty>[]>(
+    `/requests/${requestId}/props/details`
+  );
+
+  const { result: results } = useAsyncGet<WithID<ResultProperty>[]>(
+    `/requests/${requestId}/props/comments`
+  );
+
   const messageEndRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -30,7 +36,17 @@ export function RequestComments({
     }
   });
 
-  const sortedProps = details.sort(comparator(p => p.dateAdded));
+  const properties: WithID<Property>[] = [];
+
+  if (details.status === 'Success') {
+    properties.concat(details.data);
+  }
+
+  if (results.status === 'Success') {
+    properties.concat(results.data);
+  }
+
+  const sortedProps = properties.sort(comparator(p => p.dateAdded));
   const updatedProps = sortedProps
     .filter(p => !p.active)
     .mapMaybe(p =>
@@ -76,7 +92,7 @@ export function RequestComments({
           )}
         </Loader>
       </div>
-      <CommentComposer requestId={requestId} refresh={refresh} />
+      <CommentComposer requestId={requestId} refresh={refreshComments} />
     </div>
   );
 }

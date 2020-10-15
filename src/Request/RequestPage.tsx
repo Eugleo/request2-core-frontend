@@ -5,9 +5,9 @@ import * as Button from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { WithID } from '../Utils/WithID';
-import { RequestComments } from './CommentSidebar';
 import { ResultWidget } from './Operator/ResultComponent';
-import { idToStr, isDetailProperty, isResultProperty, Property, Request } from './Request';
+import { idToStr, Property, Request } from './Request';
+import { RequestComments } from './RequestComments';
 import RequestDetails from './RequestDetails';
 
 export default function RequestPage() {
@@ -80,10 +80,7 @@ function RequestComponent({
         <RequestDetails request={request} properties={activeProps} />
       </div>
 
-      <RequestComments
-        details={properties.filter(p => isDetailProperty(p) || isResultProperty(p))}
-        requestId={request._id}
-      />
+      <RequestComments requestId={request._id} />
     </div>
   );
 }
