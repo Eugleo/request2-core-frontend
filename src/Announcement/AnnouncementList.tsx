@@ -78,18 +78,16 @@ function Item({
           >
             {title}
           </Link>
-          <p className={c('text-sm', active ? 'text-gray-500' : 'text-gray-300')}>
-            <Loader>
-              {data => (
-                <>
-                  <span>
-                    Created by <span className="font-medium">{data.name}</span>{' '}
-                  </span>
-                  {moment.unix(dateCreated).fromNow()}
-                </>
-              )}
-            </Loader>
-          </p>
+          <Loader>
+            {data => (
+              <p className={c('text-sm', active ? 'text-gray-500' : 'text-gray-300')}>
+                <span>
+                  Created by <span className="font-medium">{data.name}</span>{' '}
+                </span>
+                {moment.unix(dateCreated).fromNow()}
+              </p>
+            )}
+          </Loader>
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>

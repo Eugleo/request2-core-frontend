@@ -50,7 +50,9 @@ function Section({
       <div className={c('px-6 py-6 flex items-center border-green-300')}>
         <h2 className="text-lg font-medium text-green-500">{title}</h2>
         <Spacer />
-        <Button.Secondary onClick={startEditing}>Edit</Button.Secondary>
+        <Button.Secondary onClick={startEditing}>
+          {properties.length > 0 ? 'Edit' : 'Upload results'}
+        </Button.Secondary>
       </div>
       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-green-300">
         {properties.map((p, ix) => (
