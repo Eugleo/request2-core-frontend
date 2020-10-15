@@ -91,7 +91,7 @@ function Item({
         </div>
         <div className="flex-grow" />
         <Authorized roles={['Admin']}>
-          <Button.Edit link="" />
+          <Button.Edit link={`/announcements/${_id}/edit`} />
         </Authorized>
       </div>
       <Markdown
