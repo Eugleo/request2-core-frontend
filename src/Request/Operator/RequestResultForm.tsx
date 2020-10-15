@@ -133,7 +133,7 @@ export default function RequestResultForm({
   const initialValues = {
     'human-time': createShortTextValue(getData('human-time')),
     'machine-time': createShortTextValue(getData('machine-time')),
-    files: createFilesValue(files),
+    files: createFilesValue(files === '' ? undefined : files),
     'files-description': createLongTextValue(getData('files-description')),
   };
 

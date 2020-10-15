@@ -61,7 +61,7 @@ function Section({
             key={p._id}
           />
         ))}
-        <FilesView files={files} isEven={properties.length % 2 !== 1} />
+        {files.length > 0 ? <FilesView files={files} isEven={properties.length % 2 !== 1} /> : null}
       </dl>
     </div>
   );
