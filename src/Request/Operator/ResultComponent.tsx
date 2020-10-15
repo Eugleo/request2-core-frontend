@@ -34,10 +34,8 @@ function ResultComponent({
     <Authorized roles={['Operator']}>
       <RequestResultForm
         request={request}
-        refreshResults={() => {
-          setIsEditing(false);
-          refresh();
-        }}
+        stopEditing={() => setIsEditing(false)}
+        refreshResults={refresh}
         properties={activeProperties}
       />
     </Authorized>

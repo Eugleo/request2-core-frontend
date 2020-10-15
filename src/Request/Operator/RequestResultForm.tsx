@@ -4,6 +4,7 @@ import React, { useContext, useState } from 'react';
 import { TrinityRingsSpinner } from 'react-epic-spinners';
 import { Check, X } from 'react-feather';
 
+import { Tertiary } from '../../Common/Buttons';
 import { Files } from '../../Common/Form/Files';
 import { LongText, ShortText } from '../../Common/Form/TextField';
 import { Card } from '../../Common/Layout';
@@ -111,10 +112,12 @@ function SubmitButton({ status }: { status: Status }) {
 
 export default function RequestResultForm({
   request,
-  refreshResults: stopEditing,
+  stopEditing,
+  refreshResults,
   properties: resultProperties,
 }: {
   request: WithID<Request>;
+  stopEditing: () => void;
   refreshResults: () => void;
   properties?: WithID<ResultProperty>[];
 }) {
@@ -148,6 +151,7 @@ export default function RequestResultForm({
               if (r.ok) {
                 setStatus('Success');
                 stopEditing();
+                refreshResults();
               } else {
                 setStatus('Error');
               }
@@ -187,13 +191,32 @@ export default function RequestResultForm({
               </div>
             </div>
 
-            <div className="bg-green-100 py-3 px-6 flex flex-row-reverse">
+            <div className="bg-green-100 py-3 px-6 flex justify-end flex-row">
+              <CancelButton stopEditing={stopEditing} />
               <SubmitButton status={status} />
             </div>
           </Form>
         </Formik>
       </Uploady>
     </Card>
+  );
+}
+
+function CancelButton({ stopEditing }: { stopEditing: () => void }) {
+  const { authDel } = useAuth();
+  const { values } = useFormikContext<ResultStub>();
+
+  return (
+    <Tertiary
+      title="Cancel"
+      className="text-green-700 hover:text-green-800"
+      onClick={async () => {
+        const rs = await Promise.all(values.files.content.map(f => authDel(`/files/${f.hash}`, f)));
+        if (rs.every(r => r.ok)) {
+          stopEditing();
+        }
+      }}
+    />
   );
 }
 
