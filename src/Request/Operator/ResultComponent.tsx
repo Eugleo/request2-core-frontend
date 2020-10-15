@@ -13,21 +13,22 @@ export function ResultWidget({ request }: { request: WithID<Request> }) {
   );
   return (
     <Loader>
-      {results => <ResultComponent request={request} results={results} refresh={refresh} />}
+      {results => <ResultComponent request={request} properties={results} refresh={refresh} />}
     </Loader>
   );
 }
 
 function ResultComponent({
   request,
-  results,
+  properties,
   refresh,
 }: {
   request: WithID<Request>;
-  results: WithID<ResultProperty>[];
+  properties: WithID<ResultProperty>[];
   refresh: () => void;
 }) {
-  const [isEditing, setIsEditing] = useState(results.length === 0);
+  const activeProperties = properties.filter(p => p.active);
+  const [isEditing, setIsEditing] = useState(activeProperties.length === 0);
 
   return isEditing ? (
     <Authorized roles={['Operator']}>
@@ -37,10 +38,10 @@ function ResultComponent({
           setIsEditing(false);
           refresh();
         }}
-        resultProperties={results}
+        properties={activeProperties}
       />
     </Authorized>
   ) : (
-    <RequestResults properties={results} startEditing={() => setIsEditing(true)} />
+    <RequestResults properties={activeProperties} startEditing={() => setIsEditing(true)} />
   );
 }

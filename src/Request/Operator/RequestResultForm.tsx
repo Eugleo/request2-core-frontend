@@ -30,7 +30,7 @@ type ResultStub = {
   'human-time': ShortTextFieldValue;
   'machine-time': ShortTextFieldValue;
   files: FilesFieldValue;
-  'files-description': LongTextFieldValue;
+  description: LongTextFieldValue;
 };
 
 function submit(
@@ -112,11 +112,11 @@ function SubmitButton({ status }: { status: Status }) {
 export default function RequestResultForm({
   request,
   refreshResults: stopEditing,
-  resultProperties,
+  properties: resultProperties,
 }: {
   request: WithID<Request>;
   refreshResults: () => void;
-  resultProperties?: WithID<ResultProperty>[];
+  properties?: WithID<ResultProperty>[];
 }) {
   const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
   const [status, setStatus] = useState<Status>('Default');
@@ -134,7 +134,7 @@ export default function RequestResultForm({
     'human-time': createShortTextValue(getData('human-time')),
     'machine-time': createShortTextValue(getData('machine-time')),
     files: createFilesValue(files === '' ? undefined : files),
-    'files-description': createLongTextValue(getData('files-description')),
+    description: createLongTextValue(getData('description')),
   };
 
   return (
@@ -162,11 +162,7 @@ export default function RequestResultForm({
 
               <div className="grid grid-cols-4 px-6 py-4">
                 <div className="row-span-2 col-span-4 flex flex-row items-stretch w-full h-full">
-                  <LongText
-                    path="files-description"
-                    label="Description"
-                    className="h-full w-full"
-                  />
+                  <LongText path="description" label="Description" className="h-full w-full" />
                 </div>
 
                 <div className="col-span-4 grid grid-cols-3">
