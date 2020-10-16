@@ -40,10 +40,10 @@ type RequestSubmit = (request: Request, values: BareProperty[]) => Promise<void>
 export default function RequestDetailFormPage<T>({
   onSubmit,
   ...props
-}: ({ requestId: number } | { requestType: string }) & { onSubmit: RequestSubmit }) {
+}: ({ requestId: number } | { requestType: string; title: string }) & { onSubmit: RequestSubmit }) {
   if ('requestType' in props) {
     return (
-      <Page title={`New ${props.requestType}`}>
+      <Page title={props.title}>
         <RequestDetailForm requestType={props.requestType} onSubmit={onSubmit} />
       </Page>
     );

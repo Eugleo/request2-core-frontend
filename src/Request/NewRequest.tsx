@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import Modal from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
@@ -20,11 +20,17 @@ export default function NewRequestPage() {
 
   const schema = requestSchemas.get(requestType);
 
+  if (!schema) {
+    console.log(`Error, schema for type ${requestType} not found`);
+    return <Navigate to="/404" />;
+  }
+
   return (
     <>
       {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
 
       <RequestDetailFormPage
+        title={`New ${schema.title} request`}
         requestType={requestType}
         onSubmit={async (request, properties) => {
           const r = await authPost('/requests', {
