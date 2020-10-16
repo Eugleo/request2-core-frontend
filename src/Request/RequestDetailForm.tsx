@@ -219,6 +219,10 @@ function Section({
 }
 
 function getDefValue(field: DetailField, properties: Maybe<Property[]>): FieldValue {
+  const files = properties
+    ?.filter(p => p.active && p.propertyName.startsWith(field.path))
+    .map(p => p.propertyData)
+    .join(';;;');
   const currentValue = properties?.find(p => p.active && p.propertyName === field.path)
     ?.propertyData;
   switch (field.type) {
@@ -233,12 +237,7 @@ function getDefValue(field: DetailField, properties: Maybe<Property[]>): FieldVa
     case 'text-long':
       return createLongTextValue(currentValue);
     default:
-      return createFilesValue(
-        properties
-          ?.filter(p => p.active && p.propertyName.startsWith(field.path))
-          .map(p => p.propertyData)
-          .join(';;;')
-      );
+      return createFilesValue(files === '' ? undefined : files);
   }
 }
 
