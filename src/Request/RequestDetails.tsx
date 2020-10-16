@@ -3,61 +3,75 @@ import React from 'react';
 import { Navigate } from 'react-router';
 
 import { Card } from '../Common/Layout';
+import { useAsyncGet } from '../Utils/Api';
 import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
 import { isFileProperty } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
-import { Property, Request } from './Request';
+import { DetailProperty, Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
 
-export default function RequestDetails({
-  request,
-  properties,
-}: {
-  request: Request;
-  properties: WithID<Property>[];
-}) {
+export default function RequestDetails({ requestId }: { requestId: number }) {
+  const { Loader } = useAsyncGet<WithID<DetailProperty>[]>(`/requests/${requestId}/props/details`);
+  const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
+
   // TODO Is there a better way?
-  const schema = requestSchemas.get(request.requestType);
-
-  if (!schema) {
-    // TODO Handle this better
-    console.log(`Can't find schema for the provided request type: ${request.requestType}`);
-    return <Navigate to="/404" />;
-  }
-
-  const relevantProperties = properties.filter(
-    p => p.active && ['Detail', 'File'].includes(p.propertyType)
-  );
-  const sections: Array<{ title: string; properties: WithID<Property>[] }> = schema.sections
-    .map(s => {
-      const fields = s.fields.mapMaybe(f => resolveInclude(f));
-      const normalProps = fields
-        .filter(f => f.type !== 'files')
-        .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-        .mapMaybe(f => relevantProperties.find(p => p.propertyName === f.fieldPath))
-        .filter(p => p.propertyData !== '');
-      const fileProps = fields
-        .filter(f => f.type === 'files')
-        .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-        .flatMap(f => relevantProperties.filter(p => p.propertyName.startsWith(f.fieldPath)))
-        .filter(p => p.propertyData !== '');
-      return {
-        title: s.title,
-        properties: [...normalProps, ...fileProps],
-      };
-    })
-    .filter(s => s.properties.length > 0);
 
   return (
-    <div>
-      {sections.map(s => (
-        <Card className="mb-4" key={s.title}>
-          <Section title={s.title} properties={s.properties} />
-        </Card>
-      ))}
-    </div>
+    <RequestLoader>
+      {request => {
+        const schema = requestSchemas.get(request.requestType);
+
+        if (!schema) {
+          // TODO Handle this better
+          console.log(`Can't find schema for the provided request type: ${request.requestType}`);
+          return <Navigate to="/404" />;
+        }
+
+        return (
+          <Loader>
+            {details => {
+              const relevantProperties = details.filter(p => p.active);
+              const sections: Array<{
+                title: string;
+                properties: WithID<Property>[];
+              }> = schema.sections
+                .map(s => {
+                  const fields = s.fields.mapMaybe(f => resolveInclude(f));
+                  const normalProps = fields
+                    .filter(f => f.type !== 'files')
+                    .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
+                    .mapMaybe(f => relevantProperties.find(p => p.propertyName === f.fieldPath))
+                    .filter(p => p.propertyData !== '');
+                  const fileProps = fields
+                    .filter(f => f.type === 'files')
+                    .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
+                    .flatMap(f =>
+                      relevantProperties.filter(p => p.propertyName.startsWith(f.fieldPath))
+                    )
+                    .filter(p => p.propertyData !== '');
+                  return {
+                    title: s.title,
+                    properties: [...normalProps, ...fileProps],
+                  };
+                })
+                .filter(s => s.properties.length > 0);
+
+              return (
+                <div>
+                  {sections.map(s => (
+                    <Card className="mb-4" key={s.title}>
+                      <Section title={s.title} properties={s.properties} />
+                    </Card>
+                  ))}
+                </div>
+              );
+            }}
+          </Loader>
+        );
+      }}
+    </RequestLoader>
   );
 }
 

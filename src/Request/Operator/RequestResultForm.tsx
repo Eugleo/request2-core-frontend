@@ -224,11 +224,15 @@ function TimeLabel() {
   const { values } = useFormikContext<ResultStub>();
   const humanTime = Number(values['human-time'].content);
   const machineTime = Number(values['machine-time'].content);
+  const totalTime = humanTime + machineTime;
 
   return (
     <div className="flex items-center text-gray-500 text-sm">
       <p>
-        Total time is <span className="font-bold">{humanTime + machineTime} minutes</span>
+        Total time is{' '}
+        <span className="font-bold">
+          {totalTime} {totalTime !== 1 ? 'minutes' : 'minute'}
+        </span>
       </p>
     </div>
   );

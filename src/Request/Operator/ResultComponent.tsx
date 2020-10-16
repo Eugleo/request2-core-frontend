@@ -7,14 +7,21 @@ import { Request, ResultProperty } from '../Request';
 import RequestResults from '../RequestResults';
 import RequestResultForm from './RequestResultForm';
 
-export function ResultWidget({ request }: { request: WithID<Request> }) {
+export function ResultWidget({ requestId }: { requestId: number }) {
+  const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
+
   const { Loader, refresh } = useAsyncGet<WithID<ResultProperty>[]>(
-    `/requests/${request._id}/props/results`
+    `/requests/${requestId}/props/results`
   );
+
   return (
-    <Loader>
-      {results => <ResultComponent request={request} properties={results} refresh={refresh} />}
-    </Loader>
+    <RequestLoader>
+      {request => (
+        <Loader>
+          {results => <ResultComponent request={request} properties={results} refresh={refresh} />}
+        </Loader>
+      )}
+    </RequestLoader>
   );
 }
 

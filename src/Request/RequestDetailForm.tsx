@@ -1,3 +1,4 @@
+/* eslint-disable react/destructuring-assignment */
 import { Uploady } from '@rpldy/chunked-uploady';
 import c from 'classnames';
 import { Form, Formik } from 'formik';
@@ -10,8 +11,11 @@ import { Files } from '../Common/Form/Files';
 import { LongText, ShortText } from '../Common/Form/TextField';
 import { TextWithHints } from '../Common/Form/TextWithHintsField';
 import { Card, Page } from '../Common/Layout';
+import { useAsyncGet } from '../Utils/Api';
 import { apiBase } from '../Utils/ApiBase';
+import { useAuth } from '../Utils/Auth';
 import { makeFieldPath } from '../Utils/FieldPath';
+import { fileToString } from '../Utils/File';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import {
@@ -22,26 +26,76 @@ import {
   createSingleChoiceValue,
   createTextWithHintsValue,
   FieldValue,
+  fieldValueToString,
   isEmpty,
+  isFilesField,
 } from './FieldValue';
-import { Property, Request } from './Request';
+import { BareProperty, DetailProperty, Property, PropertyType, Request } from './Request';
 import { DetailField, Field, IndirectField, isField } from './RequestSchema';
 import { requestSchemas, requestValidations } from './RequestTypes';
 import fieldLib from './RequestTypes/field-library.json';
 
-export default function RequestDetailForm<T>({
-  title,
-  requestType,
-  request,
-  properties,
+type RequestSubmit = (request: Request, values: BareProperty[]) => Promise<void>;
+
+export default function RequestDetailFormPage<T>({
+  onSubmit,
+  ...props
+}: ({ requestId: number } | { requestType: string }) & { onSubmit: RequestSubmit }) {
+  if ('requestType' in props) {
+    return (
+      <Page title={`New ${props.requestType}`}>
+        <RequestDetailForm requestType={props.requestType} onSubmit={onSubmit} />
+      </Page>
+    );
+  }
+
+  return <PreloadedRequestDetailForm requestId={props.requestId} onSubmit={onSubmit} />;
+}
+
+function PreloadedRequestDetailForm({
+  requestId,
   onSubmit,
 }: {
-  title: string;
-  requestType: string;
-  request?: Maybe<WithID<Request>>;
-  properties?: Property[];
-  onSubmit: (values: { [_: string]: FieldValue }) => Promise<T>;
+  requestId: number;
+  onSubmit: RequestSubmit;
 }) {
+  const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
+  const { Loader: DetailsLoader } = useAsyncGet<WithID<DetailProperty>[]>(
+    `/requests/${requestId}/props/details`
+  );
+
+  return (
+    <RequestLoader>
+      {request => (
+        <Page title={`Editing ${request.name}`}>
+          <DetailsLoader>
+            {details => (
+              <RequestDetailForm
+                request={request}
+                requestType={request.requestType}
+                onSubmit={onSubmit}
+                details={details}
+              />
+            )}
+          </DetailsLoader>
+        </Page>
+      )}
+    </RequestLoader>
+  );
+}
+
+function RequestDetailForm({
+  requestType,
+  request,
+  onSubmit,
+  details,
+}: {
+  requestType: string;
+  request?: WithID<Request>;
+  details?: WithID<DetailProperty>[];
+  onSubmit: RequestSubmit;
+}) {
+  const { auth } = useAuth();
   const schema = requestSchemas.get(requestType);
 
   if (!schema) {
@@ -60,7 +114,7 @@ export default function RequestDetailForm<T>({
   const initialValues: { [_: string]: FieldValue } = fields.reduce(
     (acc, f) => ({
       ...acc,
-      [f.path]: getDefValue(f, properties),
+      [f.path]: getDefValue(f, details),
     }),
     { title: { type: 'text-short', content: request?.name || '' } }
   );
@@ -68,43 +122,75 @@ export default function RequestDetailForm<T>({
   const generalValidate = getValidateForFields(fields);
 
   return (
-    <Page title={title}>
-      <Card className="mb-12 max-w-2xl mx-auto">
-        <Uploady destination={{ url: `${apiBase}/files` }}>
-          <Formik
-            initialValues={initialValues}
-            onSubmit={values => {
-              onSubmit(values).catch(console.log);
-            }}
-            validate={values => ({
-              ...specificValidate(values),
-              ...generalValidate(values),
-            })}
-            validateOnChange
-          >
-            <Form className="flex flex-col items-start">
-              <Section title="General information">
-                <ShortText
-                  path="title"
-                  label="Request title"
-                  description="How the request will be called in your requests overview"
-                />
-              </Section>
-              {sections.map((s, ix) => (
-                <Section title={s.title} key={s.title} isLast={ix + 1 === sections.length}>
-                  {s.fields.map(f => makeField(f, title))}
-                </Section>
-              ))}
+    <Card className="mb-12 max-w-2xl mx-auto">
+      <Uploady destination={{ url: `${apiBase}/files` }}>
+        <Formik
+          initialValues={initialValues}
+          onSubmit={values => {
+            const now = Math.round(Date.now() / 1000);
+            const mkProp = (n: string, t: PropertyType, d: string) => ({
+              authorId: auth.user._id,
+              dateAdded: now,
+              active: true,
+              propertyName: n,
+              propertyType: t,
+              propertyData: d,
+              requestId: request?._id,
+            });
 
-              <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
-                <Button.Cancel />
-                <Button.Primary type="submit">Save changes</Button.Primary>
-              </div>
-            </Form>
-          </Formik>
-        </Uploady>
-      </Card>
-    </Page>
+            const req: Request = {
+              authorId: auth.user._id,
+              teamId: auth.user.team._id,
+              status: 'Pending',
+              requestType,
+              dateCreated: now,
+              ...request,
+              name: fieldValueToString(values.title),
+            };
+
+            const normalProps = Object.entries(values)
+              .filter(([name, value]) => name !== 'title' && !isFilesField(value))
+              .map(([name, value]) => mkProp(name, 'Detail', fieldValueToString(value)));
+
+            const fileProps = Object.entries(values)
+              .flatMap(([name, value]) =>
+                isFilesField(value) ? value.content.map(file => ({ name, file })) : []
+              )
+              .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
+
+            const status = mkProp('status', 'General', req.status);
+            const title = mkProp('title', 'General', req.name);
+
+            onSubmit(req, [title, status, ...normalProps, ...fileProps]);
+          }}
+          validate={values => ({
+            ...specificValidate(values),
+            ...generalValidate(values),
+          })}
+          validateOnChange
+        >
+          <Form className="flex flex-col items-start">
+            <Section title="General information">
+              <ShortText
+                path="title"
+                label="Request title"
+                description="How the request will be called in your requests overview"
+              />
+            </Section>
+            {sections.map((s, ix) => (
+              <Section title={s.title} key={s.title} isLast={ix + 1 === sections.length}>
+                {s.fields.map(f => makeField(f, s.title))}
+              </Section>
+            ))}
+
+            <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
+              <Button.Cancel />
+              <Button.Primary type="submit">Save changes</Button.Primary>
+            </div>
+          </Form>
+        </Formik>
+      </Uploady>
+    </Card>
   );
 }
 

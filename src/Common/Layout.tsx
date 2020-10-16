@@ -25,7 +25,7 @@ export function Header({ children, className }: { children: React.ReactNode; cla
 }
 
 export function Body({ children }: { children: React.ReactNode }) {
-  return <div className="my-6 flex flex-col">{children}</div>;
+  return <div className="py-6 overflow-scroll">{children}</div>;
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }) {
