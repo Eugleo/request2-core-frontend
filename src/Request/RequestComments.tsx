@@ -4,6 +4,7 @@ import React, { useEffect, useRef } from 'react';
 
 import * as Button from '../Common/Buttons';
 import { RandomAvatar } from '../Page/UserView';
+import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { parseFieldName } from '../Utils/FieldPath';
@@ -36,17 +37,9 @@ export function RequestComments({ requestId }: { requestId: number }) {
     }
   });
 
-  const properties: WithID<Property>[] = [];
-
-  if (details.status === 'Success') {
-    properties.concat(details.data);
-  }
-
-  if (results.status === 'Success') {
-    properties.concat(results.data);
-  }
-
-  const sortedProps = properties.sort(comparator(p => p.dateAdded));
+  const resultsArray = results.status === 'Success' ? results.data : [];
+  const detailsArray = details.status === 'Success' ? details.data : [];
+  const sortedProps = [...resultsArray, ...detailsArray].sort(comparator(p => p.dateAdded));
   const updatedProps = sortedProps
     .filter(p => !p.active)
     .mapMaybe(p =>
@@ -65,18 +58,18 @@ export function RequestComments({ requestId }: { requestId: number }) {
               {[...updatedProps, ...comments]
                 .sort(comparator(p => p.dateAdded))
                 .map(prop =>
-                  ['Detail', 'Result', 'File', 'ResultFile'].includes(prop.propertyType) ? (
-                    <Change
-                      key={prop._id}
-                      date={prop.dateAdded}
-                      authorName="Evžen"
-                      fieldPath={prop.propertyName}
-                    />
-                  ) : (
+                  prop.propertyType === 'Comment' ? (
                     <Comment
                       isMine={prop.authorId === auth.user._id}
                       text={prop.propertyData}
                       key={prop._id}
+                    />
+                  ) : (
+                    <Change
+                      key={prop._id}
+                      date={prop.dateAdded}
+                      authorId={prop.authorId}
+                      fieldPath={prop.propertyName}
                     />
                   )
                 )
@@ -199,18 +192,24 @@ function Comment({ isMine, text }: { isMine: boolean; text: string }) {
 
 function Change({
   date,
-  authorName,
+  authorId,
   fieldPath,
 }: {
   date: number;
-  authorName: string;
+  authorId: number;
   fieldPath: string;
 }) {
+  const { result } = useAsyncGet<User>(`/users/${authorId}`);
   const { field } = parseFieldName(fieldPath);
   return (
     <div className="text-xs text-gray-400 border-t border-b border-gray-200 w-full p-3 hover:text-gray-600">
       <p className="text-center w-full">
-        <span className="font-semibold">{authorName}</span> changed {field}
+        {result.status === 'Success' ? (
+          <span className="font-semibold">{result.data.name}</span>
+        ) : (
+          'Someone'
+        )}{' '}
+        changed {field}
       </p>
     </div>
   );
