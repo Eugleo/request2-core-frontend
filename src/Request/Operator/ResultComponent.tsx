@@ -34,6 +34,7 @@ function ResultComponent({
   properties: WithID<ResultProperty>[];
   refresh: () => void;
 }) {
+  console.log(properties.filter(p => p.propertyName === 'human-time'));
   const activeProperties = properties.filter(p => p.active);
   const [isEditing, setIsEditing] = useState(activeProperties.length === 0);
 

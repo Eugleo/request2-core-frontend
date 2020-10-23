@@ -149,6 +149,7 @@ export default function RequestResultForm({
             setStatus('Pending');
             submit(auth.user._id, authPut, values, request).then(r => {
               if (r.ok) {
+                console.log(values);
                 setStatus('Success');
                 stopEditing();
                 refreshResults();

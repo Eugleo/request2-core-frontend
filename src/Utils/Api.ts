@@ -30,19 +30,20 @@ export function useAsyncGetMany<T>(url: string, limit: number, offset: number) {
 // The server returns either { error: ... } or { data: ... }
 export function useAsyncGet<T>(url: string) {
   const { authGet } = useAuth();
-  const [refState, refresh] = useRefresh();
+  const [ref, refresh] = useRefresh();
 
   const getThing = useCallback(() => {
-    console.log(refState);
     return authGet(url)
       .then(r => r.json())
       .then(json => {
         if (json.data) {
           return json.data;
         }
-        throw new Error(json.error);
+        // ref needs to stay in deps array
+        // Otherwise this won't work
+        throw new Error(json.error + ref);
       });
-  }, [authGet, refState, url]);
+  }, [authGet, ref, url]);
   const thing = useAsync<T>(getThing);
 
   return { ...thing, refresh };

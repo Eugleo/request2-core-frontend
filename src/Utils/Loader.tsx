@@ -7,7 +7,6 @@ export type Result<T> =
   | { status: 'Error'; data: string };
 
 function Spinner() {
-  console.log('SPIN IT UP');
   return (
     <span className="mx-auto">
       <AtomSpinner color="gray" />

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 export function useOnClickOutside<T extends Node>(handler: () => void) {
   const ref = useRef<T>(null);
@@ -24,8 +24,11 @@ export function useOnClickOutside<T extends Node>(handler: () => void) {
 }
 
 export function useRefresh(): [number, () => void] {
-  const [st, setS] = useState(0);
-  return [st, () => setS(s => s + 1)];
+  const [tick, setTick] = useState(0);
+  const update = useCallback(() => {
+    setTick(t => t + 1);
+  }, []);
+  return [tick, update];
 }
 
 export function useTraceUpdate<T extends Record<string, any>>(props: T) {
