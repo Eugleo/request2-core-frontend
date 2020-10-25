@@ -46,8 +46,8 @@ export default function AnnouncementForm({
     <Page title={title}>
       <Formik
         initialValues={{
-          title: createShortTextValue(ann?.title),
           body: createLongTextValue(ann?.body),
+          title: createShortTextValue(ann?.title),
         }}
         onSubmit={values => {
           onSubmit(values)
