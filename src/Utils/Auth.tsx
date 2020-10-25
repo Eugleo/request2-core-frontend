@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-no-useless-fragment */
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router';
 
@@ -5,7 +6,7 @@ import { Role, UserDetails } from '../User/User';
 import { apiBase } from './ApiBase';
 import { useAuthState } from './AuthContext';
 
-export function authHeaders(apiKey: string) {
+export function authHeaders(apiKey: string): { Authorization: string } {
   return { Authorization: `Bearer ${apiKey}` };
 }
 
@@ -35,17 +36,18 @@ export function useAuth<T>(): {
   );
 
   const authGet = useCallback(
-    url => withUser(fetch(apiBase + url, { method: 'GET', headers: authHeaders(auth.apiKey) })),
+    (url: string) =>
+      withUser(fetch(apiBase + url, { headers: authHeaders(auth.apiKey), method: 'GET' })),
     [auth.apiKey, withUser]
   );
 
   const authPost = useCallback(
-    (url, data) => {
+    (url: string, data) => {
       return withUser(
         fetch(apiBase + url, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
           body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
+          method: 'POST',
         })
       );
     },
@@ -53,26 +55,26 @@ export function useAuth<T>(): {
   );
 
   const authDel = useCallback(
-    (url, data) =>
+    (url: string, data) =>
       withUser(
         fetch(apiBase + url, {
-          method: 'DELETE',
+          body: data ? JSON.stringify(data) : undefined,
           headers: data
             ? { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) }
             : authHeaders(auth.apiKey),
-          body: data ? JSON.stringify(data) : undefined,
+          method: 'DELETE',
         })
       ),
     [auth.apiKey, withUser]
   );
 
   const authPut = useCallback(
-    (url, data) => {
+    (url: string, data) => {
       return withUser(
         fetch(apiBase + url, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
           body: JSON.stringify(data),
+          headers: { 'Content-Type': 'application/json', ...authHeaders(auth.apiKey) },
+          method: 'PUT',
         })
       );
     },
@@ -80,11 +82,11 @@ export function useAuth<T>(): {
   );
 
   return {
+    auth,
+    authDel,
     authGet,
     authPost,
-    authDel,
     authPut,
-    auth,
   };
 }
 
@@ -104,7 +106,7 @@ export function NotAuthentized({
 }: {
   children: JSX.Element | JSX.Element[] | null;
   otherwise?: JSX.Element | JSX.Element[] | null;
-}) {
+}): JSX.Element {
   return <Authorized otherwise={children}>{otherwise}</Authorized>;
 }
 
@@ -115,8 +117,8 @@ export function Authorized({
 }: {
   otherwise?: JSX.Element | JSX.Element[] | null;
   children: JSX.Element | JSX.Element[] | null;
-  roles?: Array<Role>;
-}) {
+  roles?: Role[];
+}): JSX.Element | null {
   const auth = useAuthState();
 
   if (!auth.loggedIn || !roles.every(r => auth.user.roles.includes(r))) {

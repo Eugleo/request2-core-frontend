@@ -6,9 +6,9 @@ import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
-import AnnouncementForm from './AnnouncementForm';
+import { AnnouncementForm } from './AnnouncementForm';
 
-export default function EditAnnouncement() {
+export function EditAnnouncement(): JSX.Element {
   const { id } = useParams();
   const { authPut } = useAuth<Announcement>();
   const { Loader } = useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
@@ -21,8 +21,8 @@ export default function EditAnnouncement() {
           onSubmit={values =>
             authPut(`/announcements/${id}`, {
               ...ann,
-              title: values.title.content,
               body: values.body.content,
+              title: values.title.content,
             })
           }
           ann={ann}
@@ -45,10 +45,9 @@ function ActivateButton({ ann }: { ann: WithID<Announcement> }) {
     <Button.Secondary
       title="Reactivate"
       status="Normal"
-      onClick={() => {
-        authPut(`/announcements/${ann._id}`, { ...ann, active: true })
-          .then(() => navigate(-1))
-          .catch(console.log);
+      onClick={async () => {
+        await authPut(`/announcements/${ann._id}`, { ...ann, active: true });
+        navigate(-1);
       }}
       className="mr-2"
     />
@@ -63,10 +62,9 @@ function DeactivateButton({ ann }: { ann: WithID<Announcement> }) {
     <Button.Secondary
       title="Deactivate"
       status="Danger"
-      onClick={() => {
-        authDel(`/announcements/${ann._id}`)
-          .then(() => navigate(-1))
-          .catch(console.log);
+      onClick={async () => {
+        await authDel(`/announcements/${ann._id}`);
+        navigate(-1);
       }}
       className="mr-2"
     />

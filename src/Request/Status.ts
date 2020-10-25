@@ -1,6 +1,8 @@
+import { ClassValue } from 'classnames/types';
+
 export type Status = 'Pending' | 'InProgress' | 'Done' | 'AwaitingInput' | 'Deleted';
 
-export function statusStyle(status: Status) {
+export function statusStyle(status: Status): string {
   switch (status) {
     case 'Pending':
       return 'bg-blue-100 text-blue-500 border border-blue-300';
@@ -15,7 +17,7 @@ export function statusStyle(status: Status) {
   }
 }
 
-export function statusStyleHover(status: Status) {
+export function statusStyleHover(status: Status): string {
   switch (status) {
     case 'Pending':
       return 'hover:bg-blue-100 hover:text-blue-500';
@@ -30,18 +32,7 @@ export function statusStyleHover(status: Status) {
   }
 }
 
-export function statusToString(status: Status) {
-  switch (status) {
-    case 'InProgress':
-      return 'In Progress';
-    case 'AwaitingInput':
-      return 'Awaiting Input';
-    default:
-      return status;
-  }
-}
-
-export function statusToStr(status: Status) {
+export function statusToStr(status: Status): string {
   switch (status) {
     case 'InProgress':
       return 'In Progress';

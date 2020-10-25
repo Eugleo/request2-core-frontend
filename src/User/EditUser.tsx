@@ -7,9 +7,9 @@ import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Role, User } from './User';
-import UserForm, { UserStub } from './UserForm';
+import { UserStub, UserForm } from './UserForm';
 
-export default function EditUser() {
+export function EditUser(): JSX.Element {
   const { id } = useParams();
   const { Loader } = useAsyncGet<WithID<User>>(`/users/${id}`);
   return <Loader>{user => <EditUserForm user={user} />}</Loader>;
@@ -22,8 +22,8 @@ function EditUserForm({ user }: { user: WithID<User> }) {
   const onSubmit = async (values: UserStub, teamId: number) => {
     const response = await authPut(`/users/${user._id}`, {
       ...user,
-      name: fieldValueToString(values.name),
       email: fieldValueToString(values.email),
+      name: fieldValueToString(values.name),
       roles: values.roles.content as Role[],
       teamId,
     });
@@ -40,18 +40,16 @@ function EditUserForm({ user }: { user: WithID<User> }) {
       headerButtons={
         user.active ? (
           <Button.Deactivate
-            onClick={() => {
-              authDel(`/users/${user._id}`)
-                .then(() => navigate(-1))
-                .catch(console.log);
+            onClick={async () => {
+              await authDel(`/users/${user._id}`);
+              navigate(-1);
             }}
           />
         ) : (
           <Button.Activate
-            onClick={() => {
-              authPut(`/users/${user._id}`, { ...user, active: true })
-                .then(() => navigate(-1))
-                .catch(console.log);
+            onClick={async () => {
+              await authPut(`/users/${user._id}`, { ...user, active: true });
+              navigate(-1);
             }}
           />
         )

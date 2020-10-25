@@ -12,38 +12,32 @@ import { authHeaders } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
 import { Errors } from '../Utils/Errors';
 
-export function getUserInfo(apiKey: string): Promise<UserDetails> {
-  return Api.get('/me', authHeaders(apiKey))
-    .then(r => {
-      if (r.ok) {
-        return r.json();
-      }
-      throw new Error('Failed to retrieve user by api key');
-    })
-    .then(js => js)
-    .catch(error => console.log(error));
+export async function getUserInfo(apiKey: string): Promise<UserDetails> {
+  const r = await Api.get('/me', authHeaders(apiKey));
+  if (r.ok) {
+    return r.json();
+  }
+  throw new Error('Failed to retrieve user by api key');
 }
 
-function verifyLogin(email: string, password: string, authDispatch: Function, setFailed: Function) {
-  return Api.post('/login', { email, password })
-    .then(r => {
-      if (r.ok) {
-        setFailed(false);
-        return r.json();
-      }
-      setFailed(true);
-      throw new Error('Incorrect email and/or password');
-    })
-    .then(js => {
-      getUserInfo(js.apiKey).then(userDetails => {
-        console.log({ apiKey: `.${js.apiKey}.`, user: userDetails });
-        authDispatch({
-          type: 'LOGIN',
-          payload: { apiKey: js.apiKey, user: userDetails },
-        });
-      });
-    })
-    .catch(error => console.log(error));
+async function verifyLogin(
+  email: string,
+  password: string,
+  authDispatch: Function,
+  setFailed: Function
+) {
+  const r = await Api.post('/login', { email, password });
+  if (r.ok) {
+    setFailed(false);
+    const js = await r.json();
+    const userDetails = await getUserInfo(js.apiKey);
+    authDispatch({
+      payload: { apiKey: js.apiKey, user: userDetails },
+      type: 'LOGIN',
+    });
+  }
+  setFailed(true);
+  throw new Error('Incorrect email and/or password');
 }
 
 function validate(values: LoginStub) {
@@ -61,7 +55,7 @@ function validate(values: LoginStub) {
 
 type LoginStub = { email: ShortTextFieldValue; password: ShortTextFieldValue };
 
-export default function LoginPage() {
+export function LoginPage(): JSX.Element {
   const [loginFailed, setLoginFailed] = useState(false);
   const dispatch = useAuthDispatch();
 

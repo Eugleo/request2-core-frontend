@@ -8,12 +8,12 @@ import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { parseFieldName } from '../Utils/FieldPath';
-import { comparator } from '../Utils/Func';
+import { comparing } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { createLongTextValue, LongTextFieldValue } from './FieldValue';
 import { DetailProperty, Property, ResultProperty } from './Request';
 
-export function RequestComments({ requestId }: { requestId: number }) {
+export function RequestComments({ requestId }: { requestId: number }): JSX.Element {
   const { auth } = useAuth();
 
   type Comment = WithID<Property & { propertyType: 'Comment' }>;
@@ -39,7 +39,7 @@ export function RequestComments({ requestId }: { requestId: number }) {
 
   const resultsArray = results.status === 'Success' ? results.data : [];
   const detailsArray = details.status === 'Success' ? details.data : [];
-  const sortedProps = [...resultsArray, ...detailsArray].sort(comparator(p => p.dateAdded));
+  const sortedProps = [...resultsArray, ...detailsArray].sort(comparing(p => p.dateAdded));
   const updatedProps = sortedProps
     .filter(p => !p.active)
     .mapMaybe(p =>
@@ -56,7 +56,7 @@ export function RequestComments({ requestId }: { requestId: number }) {
           {comments => (
             <>
               {[...updatedProps, ...comments]
-                .sort(comparator(p => p.dateAdded))
+                .sort(comparing(p => p.dateAdded))
                 .map(prop =>
                   prop.propertyType === 'Comment' ? (
                     <Comment
@@ -76,7 +76,7 @@ export function RequestComments({ requestId }: { requestId: number }) {
                 .intersperse(ix => (
                   <div
                     key={ix}
-                    style={{ width: '1px', margin: '-1px auto -1px auto' }}
+                    style={{ margin: '-1px auto -1px auto', width: '1px' }}
                     className="h-4 bg-gray-200 flex-shrink-0"
                   />
                 ))}
@@ -114,22 +114,22 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   return (
     <Formik
       initialValues={{ comment: createLongTextValue() }}
-      onSubmit={({ comment }, { resetForm }) =>
-        authPost(`/requests/${requestId}/comments`, {
-          authorId: auth.user._id,
-          requestId,
-          propertyType: 'Comment',
-          propertyName: 'comment',
-          propertyData: comment.content,
-          dateAdded: Math.round(Date.now() / 1000),
+      onSubmit={async ({ comment }, { resetForm }) => {
+        const r = await authPost(`/requests/${requestId}/comments`, {
           active: true,
-        }).then(r => {
-          if (r.status === 201) {
-            refresh();
-            resetForm();
-          }
-        })
-      }
+          authorId: auth.user._id,
+          dateAdded: Math.round(Date.now() / 1000),
+          propertyData: comment.content,
+          propertyName: 'comment',
+          propertyType: 'Comment',
+          requestId,
+        });
+
+        if (r.status === 201) {
+          refresh();
+          resetForm();
+        }
+      }}
     >
       <Form className="px-6 py-3 border-t border-gray-300 shadow-md">
         <CommentTextField />
@@ -146,6 +146,7 @@ function CommentTextField() {
   return (
     <textarea
       name={field.name}
+      // eslint-disable-next-line react/jsx-handler-names
       onBlur={field.onBlur}
       onChange={e => helpers.setValue(createLongTextValue(e.target.value))}
       value={meta.value.content}
@@ -156,22 +157,26 @@ function CommentTextField() {
 }
 
 function Comment({ isMine, text }: { isMine: boolean; text: string }) {
-  const Avatar = () => (
-    <div className="flex flex-col items-stretch col-span-1 justify-start h-full">
-      <RandomAvatar />
-    </div>
-  );
+  function Avatar() {
+    return (
+      <div className="flex flex-col items-stretch col-span-1 justify-start h-full">
+        <RandomAvatar />
+      </div>
+    );
+  }
 
-  const Body = () => (
-    <p
-      className={c(
-        'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-lg border-gray-200 border p-3',
-        isMine ? 'text-left' : 'text-right'
-      )}
-    >
-      {text}
-    </p>
-  );
+  function Body() {
+    return (
+      <p
+        className={c(
+          'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-lg border-gray-200 border p-3',
+          isMine ? 'text-left' : 'text-right'
+        )}
+      >
+        {text}
+      </p>
+    );
+  }
 
   return (
     <div className={c('grid grid-cols-5 gap-2 max-w-sm w-full')}>

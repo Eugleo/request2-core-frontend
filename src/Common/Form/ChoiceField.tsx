@@ -1,10 +1,17 @@
+/* eslint-disable react/jsx-handler-names */
 import { useField } from 'formik';
 import React from 'react';
 
 import { ChoicesFieldProps } from './Field';
 import { Description, Field, FieldHeader } from './General';
 
-export function SingleChoice({ path: name, description, label, hint, choices }: ChoicesFieldProps) {
+export function SingleChoice({
+  path: name,
+  description,
+  label,
+  hint,
+  choices,
+}: ChoicesFieldProps): JSX.Element {
   const [field, meta, helpers] = useField<{ type: 'single-choice'; content: string }>({
     name,
     type: 'radio',
@@ -19,7 +26,7 @@ export function SingleChoice({ path: name, description, label, hint, choices }: 
             <input
               name={field.name}
               onBlur={field.onBlur}
-              onChange={e => helpers.setValue({ type: 'single-choice', content: e.target.value })}
+              onChange={e => helpers.setValue({ content: e.target.value, type: 'single-choice' })}
               type="radio"
               id={`${name}/${choice}`}
               value={choice}
@@ -41,7 +48,7 @@ export function MultipleChoice({
   label,
   choices,
   hint,
-}: ChoicesFieldProps) {
+}: ChoicesFieldProps): JSX.Element {
   const [field, meta, helpers] = useField<{ type: 'multiple-choice'; content: string[] }>({
     name,
     type: 'checkbox',
@@ -58,10 +65,10 @@ export function MultipleChoice({
               onBlur={field.onBlur}
               onChange={e =>
                 helpers.setValue({
-                  type: 'multiple-choice',
                   content: e.target.checked
                     ? meta.value.content.concat(e.target.value)
                     : meta.value.content.filter(s => s !== e.target.value),
+                  type: 'multiple-choice',
                 })
               }
               id={`${name}/${choice}`}

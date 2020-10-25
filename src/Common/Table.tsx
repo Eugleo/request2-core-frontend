@@ -11,10 +11,10 @@ function TableHeading({ text }: { text: string }) {
   );
 }
 
-export function Row({ children }: { children: React.ReactNode }) {
+export function Row({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <tr
-      style={{ gridAutoFlow: 'column', gridAutoColumns: '1fr' }}
+      style={{ gridAutoColumns: '1fr', gridAutoFlow: 'column' }}
       className="list-item border-gray-200 px-6 py-3 hover:bg-gray-100 border-b"
     >
       {children}
@@ -22,11 +22,23 @@ export function Row({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function Cell({ children, className }: { children: React.ReactNode; className?: string }) {
+export function Cell({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return <td className={c('px-6 py-3 text-sm', className)}>{children}</td>;
 }
 
-export function Table({ columns, children }: { columns: string[]; children: ReactNode }) {
+export function Table({
+  columns,
+  children,
+}: {
+  columns: string[];
+  children: ReactNode;
+}): JSX.Element {
   return (
     <Card>
       <table className="min-w-full">
@@ -43,6 +55,6 @@ export function Table({ columns, children }: { columns: string[]; children: Reac
   );
 }
 
-export function Pill({ text, className }: { text: string; className: string }) {
+export function Pill({ text, className }: { text: string; className: string }): JSX.Element {
   return <span className={c('py-1 px-3 text-xs rounded-full border', className)}>{text}</span>;
 }

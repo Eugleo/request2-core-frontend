@@ -21,7 +21,7 @@ type SubmitButtonParams =
   | (BaseButtonParams & { type: 'submit' | 'reset'; onClick?: undefined; status?: Status })
   | (ButtonParams & { type?: 'button' });
 
-export function primaryClasses(status: Status) {
+export function primaryClasses(status: Status): ClassValue[] {
   return [
     'rounded-lg',
     'text-white',
@@ -31,7 +31,7 @@ export function primaryClasses(status: Status) {
   ];
 }
 
-export function secondaryClasses(status: Status) {
+export function secondaryClasses(status: Status): ClassValue[] {
   return [
     'border-2',
     'rounded-lg',
@@ -45,7 +45,7 @@ export function secondaryClasses(status: Status) {
   ];
 }
 
-export function tertiaryClasses(status: Status) {
+export function tertiaryClasses(status: Status): ClassValue[] {
   return [
     'text-gray-600',
     'font-medium',
@@ -64,11 +64,11 @@ export const baseClasses = [
   'text-sm',
 ];
 
-export function Activate({ onClick }: { onClick: () => void }) {
+export function Activate({ onClick }: { onClick: () => void }): JSX.Element {
   return <Secondary title="Reactivate" status="Normal" onClick={onClick} />;
 }
 
-export function Deactivate({ onClick }: { onClick: () => void }) {
+export function Deactivate({ onClick }: { onClick: () => void }): JSX.Element {
   return <Secondary title="Deactivate" status="Danger" onClick={onClick} />;
 }
 
@@ -93,11 +93,11 @@ function makeLinkedButton(p: LinkParams, getClasses: (status: Status) => ClassVa
   );
 }
 
-export function Create({ title }: { title: string }) {
+export function Create({ title }: { title: string }): JSX.Element {
   return <PrimaryLinked to="new" title={title} />;
 }
 
-export function Edit({ link }: { link: string }) {
+export function Edit({ link }: { link: string }): JSX.Element {
   return (
     <Link
       to={link}
@@ -115,33 +115,33 @@ export function Edit({ link }: { link: string }) {
   );
 }
 
-export function Cancel({ className }: { className?: string }) {
+export function Cancel({ className }: { className?: string }): JSX.Element {
   const navigate = useNavigate();
   return (
     <Tertiary className={className} title="Cancel" status="Normal" onClick={() => navigate(-1)} />
   );
 }
 
-export function Primary(props: SubmitButtonParams) {
+export function Primary(props: SubmitButtonParams): JSX.Element {
   return makeButton(props, primaryClasses);
 }
 
-export function PrimaryLinked(props: LinkParams) {
+export function PrimaryLinked(props: LinkParams): JSX.Element {
   return makeLinkedButton(props, primaryClasses);
 }
 
-export function Secondary(props: ButtonParams) {
+export function Secondary(props: ButtonParams): JSX.Element {
   return makeButton(props, secondaryClasses);
 }
 
-export function SecondaryLinked(props: LinkParams) {
+export function SecondaryLinked(props: LinkParams): JSX.Element {
   return makeLinkedButton(props, secondaryClasses);
 }
 
-export function Tertiary(props: ButtonParams) {
+export function Tertiary(props: ButtonParams): JSX.Element {
   return makeButton(props, tertiaryClasses);
 }
 
-export function TertiaryLinked(props: LinkParams) {
+export function TertiaryLinked(props: LinkParams): JSX.Element {
   return makeLinkedButton(props, tertiaryClasses);
 }

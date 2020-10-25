@@ -2,18 +2,18 @@ import React, { useCallback, useEffect } from 'react';
 import { AtomSpinner, TrinityRingsSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
-import AnnouncementRouter from './Announcement/AnnouncementList';
+import { AnnouncementRouter } from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
-import LoginPage, { getUserInfo } from './Page/LoginPage';
+import { getUserInfo, LoginPage } from './Page/LoginPage';
 import { NewRegistrationPage } from './Page/NewRegistrationPage';
 import { NotFound404 } from './Page/NotFound404';
 import { RegisterPage } from './Page/RegisterPage';
-import Sidebar from './Page/Sidebar';
-import RequestsAsClient from './Request/Client/RequestList';
-import RequestsAsOperator from './Request/Operator/RequestList';
-import TeamRouter from './Team/TeamList';
+import { Sidebar } from './Page/Sidebar';
+import { Requests as RequestsAsClient } from './Request/Client/RequestList';
+import { Requests as RequestsAsOperator } from './Request/Operator/RequestList';
+import { TeamRouter } from './Team/TeamList';
 import { UserRouter } from './User/UserRouter';
-import * as Api from './Utils/Api';
+import { get } from './Utils/Api';
 import { Authentized } from './Utils/Auth';
 import { AuthProvider, useAuthDispatch } from './Utils/AuthContext';
 import { useAsync } from './Utils/Loader';
@@ -21,7 +21,8 @@ import { useAsync } from './Utils/Loader';
 type BackendState = 'available' | 'unavailable' | 'loading';
 
 async function getAvailability() {
-  return Api.get('/capability').then(r => r.json());
+  const r = await get('/capability');
+  return r.json();
 }
 
 function useBackendState(): BackendState {
@@ -34,7 +35,7 @@ function useBackendState(): BackendState {
       if (result.data.includes('request2')) {
         return 'available';
       }
-      throw Error('Unsupported backend');
+      throw new Error('Unsupported backend');
     default:
       return 'unavailable';
   }
@@ -44,14 +45,12 @@ function useLogin() {
   const apiKey = localStorage.getItem('apiKey');
   const dispatch = useAuthDispatch();
 
-  const getUserDetails = useCallback(() => {
+  const getUserDetails = useCallback(async () => {
     if (apiKey) {
-      return getUserInfo(apiKey).then(userDetails => {
-        dispatch({
-          type: 'LOGIN',
-          payload: { apiKey, user: userDetails },
-        });
-        return null;
+      const userDetails = await getUserInfo(apiKey);
+      dispatch({
+        payload: { apiKey, user: userDetails },
+        type: 'LOGIN',
       });
     }
     return Promise.resolve(null);
@@ -68,7 +67,7 @@ function useLogin() {
   return result;
 }
 
-function App() {
+export function App(): JSX.Element {
   return (
     <AuthProvider>
       <div
@@ -153,5 +152,3 @@ function NormalRoutes() {
     </Authentized>
   );
 }
-
-export default App;

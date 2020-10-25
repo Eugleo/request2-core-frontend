@@ -1,13 +1,18 @@
 import { capitalize } from './Func';
 
-export function makeFieldPath(section: string, propertyName: string) {
-  const normalize = (str: string) => str.toLowerCase().replace(/\s+/g, '-');
+function normalize(str: string) {
+  return str.toLowerCase().replace(/\s+/gu, '-');
+}
+
+export function makeFieldPath(section: string, propertyName: string): string {
   return `${normalize(section)}/${normalize(propertyName)}`;
 }
 
-export function parseFieldName(name: string) {
-  const denormalize = (str: string) => str && capitalize(str.split('-').join(' '));
+function denormalize(str: string) {
+  return str && capitalize(str.split('-').join(' '));
+}
 
+export function parseFieldName(name: string): { field: string; section: string } {
   const [field, section] = name.split('/').reverse();
-  return { section: denormalize(section), field: denormalize(field) };
+  return { field: denormalize(field), section: denormalize(section) };
 }

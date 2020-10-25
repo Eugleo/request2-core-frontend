@@ -51,7 +51,7 @@ export type BareProperty = {
   active: boolean;
 };
 
-export function idToCode(id: number) {
+export function idToCode(id: number): string {
   const table = [...'123456789ABCDEFGHIJKLMNPQRSTUVWXYZ'.split('')];
   const k = table.length;
 
@@ -59,15 +59,15 @@ export function idToCode(id: number) {
     return [[...dgs, Math.floor(rst / k ** n)], rst % k ** n];
   }
 
-  const code = [...Array(10).keys()]
+  const code = [...new Array(10).keys()]
     .reverse()
     .reduce(helper, [[], id])[0]
     .map((i: number) => table[i])
     .join('');
 
-  return code.replace(/^1+(?=\w\w\w)/, '');
+  return code.replace(/^1+(?=\w{3})/u, '');
 }
 
-export function idToStr(request: WithID<{ requestType: string }>) {
+export function idToStr(request: WithID<{ requestType: string }>): string {
   return `${capitalize(request.requestType)[0]}/${idToCode(request._id)}`;
 }

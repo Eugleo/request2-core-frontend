@@ -4,20 +4,20 @@ import { useNavigate } from 'react-router';
 import { fieldValueToString } from '../Request/FieldValue';
 import { useAuth } from '../Utils/Auth';
 import { Role, User } from './User';
-import UserForm, { UserStub } from './UserForm';
+import { UserStub, UserForm } from './UserForm';
 
-export default function NewUser() {
+export function NewUser(): JSX.Element {
   const { authPost } = useAuth<User>();
   const navigate = useNavigate();
 
   const onSubmit = async (values: UserStub, teamId: number) => {
     const response = await authPost('/users', {
-      name: fieldValueToString(values.name),
+      active: true,
+      dateCreated: Math.round(Date.now() / 1000),
       email: fieldValueToString(values.email),
+      name: fieldValueToString(values.name),
       password: fieldValueToString(values.password),
       roles: values.roles.content as Role[],
-      dateCreated: Math.round(Date.now() / 1000),
-      active: true,
       teamId,
     });
 

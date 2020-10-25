@@ -43,13 +43,13 @@ function submit(
   const normalProps: ResultProperty[] = Object.entries(properties)
     .filter(([, value]) => !isFilesField(value))
     .map(([name, value]) => ({
-      authorId,
-      requestId: request._id,
-      propertyType: 'Result',
-      propertyName: name,
-      propertyData: fieldValueToString(value),
-      dateAdded: Math.round(Date.now() / 1000),
       active: true,
+      authorId,
+      dateAdded: Math.round(Date.now() / 1000),
+      propertyData: fieldValueToString(value),
+      propertyName: name,
+      propertyType: 'Result',
+      requestId: request._id,
     }));
 
   const fileProps: ResultProperty[] = Object.entries(properties)
@@ -57,13 +57,13 @@ function submit(
     .filter<{ type: 'files'; content: File[] }>(isFilesField)
     .flatMap(v => v.content)
     .map((f, ix) => ({
-      authorId,
-      requestId: request._id,
-      propertyType: 'ResultFile',
-      propertyName: `file-${ix}`,
-      propertyData: fileToString(f),
-      dateAdded: Math.round(Date.now() / 1000),
       active: true,
+      authorId,
+      dateAdded: Math.round(Date.now() / 1000),
+      propertyData: fileToString(f),
+      propertyName: `file-${ix}`,
+      propertyType: 'ResultFile',
+      requestId: request._id,
     }));
 
   return authPut(`/requests/${request._id}`, {
@@ -110,7 +110,7 @@ function SubmitButton({ status }: { status: Status }) {
   );
 }
 
-export default function RequestResultForm({
+export function RequestResultForm({
   request,
   stopEditing,
   refreshResults,
@@ -120,7 +120,7 @@ export default function RequestResultForm({
   stopEditing: () => void;
   refreshResults: () => void;
   properties?: WithID<ResultProperty>[];
-}) {
+}): JSX.Element {
   const { auth, authPut } = useAuth<{ req: Request; props: ResultProperty[] }>();
   const [status, setStatus] = useState<Status>('Default');
 
@@ -134,10 +134,10 @@ export default function RequestResultForm({
     .join(';;;');
 
   const initialValues = {
+    description: createLongTextValue(getData('description')),
+    files: createFilesValue(files === '' ? undefined : files),
     'human-time': createShortTextValue(getData('human-time')),
     'machine-time': createShortTextValue(getData('machine-time')),
-    files: createFilesValue(files === '' ? undefined : files),
-    description: createLongTextValue(getData('description')),
   };
 
   return (
@@ -145,9 +145,9 @@ export default function RequestResultForm({
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <Formik
           initialValues={initialValues}
-          onSubmit={(values: ResultStub) => {
+          onSubmit={async (values: ResultStub) => {
             setStatus('Pending');
-            submit(auth.user._id, authPut, values, request).then(r => {
+            await submit(auth.user._id, authPut, values, request).then(r => {
               if (r.ok) {
                 console.log(values);
                 setStatus('Success');
@@ -232,7 +232,7 @@ function TimeLabel() {
       <p>
         Total time is{' '}
         <span className="font-bold">
-          {totalTime} {totalTime !== 1 ? 'minutes' : 'minute'}
+          {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
         </span>
       </p>
     </div>

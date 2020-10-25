@@ -2,7 +2,7 @@ import React from 'react';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
-import Pagination, { usePagination } from '../Common/PageSwitcher';
+import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { Cell, Pill, Row, Table } from '../Common/Table';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
@@ -38,7 +38,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
   );
 }
 
-export default function UserList() {
+export function UserList(): JSX.Element {
   const { limit, currentPage } = usePagination(10);
   // const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
   const { Loader } = Api.useAsyncGetMany<WithID<User>>('/users', 1000, 0);

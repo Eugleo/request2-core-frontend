@@ -8,9 +8,9 @@ import * as Button from '../Common/Buttons';
 import { useOnClickOutside } from '../Common/Hooks';
 import { useAuth } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
-import formatDate from '../Utils/Date';
+import { formatDate } from '../Utils/Date';
 
-export function RandomAvatar() {
+export function RandomAvatar(): JSX.Element {
   return (
     <div className="bg-teal-700 rounded-full h-10 w-10 flex justify-center items-center">
       <User className="text-white" />
@@ -19,7 +19,7 @@ export function RandomAvatar() {
 }
 
 // TODO Fix accessibility
-export default function UserView() {
+export function UserView(): JSX.Element {
   const [showDetails, setShowDetails] = useState(false);
   const ref = useOnClickOutside<HTMLDivElement>(() => setShowDetails(false));
 
@@ -68,18 +68,15 @@ function UserDetails() {
         <Button.Primary
           title="Log out"
           status="Danger"
-          onClick={() => {
-            authPost('/logout', {})
-              .then(r => {
-                if (r.ok) {
-                  localStorage.removeItem('apiKey');
-                  dispatch({ type: 'LOGOUT' });
-                }
-                throw new Error(`Couldn't log out, response was ${r}`);
-              })
-              .catch(e => {
-                console.log(e);
-              });
+          onClick={async () => {
+            const r = await authPost('/logout', {});
+            if (r.ok) {
+              localStorage.removeItem('apiKey');
+              dispatch({ type: 'LOGOUT' });
+            } else {
+              const body = await r.text();
+              console.log(`Couldn't log out, response body was ${body}`);
+            }
           }}
         />
       </div>

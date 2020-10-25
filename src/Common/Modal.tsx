@@ -3,7 +3,7 @@ import React, { ReactNode } from 'react';
 import * as Button from './Buttons';
 import { useOnClickOutside } from './Hooks';
 
-export default function Modal({
+export function Modal({
   title,
   closeText,
   onClose,
@@ -13,7 +13,7 @@ export default function Modal({
   closeText: string;
   onClose: () => void;
   children: ReactNode;
-}) {
+}): JSX.Element {
   return (
     <div className="w-full h-full fixed bg-gray-200 bg-transparent flex justify-center items-center content-center z-50 left-0 top-0">
       <div

@@ -24,7 +24,7 @@ function validate(values: TeamStub) {
   return error;
 }
 
-export default function TeamForm({
+export function TeamForm({
   title,
   team,
   onSubmit,
@@ -36,7 +36,7 @@ export default function TeamForm({
   onSubmit: (values: TeamStub) => Promise<Response>;
   children: ReactNode;
   headerButtons?: React.ReactNode;
-}) {
+}): JSX.Element {
   const navigate = useNavigate();
 
   return (
@@ -44,14 +44,13 @@ export default function TeamForm({
       <Card className="max-w-md w-full mx-auto">
         <Formik
           initialValues={{
-            name: createShortTextValue(team?.name),
             code: createShortTextValue(team?.code),
+            name: createShortTextValue(team?.name),
           }}
           validate={validate}
-          onSubmit={values => {
-            onSubmit(values)
-              .then(() => navigate(-1))
-              .catch(console.log);
+          onSubmit={async values => {
+            await onSubmit(values);
+            navigate(-1);
           }}
         >
           <Form className="flex flex-col items-start">

@@ -27,18 +27,20 @@ export function useAsync<T>(
   const [result, setResult] = useState<Result<T>>({ status: 'Pending' });
 
   useEffect(() => {
-    func()
-      .then(t => setResult({ status: 'Success', data: t }))
-      .catch(e => setResult({ status: 'Error', data: e }));
+    const fetchData = async () => {
+      const t = await func();
+      setResult({ data: t, status: 'Success' });
+    };
+    fetchData().catch(console.log);
   }, [func]);
 
   switch (result.status) {
     case 'Pending':
-      return { result, Loader: Spinner };
+      return { Loader: Spinner, result };
     case 'Error':
-      return { result, Loader: () => <Problem /> };
+      return { Loader: () => <Problem />, result };
     default:
-      return { result, Loader: ({ children }) => children(result.data) };
+      return { Loader: ({ children }) => children(result.data), result };
   }
 }
 

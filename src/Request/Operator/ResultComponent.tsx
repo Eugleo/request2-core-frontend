@@ -4,10 +4,10 @@ import { useAsyncGet } from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
 import { Request, ResultProperty } from '../Request';
-import RequestResults from '../RequestResults';
-import RequestResultForm from './RequestResultForm';
+import { RequestResults } from '../RequestResults';
+import { RequestResultForm } from './RequestResultForm';
 
-export function ResultWidget({ requestId }: { requestId: number }) {
+export function ResultWidget({ requestId }: { requestId: number }): JSX.Element {
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
 
   const { Loader, refresh } = useAsyncGet<WithID<ResultProperty>[]>(

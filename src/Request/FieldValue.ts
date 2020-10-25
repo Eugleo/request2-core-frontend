@@ -17,7 +17,7 @@ export type FilesFieldValue = { type: 'files'; content: File[] };
 export type FieldValue = TextFieldValue | MultipleChoiceFieldValue | FilesFieldValue;
 
 export function isEmpty(val: FieldValue): boolean {
-  if (typeof val === 'string' || val instanceof Array) {
+  if (typeof val === 'string' || Array.isArray(val)) {
     return val.length === 0;
   }
   return val.content === '';
@@ -28,30 +28,30 @@ export function isFilesField(val: FieldValue): val is { type: 'files'; content: 
 }
 
 export function createShortTextValue(def?: Maybe<string>): ShortTextFieldValue {
-  return { type: 'text-short', content: def ?? '' };
+  return { content: def ?? '', type: 'text-short' };
 }
 
 export function createLongTextValue(def?: string): LongTextFieldValue {
-  return { type: 'text-long', content: def ?? '' };
+  return { content: def ?? '', type: 'text-long' };
 }
 
 export function createSingleChoiceValue(def?: string): SingleChoiceFieldValue {
-  return { type: 'single-choice', content: def ?? '' };
+  return { content: def ?? '', type: 'single-choice' };
 }
 
 export function createMultipleChoiceValue(def?: string): MultipleChoiceFieldValue {
-  return { type: 'multiple-choice', content: def?.split(';;;') ?? [] };
+  return { content: def?.split(';;;') ?? [], type: 'multiple-choice' };
 }
 
 export function createTextWithHintsValue(def?: string): TextWithHintsFieldValue {
-  return { type: 'text-with-hints', content: def ?? '' };
+  return { content: def ?? '', type: 'text-with-hints' };
 }
 
 export function createFilesValue(def?: string): FilesFieldValue {
-  return { type: 'files', content: def?.split(';;;').map(stringToFile) ?? [] };
+  return { content: def?.split(';;;').map(stringToFile) ?? [], type: 'files' };
 }
 
-export function fieldValueToString(field: FieldValue) {
+export function fieldValueToString(field: FieldValue): string {
   switch (field.type) {
     case 'single-choice':
     case 'text-long':

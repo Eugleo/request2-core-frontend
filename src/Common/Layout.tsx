@@ -1,17 +1,29 @@
 import c from 'classnames';
 import React from 'react';
 
-export function Spacer() {
+export function Spacer(): JSX.Element {
   return <span className="flex-grow" />;
 }
 
-export function Title({ children, className }: { children: React.ReactNode; className?: string }) {
+export function Title({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return (
     <h1 className={c('text-2xl font-bold leading-tight text-black', className)}>{children}</h1>
   );
 }
 
-export function Header({ children, className }: { children: React.ReactNode; className?: string }) {
+export function Header({
+  children,
+  className,
+}: {
+  children: React.ReactNode;
+  className?: string;
+}): JSX.Element {
   return (
     <div
       className={c(
@@ -24,11 +36,11 @@ export function Header({ children, className }: { children: React.ReactNode; cla
   );
 }
 
-export function Body({ children }: { children: React.ReactNode }) {
+export function Body({ children }: { children: React.ReactNode }): JSX.Element {
   return <div className="py-6 overflow-scroll">{children}</div>;
 }
 
-export function ContentWrapper({ children }: { children: React.ReactNode }) {
+export function ContentWrapper({ children }: { children: React.ReactNode }): JSX.Element {
   return <div className="pb-10 max-h-full overflow-x-hidden overflow-y-auto">{children}</div>;
 }
 
@@ -40,7 +52,7 @@ export function Page({
   title: string;
   buttons?: React.ReactNode;
   children: React.ReactNode;
-}) {
+}): JSX.Element {
   return (
     <ContentWrapper>
       <Header>
@@ -53,7 +65,7 @@ export function Page({
   );
 }
 
-export function SidebarWrapper({ children }: { children: React.ReactNode }) {
+export function SidebarWrapper({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <div style={{ gridTemplateColumns: 'auto 1fr' }} className="grid grid-cols-2">
       {children}
@@ -69,7 +81,7 @@ export function Card({
   children: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
-}) {
+}): JSX.Element {
   const classes = 'flex flex-col bg-white overflow-hidden shadow-xs rounded-lg mx-6';
   return (
     <div style={style} className={c(classes, className)}>

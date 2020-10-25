@@ -5,18 +5,18 @@ import { Link, Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Card, Page } from '../Common/Layout';
-import Markdown from '../Common/MdRender';
-import Pagination, { usePagination } from '../Common/PageSwitcher';
+import { Markdown } from '../Common/MdRender';
+import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { User } from '../User/User';
-import * as Api from '../Utils/Api';
+import { useAsyncGetMany, useAsyncGet } from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
-import AnnouncementPage from './AnnouncementPage';
-import EditAnnouncement from './EditAnnouncement';
-import NewAnnouncement from './NewAnnouncement';
+import { AnnouncementPage } from './AnnouncementPage';
+import { EditAnnouncement } from './EditAnnouncement';
+import { NewAnnouncement } from './NewAnnouncement';
 
-export default function AnnouncementRouter() {
+export function AnnouncementRouter(): JSX.Element {
   return (
     <Routes>
       <Route path="" element={<AnnouncementList />} />
@@ -29,7 +29,7 @@ export default function AnnouncementRouter() {
 
 function AnnouncementList() {
   const { limit, offset, currentPage } = usePagination(10);
-  const { Loader } = Api.useAsyncGetMany<WithID<Announcement>>('/announcements', limit, offset);
+  const { Loader } = useAsyncGetMany<WithID<Announcement>>('/announcements', limit, offset);
 
   return (
     <Page
@@ -63,7 +63,7 @@ function Item({
 }: {
   ann: WithID<Announcement>;
 }) {
-  const { Loader } = Api.useAsyncGet<WithID<User>>(`/users/${authorId}`);
+  const { Loader } = useAsyncGet<WithID<User>>(`/users/${authorId}`);
 
   return (
     <Card className="mb-6">

@@ -7,7 +7,7 @@ const req = require.context('./RequestTypes', true, /^.*\.rcfg\.json$/imu);
 export const requestSchemas: Map<string, Schema> = new Map(
   req
     .keys()
-    .map(req)
+    .map<Object>(req)
     .filter(isSchema)
     .map(sch => [sch.type, sch])
 );

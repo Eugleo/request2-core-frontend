@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export function useOnClickOutside<T extends Node>(handler: () => void) {
+export function useOnClickOutside<T extends Node>(handler: () => void): React.RefObject<T> {
   const ref = useRef<T>(null);
 
   useEffect(() => {
@@ -29,22 +29,6 @@ export function useRefresh(): [number, () => void] {
     setTick(t => t + 1);
   }, []);
   return [tick, update];
-}
-
-export function useTraceUpdate<T extends Record<string, any>>(props: T) {
-  const prev = useRef<T>(props);
-  useEffect(() => {
-    const changedProps = Object.entries(props).reduce<Record<string, any>>((ps, [k, v]) => {
-      if (prev.current[k] !== v) {
-        return { ...ps, [ps[k]]: [prev.current[k], v] };
-      }
-      return ps;
-    }, {});
-    if (Object.keys(changedProps).length > 0) {
-      console.log('Changed props:', changedProps);
-    }
-    prev.current = props;
-  });
 }
 
 export function useHover<T extends Node>(): [React.RefObject<T>, boolean] {

@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function SearchSidebar() {
+export function SearchSidebar(): JSX.Element {
   return (
     <div className="bg-teal-600 sticky flex flex-col col-span-1 py-4 border-r border-gray-300">
       <h2
@@ -27,7 +27,7 @@ function SearchField() {
   );
 }
 
-function Filter({ title, choices }: { title: string; choices: Array<string> }) {
+function Filter({ title, choices }: { title: string; choices: string[] }) {
   return (
     <div className="px-6">
       <h2 className="font-medium text-gray-500 mb-3">{title}</h2>

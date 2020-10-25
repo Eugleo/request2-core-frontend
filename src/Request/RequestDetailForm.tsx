@@ -37,10 +37,12 @@ import fieldLib from './RequestTypes/field-library.json';
 
 type RequestSubmit = (request: Request, values: BareProperty[]) => Promise<void>;
 
-export default function RequestDetailFormPage<T>({
+export function RequestDetailFormPage({
   onSubmit,
   ...props
-}: ({ requestId: number } | { requestType: string; title: string }) & { onSubmit: RequestSubmit }) {
+}: ({ requestId: number } | { requestType: string; title: string }) & {
+  onSubmit: RequestSubmit;
+}): JSX.Element {
   if ('requestType' in props) {
     return (
       <Page title={props.title}>
@@ -84,6 +86,12 @@ function PreloadedRequestDetailForm({
   );
 }
 
+function transformFields(sectionTitle: string, fs: (Field | IndirectField)[]) {
+  return fs
+    .mapMaybe(resolveInclude)
+    .map(f => ({ ...f, path: makeFieldPath(sectionTitle, f.name) }));
+}
+
 function RequestDetailForm({
   requestType,
   request,
@@ -103,11 +111,9 @@ function RequestDetailForm({
     return <Navigate to="/404" />;
   }
 
-  const transformFields = (sectionTitle: string, fs: (Field | IndirectField)[]) =>
-    fs.mapMaybe(resolveInclude).map(f => ({ ...f, path: makeFieldPath(sectionTitle, f.name) }));
   const sections = schema.sections.map(s => ({
-    title: s.title,
     fields: transformFields(s.title, s.fields),
+    title: s.title,
   }));
   const fields = sections.map(s => s.fields).reduce((acc, f) => acc.concat(f));
 
@@ -116,7 +122,7 @@ function RequestDetailForm({
       ...acc,
       [f.path]: getDefValue(f, details),
     }),
-    { title: { type: 'text-short', content: request?.name || '' } }
+    { title: { content: request?.name || '', type: 'text-short' } }
   );
   const specificValidate = requestValidations.get(requestType) || (() => ({}));
   const generalValidate = getValidateForFields(fields);
@@ -126,24 +132,24 @@ function RequestDetailForm({
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <Formik
           initialValues={initialValues}
-          onSubmit={values => {
+          onSubmit={async values => {
             const now = Math.round(Date.now() / 1000);
             const mkProp = (n: string, t: PropertyType, d: string) => ({
+              active: true,
               authorId: auth.user._id,
               dateAdded: now,
-              active: true,
+              propertyData: d,
               propertyName: n,
               propertyType: t,
-              propertyData: d,
               requestId: request?._id,
             });
 
             const req: Request = {
               authorId: auth.user._id,
-              teamId: auth.user.team._id,
-              status: 'Pending',
-              requestType,
               dateCreated: now,
+              requestType,
+              status: 'Pending',
+              teamId: auth.user.team._id,
               ...request,
               name: fieldValueToString(values.title),
             };
@@ -154,14 +160,14 @@ function RequestDetailForm({
 
             const fileProps = Object.entries(values)
               .flatMap(([name, value]) =>
-                isFilesField(value) ? value.content.map(file => ({ name, file })) : []
+                isFilesField(value) ? value.content.map(file => ({ file, name })) : []
               )
               .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
 
             const status = mkProp('status', 'General', req.status);
             const title = mkProp('title', 'General', req.name);
 
-            onSubmit(req, [title, status, ...normalProps, ...fileProps]);
+            await onSubmit(req, [title, status, ...normalProps, ...fileProps]);
           }}
           validate={values => ({
             ...specificValidate(values),
@@ -262,11 +268,11 @@ export function resolveInclude(field: Field | IndirectField): Maybe<Field> {
 
 function makeField(f: DetailField, sectionTitle: string) {
   const propsPack = {
-    key: f.name,
-    path: f.path,
-    label: f.name,
     description: f.description,
     hint: f.hint,
+    key: f.name,
+    label: f.name,
+    path: f.path,
   };
 
   switch (f.type) {

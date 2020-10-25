@@ -15,6 +15,7 @@ import {
 } from '../Request/FieldValue';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
+import { comparing } from '../Utils/Func';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 import { User } from './User';
@@ -27,7 +28,7 @@ export type UserStub = {
   team: SingleChoiceFieldValue;
 };
 
-export default function UserForm({
+export function UserForm({
   title,
   submitTitle,
   headerButtons,
@@ -39,7 +40,7 @@ export default function UserForm({
   user?: WithID<User>;
   headerButtons?: React.ReactNode;
   onSubmit: (values: UserStub, teamId: number) => void;
-}) {
+}): JSX.Element {
   const { result, Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', 1000, 0);
 
   const teamIds: Map<string, number> = ok(result)
@@ -51,8 +52,8 @@ export default function UserForm({
     : undefined;
 
   const initialValues = {
-    name: createShortTextValue(user?.name),
     email: createShortTextValue(user?.email),
+    name: createShortTextValue(user?.name),
     password: createShortTextValue(user?.password),
     roles: createMultipleChoiceValue(user?.roles.join(';;;')),
     team: createSingleChoiceValue(selectedTeam),
@@ -69,7 +70,7 @@ export default function UserForm({
               if (teamId) {
                 onSubmit(values, teamId);
               } else {
-                throw Error('Selected team is not in values');
+                throw new Error('Selected team is not in values');
               }
             }}
           >
@@ -91,7 +92,7 @@ export default function UserForm({
                 <SingleChoice
                   path="team"
                   label="Team"
-                  choices={teams.map(t => t.name).sort()}
+                  choices={teams.sort(comparing(t => t.name)).map(t => t.name)}
                   description="Missing team among the choices? Be sure to add it in the 'Teams' tab"
                 />
               </div>

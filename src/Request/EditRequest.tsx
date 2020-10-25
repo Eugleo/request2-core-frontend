@@ -3,9 +3,9 @@ import { useNavigate, useParams } from 'react-router';
 
 import { useAuth } from '../Utils/Auth';
 import { BareProperty, Property, Request } from './Request';
-import RequestDetailFormPage from './RequestDetailForm';
+import { RequestDetailFormPage } from './RequestDetailForm';
 
-export default function EditRequestPage() {
+export function EditRequestPage(): JSX.Element {
   const navigate = useNavigate();
   const { id } = useParams();
   const requestId = Number(id);

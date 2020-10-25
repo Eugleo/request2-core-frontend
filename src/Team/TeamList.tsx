@@ -3,16 +3,16 @@ import { Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
-import Pagination, { usePagination } from '../Common/PageSwitcher';
+import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { Cell, Pill, Row, Table } from '../Common/Table';
 import * as Api from '../Utils/Api';
-import { comparator } from '../Utils/Func';
+import { comparing } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
-import EditTeam from './EditTeam';
-import NewTeam from './NewTeam';
+import { EditTeam } from './EditTeam';
+import { NewTeam } from './NewTeam';
 import { Team } from './Team';
 
-export default function TeamRouter() {
+export function TeamRouter(): JSX.Element {
   return (
     <Routes>
       <Route path="" element={<TeamList />} />
@@ -56,7 +56,7 @@ function TeamList() {
         {({ values, total }) => (
           <>
             <Table columns={['Name', 'Company code', 'Status', '']}>
-              {values.sort(comparator(t => t.name)).map(v => (
+              {values.sort(comparing(t => t.name)).map(v => (
                 <TeamTableItem key={v._id} team={v} />
               ))}
             </Table>

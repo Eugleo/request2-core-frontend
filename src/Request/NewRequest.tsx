@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
-import Modal from '../Common/Modal';
+import { Modal } from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import { BareProperty, idToStr, Request } from './Request';
-import RequestDetailFormPage from './RequestDetailForm';
+import { RequestDetailFormPage } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
 
 // TODO Check that the field names are unique
-export default function NewRequestPage() {
+export function NewRequestPage(): JSX.Element {
   const [modalInfo, setModalInfo] = useState<{ show: boolean; request: Maybe<WithID<Request>> }>({
-    show: false,
     request: null,
+    show: false,
   });
   const { requestType } = useParams();
   const { authPost } = useAuth<{ req: Request; props: BareProperty[] }>();
@@ -40,9 +40,9 @@ export default function NewRequestPage() {
 
           if (r.status === 201) {
             const js = await r.json();
-            setModalInfo({ show: true, request: js.data });
+            setModalInfo({ request: js.data, show: true });
           } else {
-            throw Error('There was an error with processing your request');
+            throw new Error('There was an error with processing your request');
           }
         }}
       />

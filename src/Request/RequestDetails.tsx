@@ -12,7 +12,7 @@ import { DetailProperty, Property, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
 
-export default function RequestDetails({ requestId }: { requestId: number }) {
+export function RequestDetails({ requestId }: { requestId: number }): JSX.Element {
   const { Loader } = useAsyncGet<WithID<DetailProperty>[]>(`/requests/${requestId}/props/details`);
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
 
@@ -33,10 +33,10 @@ export default function RequestDetails({ requestId }: { requestId: number }) {
           <Loader>
             {details => {
               const relevantProperties = details.filter(p => p.active);
-              const sections: Array<{
+              const sections: {
                 title: string;
                 properties: WithID<Property>[];
-              }> = schema.sections
+              }[] = schema.sections
                 .map(s => {
                   const fields = s.fields.mapMaybe(f => resolveInclude(f));
                   const normalProps = fields
@@ -52,8 +52,8 @@ export default function RequestDetails({ requestId }: { requestId: number }) {
                     )
                     .filter(p => p.propertyData !== '');
                   return {
-                    title: s.title,
                     properties: [...normalProps, ...fileProps],
+                    title: s.title,
                   };
                 })
                 .filter(s => s.properties.length > 0);

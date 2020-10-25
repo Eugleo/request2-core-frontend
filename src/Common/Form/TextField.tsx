@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-handler-names */
 import c from 'classnames';
 import { useField } from 'formik';
 import React from 'react';
@@ -30,7 +31,9 @@ export function ShortText({
   className,
   type = 'text',
   ...props
-}: StyledFieldProps & { type?: string } & React.PropsWithoutRef<JSX.IntrinsicElements['input']>) {
+}: StyledFieldProps & { type?: string } & React.PropsWithoutRef<
+    JSX.IntrinsicElements['input']
+  >): JSX.Element {
   const [field, meta, helpers] = useField<{ type: 'text-short'; content: string }>({ name, type });
   return (
     <Field touched={meta.touched} error={meta.error}>
@@ -40,7 +43,7 @@ export function ShortText({
         name={field.name}
         onBlur={field.onBlur}
         value={field.value.content}
-        onChange={e => helpers.setValue({ type: 'text-short', content: e.target.value })}
+        onChange={e => helpers.setValue({ content: e.target.value, type: 'text-short' })}
         {...props}
         className={c(textFieldClasses, className)}
       />
@@ -56,7 +59,7 @@ export function LongText({
   label,
   className,
   ...props
-}: StyledFieldProps & React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>) {
+}: StyledFieldProps & React.PropsWithoutRef<JSX.IntrinsicElements['textarea']>): JSX.Element {
   const [field, meta, helpers] = useField<LongTextFieldValue>({ name });
   return (
     <Field touched={meta.touched} error={meta.error}>
@@ -67,7 +70,7 @@ export function LongText({
         name={field.name}
         onBlur={field.onBlur}
         value={field.value.content}
-        onChange={e => helpers.setValue({ type: 'text-long', content: e.target.value })}
+        onChange={e => helpers.setValue({ content: e.target.value, type: 'text-long' })}
         {...props}
       />
       <Description>{description}</Description>

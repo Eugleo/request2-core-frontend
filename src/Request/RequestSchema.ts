@@ -20,7 +20,7 @@ type BaseField = {
 
 export type Section = {
   title: string;
-  fields: Array<Field | IndirectField>;
+  fields: (Field | IndirectField)[];
 };
 
 export type Schema = {
@@ -31,7 +31,7 @@ export type Schema = {
 };
 
 // TODO Check that sections is an Array
-export function isSchema(x: any): x is Schema {
+export function isSchema(x: Object): x is Schema {
   const s = x as Schema;
   return (
     s.title !== undefined &&
@@ -43,7 +43,7 @@ export function isSchema(x: any): x is Schema {
 }
 
 // TODO Check that fields is an Array
-function isSection(x: any): x is Section {
+function isSection(x: Object): x is Section {
   const s = x as Section;
   return (
     s.title !== undefined &&
@@ -52,11 +52,11 @@ function isSection(x: any): x is Section {
   );
 }
 
-export function isField(x: any): x is Field {
+export function isField(x: Object): x is Field {
   const f = x as Field;
   return f.name !== undefined && f.type !== undefined;
 }
 
-export function isIndirectField(x: any): x is IndirectField {
+export function isIndirectField(x: Object): x is IndirectField {
   return (x as IndirectField).include !== undefined;
 }

@@ -6,12 +6,12 @@ import React, { ReactNode } from 'react';
 import * as Icon from 'react-feather';
 import { NavLink as RouterNavLink } from 'react-router-dom';
 
-import logoSrc from '../assets/logoII.svg';
 import { Spacer } from '../Common/Layout';
 import { Authentized, Authorized, NotAuthentized } from '../Utils/Auth';
-import UserView from './UserView';
+import logoSrc from '../assets/logoII.svg';
+import { UserView } from './UserView';
 
-export default function Sidebar() {
+export function Sidebar(): JSX.Element {
   return (
     <nav className="h-full sticky w-20 bg-teal-500 border-gray-300 flex">
       <div className="py-4 px-2 z-10 flex flex-col items-center relative">

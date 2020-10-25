@@ -7,7 +7,13 @@ import { stringToFile } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import { FileProperty } from './Request';
 
-export function FilesView({ files, isEven }: { files: WithID<FileProperty>[]; isEven: boolean }) {
+export function FilesView({
+  files,
+  isEven,
+}: {
+  files: WithID<FileProperty>[];
+  isEven: boolean;
+}): JSX.Element {
   return (
     <div
       style={{ gridTemplateColumns: '1fr 2fr' }}
@@ -25,7 +31,7 @@ export function FilesView({ files, isEven }: { files: WithID<FileProperty>[]; is
   );
 }
 
-export function FileView({ file }: { file: FileProperty }) {
+export function FileView({ file }: { file: FileProperty }): JSX.Element {
   const { hash, name } = stringToFile(file.propertyData);
 
   return (

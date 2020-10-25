@@ -1,11 +1,11 @@
 import React from 'react';
 import { Route, Routes } from 'react-router';
 
-import EditUser from './EditUser';
-import NewUser from './NewUser';
-import UserList from './UserList';
+import { EditUser } from './EditUser';
+import { NewUser } from './NewUser';
+import { UserList } from './UserList';
 
-export function UserRouter() {
+export function UserRouter(): JSX.Element {
   return (
     <Routes>
       <Route path="" element={<UserList />} />

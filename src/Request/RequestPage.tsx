@@ -8,10 +8,10 @@ import { WithID } from '../Utils/WithID';
 import { ResultWidget } from './Operator/ResultComponent';
 import { idToStr, Request } from './Request';
 import { RequestComments } from './RequestComments';
-import RequestDetails from './RequestDetails';
+import { RequestDetails } from './RequestDetails';
 import { RequestStatus } from './RequestStatus';
 
-export default function RequestPage() {
+export function RequestPage(): JSX.Element {
   const { id } = useParams();
   return <RequestComponent requestId={Number(id)} />;
 }
@@ -21,7 +21,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
 
   return (
     <div
-      style={{ gridTemplateRows: 'auto 1fr', gridTemplateColumns: '3fr 1fr' }}
+      style={{ gridTemplateColumns: '3fr 1fr', gridTemplateRows: 'auto 1fr' }}
       className="max-h-screen grid grid-rows-2 grid-cols-2"
     >
       <Page.Header className="col-span-2">

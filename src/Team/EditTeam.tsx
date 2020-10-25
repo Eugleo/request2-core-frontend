@@ -6,9 +6,9 @@ import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Team } from './Team';
-import TeamForm from './TeamForm';
+import { TeamForm } from './TeamForm';
 
-export default function EditTeam() {
+export function EditTeam(): JSX.Element {
   const { id } = useParams();
   const { authPut, authDel } = useAuth<WithID<Team>>();
   const { Loader } = useAsyncGet<WithID<Team>>(`/teams/${id}`);
@@ -30,18 +30,16 @@ export default function EditTeam() {
           headerButtons={
             team.active ? (
               <Button.Deactivate
-                onClick={() => {
-                  authDel(`/teams/${team._id}`)
-                    .then(() => navigate(-1))
-                    .catch(console.log);
+                onClick={async () => {
+                  await authDel(`/teams/${team._id}`);
+                  navigate(-1);
                 }}
               />
             ) : (
               <Button.Activate
-                onClick={() => {
-                  authPut(`/teams/${team._id}`, { ...team, active: true })
-                    .then(() => navigate(-1))
-                    .catch(console.log);
+                onClick={async () => {
+                  await authPut(`/teams/${team._id}`, { ...team, active: true });
+                  navigate(-1);
                 }}
               />
             )

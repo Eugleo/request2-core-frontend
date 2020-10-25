@@ -2,4 +2,4 @@ export type FieldProps = { path: string; description?: string; label?: string; h
 
 export type StyledFieldProps = FieldProps & { className?: string };
 
-export type ChoicesFieldProps = FieldProps & { choices: Array<string> };
+export type ChoicesFieldProps = FieldProps & { choices: string[] };

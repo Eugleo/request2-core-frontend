@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router';
 
 import { LongText, ShortText } from '../Common/Form/TextField';
 import { Card, Page } from '../Common/Layout';
-import Markdown from '../Common/MdRender';
+import { Markdown } from '../Common/MdRender';
 import {
   createLongTextValue,
   createShortTextValue,
@@ -30,7 +30,7 @@ function validate(values: AnnStub) {
 }
 
 // TODO Handle failure
-export default function AnnouncementForm({
+export function AnnouncementForm({
   title,
   ann,
   onSubmit,
@@ -40,7 +40,7 @@ export default function AnnouncementForm({
   ann?: Announcement;
   onSubmit: (values: AnnStub) => Promise<Response>;
   children: ReactNode;
-}) {
+}): JSX.Element {
   const navigate = useNavigate();
   return (
     <Page title={title}>
@@ -49,10 +49,9 @@ export default function AnnouncementForm({
           body: createLongTextValue(ann?.body),
           title: createShortTextValue(ann?.title),
         }}
-        onSubmit={values => {
-          onSubmit(values)
-            .then(() => navigate(-1))
-            .catch(console.log);
+        onSubmit={async values => {
+          await onSubmit(values);
+          navigate(-1);
         }}
         validate={validate}
         validateOnChange

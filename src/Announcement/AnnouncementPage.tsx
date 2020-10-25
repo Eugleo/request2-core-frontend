@@ -2,13 +2,13 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 
 import { Page } from '../Common/Layout';
-import Markdown from '../Common/MdRender';
+import { Markdown } from '../Common/MdRender';
 import { User } from '../User/User';
 import * as Api from '../Utils/Api';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
 
-export default function AnnouncementPage() {
+export function AnnouncementPage(): JSX.Element {
   const { id } = useParams();
   const { Loader } = Api.useAsyncGet<WithID<Announcement>>(`/announcements/${id}`);
 

@@ -31,12 +31,12 @@ const UploadButton2 = asUploadButton(
   ))
 );
 
-export function Files({ name, className = '' }: { name: string; className?: string }) {
+export function Files({ name, className = '' }: { name: string; className?: string }): JSX.Element {
   const [field, meta, helpers] = useField<FilesFieldValue>({ name });
   const [inProgress, setInProgress] = useState<number>(0);
 
   const removeFile = (file: File) =>
-    helpers.setValue({ type: 'files', content: field.value.content.filter(f => f !== file) });
+    helpers.setValue({ content: field.value.content.filter(f => f !== file), type: 'files' });
 
   useItemStartListener(() => {
     setInProgress(n => n + 1);
@@ -48,7 +48,7 @@ export function Files({ name, className = '' }: { name: string; className?: stri
     const items = r?.data?.files;
     if (items) {
       setInProgress(n => n - items.length);
-      helpers.setValue({ type: 'files', content: field.value.content.concat(items) });
+      helpers.setValue({ content: field.value.content.concat(items), type: 'files' });
     }
   });
 

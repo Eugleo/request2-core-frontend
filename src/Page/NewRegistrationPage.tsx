@@ -18,7 +18,7 @@ function validate(values: { email: ShortTextFieldValue }) {
   return errors;
 }
 
-export function NewRegistrationPage() {
+export function NewRegistrationPage(): JSX.Element {
   const [regState, setState] = useState('init');
 
   return (
@@ -26,20 +26,15 @@ export function NewRegistrationPage() {
       <Formik
         initialValues={{ email: createShortTextValue() }}
         validate={validate}
-        onSubmit={(values: { email: ShortTextFieldValue }) => {
+        onSubmit={async (values: { email: ShortTextFieldValue }) => {
           setState('loading');
-          post('/register-init', { email: values.email.content })
-            .then(r => {
-              if (r.ok) {
-                setState('success');
-              } else {
-                throw new Error('register-init failed');
-              }
-            })
-            .catch(error => {
-              setState('problem');
-              console.log(error);
-            });
+          const r = await post('/register-init', { email: values.email.content });
+          if (r.ok) {
+            setState('success');
+          } else {
+            console.log('register-init failed');
+            setState('problem');
+          }
         }}
       >
         <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">

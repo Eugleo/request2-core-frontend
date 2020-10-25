@@ -1,4 +1,4 @@
-import React, { useContext, useReducer } from 'react';
+import React, { Dispatch, useContext, useReducer } from 'react';
 
 import { UserDetails } from '../User/User';
 import { Maybe } from './Maybe';
@@ -27,13 +27,13 @@ export type LoginDispatch = (state: Auth, action: UserAction) => Auth;
 export type Auth = { loggedIn: false } | { loggedIn: true; apiKey: string; user: UserDetails };
 
 const AuthStateContext = React.createContext<Auth>({ loggedIn: false });
-const AuthDispatchContext = React.createContext<Maybe<React.Dispatch<UserAction>>>(undefined);
+const AuthDispatchContext = React.createContext<Maybe<React.Dispatch<UserAction>>>(null);
 
-export function useAuthState() {
+export function useAuthState(): Auth {
   return useContext(AuthStateContext);
 }
 
-export function useAuthDispatch() {
+export function useAuthDispatch(): Dispatch<UserAction> {
   const dispatch = useContext(AuthDispatchContext);
   if (dispatch) {
     return dispatch;
@@ -41,13 +41,13 @@ export function useAuthDispatch() {
   throw new Error('Attempted to use auth dispatch out of auth context');
 }
 
-export function useAuthContext() {
+export function useAuthContext(): { auth: Auth; dispatch: Dispatch<UserAction> } {
   const auth = useAuthState();
   const dispatch = useAuthDispatch();
   return { auth, dispatch };
 }
 
-export function AuthProvider({ children }: { children: React.ReactNode }) {
+export function AuthProvider({ children }: { children: React.ReactNode }): JSX.Element {
   const [state, dispatch] = useReducer<LoginDispatch>(reducer, { loggedIn: false });
   return (
     <AuthStateContext.Provider value={state}>

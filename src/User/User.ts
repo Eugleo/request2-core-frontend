@@ -7,7 +7,7 @@ export type User = {
   email: string;
   password: string;
   name: string;
-  roles: Array<Role>;
+  roles: Role[];
   teamId: number;
   dateCreated: number;
   active: boolean;
@@ -16,7 +16,7 @@ export type User = {
 export type UserDetails = {
   _id: number;
   name: string;
-  roles: Array<Role>;
+  roles: Role[];
   team: WithID<Team>;
   dateCreated: Date;
 };

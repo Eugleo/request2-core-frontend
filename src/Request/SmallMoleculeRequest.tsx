@@ -1,6 +1,6 @@
 import { FieldValue, isEmpty } from './FieldValue';
 
-export function fieldTransformSM(values: { [_: string]: FieldValue }) {
+export function fieldTransformSM(values: { [_: string]: FieldValue }): { [_: string]: string } {
   const err: { [_: string]: string } = {};
 
   const key = 'structure-or-gel-image/image-file';

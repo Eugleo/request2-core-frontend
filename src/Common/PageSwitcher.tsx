@@ -20,16 +20,16 @@ function getPages(
   pathname: string,
   bufferOnBoundary: number,
   bufferAround: number
-): Array<Page> {
+): Page[] {
   const shouldBeHidden = (n: number) =>
     n >= 0 + bufferOnBoundary &&
     n <= finalPage - bufferOnBoundary &&
     Math.abs(currentPage - n) > bufferAround;
 
   return (
-    [...Array(finalPage + 1).keys()]
+    [...new Array(finalPage + 1).keys()]
       // Hide pages according to basic rules
-      .map((n: number) => ({ number: n, hidden: shouldBeHidden(n) }))
+      .map((n: number) => ({ hidden: shouldBeHidden(n), number: n }))
       // Unhide a page if it's surrounded by shown pages
       .map((p, i, a) => {
         const prevHidden = i === 0 || a[i - 1].hidden;
@@ -53,7 +53,7 @@ function getPages(
   );
 }
 
-export default function Pagination({
+export function Pagination({
   currentPage,
   limit,
   total,
@@ -65,7 +65,7 @@ export default function Pagination({
   total: number;
   bufferOnBoundary?: number;
   bufferAround?: number;
-}) {
+}): JSX.Element {
   const location = useLocation();
   const finalPage = Math.max(Math.floor(total / limit), 0);
   const pages = getPages(currentPage, finalPage, location.pathname, bufferOnBoundary, bufferAround);
@@ -111,7 +111,15 @@ export default function Pagination({
   );
 }
 
-export function usePagination(initLimit = 10) {
+export function usePagination(
+  initLimit = 10
+): {
+  currentPage: number;
+  limit: number;
+  offset: number;
+  setLimit: React.Dispatch<React.SetStateAction<number>>;
+  setOffset: React.Dispatch<React.SetStateAction<number>>;
+} {
   const [limit, setLimit] = useState(initLimit);
   const [offset, setOffset] = useState(0);
 
@@ -123,7 +131,7 @@ export function usePagination(initLimit = 10) {
     setOffset(currentPage * limit);
   }, [currentPage, limit]);
 
-  return { limit, setLimit, offset, setOffset, currentPage };
+  return { currentPage, limit, offset, setLimit, setOffset };
 }
 
 function Ellipsis() {
@@ -140,12 +148,12 @@ function ArrowButton({ dir, disabled, link }: { dir: 'L' | 'R'; disabled: boolea
   const content =
     dir === 'L' ? <Icon.ChevronLeft className="h-4" /> : <Icon.ChevronRight className="h-4" />;
 
-  return !disabled ? (
+  return disabled ? (
+    <div className={c(classes, 'text-gray-500')}>{content}</div>
+  ) : (
     <Link key={dir} className={classes} to={link}>
       {content}
     </Link>
-  ) : (
-    <div className={c(classes, 'text-gray-500')}>{content}</div>
   );
 }
 

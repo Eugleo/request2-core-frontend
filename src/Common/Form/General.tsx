@@ -13,7 +13,7 @@ export function Field({
   touched: boolean;
   error: Maybe<string>;
   children: React.ReactNode;
-}) {
+}): JSX.Element {
   const classNames = ['flex', 'flex-col', 'w-full', 'h-full', 'rounded-md', 'px-4', 'py-2'];
   return (
     <div className={c('flex', 'flex-row', 'w-full', error && touched && 'bg-yellow-100')}>
@@ -26,11 +26,15 @@ export function Field({
   );
 }
 
-export function Description({ children }: { children: Maybe<React.ReactNode> }) {
+export function Description({
+  children,
+}: {
+  children: Maybe<React.ReactNode>;
+}): JSX.Element | null {
   return children ? <p className="font-normal mt-2 text-sm text-gray-500">{children}</p> : null;
 }
 
-export function FieldHeader({ hint, label }: { hint: Maybe<string>; label: string }) {
+export function FieldHeader({ hint, label }: { hint: Maybe<string>; label: string }): JSX.Element {
   return (
     <div className="flex flex-row items-center mb-1">
       <FieldLabel text={label} />
@@ -39,7 +43,7 @@ export function FieldHeader({ hint, label }: { hint: Maybe<string>; label: strin
   );
 }
 
-export function FieldLabel({ text }: { text: string }) {
+export function FieldLabel({ text }: { text: string }): JSX.Element {
   return (
     <label htmlFor={text} className="font-medium text-gray-800 mr-2">
       {text}
@@ -47,7 +51,7 @@ export function FieldLabel({ text }: { text: string }) {
   );
 }
 
-export function Hint({ hint }: { hint: Maybe<string> }) {
+export function Hint({ hint }: { hint: Maybe<string> }): JSX.Element | null {
   return hint ? (
     <>
       <Icon.HelpCircle data-tip={hint} className="h-5 text-gray-500" />

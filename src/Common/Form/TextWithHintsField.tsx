@@ -5,6 +5,7 @@ import { components, ControlProps, PlaceholderProps } from 'react-select';
 import Creatable from 'react-select/creatable';
 
 import { createTextWithHintsValue, TextWithHintsFieldValue } from '../../Request/FieldValue';
+import { comparing } from '../../Utils/Func';
 import { ChoicesFieldProps } from './Field';
 import { Description, Field, FieldHeader } from './General';
 
@@ -16,7 +17,7 @@ export function TextWithHints({
   label,
   choices,
   hint,
-}: ChoicesFieldProps) {
+}: ChoicesFieldProps): JSX.Element {
   const [field, meta, helpers] = useField<TextWithHintsFieldValue>({
     name,
     type: 'text',
@@ -40,29 +41,29 @@ export function TextWithHints({
     'text-gray-300',
   ];
 
-  const options = choices.sort().map(h => ({ value: h, label: h }));
+  const options = choices.sort(comparing(s => s)).map(h => ({ label: h, value: h }));
 
-  const Placeholder = ({
+  function Placeholder({
     children,
     ...props
-  }: { children: ReactNode } & PlaceholderProps<{ value: string; label: string }>) => {
+  }: { children: ReactNode } & PlaceholderProps<{ value: string; label: string }>) {
     return (
       <components.Placeholder {...props} className="text-gray-500">
         {children}
       </components.Placeholder>
     );
-  };
+  }
 
-  const Control = ({
+  function Control({
     children,
     ...props
-  }: { children: ReactNode } & ControlProps<{ value: string; label: string }>) => {
+  }: { children: ReactNode } & ControlProps<{ value: string; label: string }>) {
     return (
       <components.Control {...props} className={c(classes)}>
         {children}
       </components.Control>
     );
-  };
+  }
 
   return (
     <Field touched={meta.touched} error={meta.error}>
@@ -73,12 +74,13 @@ export function TextWithHints({
         components={{ Control, Placeholder }}
         styles={{
           control: () => ({}),
-          placeholder: () => ({ position: 'absolute', paddingLeft: '2px' }),
+          placeholder: () => ({ paddingLeft: '2px', position: 'absolute' }),
           singleValue: (base, state) => ({
             ...base,
             color: state.selectProps.menuIsOpen ? '#8795A1' : base.color,
           }),
         }}
+        // eslint-disable-next-line react/jsx-handler-names
         onBlur={field.onBlur}
         onChange={option => {
           if (option) {

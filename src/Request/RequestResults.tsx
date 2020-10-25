@@ -9,13 +9,13 @@ import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
 import { FileProperty, Property, ResultProperty } from './Request';
 
-export default function RequestResults({
+export function RequestResults({
   properties,
   startEditing,
 }: {
   properties: WithID<ResultProperty>[];
   startEditing: () => void;
-}) {
+}): JSX.Element {
   const files = properties.map(p => p as WithID<Property>).filter(isFileProperty);
   return (
     <div>
@@ -33,6 +33,10 @@ export default function RequestResults({
   );
 }
 
+function prettifyName(name: string) {
+  return capitalize(name.replaceAll('-', ' '));
+}
+
 function Section({
   title,
   properties,
@@ -44,7 +48,6 @@ function Section({
   files: WithID<FileProperty>[];
   startEditing: () => void;
 }) {
-  const prettifyName = (name: string) => capitalize(name.replaceAll('-', ' '));
   return (
     <div>
       <div className={c('px-6 py-6 flex items-center border-green-300')}>

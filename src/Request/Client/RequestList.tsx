@@ -9,13 +9,13 @@ import { Cell, Pill, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
-import EditRequestPage from '../EditRequest';
-import NewRequestPage from '../NewRequest';
+import { EditRequestPage } from '../EditRequest';
+import { NewRequestPage } from '../NewRequest';
 import { idToStr, Request } from '../Request';
-import RequestPage from '../RequestPage';
+import { RequestPage } from '../RequestPage';
 import { statusStyle, statusToStr } from '../Status';
 
-export default function Requests() {
+export function Requests(): JSX.Element {
   return (
     <Routes>
       <Route path="" element={<RequestList />} />
@@ -74,10 +74,10 @@ function RequestList() {
 }
 
 function NewRequestSection() {
-  const requestTypes: Array<{ title: string; type: string }> = [];
-  const req = require.context('../RequestTypes', true, /^.*\.rcfg\.json$/im);
+  const requestTypes: { title: string; type: string }[] = [];
+  const req = require.context('../RequestTypes', true, /^.*\.rcfg\.json$/imu);
   req.keys().forEach(fileName => {
-    const type = fileName.match(/[^/]+(?=\.rcfg)/);
+    const type = /[^/]+(?=\.rcfg)/u.exec(fileName);
     if (type) {
       requestTypes.push({ title: req(fileName).title, type: type[0] });
     }
@@ -86,8 +86,8 @@ function NewRequestSection() {
   return (
     <div
       style={{
-        gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
         gridAutoRows: '1fr',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
       }}
       className="grid gap-5 px-6"
     >
