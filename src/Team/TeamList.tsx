@@ -1,10 +1,13 @@
-import React from 'react';
+import { Form, Formik } from 'formik';
+import React, { useState } from 'react';
 import { Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
+import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { Cell, Pill, Row, Table } from '../Common/Table';
+import { createShortTextValue } from '../Request/FieldValue';
 import * as Api from '../Utils/Api';
 import { comparing } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
@@ -48,10 +51,21 @@ function TeamTableItem({ team }: { team: WithID<Team> }) {
 
 function TeamList() {
   const { limit, offset, currentPage } = usePagination(10);
-  const { Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', limit, offset);
+  const [query, setQuery] = useState<string>('sort:name');
+  const { Loader } = Api.useAsyncGet<{ values: WithID<Team>[]; total: number }>(
+    Api.urlWithParams('/teams', { limit, offset, query })
+  );
 
   return (
     <Page title="Admin Panel: Teams" buttons={<Button.Create title="Create new" />}>
+      <Formik
+        initialValues={{ query: createShortTextValue(query) }}
+        onSubmit={values => setQuery(values.query.content)}
+      >
+        <Form className="mx-6 mb-10 flex flex-row items-center max-w-xl">
+          <ShortText onChange={e => setQuery(e.target.value)} path="query" label="Search query" />
+        </Form>
+      </Formik>
       <Loader>
         {({ values, total }) => (
           <>

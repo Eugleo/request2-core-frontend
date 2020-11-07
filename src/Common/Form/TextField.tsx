@@ -29,6 +29,7 @@ export function ShortText({
   hint,
   label,
   className,
+  onChange,
   type = 'text',
   ...props
 }: StyledFieldProps & { type?: string } & React.PropsWithoutRef<
@@ -43,7 +44,12 @@ export function ShortText({
         name={field.name}
         onBlur={field.onBlur}
         value={field.value.content}
-        onChange={e => helpers.setValue({ content: e.target.value, type: 'text-short' })}
+        onChange={e => {
+          if (onChange) {
+            onChange(e);
+          }
+          helpers.setValue({ content: e.target.value, type: 'text-short' });
+        }}
         {...props}
         className={c(textFieldClasses, className)}
       />
