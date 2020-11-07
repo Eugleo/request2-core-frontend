@@ -70,7 +70,7 @@ function TeamList() {
         {({ values, total }) => (
           <>
             <Table columns={['Name', 'Company code', 'Status', '']}>
-              {values.sort(comparing(t => t.name)).map(v => (
+              {values.map(v => (
                 <TeamTableItem key={v._id} team={v} />
               ))}
             </Table>
