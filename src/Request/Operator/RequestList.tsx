@@ -1,12 +1,15 @@
 import moment from 'moment';
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useSearchParams } from 'react-router-dom';
 
+import { Secondary } from '../../Common/Buttons';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
+import { SearchBar } from '../../Common/SearchBar';
 import { Cell, Pill, Row, Table } from '../../Common/Table';
 import { User } from '../../User/User';
 import * as Api from '../../Utils/Api';
+import { padWithSpace } from '../../Utils/Func';
 import { ok } from '../../Utils/Loader';
 import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
@@ -48,11 +51,22 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 }
 
 function RequestList() {
-  const { limit, offset } = usePagination(100);
-  const { Loader } = Api.useAsyncGetMany<WithID<Request>>('/requests', limit, offset);
+  const { limit, offset } = usePagination(10);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? '-status:deleted';
+  const { Loader } = Api.useAsyncGet<{ values: WithID<Request>[]; total: number }>(
+    Api.urlWithParams('/requests', { limit, offset, query })
+  );
 
   return (
     <Page title="Clients' requests">
+      <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+        <SearchBar
+          query={padWithSpace(query)}
+          onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+        />
+        <Secondary className="flex-shrink-0" type="submit" title="Search" />
+      </div>
       <Loader>
         {({ values }) => (
           <Table columns={['Name', 'ID number', 'Author', 'Requested', 'Status']}>

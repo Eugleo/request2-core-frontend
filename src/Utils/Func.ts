@@ -16,6 +16,13 @@ export function comparing<T, U>(f: (x: T) => U): (a: T, b: T) => -1 | 0 | 1 {
   };
 }
 
+export function padWithSpace(s: string): string {
+  if (s.endsWith(' ')) {
+    return s;
+  }
+  return `${s} `;
+}
+
 /* eslint-disable no-extend-native */
 declare global {
   // The next disable clause is very important, do not remove

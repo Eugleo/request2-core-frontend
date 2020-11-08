@@ -1,15 +1,17 @@
 import c from 'classnames';
 import moment from 'moment';
 import React from 'react';
-import { Link, Route, Routes } from 'react-router-dom';
+import { Link, Route, Routes, useSearchParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Card, Page } from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
+import { SearchBar } from '../Common/SearchBar';
 import { User } from '../User/User';
-import { useAsyncGetMany, useAsyncGet } from '../Utils/Api';
+import { useAsyncGetMany, useAsyncGet, urlWithParams } from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
+import { padWithSpace } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
 import { AnnouncementPage } from './AnnouncementPage';
@@ -29,30 +31,34 @@ export function AnnouncementRouter(): JSX.Element {
 
 function AnnouncementList() {
   const { limit, offset, currentPage } = usePagination(10);
-  const { Loader } = useAsyncGetMany<WithID<Announcement>>('/announcements', limit, offset);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? 'active:true';
+  const { Loader } = useAsyncGet<{ values: WithID<Announcement>[]; total: number }>(
+    urlWithParams('/announcements', { limit, offset, query })
+  );
 
   return (
-    <Page
-      title="Announcements"
-      buttons={
+    <Page title="Announcements">
+      <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+        <SearchBar
+          query={padWithSpace(query)}
+          onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+        />
         <Authorized roles={['Admin']}>
-          <Button.Create title="Create new" />
+          <Button.Create title="New announcement" />
         </Authorized>
-      }
-    >
+      </div>
       <div className="flex flex-col">
-        <div className="flex flex-col">
-          <Loader>
-            {({ values, total }) => (
-              <>
-                {values.map(ann => (
-                  <Item key={ann._id} ann={ann} />
-                ))}
-                <Pagination currentPage={currentPage} limit={limit} total={total} />
-              </>
-            )}
-          </Loader>
-        </div>
+        <Loader>
+          {({ values, total }) => (
+            <>
+              {values.map(ann => (
+                <Item key={ann._id} ann={ann} />
+              ))}
+              <Pagination currentPage={currentPage} limit={limit} total={total} />
+            </>
+          )}
+        </Loader>
       </div>
     </Page>
   );

@@ -1,11 +1,14 @@
 import React from 'react';
+import { useSearchParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
+import { SearchBar } from '../Common/SearchBar';
 import { Cell, Pill, Row, Table } from '../Common/Table';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
+import { padWithSpace } from '../Utils/Func';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 import { User } from './User';
@@ -39,12 +42,22 @@ function UserTableItem({ user }: { user: WithID<User> }) {
 }
 
 export function UserList(): JSX.Element {
-  const { limit, currentPage } = usePagination(10);
-  // const sort = useCallback(v => v.sort(comparator((u: User) => u.name)), []);
-  const { Loader } = Api.useAsyncGetMany<WithID<User>>('/users', 1000, 0);
+  const { limit, offset, currentPage } = usePagination(10);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? 'active:true';
+  const { Loader } = Api.useAsyncGet<{ values: WithID<User>[]; total: number }>(
+    Api.urlWithParams('/users', { limit, offset, query })
+  );
 
   return (
-    <Page title="Admin Panel: Users" buttons={<Button.Create title="Create new" />}>
+    <Page title="Admin Panel: Users">
+      <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+        <SearchBar
+          query={padWithSpace(query)}
+          onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+        />
+        <Button.Create title="New user" />
+      </div>
       <Loader>
         {({ values, total }) => (
           <>

@@ -27,7 +27,7 @@ export function Header({
   return (
     <div
       className={c(
-        'flex flex-row space-between items-center w-full sticky px-6 py-4 bg-white border-b border-gray-300 top-0',
+        'flex flex-row space-between items-center w-full sticky px-6 py-4 bg-white border-b border-gray-300 top-0 z-50',
         className
       )}
     >

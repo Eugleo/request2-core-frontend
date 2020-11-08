@@ -23,6 +23,40 @@ const textFieldClasses = [
   'font-normal',
 ];
 
+const simpleTextFieldClasses = [
+  'border',
+  'bg-gray-100',
+  'text-sm',
+  'border-gray-300',
+  'rounded-md',
+  'py-1',
+  'px-2',
+  'focus:outline-none',
+  'focus:shadow-outline-blue',
+  'focus:border-blue-600',
+  'focus:bg-white',
+  'focus:z-10',
+  'font-normal',
+];
+
+export function SimpleText({
+  name,
+  className,
+  ...props
+}: { name: string } & React.PropsWithoutRef<JSX.IntrinsicElements['input']>): JSX.Element {
+  const [field, , helpers] = useField<{ type: 'text-short'; content: string }>({ name });
+  return (
+    <input
+      name={field.name}
+      onBlur={field.onBlur}
+      value={field.value.content}
+      onChange={e => helpers.setValue({ content: e.target.value, type: 'text-short' })}
+      {...props}
+      className={c(simpleTextFieldClasses, className)}
+    />
+  );
+}
+
 export function ShortText({
   path: name,
   description,

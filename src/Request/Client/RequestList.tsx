@@ -1,13 +1,16 @@
 import { To } from 'history';
 import moment from 'moment';
 import React from 'react';
-import { Link, Navigate, Route, Routes } from 'react-router-dom';
+import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
+import { Primary, Secondary } from '../../Common/Buttons';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
+import { SearchBar } from '../../Common/SearchBar';
 import { Cell, Pill, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
+import { padWithSpace } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
 import { NewRequestPage } from '../NewRequest';
@@ -47,8 +50,12 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 }
 
 function RequestList() {
-  const { limit, offset } = usePagination(100);
-  const { Loader } = Api.useAsyncGetMany<WithID<Request>>('/requests', limit, offset);
+  const { limit, offset } = usePagination(10);
+  const [searchParams, setSearchParams] = useSearchParams();
+  const query = searchParams.get('query') ?? '-status:deleted';
+  const { Loader } = Api.useAsyncGet<{ values: WithID<Request>[]; total: number }>(
+    Api.urlWithParams('/requests', { limit, offset, query })
+  );
 
   return (
     <Authorized roles={['Client']} otherwise={<Navigate to="/requests" />}>
@@ -58,6 +65,13 @@ function RequestList() {
             Create new request
           </h2>
           <NewRequestSection />
+        </div>
+        <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+          <SearchBar
+            query={padWithSpace(query)}
+            onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+          />
+          <Secondary className="flex-shrink-0" type="submit" title="Search" />
         </div>
         <Loader>
           {({ values }) => (

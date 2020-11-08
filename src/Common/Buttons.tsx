@@ -94,7 +94,7 @@ function makeLinkedButton(p: LinkParams, getClasses: (status: Status) => ClassVa
 }
 
 export function Create({ title }: { title: string }): JSX.Element {
-  return <PrimaryLinked to="new" title={title} />;
+  return <PrimaryLinked to="new" title={title} className="flex-shrink-0" />;
 }
 
 export function Edit({ link }: { link: string }): JSX.Element {
@@ -130,7 +130,7 @@ export function PrimaryLinked(props: LinkParams): JSX.Element {
   return makeLinkedButton(props, primaryClasses);
 }
 
-export function Secondary(props: ButtonParams): JSX.Element {
+export function Secondary(props: SubmitButtonParams): JSX.Element {
   return makeButton(props, secondaryClasses);
 }
 
