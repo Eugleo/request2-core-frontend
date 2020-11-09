@@ -29,7 +29,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
           <Loader>{request => <p>{request.name}</p>}</Loader>
         </Page.Title>
         <h2 className="text-gray-500 font-mono text-2xl leading-tight">
-          <Loader>{request => <p>#{idToStr(request)}</p>}</Loader>
+          <Loader>{request => <p>{`${idToStr(request).type}/${idToStr(request).code}`}</p>}</Loader>
         </h2>
         <Page.Spacer />
         <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />

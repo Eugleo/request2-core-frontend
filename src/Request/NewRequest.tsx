@@ -52,6 +52,7 @@ export function NewRequestPage(): JSX.Element {
 
 function CodeModal({ request }: { request: WithID<Request> }) {
   const navigate = useNavigate();
+  const { type, code } = idToStr(request);
   return (
     <Modal title="Success!" closeText="Close" onClose={() => navigate(-1)}>
       <p className="mt-4">
@@ -59,7 +60,9 @@ function CodeModal({ request }: { request: WithID<Request> }) {
         operators will be able to match them to your request
       </p>
       <div className="my-8 flex flex-row justify-center items-center ">
-        <p className="text-gray-600 text-2xl">#{idToStr(request)}</p>
+        <p className="text-gray-600 text-2xl">
+          {type}/{code}
+        </p>
       </div>
     </Modal>
   );
