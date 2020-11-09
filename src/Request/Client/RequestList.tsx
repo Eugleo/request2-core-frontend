@@ -3,7 +3,7 @@ import moment from 'moment';
 import React from 'react';
 import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
-import { Primary, Secondary } from '../../Common/Buttons';
+import { Secondary } from '../../Common/Buttons';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import { SearchBar } from '../../Common/SearchBar';
