@@ -29,6 +29,7 @@ export function Requests(): JSX.Element {
 
 function RequestTableItem({ request }: { request: WithID<Request> }) {
   const { result } = Api.useAsyncGet<User>(`/users/${request.authorId}`);
+  const { type, code } = idToStr(request);
 
   return (
     <Row>
@@ -38,8 +39,8 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
         </Link>
       </Cell>
       <Cell className="text-gray-700 font-mono">
-        <span className="text-gray-500">#</span>
-        {idToStr(request)}
+        <span className="text-gray-500">{type}/</span>
+        {code}
       </Cell>
       <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading'}</Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>

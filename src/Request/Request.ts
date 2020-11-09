@@ -1,3 +1,5 @@
+import { Code } from 'react-feather';
+
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { Status } from './Status';
@@ -51,6 +53,7 @@ export type BareProperty = {
   active: boolean;
 };
 
+// DON'T CHANGE THIS UNLESS YOU CHANGE Api.Query.Request AS WELL
 export function idToCode(id: number): string {
   const table = [...'123456789ABCDEFGHIJKLMNPQRSTUVWXYZ'.split('')];
   const k = table.length;
@@ -68,6 +71,6 @@ export function idToCode(id: number): string {
   return code.replace(/^1+(?=\w{3})/u, '');
 }
 
-export function idToStr(request: WithID<{ requestType: string }>): string {
-  return `${capitalize(request.requestType)[0]}/${idToCode(request._id)}`;
+export function idToStr(request: WithID<{ requestType: string }>): { type: string; code: string } {
+  return { code: idToCode(request._id), type: capitalize(request.requestType)[0] };
 }

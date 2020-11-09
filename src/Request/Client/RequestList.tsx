@@ -30,6 +30,7 @@ export function Requests(): JSX.Element {
 }
 
 function RequestTableItem({ request }: { request: WithID<Request> }) {
+  const { type, code } = idToStr(request);
   return (
     <Row>
       <Cell>
@@ -38,8 +39,8 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
         </Link>
       </Cell>
       <Cell className="font-mono text-gray-700">
-        <span className="text-gray-500">#</span>
-        {idToStr(request)}
+        <span className="text-gray-500">{type}/</span>
+        {code}
       </Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
