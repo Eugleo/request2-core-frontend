@@ -75,7 +75,7 @@ function RequestList() {
         </div>
         <Loader>
           {({ values }) => (
-            <Table columns={['Name', 'ID number', 'Created', 'Status']}>
+            <Table columns={['Name', 'ID code', 'Created', 'Status']}>
               {values.map(r => (
                 <RequestTableItem key={r._id} request={r} />
               ))}
