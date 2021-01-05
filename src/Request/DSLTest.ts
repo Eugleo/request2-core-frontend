@@ -1,38 +1,18 @@
-import React from 'react';
-
 import { File as FileObject } from '../Utils/File';
 import { Maybe } from '../Utils/Maybe';
 
-function Branches(
-  id: Id,
-  title: string,
-  choices: string[]
-): Constructor<FieldBase & (SingleChoice | MultipleChoice)> {
-  return f => {
-    const val = value(id)(f) as string;
-    return {
-      choices,
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'single-choice',
-      value: val ?? '',
-    };
-  };
-}
-
 type ItemObject =
-  | (FieldBase & (MultipleChoice | ShortText | LongText | HintedText | File | SingleChoice))
+  | (FieldBase & (MultipleChoice | ShortText | LongText | Selection | File | SingleChoice | Number))
   | Note;
 
-type ShortText = { type: 'short-text'; value: string };
-type LongText = { type: 'long-text'; value: string };
-type HintedText = { type: 'hinted-text'; value: string };
-type File = { type: 'file'; value: FileObject[] };
-type SingleChoice = { type: 'single-choice'; value: string };
-type MultipleChoice = { type: 'multiple-choice'; value: string[] };
-type Note = { type: 'note'; value: string };
+type ShortText = { type: 'short-text' };
+type Number = { type: 'number' };
+type LongText = { type: 'long-text' };
+type Selection = { type: 'selection'; choices: string[] };
+type File = { type: 'file' };
+type SingleChoice = { type: 'single-choice'; choices: string[] };
+type MultipleChoice = { type: 'multiple-choice'; choices: string[] };
+type Note = { type: 'note' };
 
 type FieldOptions = 'required' | 'manually-checked';
 
@@ -45,7 +25,7 @@ type FieldBase = {
 
 type Constructor<T> = (f: FormObject) => T;
 
-type FormObject = { title: string; sections: SectionObject[] };
+type FormObject = { title: string; sections: SectionObject[]; get: (id: Id) => Maybe<FieldValue> };
 
 type SectionObject = { title: string; fields: ItemObject[] };
 
@@ -67,199 +47,168 @@ type Item = Constructor<ItemObject>;
 
 type Items = Constructor<ItemObject[]>;
 
-function choice(
-  id: Id,
-  title: string,
-  choices: string[]
-): Constructor<FieldBase & (SingleChoice | MultipleChoice)> {
-  return f => {
-    const val = value(id)(f) as string;
-    return {
-      choices,
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'single-choice',
-      value: val ?? '',
-    };
-  };
-}
-
-function multipleChoice(
-  id: Id,
-  title: string,
-  choices: string[]
-): Constructor<FieldBase & (SingleChoice | MultipleChoice)> {
-  return f => {
-    const val = value(id)(f) as string[];
-    return {
-      choices,
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'multiple-choice',
-      value: val ?? [],
-    };
-  };
-}
-
 function note(value: string): Constructor<Note> {
-  return _ => ({
+  return field({
     type: 'note',
     value,
   });
 }
 
-function text(id: Id, title: string): Constructor<FieldBase & ShortText> {
-  return f => {
-    const val = value(id)(f) as string;
-    return {
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'short-text',
-      value: val ?? '',
-    };
-  };
-}
-
-function longText(id: Id, title: string): Constructor<FieldBase & LongText> {
-  return f => {
-    const val = value(id)(f) as string;
-    return {
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'long-text',
-      value: val ?? '',
-    };
-  };
-}
-
-function hintedText(id: Id, title: string): Constructor<FieldBase & HintedText> {
-  return f => {
-    const val = value(id)(f) as string;
-    return {
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'hinted-text',
-      value: val ?? '',
-    };
-  };
-}
-
-function image(id: Id, title: string): Constructor<FieldBase & File> {
-  return f => {
-    const val = value(id)(f) as FileObject[];
-    return {
-      description: '',
-      id,
-      options: [],
-      title,
-      type: 'file',
-      value: val ?? [],
-    };
-  };
-}
-
-type FieldValue = string | string[] | FileObject[];
+type FieldValue = number | string | string[] | FileObject[];
 
 type Value = Maybe<FieldValue>;
 
-type Case = Constructor<(pred: Value) => ItemObject[]>;
+type Predicate = Constructor<boolean>;
 
-function when(v: Constructor<Value>, ...items: Case[]): Items {
-  return f => {
-    const val = v(f);
-    return items.flatMap(constructor => constructor(f)(val));
-  };
-}
-
-// TODO Reference types in FieldValue could be a problem
-function equals(val: FieldValue): { then: (...items: (Item | Items)[]) => Case } {
+function when(pred: Predicate): { then: (...items: (Item | Items)[]) => Items } {
   return {
     then(...items) {
       return f => {
-        return v => {
-          if (v === val) {
-            return items.flatMap(constructor => constructor(f));
-          }
-          return [];
-        };
+        if (pred(f)) {
+          items.flatMap(constructor => constructor(f));
+        }
+        return [];
       };
     },
   };
 }
 
-function value(id: string): Constructor<Value> {
-  return f => {
-    const fields = f.sections.flatMap(s => s.fields);
-    const field = fields.find(field => 'id' in field && field.id === id);
-    return field ? field.value : null;
+function value(id: Id): { equals: (val: FieldValue) => Predicate } {
+  return {
+    equals(val) {
+      return f => f.get(id) === val;
+    },
   };
 }
 
-question('tag_strategy', 'What TAG strategy did you use?').withChoices(
-  choice('Anti TAG Ab').then(
-    question('anti_tag_ab_strategy', 'Which Anti TAG Ab strategy did you use?')
-      .withChoices(
-        choice('FLAG'),
-        choice('GFP'),
-        choice('HA'),
-        choice('Myc'),
-        choice('Other').then(text('anti_tag_ab_strategy_specification', 'Please specify'))
-      )
-      .withOptions([Opt.Requred, Opt.Warning]),
+// function get(id: Id): Constructor<Value> {
+//   return f => {
+//     const fields = f.sections.flatMap(s => s.fields);
+//     const field = fields.find(field => 'id' in field && field.id === id);
+//     return field ? field.value : null;
+//   };
+// }
 
-    when(value('ANTI TAG AB STRATEGY').equals('Other')).then(
-      text('ANTI TAG AB STRATEGY SPECIFICATION', 'Please specify')
+type QuestionStub = {
+  id: Id;
+  title: string;
+  withChoices: (...choices: Choice[]) => Items;
+  withSelection: (...choices: string[]) => Constructor<FieldBase & Selection>;
+  withTextField: (
+    type?: 'short-text' | 'long-text'
+  ) => Constructor<FieldBase & (ShortText | LongText)>;
+  withFileInput: () => Constructor<FieldBase & File>;
+};
+
+function question(id: Id, title: string, description = '', options = []): QuestionStub {
+  return {
+    id,
+    title,
+    withChoices(...choices) {
+      return f => {
+        const thisQuestion: FieldBase & SingleChoice = {
+          choices: choices.map(c => c.value),
+          description,
+          id,
+          options,
+          title,
+          type: 'single-choice',
+        };
+        return [thisQuestion, ...choices.flatMap(c => c.equal(id)(f))];
+      };
+    },
+    withFileInput: (description = '', options = []) =>
+      field({
+        description,
+        id,
+        options,
+        title,
+        type: 'file',
+      }),
+    withSelection: (...choices) =>
+      field({
+        choices,
+        description,
+        id,
+        options,
+        title,
+        type: 'selection',
+      }),
+    withTextField: (type = 'short-text') =>
+      field({
+        description,
+        id,
+        options,
+        title,
+        type,
+      }),
+  };
+}
+
+function field<T>(obj: T): Constructor<T> {
+  return _ => obj;
+}
+
+type Choice = { value: string; equal: (id: Id) => (f: FormObject) => ItemObject[] };
+
+type ChoiceStub = {
+  then: (...items: (Item | Items)[]) => Choice;
+  value: string;
+  equal: (id: Id) => (f: FormObject) => ItemObject[];
+};
+
+function choice(thisVal: string): ChoiceStub {
+  return {
+    equal(_) {
+      return _ => [];
+    },
+    then(...items) {
+      return {
+        equal(id) {
+          return f => {
+            const val = f.get(id) as string;
+            if (thisVal === val) {
+              return items.flatMap(constructor => constructor(f));
+            }
+            return [];
+          };
+        },
+        value: thisVal,
+      };
+    },
+    value: thisVal,
+  };
+}
+
+form(
+  section(
+    'Scope of the experiment',
+    question('analysis_type', 'What type of the analysis do you want to perform?').withChoices(
+      choice('Identification of all proteins in my sample'),
+      choice('Protein quantification'),
+      choice('Intact Protein Mass measurement')
+    ),
+    question('tag_strategy', 'What TAG strategy did you use?').withChoices(
+      choice('Anti TAG Ab').then(
+        question('anti_tag_ab_strategy', 'Which Anti TAG Ab strategy did you use?').withChoices(
+          choice('FLAG'),
+          choice('GFP'),
+          choice('HA'),
+          choice('Myc'),
+          choice('Other').then(
+            question('anti_tag_ab_strategy_specification', 'Please specify').withTextField()
+          )
+        ),
+        when(value('anti_tag_ab_strategy').equals('Other')).then(note('Please specify'))
+      ),
+      choice('nanobody'),
+      choice('Polyclonal Ab'),
+      choice('Monoclonal Ab'),
+      choice('Streptavidin'),
+      choice('Tandem IP')
     )
-  ),
-  choice('nanobody'),
-  choice('Polyclonal Ab'),
-  choice('Monoclonal Ab'),
-  choice('Streptavidin'),
-  choice('Tandem IP')
+  )
 );
-
-// form(
-//     section(
-//       'Scope of the experiment',
-//       choice('ANALYSIS TYPE', 'What type of the analysis do you want to perform?', [
-//         'Identification of all proteins in my sample',
-//         'Protein quantification',
-//         'Intact Protein Mass measurement',
-//       ]),
-//       question('tag_strategy', 'What TAG strategy did you use?').withChoices(
-//         choice('Anti TAG Ab').then(
-//           question('anti_tag_ab_strategy', 'Which Anti TAG Ab strategy did you use?')
-//             .withChoices(
-//               choice('FLAG'),
-//               choice('GFP'),
-//               choice('HA'),
-//               choice('Myc'),
-//               choice('Other').then(text('anti_tag_ab_strategy_specification', 'Please specify'))
-//             )
-//             .withOptions([Opt.Requred, Opt.Warning]),
-
-//           when(value('ANTI TAG AB STRATEGY').equals('Other')).then(
-//             text('ANTI TAG AB STRATEGY SPECIFICATION', 'Please specify')
-//           )
-//         ),
-//         choice('nanobody'),
-//         choice('Polyclonal Ab'),
-//         choice('Monoclonal Ab'),
-//         choice('Streptavidin'),
-//         choice('Tandem IP')
-//       );
-//     )
-//   );
 
 // form(
 //   section(
