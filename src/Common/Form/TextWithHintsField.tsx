@@ -46,7 +46,7 @@ export function TextWithHints({
   function Placeholder({
     children,
     ...props
-  }: { children: ReactNode } & PlaceholderProps<{ value: string; label: string }>) {
+  }: { children: ReactNode } & PlaceholderProps<{ value: string; label: string }, false>) {
     return (
       <components.Placeholder {...props} className="text-gray-500">
         {children}
@@ -57,7 +57,7 @@ export function TextWithHints({
   function Control({
     children,
     ...props
-  }: { children: ReactNode } & ControlProps<{ value: string; label: string }>) {
+  }: { children: ReactNode } & ControlProps<{ value: string; label: string }, false>) {
     return (
       <components.Control {...props} className={c(classes)}>
         {children}

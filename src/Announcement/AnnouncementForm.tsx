@@ -1,5 +1,5 @@
 import { Form, Formik } from 'formik';
-import React, { ReactNode } from 'react';
+import { ReactNode } from 'react';
 import { useNavigate } from 'react-router';
 
 import { LongText, ShortText } from '../Common/Form/TextField';

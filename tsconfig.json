@@ -1,7 +1,12 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": ["es2019", "dom", "dom.iterable", "esnext"],
+    "lib": [
+      "es2019",
+      "dom",
+      "dom.iterable",
+      "esnext"
+    ],
     "allowJs": false,
     "skipLibCheck": true,
     "esModuleInterop": true,
@@ -14,8 +19,10 @@
     "isolatedModules": true,
     "downlevelIteration": true,
     "noEmit": true,
-    "jsx": "react",
+    "jsx": "react-jsx",
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src/**/*"]
+  "include": [
+    "src/**/*"
+  ]
 }
