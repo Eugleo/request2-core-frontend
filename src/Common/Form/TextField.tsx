@@ -21,6 +21,8 @@ const textFieldClasses = [
   'focus:border-blue-600',
   'focus:z-10',
   'font-normal',
+  'disabled:bg-gray-200',
+  'disabled:text-gray-500',
 ];
 
 const simpleTextFieldClasses = [
@@ -85,7 +87,11 @@ export function ShortText({
           helpers.setValue({ content: e.target.value, type: 'text-short' });
         }}
         {...props}
-        className={c(textFieldClasses, className)}
+        className={c(
+          textFieldClasses,
+          className,
+          'disabled:text-gray-400 disabled:bg-gray-200 disabled:shadow-none'
+        )}
       />
       <Description>{description}</Description>
     </Field>

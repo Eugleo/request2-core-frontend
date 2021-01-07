@@ -2,12 +2,14 @@ import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 
-import * as Button from '../Common/Buttons';
-import { ShortText } from '../Common/Form/TextField';
-import { Page } from '../Common/Layout';
-import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
-import { post } from '../Utils/Api';
-import { Errors } from '../Utils/Errors';
+import * as Button from '../../Common/Buttons';
+import { ShortText } from '../../Common/Form/TextField';
+import { Page } from '../../Common/Layout';
+import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { post } from '../../Utils/Api';
+import { Errors } from '../../Utils/Errors';
+import logoSrc from '../../assets/register.svg';
+import { CenteredForm, CenteredPage } from './CenteredPage';
 
 function validate(values: { email: ShortTextFieldValue }) {
   const errors: Errors<{ email: ShortTextFieldValue }> = {};
@@ -18,11 +20,16 @@ function validate(values: { email: ShortTextFieldValue }) {
   return errors;
 }
 
-export function NewRegistrationPage(): JSX.Element {
+export function RegisterInitPage(): JSX.Element {
   const [regState, setState] = useState('init');
 
   return (
-    <Page title="New registration">
+    <CenteredPage
+      title="Register a new account"
+      subtitle="First, enter the email address you want to asociate with your new account. You'll be automatically sent an invitation link."
+      imageSrc={logoSrc}
+      imageAlt="A user icon"
+    >
       <Formik
         initialValues={{ email: createShortTextValue() }}
         validate={validate}
@@ -37,7 +44,7 @@ export function NewRegistrationPage(): JSX.Element {
           }
         }}
       >
-        <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
+        <CenteredForm>
           {regState === 'success' ? (
             <p className="text-green-600 mb-5">
               Registration started correctly! Please check your mailbox for an activation e-mail.
@@ -50,7 +57,11 @@ export function NewRegistrationPage(): JSX.Element {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.Primary type="submit" title="Register" />
+                <Button.Primary
+                  type="submit"
+                  title="Send invitation link"
+                  className="w-full mt-6"
+                />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">
@@ -59,8 +70,8 @@ export function NewRegistrationPage(): JSX.Element {
               )}
             </>
           )}
-        </Form>
+        </CenteredForm>
       </Formik>
-    </Page>
+    </CenteredPage>
   );
 }

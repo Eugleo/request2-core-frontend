@@ -3,12 +3,13 @@ import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams } from 'react-router-dom';
 
-import * as Button from '../Common/Buttons';
-import { ShortText } from '../Common/Form/TextField';
-import { Page } from '../Common/Layout';
-import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
-import { post } from '../Utils/Api';
-import { Errors } from '../Utils/Errors';
+import * as Button from '../../Common/Buttons';
+import { ShortText } from '../../Common/Form/TextField';
+import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { post } from '../../Utils/Api';
+import { Errors } from '../../Utils/Errors';
+import logoSrc from '../../assets/register.svg';
+import { CenteredForm, CenteredPage } from './CenteredPage';
 
 type RegState = 'init' | 'loading' | 'success' | 'problem';
 
@@ -26,20 +27,25 @@ export function RegisterPage(): JSX.Element {
   const [regState, setState] = useState<RegState>('init');
 
   return (
-    <Page title="Registration">
+    <CenteredPage
+      title="Register a new account"
+      subtitle="Now, just write down some more details and you're done! Please note that your account needs to be manually asigned to a team by one of our administrators."
+      imageSrc={logoSrc}
+      imageAlt="A user icon"
+    >
       <Formik
         initialValues={{
           email: createShortTextValue(email),
           name: createShortTextValue(),
           password: createShortTextValue(),
           passwordCheck: createShortTextValue(),
-          team: createShortTextValue('1'),
+          team: createShortTextValue('To be filled in by an admin'),
           token: createShortTextValue(token),
         }}
         validate={validate}
         onSubmit={async (values: RegistrationStub) => {
           setState('loading');
-          const r = await post('/register', values);
+          const r = await post(`/register/${token}`, { ...values, team: null });
 
           if (r.ok) {
             setState('success');
@@ -49,7 +55,7 @@ export function RegisterPage(): JSX.Element {
           }
         }}
       >
-        <Form className="rounded-lg shadow-md bg-white p-6 flex flex-col">
+        <CenteredForm>
           {regState === 'success' ? (
             <p className="text-green-600 mb-5">
               Registration finished correctly! You can now <Link to="/login">log in</Link>.
@@ -67,7 +73,7 @@ export function RegisterPage(): JSX.Element {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.Primary type="submit" title="Finish registration" />
+                <Button.Primary type="submit" title="Finish registration" className="mt-6 w-full" />
               )}
               {regState === 'problem' && (
                 <p className="text-red-600 mb-5">
@@ -76,9 +82,9 @@ export function RegisterPage(): JSX.Element {
               )}
             </>
           )}
-        </Form>
+        </CenteredForm>
       </Formik>
-    </Page>
+    </CenteredPage>
   );
 }
 

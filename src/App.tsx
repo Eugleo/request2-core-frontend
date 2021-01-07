@@ -4,11 +4,11 @@ import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 
 import { AnnouncementRouter } from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
-import { getUserInfo, LoginPage } from './Page/LoginPage';
-import { NewRegistrationPage } from './Page/NewRegistrationPage';
+import { getUserInfo, LoginPage } from './Page/LoggedOut/LoginPage';
+import { PasswordResetPage, PasswordResetPageWithEmail } from './Page/LoggedOut/PasswordResetPage';
+import { RegisterInitPage } from './Page/LoggedOut/RegisterInitPage';
+import { RegisterPage } from './Page/LoggedOut/RegisterPage';
 import { NotFound404 } from './Page/NotFound404';
-import { PasswordResetPage, PasswordResetPageWithEmail } from './Page/PasswordRecoveryPage';
-import { RegisterPage } from './Page/RegisterPage';
 import { Sidebar } from './Page/Sidebar';
 import { Requests as RequestsAsClient } from './Request/Client/RequestList';
 import { Requests as RequestsAsOperator } from './Request/Operator/RequestList';
@@ -126,6 +126,8 @@ function NormalRoutes() {
       otherwise={
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/register" element={<RegisterInitPage />} />
+          <Route path="/register/:email/:token" element={<RegisterPage />} />
           <Route path="/password-reset" element={<PasswordResetPage email={null} />} />
           <Route path="/password-reset/:email" element={<PasswordResetPageWithEmail />} />
           <Route path="/*" element={<Navigate to="/login" />} />
@@ -148,7 +150,7 @@ function NormalRoutes() {
           <Route path="/announcements/*" element={<AnnouncementRouter />} />
           <Route path="/teams/*" element={<TeamRouter />} />
           <Route path="/register">
-            <Route path="new" element={<NewRegistrationPage />} />
+            <Route path="new" element={<RegisterInitPage />} />
             <Route path=":email/:token" element={<RegisterPage />} />
           </Route>
           <Route path="/" element={<Navigate to="/me/requests" />} />

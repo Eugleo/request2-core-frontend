@@ -1,16 +1,17 @@
 import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 
-import * as Button from '../Common/Buttons';
-import { ShortText } from '../Common/Form/TextField';
-import { Link } from '../Common/Link';
-import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
-import { UserDetails } from '../User/User';
-import * as Api from '../Utils/Api';
-import { authHeaders } from '../Utils/Auth';
-import { useAuthDispatch } from '../Utils/AuthContext';
-import { Errors } from '../Utils/Errors';
-import logoSrc from '../assets/logoII.svg';
+import * as Button from '../../Common/Buttons';
+import { ShortText } from '../../Common/Form/TextField';
+import { Link } from '../../Common/Link';
+import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { UserDetails } from '../../User/User';
+import * as Api from '../../Utils/Api';
+import { authHeaders } from '../../Utils/Auth';
+import { useAuthDispatch } from '../../Utils/AuthContext';
+import { Errors } from '../../Utils/Errors';
+import logoSrc from '../../assets/logoII.svg';
+import { CenteredForm, CenteredPage } from './CenteredPage';
 
 export async function getUserInfo(apiKey: string): Promise<UserDetails> {
   const r = await Api.get('/me', authHeaders(apiKey));
@@ -60,14 +61,16 @@ export function LoginPage(): JSX.Element {
   const dispatch = useAuthDispatch();
 
   return (
-    <div className="flex flex-col mx-auto items-center h-full justify-center max-w-md">
-      <div className="mb-10 mx-auto max-w-sm">
-        <img src={logoSrc} alt="The Request 2 logo" className="mx-auto h-16 w-16 mb-6" />
-        <h1 className="text-3xl font-black text-center mb-2">Sign in to Request 2</h1>
-        <p className="text-sm text-center text-gray-700">
-          Or <Link to="/">register a new account</Link> if you don't have one yet
-        </p>
-      </div>
+    <CenteredPage
+      title="Sign in to Request 2"
+      subtitle={
+        <>
+          Or <Link to="/register">register a new account</Link> if you don't have one yet
+        </>
+      }
+      imageSrc={logoSrc}
+      imageAlt="The Request 2 logo"
+    >
       <Formik
         initialValues={{
           email: createShortTextValue(),
@@ -79,7 +82,7 @@ export function LoginPage(): JSX.Element {
         }
       >
         {formik => (
-          <Form className="rounded-lg shadow-xs bg-white w-full px-6 py-6">
+          <CenteredForm>
             {loginFailed ? (
               <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
             ) : null}
@@ -92,9 +95,9 @@ export function LoginPage(): JSX.Element {
             </div>
 
             <Button.Primary type="submit" title="Log in" status="Normal" className="w-full" />
-          </Form>
+          </CenteredForm>
         )}
       </Formik>
-    </div>
+    </CenteredPage>
   );
 }
