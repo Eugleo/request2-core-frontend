@@ -36,7 +36,7 @@ export function Description({
 
 export function FieldHeader({ hint, label }: { hint: Maybe<string>; label: string }): JSX.Element {
   return (
-    <div className="flex flex-row items-center mb-1">
+    <div className="flex flex-row items-center mb-1 text-sm">
       <FieldLabel text={label} />
       <Hint hint={hint} />
     </div>

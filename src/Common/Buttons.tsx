@@ -62,6 +62,7 @@ export const baseClasses = [
   'focus:outline-none',
   'font-medium',
   'text-sm',
+  'justify-center',
 ];
 
 export function Activate({ onClick }: { onClick: () => void }): JSX.Element {

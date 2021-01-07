@@ -7,6 +7,7 @@ import { Page } from './Common/Layout';
 import { getUserInfo, LoginPage } from './Page/LoginPage';
 import { NewRegistrationPage } from './Page/NewRegistrationPage';
 import { NotFound404 } from './Page/NotFound404';
+import { PasswordResetPage, PasswordResetPageWithEmail } from './Page/PasswordRecoveryPage';
 import { RegisterPage } from './Page/RegisterPage';
 import { Sidebar } from './Page/Sidebar';
 import { Requests as RequestsAsClient } from './Request/Client/RequestList';
@@ -70,12 +71,8 @@ function useLogin() {
 export function App(): JSX.Element {
   return (
     <AuthProvider>
-      <div
-        style={{ gridTemplateColumns: 'auto 1fr' }}
-        className="App bg-white h-screen max-h-screen w-screen grid grid-cols-2"
-      >
+      <div className="App bg-white h-screen max-h-screen w-screen">
         <Router>
-          <Sidebar />
           <AppBody />
         </Router>
       </div>
@@ -129,26 +126,35 @@ function NormalRoutes() {
       otherwise={
         <Routes>
           <Route path="/login" element={<LoginPage />} />
+          <Route path="/password-reset" element={<PasswordResetPage email={null} />} />
+          <Route path="/password-reset/:email" element={<PasswordResetPageWithEmail />} />
           <Route path="/*" element={<Navigate to="/login" />} />
         </Routes>
       }
     >
-      <Routes>
-        <Route path="/login" element={<Navigate to="/me/requests" />} />
-        <Route path="/admin/users/*" element={<UserRouter />} />
-        <Route path="/me/*">
-          <Route path="requests/*" element={<RequestsAsClient />} />
-        </Route>
-        <Route path="/requests/*" element={<RequestsAsOperator />} />
-        <Route path="/announcements/*" element={<AnnouncementRouter />} />
-        <Route path="/teams/*" element={<TeamRouter />} />
-        <Route path="/register">
-          <Route path="new" element={<NewRegistrationPage />} />
-          <Route path=":email/:token" element={<RegisterPage />} />
-        </Route>
-        <Route path="/" element={<Navigate to="/me/requests" />} />
-        <Route path="/*" element={<NotFound404 />} />
-      </Routes>
+      <div
+        className="grid grid-cols-2 h-screen w-screen"
+        style={{ gridTemplateColumns: 'auto 1fr' }}
+      >
+        <Sidebar />
+        <Routes>
+          <Sidebar />
+          <Route path="/login" element={<Navigate to="/me/requests" />} />
+          <Route path="/admin/users/*" element={<UserRouter />} />
+          <Route path="/me/*">
+            <Route path="requests/*" element={<RequestsAsClient />} />
+          </Route>
+          <Route path="/requests/*" element={<RequestsAsOperator />} />
+          <Route path="/announcements/*" element={<AnnouncementRouter />} />
+          <Route path="/teams/*" element={<TeamRouter />} />
+          <Route path="/register">
+            <Route path="new" element={<NewRegistrationPage />} />
+            <Route path=":email/:token" element={<RegisterPage />} />
+          </Route>
+          <Route path="/" element={<Navigate to="/me/requests" />} />
+          <Route path="/*" element={<NotFound404 />} />
+        </Routes>
+      </div>
     </Authentized>
   );
 }
