@@ -48,7 +48,7 @@ export function UserForm({
     : new Map();
 
   const selectedTeam = ok(result)
-    ? result.data.values.find(t => t._id === user?.teamId)?.name
+    ? result.data.values.find(t => t._id === user?.teamIds)?.name
     : undefined;
 
   const initialValues = {

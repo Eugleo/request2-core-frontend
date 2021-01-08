@@ -14,7 +14,7 @@ import { WithID } from '../Utils/WithID';
 import { User } from './User';
 
 function UserTableItem({ user }: { user: WithID<User> }) {
-  const { result } = Api.useAsyncGet<Team>(`/teams/${user.teamId}`);
+  const { result } = Api.useAsyncGet<Team>(`/teams/${user.teamIds}`);
 
   return (
     <Row>

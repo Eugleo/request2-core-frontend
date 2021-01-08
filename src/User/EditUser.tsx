@@ -25,7 +25,7 @@ function EditUserForm({ user }: { user: WithID<User> }) {
       email: fieldValueToString(values.email),
       name: fieldValueToString(values.name),
       roles: values.roles.content as Role[],
-      teamId,
+      teamIds: teamId,
     });
 
     if (response.status === 200) {

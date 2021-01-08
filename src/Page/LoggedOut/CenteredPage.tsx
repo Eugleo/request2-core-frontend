@@ -15,7 +15,7 @@ export function CenteredPage({
 }): JSX.Element {
   return (
     <div className="py-10 px-10 min-h-screen flex flex-col justify-center items-center">
-      <div className="mx-auto max-w-md">
+      <div className="max-w-md w-full">
         <div className="mb-10 mx-auto max-w-sm">
           <img src={imageSrc} alt={imageAlt} className="mx-auto h-16 w-16 mb-6" />
           <h1 className="text-3xl font-black text-center mb-2">{title}</h1>

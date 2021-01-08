@@ -71,7 +71,7 @@ export async function get(url: string, headers = {}): Promise<Response> {
   return fetch(apiBase + url, { headers, method: 'GET' });
 }
 
-export async function post(url: string, data: Object, headers = {}): Promise<Response> {
+export async function post<T>(url: string, data: T, headers = {}): Promise<Response> {
   return fetch(apiBase + url, {
     body: JSON.stringify(data),
     headers: { 'Content-Type': 'application/json', ...headers },

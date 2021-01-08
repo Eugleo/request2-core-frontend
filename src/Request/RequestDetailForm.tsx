@@ -149,7 +149,7 @@ function RequestDetailForm({
               dateCreated: now,
               requestType,
               status: 'Pending',
-              teamId: auth.user.team._id,
+              teamId: auth.user.teams._id,
               ...request,
               name: fieldValueToString(values.title),
             };

@@ -18,7 +18,7 @@ export function NewUser(): JSX.Element {
       name: fieldValueToString(values.name),
       password: fieldValueToString(values.password),
       roles: values.roles.content as Role[],
-      teamId,
+      teamIds: teamId,
     });
 
     if (response.status === 201) {

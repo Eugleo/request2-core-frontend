@@ -2,10 +2,12 @@ import { Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
 import { Link, useParams } from 'react-router-dom';
+import { valueEventAriaMessage } from 'react-select/src/accessibility';
 
 import * as Button from '../../Common/Buttons';
 import { ShortText } from '../../Common/Form/TextField';
 import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { User } from '../../User/User';
 import { post } from '../../Utils/Api';
 import { Errors } from '../../Utils/Errors';
 import logoSrc from '../../assets/register.svg';
@@ -45,7 +47,15 @@ export function RegisterPage(): JSX.Element {
         validate={validate}
         onSubmit={async (values: RegistrationStub) => {
           setState('loading');
-          const r = await post(`/register/${token}`, { ...values, team: null });
+          const r = await post<User>(`/register/${token}`, {
+            active: true,
+            dateCreated: Date.now(),
+            email: values.email.content,
+            name: values.name.content,
+            password: values.password.content,
+            roles: ['Client'],
+            teamIds: [],
+          });
 
           if (r.ok) {
             setState('success');

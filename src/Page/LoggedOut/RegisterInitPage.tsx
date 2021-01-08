@@ -26,7 +26,7 @@ export function RegisterInitPage(): JSX.Element {
   return (
     <CenteredPage
       title="Register a new account"
-      subtitle="First, enter the email address you want to asociate with your new account. You'll be automatically sent an invitation link."
+      subtitle="First, enter the email address you want to asociate with your new account. You'll be automatically sent an invitation e-mail with further instructions."
       imageSrc={logoSrc}
       imageAlt="A user icon"
     >
@@ -59,7 +59,7 @@ export function RegisterInitPage(): JSX.Element {
               ) : (
                 <Button.Primary
                   type="submit"
-                  title="Send invitation link"
+                  title="Send invitation e-mail"
                   className="w-full mt-6"
                 />
               )}
