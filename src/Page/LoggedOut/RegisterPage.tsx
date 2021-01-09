@@ -115,8 +115,6 @@ function validate(values: RegistrationStub) {
     values.passwordCheck &&
     values.password.content !== values.passwordCheck.content
   ) {
-    console.log(values.password.content);
-    console.log(values.passwordCheck.content);
     errors.passwordCheck = 'Passwords do not match';
   }
 
