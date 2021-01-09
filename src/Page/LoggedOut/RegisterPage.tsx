@@ -47,7 +47,7 @@ export function RegisterPage(): JSX.Element {
         validate={validate}
         onSubmit={async (values: RegistrationStub) => {
           setState('loading');
-          const r = await post<User>(`/register/${token}`, {
+          const r = await post<User & { token: string }>(`/register`, {
             active: true,
             dateCreated: Date.now(),
             email: values.email.content,
@@ -55,6 +55,7 @@ export function RegisterPage(): JSX.Element {
             password: values.password.content,
             roles: ['Client'],
             teamIds: [],
+            token,
           });
 
           if (r.ok) {
@@ -109,7 +110,13 @@ function validate(values: RegistrationStub) {
   } else if (values.password.content.length < 8) {
     errors.password = 'Please use a reasonably long password';
   }
-  if (values.password && values.passwordCheck && values.password !== values.passwordCheck) {
+  if (
+    values.password &&
+    values.passwordCheck &&
+    values.password.content !== values.passwordCheck.content
+  ) {
+    console.log(values.password.content);
+    console.log(values.passwordCheck.content);
     errors.passwordCheck = 'Passwords do not match';
   }
 
