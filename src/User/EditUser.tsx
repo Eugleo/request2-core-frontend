@@ -25,7 +25,7 @@ function EditUserForm({ user }: { user: WithID<User> }) {
       email: fieldValueToString(values.email),
       name: fieldValueToString(values.name),
       roles: values.roles.content as Role[],
-      teamIds: teamId,
+      teamIds: [teamId], // TODO Fix to allow the admin to choose multiple teams
     });
 
     if (response.status === 200) {

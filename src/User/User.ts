@@ -20,3 +20,9 @@ export type UserDetails = {
   teams: WithID<Team>[];
   dateCreated: Date;
 };
+
+export type UserInfo = {
+  apiKey: string;
+  userId: number;
+  roles: Role[];
+};

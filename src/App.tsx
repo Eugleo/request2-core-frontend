@@ -48,11 +48,17 @@ function useLogin() {
 
   const getUserDetails = useCallback(async () => {
     if (apiKey) {
-      const userDetails = await getUserInfo(apiKey);
-      dispatch({
-        payload: { apiKey, user: userDetails },
-        type: 'LOGIN',
-      });
+      try {
+        const userDetails = await getUserInfo(apiKey);
+        dispatch({
+          payload: { apiKey, user: userDetails.data },
+          type: 'LOGIN',
+        });
+      } catch (error) {
+        localStorage.removeItem('apiKey');
+        console.log(error);
+        return Promise.resolve(null);
+      }
     }
     return Promise.resolve(null);
   }, [apiKey, dispatch]);
@@ -140,7 +146,6 @@ function NormalRoutes() {
       >
         <Sidebar />
         <Routes>
-          <Sidebar />
           <Route path="/login" element={<Navigate to="/me/requests" />} />
           <Route path="/admin/users/*" element={<UserRouter />} />
           <Route path="/me/*">

@@ -59,14 +59,15 @@ export function UserList(): JSX.Element {
         <Button.Create title="New user" />
       </div>
       <Loader>
-        {({ values, total }) => (
+        {data => (
           <>
+            {console.log(data)}
             <Table columns={['Name', 'Email', 'Team Leader', 'Roles', '']}>
-              {values.map(v => (
+              {data.values.map(v => (
                 <UserTableItem key={v._id} user={v} />
               ))}
             </Table>
-            <Pagination currentPage={currentPage} limit={limit} total={total} />
+            <Pagination currentPage={currentPage} limit={limit} total={data.total} />
           </>
         )}
       </Loader>

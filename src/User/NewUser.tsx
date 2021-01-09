@@ -18,7 +18,7 @@ export function NewUser(): JSX.Element {
       name: fieldValueToString(values.name),
       password: fieldValueToString(values.password),
       roles: values.roles.content as Role[],
-      teamIds: teamId,
+      teamIds: [teamId], // TODO Fix to allow the admin to choose multiple teams
     });
 
     if (response.status === 201) {

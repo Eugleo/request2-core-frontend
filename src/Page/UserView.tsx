@@ -54,7 +54,7 @@ function UserDetails() {
     >
       <div className="font-semibold px-4 py-2 mb-2 border-b border-gray-300">{auth.user.name}</div>
       <div className="px-4 mb-4">
-        <Section title="Team">{auth.user.teams.name}</Section>
+        <Section title="Teams">{auth.user.teams.map(t => t.name).intersperse(() => ', ')}</Section>
         <Section title="Roles">
           <div className="flex flex-row flex-wrap">
             {auth.user.roles.map(d => (

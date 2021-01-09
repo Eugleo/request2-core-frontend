@@ -1,4 +1,4 @@
-import { Form, Formik } from 'formik';
+import { Formik } from 'formik';
 import React, { useState } from 'react';
 
 import * as Button from '../../Common/Buttons';
@@ -13,7 +13,7 @@ import { Errors } from '../../Utils/Errors';
 import logoSrc from '../../assets/logoII.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
-export async function getUserInfo(apiKey: string): Promise<UserDetails> {
+export async function getUserInfo(apiKey: string): Promise<{ data: UserDetails }> {
   const r = await Api.get('/me', authHeaders(apiKey));
   if (r.ok) {
     return r.json();
@@ -31,9 +31,10 @@ async function verifyLogin(
   if (r.ok) {
     setFailed(false);
     const js = await r.json();
-    const userDetails = await getUserInfo(js.apiKey);
+
+    const userDetails = await getUserInfo(js.data.apiKey);
     authDispatch({
-      payload: { apiKey: js.apiKey, user: userDetails },
+      payload: { apiKey: js.data.apiKey, user: userDetails },
       type: 'LOGIN',
     });
   }

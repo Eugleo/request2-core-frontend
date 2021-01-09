@@ -47,8 +47,10 @@ export function UserForm({
     ? new Map(result.data.values.map(v => [v.name, v._id]))
     : new Map();
 
+  // TODO Fix to accomodate multiple team IDs
+  console.log(user);
   const selectedTeam = ok(result)
-    ? result.data.values.find(t => t._id === user?.teamIds)?.name
+    ? result.data.values.find(t => t._id === user?.teamIds[0])?.name
     : undefined;
 
   const initialValues = {

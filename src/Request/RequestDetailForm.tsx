@@ -149,7 +149,7 @@ function RequestDetailForm({
               dateCreated: now,
               requestType,
               status: 'Pending',
-              teamId: auth.user.teams._id,
+              teamId: 0, // TODO Fix this to dynamically allow the user to choose a team
               ...request,
               name: fieldValueToString(values.title),
             };
