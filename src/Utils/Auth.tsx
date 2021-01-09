@@ -121,9 +121,9 @@ export function Authorized({
 }): JSX.Element | null {
   const auth = useAuthState();
 
-  if (!auth.loggedIn || !roles.every(r => auth.user.roles.includes(r))) {
-    return <>{otherwise}</>;
+  if (auth.loggedIn && (roles.length === 0 || roles.some(r => auth.user.roles.includes(r)))) {
+    return <>{children}</>;
   }
 
-  return <>{children}</>;
+  return <>{otherwise}</>;
 }

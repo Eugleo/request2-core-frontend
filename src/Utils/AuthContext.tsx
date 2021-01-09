@@ -4,6 +4,7 @@ import { UserDetails } from '../User/User';
 import { Maybe } from './Maybe';
 
 function reducer(state: Auth, action: UserAction): Auth {
+  console.log(action);
   switch (action.type) {
     case 'LOGIN':
       localStorage.setItem('apiKey', action.payload.apiKey);

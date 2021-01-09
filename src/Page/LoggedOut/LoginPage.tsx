@@ -34,12 +34,13 @@ async function verifyLogin(
 
     const userDetails = await getUserInfo(js.data.apiKey);
     authDispatch({
-      payload: { apiKey: js.data.apiKey, user: userDetails },
+      payload: { apiKey: js.data.apiKey, user: userDetails.data },
       type: 'LOGIN',
     });
+  } else {
+    setFailed(true);
+    throw new Error('Incorrect email and/or password');
   }
-  setFailed(true);
-  throw new Error('Incorrect email and/or password');
 }
 
 function validate(values: LoginStub) {

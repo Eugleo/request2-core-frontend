@@ -7,6 +7,7 @@ import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import {
   createMultipleChoiceValue,
+  createMultipleChoiceValueFromArray,
   createShortTextValue,
   createSingleChoiceValue,
   MultipleChoiceFieldValue,
@@ -25,7 +26,7 @@ export type UserStub = {
   email: ShortTextFieldValue;
   password: ShortTextFieldValue;
   roles: MultipleChoiceFieldValue;
-  team: SingleChoiceFieldValue;
+  team: MultipleChoiceFieldValue;
 };
 
 export function UserForm({
@@ -39,7 +40,7 @@ export function UserForm({
   submitTitle: string;
   user?: WithID<User>;
   headerButtons?: React.ReactNode;
-  onSubmit: (values: UserStub, teamId: number) => void;
+  onSubmit: (values: UserStub, teamIds: number[]) => void;
 }): JSX.Element {
   const { result, Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', 1000, 0);
 
@@ -47,18 +48,19 @@ export function UserForm({
     ? new Map(result.data.values.map(v => [v.name, v._id]))
     : new Map();
 
-  // TODO Fix to accomodate multiple team IDs
-  console.log(user);
-  const selectedTeam = ok(result)
-    ? result.data.values.find(t => t._id === user?.teamIds[0])?.name
-    : undefined;
+  const selectedTeams = ok(result)
+    ? user?.teamIds
+        .map(id => result.data.values.find(team => team._id === id))
+        .map(team => team?.name)
+        .filter((t): t is string => t !== undefined)
+    : [];
 
   const initialValues = {
     email: createShortTextValue(user?.email),
     name: createShortTextValue(user?.name),
     password: createShortTextValue(user?.password),
     roles: createMultipleChoiceValue(user?.roles.join(';;;')),
-    team: createSingleChoiceValue(selectedTeam),
+    team: createMultipleChoiceValueFromArray(selectedTeams),
   };
 
   return (
@@ -68,7 +70,9 @@ export function UserForm({
           <Formik
             initialValues={initialValues}
             onSubmit={values => {
-              const teamId = teamIds.get(values.team.content);
+              const teamId: number[] = values.team.content
+                .map(name => teamIds.get(name))
+                .filter((t): t is number => t !== undefined);
               if (teamId) {
                 onSubmit(values, teamId);
               } else {
@@ -91,7 +95,7 @@ export function UserForm({
                   choices={['Admin', 'Operator', 'Client']}
                 />
 
-                <SingleChoice
+                <MultipleChoice
                   path="team"
                   label="Team"
                   choices={teams.sort(comparing(t => t.name)).map(t => t.name)}

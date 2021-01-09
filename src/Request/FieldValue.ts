@@ -43,6 +43,10 @@ export function createMultipleChoiceValue(def?: string): MultipleChoiceFieldValu
   return { content: def?.split(';;;') ?? [], type: 'multiple-choice' };
 }
 
+export function createMultipleChoiceValueFromArray(def?: string[]): MultipleChoiceFieldValue {
+  return { content: def ?? [], type: 'multiple-choice' };
+}
+
 export function createTextWithHintsValue(def?: string): TextWithHintsFieldValue {
   return { content: def ?? '', type: 'text-with-hints' };
 }

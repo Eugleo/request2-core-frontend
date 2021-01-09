@@ -47,12 +47,6 @@ export function Sidebar(): JSX.Element {
         <Authentized>
           <UserView />
         </Authentized>
-        <NotAuthentized>
-          {/* <NavLink to="/register/new">Register</NavLink> */}
-          <NavLink to="/login">
-            <Icon.User />
-          </NavLink>
-        </NotAuthentized>
       </div>
     </nav>
   );

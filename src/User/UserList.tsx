@@ -13,14 +13,30 @@ import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 import { User } from './User';
 
-function UserTableItem({ user }: { user: WithID<User> }) {
-  const { result } = Api.useAsyncGet<Team>(`/teams/${user.teamIds}`);
+function TeamPill({ teamId }: { teamId: number }) {
+  const { Loader } = Api.useAsyncGet<Team>(`/teams/${teamId}`);
 
+  return (
+    <Loader>
+      {team => (
+        <Pill text={team.name} className="text-gray-600 bg-gray-100 border-gray-300 mr-2 mb-2" />
+      )}
+    </Loader>
+  );
+}
+
+function UserTableItem({ user }: { user: WithID<User> }) {
   return (
     <Row>
       <Cell>{user.active ? user.name : <span className="text-gray-600">{user.name}</span>}</Cell>
       <Cell className="text-gray-700">{user.email}</Cell>
-      <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading team'}</Cell>
+      <Cell className="text-gray-700">
+        <div className="flex flex-row items-center flex-wrap -mb-2">
+          {user.teamIds.map(id => (
+            <TeamPill key={id} teamId={id} />
+          ))}
+        </div>
+      </Cell>
       <Cell>
         <div className="flex">
           {user.roles
@@ -61,7 +77,6 @@ export function UserList(): JSX.Element {
       <Loader>
         {data => (
           <>
-            {console.log(data)}
             <Table columns={['Name', 'Email', 'Team Leader', 'Roles', '']}>
               {data.values.map(v => (
                 <UserTableItem key={v._id} user={v} />

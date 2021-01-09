@@ -10,7 +10,7 @@ export function NewUser(): JSX.Element {
   const { authPost } = useAuth<User>();
   const navigate = useNavigate();
 
-  const onSubmit = async (values: UserStub, teamId: number) => {
+  const onSubmit = async (values: UserStub, teamIds: number[]) => {
     const response = await authPost('/users', {
       active: true,
       dateCreated: Math.round(Date.now() / 1000),
@@ -18,7 +18,7 @@ export function NewUser(): JSX.Element {
       name: fieldValueToString(values.name),
       password: fieldValueToString(values.password),
       roles: values.roles.content as Role[],
-      teamIds: [teamId], // TODO Fix to allow the admin to choose multiple teams
+      teamIds,
     });
 
     if (response.status === 201) {

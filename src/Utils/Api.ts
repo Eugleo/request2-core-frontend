@@ -41,6 +41,21 @@ export function useAsyncGetMany<T>(
   return useAsync<{ values: T[]; total: number }>(getThings);
 }
 
+async function getResource<T>(
+  url: string,
+  authGet: (url: string) => Promise<Response>,
+  ref: number
+) {
+  const r = await authGet(url);
+  const js: { error: string } | { data: T } = await r.json();
+  if ('data' in js) {
+    return js.data;
+  }
+  // ref needs to stay in deps array
+  // Otherwise this won't work
+  throw new Error(`Error: ${js.error}, ref: ${ref}`);
+}
+
 // The server returns either { error: ... } or { data: ... }
 export function useAsyncGet<T>(
   url: string
@@ -52,16 +67,7 @@ export function useAsyncGet<T>(
   const { authGet } = useAuth();
   const [ref, refresh] = useRefresh();
 
-  const getThing = useCallback(async () => {
-    const r = await authGet(url);
-    const js: { error: string } | { data: T } = await r.json();
-    if ('data' in js) {
-      return js.data;
-    }
-    // ref needs to stay in deps array
-    // Otherwise this won't work
-    throw new Error(`Error: ${js.error}, ref: ${ref}`);
-  }, [authGet, ref, url]);
+  const getThing = useCallback(() => getResource<T>(url, authGet, ref), [authGet, ref, url]);
   const thing = useAsync<T>(getThing);
 
   return { ...thing, refresh };
