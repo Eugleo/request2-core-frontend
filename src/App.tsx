@@ -5,7 +5,11 @@ import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom'
 import { AnnouncementRouter } from './Announcement/AnnouncementList';
 import { Page } from './Common/Layout';
 import { getUserInfo, LoginPage } from './Page/LoggedOut/LoginPage';
-import { PasswordResetPage, PasswordResetPageWithEmail } from './Page/LoggedOut/PasswordResetPage';
+import {
+  PasswordResetInitPage,
+  PasswordResetInitPageWithEmail,
+  PasswordResetPage,
+} from './Page/LoggedOut/PasswordResetPage';
 import { RegisterInitPage } from './Page/LoggedOut/RegisterInitPage';
 import { RegisterPage } from './Page/LoggedOut/RegisterPage';
 import { NotFound404 } from './Page/NotFound404';
@@ -134,8 +138,9 @@ function NormalRoutes() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterInitPage />} />
           <Route path="/register/:email/:token" element={<RegisterPage />} />
-          <Route path="/password-reset" element={<PasswordResetPage email={null} />} />
-          <Route path="/password-reset/:email" element={<PasswordResetPageWithEmail />} />
+          <Route path="/password-reset" element={<PasswordResetInitPage email={null} />} />
+          <Route path="/password-reset/:email" element={<PasswordResetInitPageWithEmail />} />
+          <Route path="/password-reset/:email/:token" element={<PasswordResetPage />} />
           <Route path="/*" element={<Navigate to="/login" />} />
         </Routes>
       }
