@@ -13,6 +13,7 @@ import {
 import { RegisterInitPage } from './Page/LoggedOut/RegisterInitPage';
 import { RegisterPage } from './Page/LoggedOut/RegisterPage';
 import { NotFound404 } from './Page/NotFound404';
+import { MyProfilePage } from './Page/ProfilePage';
 import { Sidebar } from './Page/Sidebar';
 import { Requests as RequestsAsClient } from './Request/Client/RequestList';
 import { Requests as RequestsAsOperator } from './Request/Operator/RequestList';
@@ -151,6 +152,7 @@ function NormalRoutes() {
       >
         <Sidebar />
         <Routes>
+          <Route path="/me" element={<MyProfilePage />} />
           <Route path="/login" element={<Navigate to="/me/requests" />} />
           <Route path="/admin/users/*" element={<UserRouter />} />
           <Route path="/me/*">

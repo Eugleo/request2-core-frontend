@@ -45,7 +45,7 @@ export function FieldHeader({ hint, label }: { hint: Maybe<string>; label: strin
 
 export function FieldLabel({ text }: { text: string }): JSX.Element {
   return (
-    <label htmlFor={text} className="font-medium text-gray-800 mr-2">
+    <label htmlFor={text} className="font-medium text-gray-800 mr-2 text-sm">
       {text}
     </label>
   );
