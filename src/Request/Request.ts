@@ -13,6 +13,13 @@ export type Request = {
   dateCreated: number;
 };
 
+export type NewRequest = {
+  title: string;
+  teamId: number;
+  status: Status;
+  requestType: string;
+};
+
 export type PropertyType =
   | 'Comment'
   | 'Note'
@@ -30,6 +37,17 @@ export type Property = {
   propertyData: string;
   dateAdded: number;
   active: boolean;
+};
+
+export type NewProperty = {
+  name: string;
+  value: string;
+};
+
+export type Comment = {
+  requestId: number;
+  authorId: number;
+  content: string;
 };
 
 export type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
