@@ -11,6 +11,7 @@ import { Primary } from '../Buttons';
 import { Page } from '../Layout';
 import { FileInput } from './NewFile';
 import { Option, LongText, MultipleChoice, Question, ShortText, SingleChoice } from './Question';
+import { TeamField } from './TeamField';
 
 export function NewForm(): JSX.Element {
   const form = useForm();
@@ -20,7 +21,10 @@ export function NewForm(): JSX.Element {
     <Page title="Test">
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)}>
+          <form onSubmit={form.handleSubmit(console.log)}>
+            <Section title="General information">
+              <TeamField id="teamId" />
+            </Section>
             <Section title="Scope of the experiment">
               <div className="bg-yellow-200">
                 <Question>What type of the analysis do you want to perform?</Question>
@@ -71,13 +75,13 @@ type FieldValue = string | number | Selection | Selection[] | File[];
 
 async function onSubmit(
   requestType: string,
-  data: { title: string; teamId: number } & Record<string, FieldValue>,
+  data: { title: string; teamId: string } & Record<string, FieldValue>,
   submit: (request: NewRequest, properties: NewProperty[]) => Promise<Response>
 ) {
   const req: NewRequest = {
     title: data.title,
     status: 'Pending',
-    teamId: data.teamId,
+    teamId: Number.parseInt(data.teamId),
     requestType,
   };
   const props: NewProperty[] = Object.entries(data).reduce(fieldToProperty, []);

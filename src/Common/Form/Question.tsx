@@ -12,7 +12,7 @@ type Choice = ReactElement<
   any
 >;
 
-export type QuestionProps = { id: string; className?: string };
+export type QuestionProps = { id: string; className?: string; required?: boolean };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 function MultiCreatable({ ref, ...props }: any) {
@@ -33,6 +33,10 @@ export function MultipleChoice({
   const { watch } = useFormContext();
   const value = watch(id, null) as { label: string; value: string }[] | null;
 
+  const showChildren = children
+    .filter(ch => value && ch.props.children && value.map(v => v.value).includes(ch.props.value))
+    .map(ch => ch.props.children);
+
   return (
     <div>
       <Controller
@@ -46,13 +50,7 @@ export function MultipleChoice({
           value: ch.props.value,
         }))}
       />
-      {value ? (
-        <div className="mt-2">
-          {children
-            .filter(ch => ch.props.children && value.map(v => v.value).includes(ch.props.value))
-            .map(ch => ch.props.children)}
-        </div>
-      ) : null}
+      {showChildren.length > 0 ? <div className="mt-2">{showChildren}</div> : null}
     </div>
   );
 }
@@ -107,9 +105,20 @@ export function SingleChoice({
   hasCustom = false,
   isText,
   className,
+  required,
 }: QuestionProps & { children: Choice[]; hasCustom?: boolean; isText?: boolean }): JSX.Element {
   const { watch } = useFormContext();
-  const value = watch(id) as string | { label: string; value: string };
+  const value = watch(id) as string | { label: string; value: string } | null;
+
+  const showChildren = children
+    .filter(ch => {
+      if (typeof value === 'string') {
+        return value === ch.props.value && ch.props.children;
+      } else if (value) {
+        return value.value === ch.props.value;
+      }
+    })
+    .map(ch => ch.props.children);
 
   return (
     <div>
@@ -122,17 +131,7 @@ export function SingleChoice({
           {children}
         </SingleChoiceButtons>
       )}
-      {value && value !== '' ? (
-        <div className="mt-2">
-          {children
-            .filter(ch =>
-              typeof value === 'string'
-                ? value === ch.props.value && ch.props.children
-                : value.value === ch.props.value
-            )
-            .map(ch => ch.props.children)}
-        </div>
-      ) : null}
+      {showChildren.length > 0 ? <div className="mt-2">{showChildren}</div> : null}
     </div>
   );
 }
@@ -142,7 +141,7 @@ export function Option({
   label,
   children,
 }: {
-  value: string;
+  value: number | string;
   children?: ReactNode;
   label?: string;
 }): Choice {
