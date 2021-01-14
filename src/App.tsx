@@ -3,6 +3,7 @@ import { AtomSpinner, TrinityRingsSpinner } from 'react-epic-spinners';
 import { HashRouter as Router, Navigate, Route, Routes } from 'react-router-dom';
 
 import { AnnouncementRouter } from './Announcement/AnnouncementList';
+import { NewForm } from './Common/Form/NewForm';
 import { Page } from './Common/Layout';
 import { getUserInfo, LoginPage } from './Page/LoggedOut/LoginPage';
 import {
@@ -152,6 +153,7 @@ function NormalRoutes() {
       >
         <Sidebar />
         <Routes>
+          <Route path="/test" element={<NewForm />} />
           <Route path="/me" element={<MyProfilePage />} />
           <Route path="/login" element={<Navigate to="/me/requests" />} />
           <Route path="/admin/users/*" element={<UserRouter />} />

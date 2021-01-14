@@ -7,7 +7,7 @@ import { ShortText } from '../Common/Form/TextField';
 import { Page } from '../Common/Layout';
 import { Pill } from '../Common/Table';
 import { createShortTextValue } from '../Request/FieldValue';
-import { User, UserDetails } from '../User/User';
+import { UserDetails } from '../User/User';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 

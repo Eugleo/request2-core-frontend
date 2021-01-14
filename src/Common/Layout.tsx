@@ -37,11 +37,15 @@ export function Header({
 }
 
 export function Body({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="py-6 overflow-scroll">{children}</div>;
+  return <div className="py-6 overflow-scroll flex-auto">{children}</div>;
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="pb-10 max-h-full overflow-x-hidden overflow-y-auto">{children}</div>;
+  return (
+    <div className="pb-10 max-h-full overflow-x-hidden overflow-y-auto flex flex-col">
+      {children}
+    </div>
+  );
 }
 
 export function Page({
