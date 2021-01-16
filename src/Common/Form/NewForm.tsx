@@ -31,9 +31,7 @@ export function NewForm(): JSX.Element {
               <TeamField id="teamId" />
             </Section>
             <Section title="Scope of the experiment">
-              <div className="bg-yellow-200">
-                <Question>What type of the analysis do you want to perform?</Question>
-              </div>
+              <Question>What type of the analysis do you want to perform?</Question>
               <SingleChoice id="analysisType">
                 <Option value="Purified proteins">
                   <Question>How did you purify them?</Question>
