@@ -27,7 +27,7 @@ export function primaryClasses(status: Status): ClassValue[] {
     'text-white',
     'shadow-sm',
     status === 'Danger' && 'bg-red-400 hover:bg-red-500',
-    status === 'Normal' && 'bg-teal-400 hover:bg-teal-500',
+    status === 'Normal' && 'bg-green-400 hover:bg-green-500',
   ];
 }
 
@@ -119,7 +119,14 @@ export function Edit({ link }: { link: string }): JSX.Element {
 export function Cancel({ className }: { className?: string }): JSX.Element {
   const navigate = useNavigate();
   return (
-    <Tertiary className={className} title="Cancel" status="Normal" onClick={() => navigate(-1)} />
+    <Tertiary
+      className={className}
+      title="Cancel"
+      status="Normal"
+      onClick={() => {
+        navigate(-1);
+      }}
+    />
   );
 }
 

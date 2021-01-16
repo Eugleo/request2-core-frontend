@@ -10,19 +10,24 @@ import { Maybe } from '../../Utils/Maybe';
 import { Primary } from '../Buttons';
 import { Page } from '../Layout';
 import { FileInput } from './NewFile';
-import { Option, LongText, MultipleChoice, Question, ShortText, SingleChoice } from './Question';
-import { TeamField } from './TeamField';
+import { LongText, ShortText } from './NewTextField';
+import { Option, MultipleChoice, Question, SingleChoice } from './Question';
+import { TeamField } from './RequestInfoFields';
 
 export function NewForm(): JSX.Element {
-  const form = useForm();
+  const form = useForm({ mode: 'all' });
   const { authPost } = useAuth();
 
+  const title = form.watch('title', null);
+
   return (
-    <Page title="Test">
+    <Page title={title ? `New Request: ${title}` : 'New Request'}>
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <FormProvider {...form}>
           <form onSubmit={form.handleSubmit(console.log)}>
             <Section title="General information">
+              <Question>What should be this request called?</Question>
+              <ShortText id="title" required />
               <TeamField id="teamId" />
             </Section>
             <Section title="Scope of the experiment">
@@ -39,7 +44,8 @@ export function NewForm(): JSX.Element {
                 <Option value="Cell lysate">And I, I have chosen this</Option>
                 <Option value="Tissue lysate">Wwwwhat?</Option>
               </SingleChoice>
-              <MultipleChoice id="analysisTypeOpen">
+              <Question>Choose one of the following</Question>
+              <MultipleChoice required id="analysisTypeOpen">
                 <Option value="Purified proteins">
                   <Question>How did you purify them?</Question>
                   <ShortText id="purificationMethod" />
@@ -49,7 +55,7 @@ export function NewForm(): JSX.Element {
                 <Option value="Cell lysate">And I, I have chosen this</Option>
                 <Option value="Tissue lysate">Wwwwhat?</Option>
               </MultipleChoice>
-              <FileInput id="analysisFiles" />
+              <FileInput required id="analysisFiles" />
             </Section>
             <div className="mt-10">
               <Primary type="submit">Submit</Primary>

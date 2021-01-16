@@ -29,7 +29,7 @@ export function Cell({
   children: React.ReactNode;
   className?: string;
 }): JSX.Element {
-  return <td className={c('px-6 py-3 text-sm', 'whitespace-no-wrap', className)}>{children}</td>;
+  return <td className={c('px-6 py-3 text-sm', 'whitespace-nowrap', className)}>{children}</td>;
 }
 
 export function Table({

@@ -1,4 +1,4 @@
-import '../styles/tailwind.css';
+import '../styles/index.css';
 
 import c from 'classnames';
 import { To } from 'history';
@@ -17,7 +17,7 @@ export function Sidebar(): JSX.Element {
   const dispatch = useAuthDispatch();
 
   return (
-    <nav className="h-full sticky w-20 bg-teal-500 border-gray-300 flex">
+    <nav className="h-full sticky w-20 bg-green-500 border-gray-300 flex">
       <div className="py-4 px-2 z-10 flex flex-col items-center relative">
         <span className="mb-10 flex-grow-0 px-3">
           <img alt="Request II logo" src={logoSrc} className="flex-grow-0" />
@@ -62,7 +62,7 @@ export function Sidebar(): JSX.Element {
               }
             }}
           >
-            <Icon.LogOut className="text-teal-800 hover:text-white" />
+            <Icon.LogOut className="text-green-800 hover:text-white" />
           </Tertiary>
           <NavLink to="/me">
             <Icon.User />
@@ -77,8 +77,8 @@ function NavLink({ className, to, children }: { to: To; children: ReactNode; cla
   return (
     <RouterNavLink
       to={to}
-      className={c('text-white mb-6 px-3 py-2 rounded-md text-sm hover:bg-teal-600', className)}
-      activeClassName="bg-teal-800"
+      className={c('text-white mb-6 px-3 py-2 rounded-md text-sm hover:bg-green-600', className)}
+      activeClassName="bg-green-800"
     >
       {children}
     </RouterNavLink>

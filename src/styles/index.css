@@ -2,9 +2,39 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer components {
+  .request-select__control,
+  .request-select-error__control {
+    @apply transition-colors border shadow-sm rounded-md font-normal focus:outline-none focus:ring-4 focus:ring-opacity-50;
+  }
+
+  .request-select__control {
+    @apply border-gray-300;
+  }
+
+  .request-select__value-container,
+  .request-select-error__value-container {
+    @apply py-1 px-3;
+  }
+
+  .request-select__multi-value,
+  .request-select-error__multi-value {
+    @apply rounded-full bg-gray-100 border border-gray-300;
+  }
+
+  .request-select__multi-value__label,
+  .request-select-error__multi-value__label {
+    @apply pl-4 pr-2 py-1 text-sm text-gray-800 flex flex-col;
+  }
+
+  #react-select-2-input {
+    @apply focus:outline-none focus:ring-0 !important;
+  }
+}
+
 body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu",
-    "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu',
+    'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif;
 }
 
 .list-item:last-child {

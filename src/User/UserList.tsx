@@ -41,7 +41,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
         <div className="flex">
           {user.roles
             .map(r => (
-              <Pill key={r} text={r} className="text-teal-500 bg-teal-100 border-teal-300" />
+              <Pill key={r} text={r} className="text-green-500 bg-green-100 border-green-300" />
             ))
             .intersperse(ix => (
               <span key={ix} className="px-1" />
@@ -70,7 +70,9 @@ export function UserList(): JSX.Element {
       <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
         <SearchBar
           query={padWithSpace(query)}
-          onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+          onSubmit={values => {
+            setSearchParams({ query: values.query.content.trim() });
+          }}
         />
         <Button.Create title="New user" />
       </div>

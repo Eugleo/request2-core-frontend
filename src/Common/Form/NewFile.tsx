@@ -15,27 +15,30 @@ import { File } from '../../Utils/File';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
-import { QuestionProps } from './Question';
+import { ErrorMessage, QuestionProps, reqRule } from './Question';
 
-export function FileInput({ id, className }: QuestionProps): JSX.Element {
+export function FileInput({ id, className, required = false }: QuestionProps): JSX.Element {
   const [inProgress, setInProgress] = useState<number>(0);
-  const { register, watch, setValue, unregister } = useFormContext();
+  const { register, watch, errors, setValue, unregister } = useFormContext();
   const [removableFiles, setRemovableFiles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    register(id);
-    return () => {
-      unregister(id);
-    };
-  }, [register, unregister, id]);
+    register(id, {
+      validate: (val: File[] | null) =>
+        !required || (val && val.length > 0) || 'You have to upload at least one file',
+    });
+  }, [register, unregister, required, id]);
 
   const value = watch(id, []) as File[];
+
+  console.log(value);
 
   const removeFile = (file: File) => {
     // Possible bug, we're not removing the file from removableFiles
     setValue(
       id,
-      value.filter(f => f !== file)
+      value.filter(f => f !== file),
+      { shouldValidate: true }
     );
   };
 
@@ -55,18 +58,26 @@ export function FileInput({ id, className }: QuestionProps): JSX.Element {
     }
   });
 
+  const err = errors[id]?.message;
+
   return (
     <UploadDropZone
       onDragOverClassName="bg-green-100"
       grouped={false}
-      className={c('rounded-md p-2', className)}
+      className={c('rounded-md', className)}
     >
       <div>
-        <div className="flex flex-row justify-between items-baseline mb-1">
-          <h4 className="font-medium text-gray-800">File upload</h4>
-          {value.length > 0 ? <UploadButton /> : null}
-        </div>
-        <div className="shadow-xs rounded-lg overflow-hidden">
+        {value.length > 0 ? (
+          <div className="flex flex-row justify-between items-baseline mb-1">
+            <UploadButton />
+          </div>
+        ) : null}
+        <div
+          className={c(
+            'border rounded-lg overflow-hidden',
+            err ? 'border-red-300' : 'border-gray-100'
+          )}
+        >
           <div className="pt-3 pb-3 px-4 ">
             {value.length > 0 ? (
               value.map(f => (
@@ -84,15 +95,21 @@ export function FileInput({ id, className }: QuestionProps): JSX.Element {
               </div>
             )}
           </div>
-          <div className="py-2 px-4 bg-gray-100">
+          <div
+            className={c(
+              'py-2 px-4 text-xs',
+              err ? 'bg-red-100 text-red-500' : ' bg-gray-100 text-gray-500'
+            )}
+          >
             {inProgress > 0 ? (
-              <p className="text-xs text-gray-500">{inProgress} uploads in progress</p>
+              <p>{inProgress} uploads in progress</p>
             ) : (
-              <p className="text-xs text-gray-500">No uploads in progress</p>
+              <p>No uploads in progress</p>
             )}
           </div>
         </div>
       </div>
+      <ErrorMessage error={err} />
     </UploadDropZone>
   );
 }
