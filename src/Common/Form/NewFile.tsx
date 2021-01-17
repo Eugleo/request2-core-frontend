@@ -15,9 +15,9 @@ import { File } from '../../Utils/File';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
-import { ErrorMessage, QuestionProps, reqRule } from './Question';
+import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
 
-export function FileInput({ id, className, required = false }: QuestionProps): JSX.Element {
+export function FileInput({ id, className, required = false, q }: QuestionProps): JSX.Element {
   const [inProgress, setInProgress] = useState<number>(0);
   const { register, watch, errors, setValue, unregister } = useFormContext();
   const [removableFiles, setRemovableFiles] = useState<Set<string>>(new Set());
@@ -67,6 +67,7 @@ export function FileInput({ id, className, required = false }: QuestionProps): J
       className={c('rounded-md', className)}
     >
       <div>
+        <Question>{q}</Question>
         {value.length > 0 ? (
           <div className="flex flex-row justify-between items-baseline mb-1">
             <UploadButton />

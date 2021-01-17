@@ -37,12 +37,12 @@ export function Header({
 }
 
 export function Body({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="py-6 overflow-scroll flex-auto">{children}</div>;
+  return <div className="p-6">{children}</div>;
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }): JSX.Element {
   return (
-    <div className="pb-10 max-h-full overflow-x-hidden overflow-y-auto flex flex-col">
+    <div className="h-screen overflow-x-hidden overflow-y-auto flex flex-col bg-gray-100">
       {children}
     </div>
   );

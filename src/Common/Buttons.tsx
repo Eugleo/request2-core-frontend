@@ -27,7 +27,7 @@ export function primaryClasses(status: Status): ClassValue[] {
     'text-white',
     'shadow-sm',
     status === 'Danger' && 'bg-red-400 hover:bg-red-500',
-    status === 'Normal' && 'bg-green-400 hover:bg-green-500',
+    status === 'Normal' && 'bg-green-500 hover:bg-green-600',
   ];
 }
 
@@ -55,13 +55,13 @@ export function tertiaryClasses(status: Status): ClassValue[] {
 }
 
 export const baseClasses = [
-  'px-3',
+  'px-4',
   'py-2',
   'inline-flex',
   'items-center',
+  'text-sm',
   'focus:outline-none',
   'font-medium',
-  'text-sm',
   'justify-center',
 ];
 

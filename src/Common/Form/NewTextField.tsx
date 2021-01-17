@@ -1,13 +1,13 @@
 import c from 'classnames';
 import { useFormContext } from 'react-hook-form';
 
-import { ErrorMessage, QuestionProps, reqRule } from './Question';
+import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
 
 const baseClasses = [
   'border',
   'w-full',
   'shadow-sm',
-  'text-md',
+  'text-sm',
   'text-gray-900',
   'rounded-md',
   'py-2',
@@ -37,12 +37,13 @@ const errorClasses = [
   'focus:ring-red-300',
 ];
 
-export function ShortText({ id, className, required = false }: QuestionProps): JSX.Element {
+export function ShortText({ id, q, className, required = false }: QuestionProps): JSX.Element {
   const { register, errors } = useFormContext();
   const err = errors[id]?.message;
 
   return (
-    <div className="w-full">
+    <div>
+      <Question>{q}</Question>
       <input
         name={id}
         ref={register(reqRule(required))}
@@ -53,12 +54,13 @@ export function ShortText({ id, className, required = false }: QuestionProps): J
   );
 }
 
-export function LongText({ id, className, required = false }: QuestionProps): JSX.Element {
+export function LongText({ id, q, className, required = false }: QuestionProps): JSX.Element {
   const { register, errors } = useFormContext();
   const err = errors[id];
 
   return (
     <div>
+      <Question>{q}</Question>
       <textarea
         name={id}
         ref={register(reqRule(required))}

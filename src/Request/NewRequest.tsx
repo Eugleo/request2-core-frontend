@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
+import { NewForm } from '../Common/Form/NewForm';
+import { Page } from '../Common/Layout';
 import { Modal } from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
-import { BareProperty, idToStr, Request } from './Request';
+import { BareProperty, idToStr, NewProperty, NewRequest, Request } from './Request';
 import { RequestDetailFormPage } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
+import { Proteomics } from './RequestTypes/Proteomics';
 
 // TODO Check that the field names are unique
 export function NewRequestPage(): JSX.Element {
@@ -16,36 +19,42 @@ export function NewRequestPage(): JSX.Element {
     show: false,
   });
   const { requestType } = useParams();
-  const { authPost } = useAuth<{ req: Request; props: BareProperty[] }>();
+  const { authPost } = useAuth<{ request: NewRequest; properties: NewProperty[] }>();
+  const [title, setTitle] = useState<Maybe<string>>(null);
 
-  const schema = requestSchemas.get(requestType);
+  let requestForm = null;
+  switch (requestType) {
+    case 'proteomics':
+    case 'lipidomics':
+      requestForm = (
+        <Proteomics
+          titleChanged={title => {
+            setTitle(title);
+          }}
+          submit={async (request, properties) => {
+            const r = await authPost('/requests', {
+              props: properties,
+              req: request,
+            });
 
-  if (!schema) {
-    console.log(`Error, schema for type ${requestType} not found`);
-    return <Navigate to="/404" />;
+            if (r.status === 201) {
+              const js = await r.json();
+              setModalInfo({ request: js.data, show: true });
+            } else {
+              throw new Error('There was an error with processing your request');
+            }
+          }}
+        />
+      );
   }
 
   return (
     <>
       {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
 
-      <RequestDetailFormPage
-        title={`New ${schema.title} request`}
-        requestType={requestType}
-        onSubmit={async (request, properties) => {
-          const r = await authPost('/requests', {
-            props: properties,
-            req: request,
-          });
-
-          if (r.status === 201) {
-            const js = await r.json();
-            setModalInfo({ request: js.data, show: true });
-          } else {
-            throw new Error('There was an error with processing your request');
-          }
-        }}
-      />
+      <Page title={title ? `New ${requestType} request: ${title}` : `New ${requestType} request`}>
+        <div className="mx-auto">{requestForm}</div>
+      </Page>
     </>
   );
 }
@@ -54,7 +63,13 @@ function CodeModal({ request }: { request: WithID<Request> }) {
   const navigate = useNavigate();
   const { type, code } = idToStr(request);
   return (
-    <Modal title="Success!" closeText="Close" onClose={() => navigate(-1)}>
+    <Modal
+      title="Success!"
+      closeText="Close"
+      onClose={() => {
+        navigate(-1);
+      }}
+    >
       <p className="mt-4">
         Your request has been submitted. Please tag your samples with the following ID so that the
         operators will be able to match them to your request

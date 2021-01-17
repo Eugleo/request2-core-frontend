@@ -4,72 +4,64 @@ import { FormProvider, useForm } from 'react-hook-form';
 
 import { NewProperty, NewRequest } from '../../Request/Request';
 import { apiBase } from '../../Utils/ApiBase';
-import { useAuth } from '../../Utils/Auth';
 import { File, fileToString } from '../../Utils/File';
 import { Maybe } from '../../Utils/Maybe';
-import { Primary } from '../Buttons';
-import { Page } from '../Layout';
-import { FileInput } from './NewFile';
-import { LongText, ShortText } from './NewTextField';
-import { Option, MultipleChoice, Question, SingleChoice } from './Question';
+import { Cancel, Primary } from '../Buttons';
+import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';
 
-export function NewForm(): JSX.Element {
-  const form = useForm({ mode: 'all' });
-  const { authPost } = useAuth();
+type RequestStub = { title: string; teamId: number };
 
-  const title = form.watch('title', null);
+export type SubmitFunction = (request: RequestStub, properties: NewProperty[]) => Promise<Response>;
+
+export function NewForm({
+  children,
+  titleChanged,
+  submit,
+}: {
+  children: ReactNode;
+  titleChanged: (title: string) => void;
+  submit: SubmitFunction;
+}): JSX.Element {
+  const form = useForm<{ title: string; teamId: string } & Record<string, FieldValue>>({
+    mode: 'all',
+  });
+
+  const title = form.watch('title');
+  titleChanged(title);
 
   return (
-    <Page title={title ? `New Request: ${title}` : 'New Request'}>
-      <Uploady destination={{ url: `${apiBase}/files` }}>
-        <FormProvider {...form}>
-          <form onSubmit={form.handleSubmit(console.log)}>
-            <Section title="General information">
-              <Question>What should be this request called?</Question>
-              <ShortText id="title" required />
-              <TeamField id="teamId" />
-            </Section>
-            <Section title="Scope of the experiment">
-              <Question>What type of the analysis do you want to perform?</Question>
-              <SingleChoice id="analysisType">
-                <Option value="Purified proteins">
-                  <Question>How did you purify them?</Question>
-                  <ShortText id="purificationMethod" />
-                  <Question>No, really, tell us in detail!</Question>
-                  <LongText id="purificationMethodDetail" />
-                </Option>
-                <Option value="Cell lysate">And I, I have chosen this</Option>
-                <Option value="Tissue lysate">Wwwwhat?</Option>
-              </SingleChoice>
-              <Question>Choose one of the following</Question>
-              <MultipleChoice required id="analysisTypeOpen">
-                <Option value="Purified proteins">
-                  <Question>How did you purify them?</Question>
-                  <ShortText id="purificationMethod" />
-                  <Question>No, really, tell us in detail!</Question>
-                  <LongText id="purificationMethodDetail" />
-                </Option>
-                <Option value="Cell lysate">And I, I have chosen this</Option>
-                <Option value="Tissue lysate">Wwwwhat?</Option>
-              </MultipleChoice>
-              <FileInput required id="analysisFiles" />
-            </Section>
-            <div className="mt-10">
-              <Primary type="submit">Submit</Primary>
-            </div>
-          </form>
-        </FormProvider>
-      </Uploady>
-    </Page>
+    <Uploady destination={{ url: `${apiBase}/files` }}>
+      <FormProvider {...form}>
+        <form
+          onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
+          className="space-y-8"
+        >
+          <Section title="General information">
+            <ShortText q="What should be this request called?" id="title" required />
+            <TeamField id="teamId" />
+          </Section>
+          {children}
+          <div className="h-0.5 w-full bg-gray-200" />
+          <div className="flex justify-end flex-row w-full space-x-6">
+            <Cancel />
+            <Primary type="submit">Submit</Primary>
+          </div>
+        </form>
+      </FormProvider>
+    </Uploady>
   );
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
+export function Section({ title, children }: { title: string; children: ReactNode }): JSX.Element {
   return (
-    <div className="px-6">
-      <h2 className="font-bold text-xl">{title}</h2>
-      {children}
+    <div className="grid grid-cols-4 gap-4">
+      <div className="col-span-1">
+        <h2 className="font-medium text-lg">{title}</h2>
+      </div>
+      <div className="col-span-3">
+        <div className="p-6 bg-white  rounded-md shadow-sm space-y-6">{children}</div>
+      </div>
     </div>
   );
 }
@@ -78,15 +70,12 @@ type Selection = { label: string; value: string };
 type FieldValue = string | number | Selection | Selection[] | File[];
 
 async function onSubmit(
-  requestType: string,
   data: { title: string; teamId: string } & Record<string, FieldValue>,
-  submit: (request: NewRequest, properties: NewProperty[]) => Promise<Response>
+  submit: (request: RequestStub, properties: NewProperty[]) => Promise<Response>
 ) {
-  const req: NewRequest = {
+  const req: RequestStub = {
     title: data.title,
-    status: 'Pending',
     teamId: Number.parseInt(data.teamId),
-    requestType,
   };
   const props: NewProperty[] = Object.entries(data).reduce(fieldToProperty, []);
   return submit(req, props);
@@ -112,6 +101,5 @@ function fieldToProperty(acc: NewProperty[], [name, value]: [string, FieldValue]
   } else if (typeof value === 'object' && 'label' in value) {
     return acc.concat([{ name, value: value.value }]);
   }
-  console.log(value);
   throw new TypeError(`Field -> Property conversion failed: name=${name}, value is above`);
 }

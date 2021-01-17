@@ -16,7 +16,6 @@ export type Request = {
 export type NewRequest = {
   title: string;
   teamId: number;
-  status: Status;
   requestType: string;
 };
 

@@ -3,32 +3,56 @@
 @tailwind utilities;
 
 @layer components {
-  .request-select__control,
-  .request-select-error__control {
-    @apply transition-colors border shadow-sm rounded-md font-normal focus:outline-none focus:ring-4 focus:ring-opacity-50;
+  .react-select__control,
+  .react-select-error__control {
+    @apply transition-colors border shadow-sm rounded-md font-normal focus:outline-none focus:ring-4 focus:ring-opacity-50 text-sm;
   }
 
-  .request-select__control {
+  .react-select__placeholder,
+  .react-select-error__placeholder {
+    @apply text-gray-400 text-sm;
+  }
+
+  .react-select__menu,
+  .react-select-error__menu {
+    @apply text-gray-900 text-sm;
+  }
+
+  .react-select__input,
+  .react-select-error__input {
+    @apply text-gray-900 text-sm;
+  }
+
+  .react-select__single-value,
+  .react-select-error__single-value {
+    @apply text-gray-900 text-sm;
+  }
+
+  .react-select__control {
     @apply border-gray-300;
   }
 
-  .request-select__value-container,
-  .request-select-error__value-container {
+  .react-select__value-container,
+  .react-select-error__value-container {
     @apply py-1 px-3;
   }
 
-  .request-select__multi-value,
-  .request-select-error__multi-value {
+  .react-select__multi-value,
+  .react-select-error__multi-value {
     @apply rounded-full bg-gray-100 border border-gray-300;
   }
 
-  .request-select__multi-value__label,
-  .request-select-error__multi-value__label {
+  .react-select__multi-value__label,
+  .react-select-error__multi-value__label {
     @apply pl-4 pr-2 py-1 text-sm text-gray-800 flex flex-col;
   }
 
-  #react-select-2-input {
+  .react-select input {
     @apply focus:outline-none focus:ring-0 !important;
+  }
+
+  .white-tooltip {
+    @apply bg-gray-100 border border-gray-300 text-gray-800 bg-opacity-100 !important;
   }
 }
 

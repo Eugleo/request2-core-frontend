@@ -153,7 +153,6 @@ function NormalRoutes() {
       >
         <Sidebar />
         <Routes>
-          <Route path="/test" element={<NewForm />} />
           <Route path="/me" element={<MyProfilePage />} />
           <Route path="/login" element={<Navigate to="/me/requests" />} />
           <Route path="/admin/users/*" element={<UserRouter />} />
