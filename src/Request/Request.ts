@@ -5,7 +5,7 @@ import { WithID } from '../Utils/WithID';
 import { Status } from './Status';
 
 export type Request = {
-  name: string;
+  title: string;
   authorId: number;
   teamId: number;
   status: Status;

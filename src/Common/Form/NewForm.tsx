@@ -11,8 +11,9 @@ import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
+type FormValues = { title: string; teamId: string } & Record<string, FieldValue>;
 
-export type SubmitFunction = (request: RequestStub, properties: NewProperty[]) => Promise<Response>;
+export type SubmitFunction = (request: RequestStub, properties: NewProperty[]) => void;
 
 export function NewForm({
   children,
@@ -23,7 +24,7 @@ export function NewForm({
   titleChanged: (title: string) => void;
   submit: SubmitFunction;
 }): JSX.Element {
-  const form = useForm<{ title: string; teamId: string } & Record<string, FieldValue>>({
+  const form = useForm<FormValues>({
     mode: 'all',
   });
 
@@ -69,16 +70,13 @@ export function Section({ title, children }: { title: string; children: ReactNod
 type Selection = { label: string; value: string };
 type FieldValue = string | number | Selection | Selection[] | File[];
 
-async function onSubmit(
-  data: { title: string; teamId: string } & Record<string, FieldValue>,
-  submit: (request: RequestStub, properties: NewProperty[]) => Promise<Response>
-) {
+async function onSubmit(data: FormValues, submit: SubmitFunction) {
   const req: RequestStub = {
     title: data.title,
     teamId: Number.parseInt(data.teamId),
   };
   const props: NewProperty[] = Object.entries(data).reduce(fieldToProperty, []);
-  return submit(req, props);
+  submit(req, props);
 }
 
 function fieldToProperty(acc: NewProperty[], [name, value]: [string, FieldValue]): NewProperty[] {

@@ -35,7 +35,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
     <Row>
       <Cell>
         <Link to={request._id.toString()} className="text-black hover:text-green-700">
-          {request.name}
+          {request.title}
         </Link>
       </Cell>
       <Cell className="font-mono text-gray-700">
@@ -62,17 +62,20 @@ function RequestList() {
     <Authorized roles={['Client']} otherwise={<Navigate to="/requests" />}>
       <Page title="My requests">
         <div className="mb-8">
-          <h2 className="font-medium text-xs text-gray-600 mb-4 mt-8 px-6 uppercase">
-            Create new request
-          </h2>
+          <h2 className="font-medium text-xs text-gray-600 mb-4 uppercase">Create new request</h2>
           <NewRequestSection />
         </div>
-        <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
-          <SearchBar
-            query={padWithSpace(query)}
-            onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
-          />
-          <Secondary className="flex-shrink-0" type="submit" title="Search" />
+        <div className="mb-6">
+          <h2 className="font-medium text-xs text-gray-600 mb-4 uppercase">Review your requests</h2>
+          <div className="flex flex-row items-stretch w-full justify-between">
+            <SearchBar
+              query={padWithSpace(query)}
+              onSubmit={values => {
+                setSearchParams({ query: values.query.content.trim() });
+              }}
+            />
+            <Secondary className="flex-shrink-0" type="submit" title="Search" />
+          </div>
         </div>
         <Loader>
           {({ values }) => (
@@ -104,7 +107,7 @@ function NewRequestSection() {
         gridAutoRows: '1fr',
         gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
       }}
-      className="grid gap-5 px-6"
+      className="grid gap-6"
     >
       {requestTypes.map(rt => (
         <NewRequestButton key={rt.title} link={`new/${rt.type}`} name={rt.title} />

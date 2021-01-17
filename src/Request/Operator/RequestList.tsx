@@ -35,7 +35,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
     <Row>
       <Cell>
         <Link to={request._id.toString()} className="font text-black hover:text-green-700">
-          {request.name}
+          {request.title}
         </Link>
       </Cell>
       <Cell className="text-gray-700 font-mono">
@@ -64,7 +64,9 @@ function RequestList() {
       <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
         <SearchBar
           query={padWithSpace(query)}
-          onSubmit={values => setSearchParams({ query: values.query.content.trim() })}
+          onSubmit={values => {
+            setSearchParams({ query: values.query.content.trim() });
+          }}
         />
         <Secondary className="flex-shrink-0" type="submit" title="Search" />
       </div>

@@ -26,7 +26,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
     >
       <Page.Header className="col-span-2">
         <Page.Title className="mr-6">
-          <Loader>{request => <p>{request.name}</p>}</Loader>
+          <Loader>{request => <p>{request.title}</p>}</Loader>
         </Page.Title>
         <h2 className="text-gray-500 font-mono text-2xl leading-tight">
           <Loader>{request => <p>{`${idToStr(request).type}/${idToStr(request).code}`}</p>}</Loader>

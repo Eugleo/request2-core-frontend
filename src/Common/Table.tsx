@@ -15,7 +15,7 @@ export function Row({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <tr
       style={{ gridAutoColumns: '1fr', gridAutoFlow: 'column' }}
-      className="list-item border-gray-200 px-6 py-3 hover:bg-gray-100 border-b"
+      className="px-6 py-3 hover:bg-gray-50"
     >
       {children}
     </tr>
@@ -29,7 +29,7 @@ export function Cell({
   children: React.ReactNode;
   className?: string;
 }): JSX.Element {
-  return <td className={c('px-6 py-3 text-sm', 'whitespace-nowrap', className)}>{children}</td>;
+  return <td className={c('px-6 py-3 text-sm whitespace-nowrap', className)}>{children}</td>;
 }
 
 export function Table({
@@ -41,15 +41,15 @@ export function Table({
 }): JSX.Element {
   return (
     <Card>
-      <table className="min-w-full">
-        <thead className="px-6 col-gap-12 py-3 bg-gray-100 min-w-full">
+      <table className="min-w-full divide-y divide-gray-200">
+        <thead className="col-gap-12 py-3 bg-gray-50 bordr-b border-gray-200">
           <tr>
             {columns.map(col => (
               <TableHeading text={col} key={`${col}-key`} />
             ))}
           </tr>
         </thead>
-        <tbody className="border-gray-300 min-w-full">{children}</tbody>
+        <tbody>{children}</tbody>
       </table>
     </Card>
   );

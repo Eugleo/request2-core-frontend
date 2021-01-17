@@ -69,7 +69,7 @@ function PreloadedRequestDetailForm({
   return (
     <RequestLoader>
       {request => (
-        <Page title={`Editing ${request.name}`}>
+        <Page title={`Editing ${request.title}`}>
           <DetailsLoader>
             {details => (
               <RequestDetailForm
@@ -122,7 +122,7 @@ function RequestDetailForm({
       ...acc,
       [f.path]: getDefValue(f, details),
     }),
-    { title: { content: request?.name || '', type: 'text-short' } }
+    { title: { content: request?.title || '', type: 'text-short' } }
   );
   const specificValidate = requestValidations.get(requestType) || (() => ({}));
   const generalValidate = getValidateForFields(fields);
@@ -151,7 +151,7 @@ function RequestDetailForm({
               status: 'Pending',
               teamId: 0, // TODO Fix this to dynamically allow the user to choose a team
               ...request,
-              name: fieldValueToString(values.title),
+              title: fieldValueToString(values.title),
             };
 
             const normalProps = Object.entries(values)
@@ -165,7 +165,7 @@ function RequestDetailForm({
               .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
 
             const status = mkProp('status', 'General', req.status);
-            const title = mkProp('title', 'General', req.name);
+            const title = mkProp('title', 'General', req.title);
 
             await onSubmit(req, [title, status, ...normalProps, ...fileProps]);
           }}

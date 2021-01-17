@@ -33,15 +33,15 @@ export function NewRequestPage(): JSX.Element {
           }}
           submit={async (request, properties) => {
             const r = await authPost('/requests', {
-              props: properties,
-              req: request,
+              properties,
+              request: { ...request, requestType },
             });
+            const js: { error: string } | { data: WithID<Request> } = await r.json();
 
-            if (r.status === 201) {
-              const js = await r.json();
+            if ('data' in js) {
               setModalInfo({ request: js.data, show: true });
             } else {
-              throw new Error('There was an error with processing your request');
+              throw new Error(`There was an error with processing your request: ${js.error}`);
             }
           }}
         />
