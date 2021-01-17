@@ -3,7 +3,7 @@ import { useFormContext } from 'react-hook-form';
 
 import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
 
-const baseClasses = [
+export const baseClasses = [
   'border',
   'w-full',
   'shadow-sm',
@@ -17,7 +17,7 @@ const baseClasses = [
   'transition-colors',
 ];
 
-const normalClasses = [
+export const normalClasses = [
   'border-gray-300',
   'hover:border-gray-400',
   'focus:border-blue-400',
@@ -27,7 +27,7 @@ const normalClasses = [
   'focus:ring-blue-300',
 ];
 
-const errorClasses = [
+export const errorClasses = [
   'border-red-300',
   'hover:border-red-400',
   'focus:border-red-400',

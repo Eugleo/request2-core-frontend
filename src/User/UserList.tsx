@@ -67,11 +67,11 @@ export function UserList(): JSX.Element {
 
   return (
     <Page title="Admin Panel: Users">
-      <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+      <div className="mb-6 flex flex-row items-stretch w-full justify-between">
         <SearchBar
           query={padWithSpace(query)}
           onSubmit={values => {
-            setSearchParams({ query: values.query.content.trim() });
+            setSearchParams({ query: values.query.trim() });
           }}
         />
         <Button.Create title="New user" />

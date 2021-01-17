@@ -169,7 +169,7 @@ function Comment({ isMine, text }: { isMine: boolean; text: string }) {
     return (
       <p
         className={c(
-          'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-lg border-gray-200 border p-3',
+          'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-md border-gray-200 border p-3',
           isMine ? 'text-left' : 'text-right'
         )}
       >

@@ -20,7 +20,7 @@ function SearchField() {
     <div className="px-6 mb-6">
       <input
         type="text"
-        className="bg-gray-200 rounded-lg placeholder-gray-500 px-3 py-2 focus:outline-none"
+        className="bg-gray-200 rounded-md placeholder-gray-500 px-3 py-2 focus:outline-none"
         placeholder="Search"
       />
     </div>

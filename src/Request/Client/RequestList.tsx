@@ -67,15 +67,12 @@ function RequestList() {
         </div>
         <div className="mb-6">
           <h2 className="font-medium text-xs text-gray-600 mb-4 uppercase">Review your requests</h2>
-          <div className="flex flex-row items-stretch w-full justify-between">
-            <SearchBar
-              query={padWithSpace(query)}
-              onSubmit={values => {
-                setSearchParams({ query: values.query.content.trim() });
-              }}
-            />
-            <Secondary className="flex-shrink-0" type="submit" title="Search" />
-          </div>
+          <SearchBar
+            query={padWithSpace(query)}
+            onSubmit={values => {
+              setSearchParams({ query: values.query.trim() });
+            }}
+          />
         </div>
         <Loader>
           {({ values }) => (
@@ -119,7 +116,7 @@ function NewRequestSection() {
 function NewRequestButton({ name, link }: { name: string; link: To }) {
   return (
     <Link to={link} className="h-full w-full">
-      <div className="h-full w-full relative duration-150 shadow-sm hover:shadow-md rounded-lg bg-white border border-gray-300 p-4 flex flex-col-reverse">
+      <div className="h-full w-full relative duration-150 shadow-sm hover:shadow-md rounded-md bg-white border border-gray-300 p-4 flex flex-col-reverse">
         <span className="lg:mt-10 mt-6 text-lg font-medium">{name}</span>
       </div>
     </Link>

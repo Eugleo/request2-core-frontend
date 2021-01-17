@@ -1,38 +1,38 @@
+import c from 'classnames';
 import { Form, Formik } from 'formik';
 import React from 'react';
 import { Search } from 'react-feather';
+import { useForm } from 'react-hook-form';
 
 import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
-import { SimpleText } from './Form/TextField';
+import { Secondary } from './Buttons';
+import { baseClasses, normalClasses } from './Form/NewTextField';
 
 export function SearchBar({
   query,
   onSubmit,
 }: {
   query: string;
-  onSubmit: ({ query }: { query: ShortTextFieldValue }) => void;
+  onSubmit: ({ query }: { query: string }) => void;
 }): JSX.Element {
+  const { handleSubmit, register } = useForm({ defaultValues: { query } });
   return (
-    <Formik
-      initialValues={{ query: createShortTextValue(query) }}
-      onSubmit={values => onSubmit(values)}
-    >
-      <Form className="mr-4 w-full relative">
-        <SimpleText
-          className="w-full h-full text-sm text-gray-800 pl-8 placeholder-gray-700"
-          name="query"
-          placeholder="Search all teams"
-        />
-        <Search
-          style={{
-            height: '1rem',
-            left: '10px',
-            top: '11px',
-            width: '1rem',
-          }}
-          className="absolute text-gray-600 pointer-events-none"
-        />
-      </Form>
-    </Formik>
+    <form className="mr-4 w-full relative" onSubmit={handleSubmit(onSubmit)}>
+      <div className="flex flex-row items-stretch w-full justify-between space-x-4">
+        <div className="flex-grow">
+          <input name="query" ref={register} className={c(baseClasses, 'pl-8', normalClasses)} />
+          <Search
+            style={{
+              height: '1rem',
+              left: '10px',
+              top: '11px',
+              width: '1rem',
+            }}
+            className="absolute text-gray-600 pointer-events-none"
+          />
+        </div>
+        <Secondary className="flex-shrink-0 bg-white" type="submit" title="Search" />
+      </div>
+    </form>
   );
 }

@@ -10,7 +10,7 @@ export function List({
   empty: JSX.Element;
 }): JSX.Element {
   return elements.length > 0 ? (
-    <div className="flex flex-col bg-white rounded-lg shadow-sm mb-2 overflow-hidden">
+    <div className="flex flex-col bg-white rounded-md shadow-sm mb-2 overflow-hidden">
       {elements}
     </div>
   ) : (

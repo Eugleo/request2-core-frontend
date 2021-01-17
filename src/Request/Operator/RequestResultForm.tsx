@@ -103,7 +103,7 @@ function SubmitButton({ status }: { status: Status }) {
     <button
       type="submit"
       onClick={() => uploady && uploady.processPending()}
-      className="rounded-lg text-white shadow-sm bg-green-400 hover:bg-green-500 px-3 py-2 inline-flex items-center focus:outline-none font-medium text-sm"
+      className="rounded-md text-white shadow-sm bg-green-400 hover:bg-green-500 px-3 py-2 inline-flex items-center focus:outline-none font-medium text-sm"
     >
       <SubmitButtonBody status={status} />
     </button>

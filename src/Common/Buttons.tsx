@@ -23,7 +23,7 @@ type SubmitButtonParams =
 
 export function primaryClasses(status: Status): ClassValue[] {
   return [
-    'rounded-lg',
+    'rounded-md',
     'text-white',
     'shadow-sm',
     status === 'Danger' && 'bg-red-400 hover:bg-red-500',
@@ -33,12 +33,12 @@ export function primaryClasses(status: Status): ClassValue[] {
 
 export function secondaryClasses(status: Status): ClassValue[] {
   return [
-    'border-2',
-    'rounded-lg',
+    'rounded-md',
     'shadow-sm',
+    'transition-colors',
     'hover:shadow-inner',
-    'border-gray-400',
-    'hover:border-gray-500',
+    'border-gray-300',
+    'hover:border-gray-400',
     'border',
     status === 'Danger' && 'text-red-600',
     status === 'Normal' && 'text-gray-700 hover:text-gray-800',

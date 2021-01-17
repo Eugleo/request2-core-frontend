@@ -80,7 +80,7 @@ export function UserForm({
               }
             }}
           >
-            <Form className="bg-white ring-1 ring-black ring-opacity-5 rounded-lg max-w-2xl mx-auto">
+            <Form className="bg-white ring-1 ring-black ring-opacity-5 rounded-md max-w-2xl mx-auto">
               <div className="p-6">
                 <ShortText path="name" label="Name" />
                 <ShortText

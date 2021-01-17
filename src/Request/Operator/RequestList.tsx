@@ -61,11 +61,11 @@ function RequestList() {
 
   return (
     <Page title="Clients' requests">
-      <div className="px-6 mb-6 flex flex-row items-stretch w-full justify-between">
+      <div className="mb-6 flex flex-row items-stretch w-full justify-between">
         <SearchBar
           query={padWithSpace(query)}
           onSubmit={values => {
-            setSearchParams({ query: values.query.content.trim() });
+            setSearchParams({ query: values.query.trim() });
           }}
         />
         <Secondary className="flex-shrink-0" type="submit" title="Search" />

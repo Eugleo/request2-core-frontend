@@ -26,7 +26,12 @@ const UploadButton = asUploadButton(
 const UploadButton2 = asUploadButton(
   forwardRef((props, ref) => (
     <div ref={ref} {...props}>
-      <Button.Secondary title="Choose files" onClick={() => console.log('Choosing files')} />
+      <Button.Secondary
+        title="Choose files"
+        onClick={() => {
+          console.log('Choosing files');
+        }}
+      />
     </div>
   ))
 );
@@ -35,8 +40,9 @@ export function Files({ name, className = '' }: { name: string; className?: stri
   const [field, meta, helpers] = useField<FilesFieldValue>({ name });
   const [inProgress, setInProgress] = useState<number>(0);
 
-  const removeFile = (file: File) =>
+  const removeFile = (file: File) => {
     helpers.setValue({ content: field.value.content.filter(f => f !== file), type: 'files' });
+  };
 
   useItemStartListener(() => {
     setInProgress(n => n + 1);
@@ -65,7 +71,7 @@ export function Files({ name, className = '' }: { name: string; className?: stri
           <h4 className="font-medium text-gray-800">File upload</h4>
           {meta.value.content.length > 0 ? <UploadButton /> : null}
         </div>
-        <div className="ring-1 ring-black ring-opacity-5 rounded-lg overflow-hidden">
+        <div className="ring-1 ring-black ring-opacity-5 rounded-md overflow-hidden">
           <div className="pt-3 pb-3 px-4 ">
             {meta.value.content.length > 0 ? (
               meta.value.content.map(f => (

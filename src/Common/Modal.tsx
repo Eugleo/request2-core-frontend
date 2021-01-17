@@ -18,7 +18,7 @@ export function Modal({
     <div className="w-full h-full fixed bg-gray-200 bg-transparent flex justify-center items-center content-center z-50 left-0 top-0">
       <div
         ref={useOnClickOutside(onClose)}
-        className="pt-6 bg-white shadow-md rounded-lg overflow-hidden max-w-lg flex flex-col"
+        className="pt-6 bg-white shadow-md rounded-md overflow-hidden max-w-lg flex flex-col"
       >
         <h1 className="text-xl font-medium px-6">{title}</h1>
         <div className="px-6">{children}</div>

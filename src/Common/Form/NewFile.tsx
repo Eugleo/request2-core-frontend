@@ -75,7 +75,7 @@ export function FileInput({ id, className, required = false, q }: QuestionProps)
         ) : null}
         <div
           className={c(
-            'border rounded-lg overflow-hidden',
+            'border rounded-md overflow-hidden',
             err ? 'border-red-300' : 'border-gray-300'
           )}
         >
