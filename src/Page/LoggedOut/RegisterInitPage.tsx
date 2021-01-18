@@ -1,27 +1,21 @@
-import { Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
+import { useForm } from 'react-hook-form';
 
 import * as Button from '../../Common/Buttons';
-import { ShortText } from '../../Common/Form/TextField';
-import { Page } from '../../Common/Layout';
-import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { ShortTextInput } from '../../Common/Form/NewTextField';
+import { Question, reqRule } from '../../Common/Form/Question';
 import { post } from '../../Utils/Api';
-import { Errors } from '../../Utils/Errors';
 import logoSrc from '../../assets/register.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
-function validate(values: { email: ShortTextFieldValue }) {
-  const errors: Errors<{ email: ShortTextFieldValue }> = {};
-  if (!values.email) {
-    // TODO check e-maility of the e-mail
-    errors.email = 'This field is required';
-  }
-  return errors;
-}
-
 export function RegisterInitPage(): JSX.Element {
   const [regState, setState] = useState('init');
+  const { register, errors, watch, handleSubmit } = useForm<{ email: string }>({
+    defaultValues: {
+      email: '',
+    },
+  });
 
   return (
     <CenteredPage
@@ -30,19 +24,16 @@ export function RegisterInitPage(): JSX.Element {
       imageSrc={logoSrc}
       imageAlt="A user icon"
     >
-      <Formik
-        initialValues={{ email: createShortTextValue() }}
-        validate={validate}
-        onSubmit={async (values: { email: ShortTextFieldValue }) => {
+      <form
+        onSubmit={handleSubmit(async ({ email }) => {
           setState('loading');
-          const r = await post('/register-init', { email: values.email.content });
+          const r = await post('/register-init', { email });
           if (r.ok) {
             setState('success');
           } else {
-            console.log('register-init failed');
             setState('problem');
           }
-        }}
+        })}
       >
         <CenteredForm>
           {regState === 'success' ? (
@@ -51,7 +42,8 @@ export function RegisterInitPage(): JSX.Element {
             </p>
           ) : (
             <>
-              <ShortText path="email" label="Email address" />
+              <Question>E-mail address</Question>
+              <ShortTextInput name="email" errors={errors} ref={register(reqRule())} />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
@@ -71,7 +63,7 @@ export function RegisterInitPage(): JSX.Element {
             </>
           )}
         </CenteredForm>
-      </Formik>
+      </form>
     </CenteredPage>
   );
 }

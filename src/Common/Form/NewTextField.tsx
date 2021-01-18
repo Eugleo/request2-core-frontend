@@ -41,7 +41,7 @@ export function ShortTextInput({
   className,
   ...props
 }: InputProps<'input'>): JSX.Element {
-  const err = errors[name]?.message;
+  const err = errors && name && errors[name]?.message;
 
   return (
     <div>
@@ -85,7 +85,7 @@ export function LongTextInput({
   errors,
   ...props
 }: InputProps<'textarea'>): JSX.Element {
-  const err = errors[name];
+  const err = errors && name && errors[name];
 
   return (
     <div>

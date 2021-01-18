@@ -21,9 +21,9 @@ export type FormErrors = DeepMap<Record<string, any>, FieldError>;
 export type InputProps<T extends keyof JSX.IntrinsicElements> = PropsWithRef<
   JSX.IntrinsicElements[T]
 > & {
-  name: string;
-  ref: PropsWithRef<JSX.IntrinsicElements[T]>['ref'];
-  errors: FormErrors;
+  name?: string;
+  ref?: PropsWithRef<JSX.IntrinsicElements[T]>['ref'];
+  errors?: FormErrors;
 };
 
 export function Note({ children }: { children: ReactNode }): JSX.Element {

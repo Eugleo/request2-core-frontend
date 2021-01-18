@@ -1,12 +1,11 @@
-import { Field, Form, Formik } from 'formik';
 import React, { useState } from 'react';
 import { AtomSpinner } from 'react-epic-spinners';
+import { useForm } from 'react-hook-form';
 import { Link, useParams } from 'react-router-dom';
-import { valueEventAriaMessage } from 'react-select/src/accessibility';
 
 import * as Button from '../../Common/Buttons';
-import { ShortText } from '../../Common/Form/TextField';
-import { createShortTextValue, ShortTextFieldValue } from '../../Request/FieldValue';
+import { ShortTextInput } from '../../Common/Form/NewTextField';
+import { Question, reqRule } from '../../Common/Form/Question';
 import { User } from '../../User/User';
 import { post } from '../../Utils/Api';
 import { Errors } from '../../Utils/Errors';
@@ -16,17 +15,32 @@ import { CenteredForm, CenteredPage } from './CenteredPage';
 type RegState = 'init' | 'loading' | 'success' | 'problem';
 
 type RegistrationStub = {
-  email: ShortTextFieldValue;
-  name: ShortTextFieldValue;
-  password: ShortTextFieldValue;
-  passwordCheck: ShortTextFieldValue;
-  team: ShortTextFieldValue;
-  token: ShortTextFieldValue;
+  email: string;
+  name: string;
+  password: string;
+  passwordCheck: string;
+  token: string;
+  teamId: string;
+};
+
+type RegistrationField = {
+  name: string;
+  password: string;
+  passwordCheck: string;
 };
 
 export function RegisterPage(): JSX.Element {
   const { email, token } = useParams();
   const [regState, setState] = useState<RegState>('init');
+  const { register, errors, watch, handleSubmit } = useForm<RegistrationField>({
+    defaultValues: {
+      name: '',
+      password: '',
+      passwordCheck: '',
+    },
+  });
+
+  const pwd = watch('password');
 
   return (
     <CenteredPage
@@ -35,24 +49,16 @@ export function RegisterPage(): JSX.Element {
       imageSrc={logoSrc}
       imageAlt="A user icon"
     >
-      <Formik
-        initialValues={{
-          email: createShortTextValue(email),
-          name: createShortTextValue(),
-          password: createShortTextValue(),
-          passwordCheck: createShortTextValue(),
-          team: createShortTextValue('To be filled in by an admin'),
-          token: createShortTextValue(token),
-        }}
-        validate={validate}
-        onSubmit={async (values: RegistrationStub) => {
+      <form
+        onSubmit={handleSubmit(async ({ name, password }: RegistrationStub) => {
           setState('loading');
+
           const r = await post<User & { token: string }>(`/register`, {
             active: true,
             dateCreated: Date.now(),
-            email: values.email.content,
-            name: values.name.content,
-            password: values.password.content,
+            email,
+            name,
+            password,
             roles: ['Client'],
             teamIds: [],
             token,
@@ -64,7 +70,7 @@ export function RegisterPage(): JSX.Element {
             setState('problem');
             console.log(r);
           }
-        }}
+        })}
       >
         <CenteredForm>
           {regState === 'success' ? (
@@ -73,12 +79,41 @@ export function RegisterPage(): JSX.Element {
             </p>
           ) : (
             <>
-              <ShortText path="email" label="Email address" disabled />
-              <Field name="token" type="hidden" />
-              <ShortText path="name" label="User name" placeholder="Name Surname" />
-              <ShortText path="team" label="Team ID" disabled />
-              <ShortText path="password" type="password" label="Password" />
-              <ShortText path="passwordCheck" type="password" label="Password (again)" />
+              <Question>E-mail address</Question>
+              <ShortTextInput disabled value={email} />
+              <Question>Display name</Question>
+              <ShortTextInput
+                name="name"
+                placeholder="Arthur Dent"
+                ref={register({
+                  ...reqRule(),
+                  validate: val =>
+                    val.name.length < 3 ||
+                    val.name.split(' ').length < 2 ||
+                    'Please provide your full name and surname',
+                })}
+              />
+              <Question>Team</Question>
+              <ShortTextInput disabled value="You will be assigned a team by our admin" />
+              <Question>Your password</Question>
+              <ShortTextInput
+                name="password"
+                type="password"
+                ref={register({
+                  ...reqRule(),
+                  validate: val =>
+                    val.length > 8 || 'The password needs to have at least 8 characters',
+                })}
+              />
+              <Question>Enter the password again</Question>
+              <ShortTextInput
+                name="passwordCheck"
+                type="password"
+                ref={register({
+                  ...reqRule(),
+                  validate: val => val === pwd || "The passwords don't match",
+                })}
+              />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
@@ -94,38 +129,7 @@ export function RegisterPage(): JSX.Element {
             </>
           )}
         </CenteredForm>
-      </Formik>
+      </form>
     </CenteredPage>
   );
-}
-
-function validate(values: RegistrationStub) {
-  const errors: Errors<RegistrationStub> = {};
-  if (!values.email) {
-    errors.email = 'This field is required';
-  } // should not happen but whatever
-
-  if (!values.password) {
-    errors.password = 'Password is required';
-  } else if (values.password.content.length < 8) {
-    errors.password = 'Please use a reasonably long password';
-  }
-  if (
-    values.password &&
-    values.passwordCheck &&
-    values.password.content !== values.passwordCheck.content
-  ) {
-    errors.passwordCheck = 'Passwords do not match';
-  }
-
-  if (!values.name) {
-    errors.name = 'User name is required';
-  }
-  if (
-    values.name &&
-    (values.name.content.length < 3 || values.name.content.split(' ').length < 2)
-  ) {
-    errors.name = 'Please provide full name and surname';
-  }
-  return errors;
 }
