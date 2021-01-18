@@ -10,20 +10,6 @@ import { Team } from './Team';
 
 type TeamStub = { name: string; code: string };
 
-function validate(values: TeamStub) {
-  const error: { name?: string; code?: string } = {};
-
-  if (!values.name) {
-    error.name = 'This field is required';
-  }
-
-  if (!values.code) {
-    error.code = 'This field is required';
-  }
-
-  return error;
-}
-
 export function TeamForm({
   title,
   team,

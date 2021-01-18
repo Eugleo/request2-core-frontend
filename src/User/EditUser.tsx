@@ -18,12 +18,12 @@ function EditUserForm({ user }: { user: WithID<User> }) {
   const { authPut, authDel } = useAuth<User>();
   const navigate = useNavigate();
 
-  const onSubmit = async (values: UserStub, teamIds: number[]) => {
+  const onSubmit = async ({ email, name, roles, teamIds }: UserStub) => {
     const response = await authPut(`/users/${user._id}`, {
       ...user,
-      email: fieldValueToString(values.email),
-      name: fieldValueToString(values.name),
-      roles: values.roles.content as Role[],
+      email,
+      name,
+      roles,
       teamIds,
     });
 

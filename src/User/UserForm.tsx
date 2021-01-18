@@ -41,7 +41,7 @@ export function UserForm({
   submitTitle: string;
   user?: WithID<User>;
   headerButtons?: React.ReactNode;
-  onSubmit: (values: UserStub, teamIds: number[]) => void;
+  onSubmit: (values: UserStub) => void;
 }): JSX.Element {
   const { result, Loader } = Api.useAsyncGetMany<WithID<Team>>('/teams', 1000, 0);
 
@@ -73,16 +73,13 @@ export function UserForm({
           <form
             onSubmit={handleSubmit(values => {
               const teamIds = values.teamIds.map(t => Number.parseInt(t.value));
-              onSubmit(
-                {
-                  ...values,
-                  teamIds,
-                  roles: values.roles
-                    .map(r => r.value)
-                    .filter((r): r is Role => ['Admin', 'Client', 'Operator'].includes(r)),
-                },
-                teamIds
-              );
+              onSubmit({
+                ...values,
+                teamIds,
+                roles: values.roles
+                  .map(r => r.value)
+                  .filter((r): r is Role => ['Admin', 'Client', 'Operator'].includes(r)),
+              });
             })}
           >
             <Card className="max-w-2xl">

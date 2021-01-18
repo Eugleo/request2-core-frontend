@@ -24,7 +24,7 @@ export function AnnouncementForm({
 }): JSX.Element {
   const navigate = useNavigate();
   const { register, errors, handleSubmit, watch } = useForm({
-    defaultValues = { title: ann?.title ?? '', body: ann?.body ?? '' },
+    defaultValues: { title: ann?.title ?? '', body: ann?.body ?? '' },
   });
   const body = watch('body');
   return (
@@ -37,15 +37,19 @@ export function AnnouncementForm({
         })}
       >
         <Card style={{ gridTemplateRows: 'auto 1fr auto' }} className="grid grid-rows-3 px-6 py-3">
-          <Question>The title of the announcement</Question>
-          <ShortTextInput name="title" ref={register(reqRule())} errors={errors} />
-          <Question>The announcement itself</Question>
-          <LongTextInput
-            name="body"
-            ref={register(reqRule())}
-            className="font-mono mb-4 h-full"
-            errors={errors}
-          />
+          <div>
+            <Question>The title of the announcement</Question>
+            <ShortTextInput name="title" ref={register(reqRule())} errors={errors} />
+          </div>
+          <div>
+            <Question>The announcement itself</Question>
+            <LongTextInput
+              name="body"
+              ref={register(reqRule())}
+              className="font-mono mb-4 h-full"
+              errors={errors}
+            />
+          </div>
           <div className="flex flex-row mb-4">{children}</div>
         </Card>
         <div>

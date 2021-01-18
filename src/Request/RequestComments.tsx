@@ -36,7 +36,7 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
           {comments => (
             <>
               {comments.sort(comparing(c => c.dateAdded)).map(prop => (
-                <Comment
+                <CommentComponent
                   isMine={prop.authorId === auth.user._id}
                   text={prop.content}
                   key={prop._id}
@@ -83,7 +83,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   );
 }
 
-function Comment({ isMine, text }: { isMine: boolean; text: string }) {
+function CommentComponent({ isMine, text }: { isMine: boolean; text: string }) {
   function Avatar() {
     return (
       <div className="flex flex-col items-stretch col-span-1 justify-start h-full">

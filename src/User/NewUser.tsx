@@ -1,7 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-import { fieldValueToString } from '../Request/FieldValue';
 import { useAuth } from '../Utils/Auth';
 import { Role, User } from './User';
 import { UserStub, UserForm } from './UserForm';
@@ -10,14 +9,14 @@ export function NewUser(): JSX.Element {
   const { authPost } = useAuth<User>();
   const navigate = useNavigate();
 
-  const onSubmit = async (values: UserStub, teamIds: number[]) => {
+  const onSubmit = async ({ password, email, name, roles, teamIds }: UserStub) => {
     const response = await authPost('/users', {
       active: true,
       dateCreated: Math.round(Date.now() / 1000),
-      email: fieldValueToString(values.email),
-      name: fieldValueToString(values.name),
-      password: fieldValueToString(values.password),
-      roles: values.roles.content as Role[],
+      email,
+      name,
+      password,
+      roles,
       teamIds,
     });
 

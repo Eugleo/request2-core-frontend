@@ -2,11 +2,9 @@ import Uploady from '@rpldy/uploady';
 import { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { fieldToProperty } from '../../Request/FieldValue';
-import { FieldValue, NewProperty, NewRequest } from '../../Request/Request';
+import { fieldToProperty, FieldValue } from '../../Request/FieldValue';
+import { NewProperty } from '../../Request/Request';
 import { apiBase } from '../../Utils/ApiBase';
-import { FileInfo, fileInfoToString } from '../../Utils/File';
-import { Maybe } from '../../Utils/Maybe';
 import { Cancel, Primary } from '../Buttons';
 import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';

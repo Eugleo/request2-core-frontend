@@ -2,8 +2,7 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import { useAuth } from '../Utils/Auth';
-import { BareProperty, PropertyJSON, Request } from './Request';
-import { RequestDetailFormPage } from './RequestDetailForm';
+import { PropertyJSON, Request } from './Request';
 
 export function EditRequestPage(): JSX.Element {
   const navigate = useNavigate();
@@ -14,7 +13,7 @@ export function EditRequestPage(): JSX.Element {
   return (
     <RequestDetailFormPage
       requestId={requestId}
-      onSubmit={async (request: Request, properties: BareProperty[]) => {
+      onSubmit={async (request: Request, properties: PropertyJSON[]) => {
         const r = await authPut(`/requests/${id}`, {
           props: properties.map(p => ({ ...p, requestId })),
           req: request,
