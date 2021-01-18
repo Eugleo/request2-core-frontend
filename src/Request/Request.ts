@@ -14,8 +14,6 @@ export type Request = {
   dateCreated: number;
 };
 
-export type NewRequest = New<Request>;
-
 export type PropertyJSON = Omit<Property, 'value'> & { value: string };
 
 export type Property = {
@@ -28,8 +26,6 @@ export type Property = {
   active: boolean;
 };
 
-export type NewProperty = New<Property>;
-
 export type Comment = {
   requestId: number;
   authorId: number;
@@ -39,7 +35,7 @@ export type Comment = {
 
 export type New<T> = Omit<
   T,
-  'dateAdded' | 'authorId' | 'active' | 'shouldLog' | 'requestId' | 'status'
+  'dateAdded' | 'authorId' | 'active' | 'shouldLog' | 'requestId' | 'status' | 'dateCreated'
 >;
 
 // DON'T CHANGE THIS UNLESS YOU CHANGE Api.Query.Request AS WELL

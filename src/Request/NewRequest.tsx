@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
+import { Cancel, Primary } from '../Common/Buttons';
 import { NewForm } from '../Common/Form/NewForm';
 import { Page } from '../Common/Layout';
 import { Modal } from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
-import { BareProperty, idToStr, NewProperty, NewRequest, Request } from './Request';
-import { RequestDetailFormPage } from './RequestDetailForm';
-import { requestSchemas } from './RequestTypes';
+import { idToStr, New, Property, PropertyJSON, Request } from './Request';
+import { requestTypeDisplayNames } from './RequestTypes';
 import { Proteomics } from './RequestTypes/Proteomics';
 
 // TODO Check that the field names are unique
@@ -19,18 +19,18 @@ export function NewRequestPage(): JSX.Element {
     show: false,
   });
   const { requestType } = useParams();
-  const { authPost } = useAuth<{ request: NewRequest; properties: NewProperty[] }>();
-  const [title, setTitle] = useState<Maybe<string>>(null);
+  const { authPost } = useAuth<{ request: New<Request>; properties: New<Property>[] }>();
 
-  let requestForm = null;
-  switch (requestType) {
-    case 'proteomics':
-    case 'lipidomics':
-      requestForm = (
-        <Proteomics
-          titleChanged={title => {
-            setTitle(title);
-          }}
+  const name = requestTypeDisplayNames.get(requestType);
+
+  if (name) {
+    return (
+      <>
+        {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
+
+        <NewForm
+          defaultTitle={`New ${name} request`}
+          requestType={requestType}
           submit={async (request, properties) => {
             const r = await authPost('/requests', {
               properties,
@@ -44,19 +44,15 @@ export function NewRequestPage(): JSX.Element {
               throw new Error(`There was an error with processing your request: ${js.error}`);
             }
           }}
-        />
-      );
+        >
+          <Cancel />
+          <Primary type="submit">Submit new request</Primary>
+        </NewForm>
+      </>
+    );
   }
 
-  return (
-    <>
-      {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
-
-      <Page title={title ? `New ${requestType} request: ${title}` : `New ${requestType} request`}>
-        <div className="mx-auto">{requestForm}</div>
-      </Page>
-    </>
-  );
+  return <Page title="Error">This request type is invalid</Page>;
 }
 
 function CodeModal({ request }: { request: WithID<Request> }) {

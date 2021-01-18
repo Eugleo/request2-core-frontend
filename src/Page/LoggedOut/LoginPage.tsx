@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as Button from '../../Common/Buttons';
 import { ShortTextInput } from '../../Common/Form/NewTextField';
 import { Question, reqRule } from '../../Common/Form/Question';
+import { Card } from '../../Common/Layout';
 import { Link } from '../../Common/Link';
 import { UserDetails } from '../../User/User';
 import * as Api from '../../Utils/Api';
@@ -74,7 +75,7 @@ export function LoginPage(): JSX.Element {
           verifyLogin(values.email, values.password, dispatch, setLoginFailed)
         )}
       >
-        <CenteredForm>
+        <Card>
           {loginFailed ? (
             <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
           ) : null}
@@ -94,7 +95,7 @@ export function LoginPage(): JSX.Element {
           </div>
 
           <Button.Primary type="submit" title="Log in" status="Normal" className="w-full" />
-        </CenteredForm>
+        </Card>
       </form>
     </CenteredPage>
   );

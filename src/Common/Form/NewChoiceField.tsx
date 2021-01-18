@@ -303,7 +303,7 @@ function SingleChoiceButtonsInput({
   errors,
   ...props
 }: Omit<InputProps<'input'>, 'value'> & { children: Choice[]; value?: Maybe<Selection | string> }) {
-  const err: Maybe<string> = errors[name]?.message;
+  const err: Maybe<string> = errors && name && errors[name]?.message;
   return (
     <div>
       {children.map(ch => (

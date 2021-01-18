@@ -1,55 +1,75 @@
 import Uploady from '@rpldy/uploady';
-import { ReactNode } from 'react';
+import { ReactNode, useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { fieldToProperty, FieldValue } from '../../Request/FieldValue';
-import { NewProperty } from '../../Request/Request';
+import { fieldToProperty, FieldValue, groupFiles } from '../../Request/FieldValue';
+import { New, Property, PropertyJSON, Request } from '../../Request/Request';
+import { Proteomics } from '../../Request/RequestTypes/Proteomics';
 import { apiBase } from '../../Utils/ApiBase';
+import { WithID } from '../../Utils/WithID';
 import { Cancel, Primary } from '../Buttons';
+import { Page } from '../Layout';
 import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
 type FormValues = { title: string; teamId: string } & Record<string, FieldValue>;
 
-export type SubmitFunction = (request: RequestStub, properties: NewProperty[]) => void;
+export type SubmitFunction = (request: RequestStub, properties: New<Property>[]) => void;
 
 export function NewForm({
+  defaultTitle,
   children,
-  titleChanged,
   submit,
+  ...props
 }: {
+  defaultTitle: string;
   children: ReactNode;
-  titleChanged: (title: string) => void;
   submit: SubmitFunction;
-}): JSX.Element {
+} & (
+  | { requestType: string }
+  | { request: WithID<Request>; properties: PropertyJSON[] }
+)): JSX.Element {
   const form = useForm<FormValues>({
     mode: 'all',
+    defaultValues:
+      'request' in props
+        ? groupFiles(props.properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {})
+        : {},
   });
-
   const title = form.watch('title');
-  titleChanged(title);
+
+  const requestType = 'requestType' in props ? props.requestType : props.request.requestType;
+  let requestForm = null;
+
+  switch (requestType) {
+    case 'proteomics':
+    case 'lipidomics':
+    case 'small molecule':
+      requestForm = Proteomics;
+  }
 
   return (
-    <Uploady destination={{ url: `${apiBase}/files` }}>
-      <FormProvider {...form}>
-        <form
-          onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
-          className="space-y-8"
-        >
-          <Section title="General information">
-            <ShortText q="What should be this request called?" id="title" required />
-            <TeamField id="teamId" />
-          </Section>
-          {children}
-          <div className="h-0.5 w-full bg-gray-200" />
-          <div className="flex justify-end flex-row w-full space-x-6">
-            <Cancel />
-            <Primary type="submit">Submit</Primary>
-          </div>
-        </form>
-      </FormProvider>
-    </Uploady>
+    <Page title={title ? `${defaultTitle}: ${title}` : defaultTitle}>
+      <div className="mx-auto">
+        <Uploady destination={{ url: `${apiBase}/files` }}>
+          <FormProvider {...form}>
+            <form
+              onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
+              className="space-y-8"
+            >
+              <Section title="General information">
+                <ShortText q="What should be this request called?" id="title" required />
+                <TeamField id="teamId" />
+              </Section>
+              {requestForm}
+              <div className="h-0.5 w-full bg-gray-200" />
+              <div className="flex justify-end flex-row w-full space-x-6">{children}</div>
+            </form>
+          </FormProvider>
+        </Uploady>
+      </div>
+    </Page>
   );
 }
 
@@ -71,6 +91,6 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
     title: data.title,
     teamId: Number.parseInt(data.teamId),
   };
-  const props: NewProperty[] = Object.entries(data).reduce(fieldToProperty, []);
+  const props: New<Property>[] = Object.entries(data).reduce(fieldToProperty, []);
   submit(req, props);
 }

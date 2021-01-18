@@ -8,7 +8,6 @@ import { WithID } from '../Utils/WithID';
 import { ResultWidget } from './Operator/ResultComponent';
 import { idToStr, Request } from './Request';
 import { RequestComments } from './RequestComments';
-import { RequestDetails } from './RequestDetails';
 import { RequestStatus } from './RequestStatus';
 
 export function RequestPage(): JSX.Element {
@@ -35,11 +34,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
         <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
       </Page.Header>
 
-      <Page.Body>
-        <ResultWidget requestId={requestId} />
-        <RequestStatus requestId={requestId} />
-        <RequestDetails requestId={requestId} />
-      </Page.Body>
+      <Page.Body>{/* <RequestDetails requestId={requestId} /> */}</Page.Body>
 
       <RequestComments requestId={requestId} />
     </div>

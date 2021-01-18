@@ -10,9 +10,7 @@ export function NewTeam(): JSX.Element {
   return (
     <TeamForm
       title="Create new team"
-      onSubmit={values =>
-        authPost('/teams', { active: true, code: values.code.content, name: values.name.content })
-      }
+      onSubmit={({ code, name }) => authPost('/teams', { active: true, code, name })}
     >
       <Button.Cancel className="mr-3" />
       <Button.Primary type="submit" title="Submit new team" status="Normal" />

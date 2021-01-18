@@ -2,7 +2,6 @@ import { ReactNode } from 'react';
 import { useForm } from 'react-hook-form';
 
 import { Primary } from '../Common/Buttons';
-import { FieldLabel } from '../Common/Form/General';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Question, reqRule } from '../Common/Form/Question';
 import { Page } from '../Common/Layout';
@@ -56,13 +55,14 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
               <Primary type="submit">Save changes</Primary>
             </div>
           </form>
-          <FieldLabel text="Research groups" />
+          <Question>Research groups</Question>
           <div className="grid col-gap-2 grid-flow-col auto-cols-max mb-6 mt-2">
             {user.teams.map(t => (
               <Pill key={t._id} text={t.name} className="bg-gray-200 text-gray-900" />
             ))}
           </div>
-          <FieldLabel text="Privileges" />
+          <Question>Privileges</Question>
+
           <div className="grid col-gap-2 grid-flow-col auto-cols-max mb-6 mt-2">
             {user.roles.map(r => (
               <Pill key={r} text={r} className="bg-gray-200 text-gray-900" />

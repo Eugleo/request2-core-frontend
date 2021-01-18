@@ -18,11 +18,11 @@ export function EditAnnouncement(): JSX.Element {
       {ann => (
         <AnnouncementForm
           title={`Editing ${ann.title}`}
-          onSubmit={values =>
+          onSubmit={({ body, title }) =>
             authPut(`/announcements/${id}`, {
               ...ann,
-              body: values.body.content,
-              title: values.title.content,
+              body,
+              title,
             })
           }
           ann={ann}

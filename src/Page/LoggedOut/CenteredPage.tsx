@@ -1,5 +1,3 @@
-import { Form } from 'formik';
-
 export function CenteredPage({
   imageSrc,
   imageAlt,
@@ -29,8 +27,8 @@ export function CenteredPage({
 
 export function CenteredForm({ children }: { children: React.ReactNode }): JSX.Element {
   return (
-    <Form className="rounded-md ring-1 ring-black ring-opacity-5 bg-white w-full px-6 py-6">
+    <div className="rounded-md ring-1 ring-black ring-opacity-5 bg-white w-full px-6 py-6">
       {children}
-    </Form>
+    </div>
   );
 }

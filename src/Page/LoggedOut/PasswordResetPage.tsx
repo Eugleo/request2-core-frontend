@@ -13,7 +13,7 @@ export function PasswordResetInitPageWithEmail(): JSX.Element {
   return <PasswordResetInitPage email={email} />;
 }
 
-export function PasswordResetInitPage({ email }: { email: string | undefined }): JSX.Element {
+export function PasswordResetInitPage({ email }: { email?: string | undefined }): JSX.Element {
   const { errors, register, handleSubmit } = useForm<{ email: string }>({
     defaultValues: { email },
   });

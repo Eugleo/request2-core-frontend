@@ -11,13 +11,13 @@ export function NewAnnouncement(): JSX.Element {
   return (
     <AnnouncementForm
       title="New announcement"
-      onSubmit={values =>
+      onSubmit={({ body, title }) =>
         authPost('/announcements', {
           active: true,
           authorId: auth.user._id,
-          body: values.body.content,
+          body,
           dateCreated: Math.floor(Date.now() / 1000),
-          title: values.title.content,
+          title,
         })
       }
     >

@@ -140,7 +140,7 @@ function NormalRoutes() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterInitPage />} />
           <Route path="/register/:email/:token" element={<RegisterPage />} />
-          <Route path="/password-reset" element={<PasswordResetInitPage email={null} />} />
+          <Route path="/password-reset" element={<PasswordResetInitPage />} />
           <Route path="/password-reset/:email" element={<PasswordResetInitPageWithEmail />} />
           <Route path="/password-reset/:email/:token" element={<PasswordResetPage />} />
           <Route path="/*" element={<Navigate to="/login" />} />

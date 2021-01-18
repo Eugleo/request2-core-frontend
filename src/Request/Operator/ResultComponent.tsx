@@ -4,8 +4,6 @@ import { useAsyncGet } from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
 import { PropertyJSON, Request } from '../Request';
-import { RequestResults } from '../RequestResults';
-import { RequestResultForm } from './RequestResultForm';
 
 export function ResultWidget({ requestId }: { requestId: number }): JSX.Element {
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);

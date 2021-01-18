@@ -3,7 +3,6 @@ import { asUploadButton } from '@rpldy/upload-button';
 import UploadDropZone from '@rpldy/upload-drop-zone';
 import { useItemFinishListener, useItemStartListener } from '@rpldy/uploady';
 import c from 'classnames';
-import { useField } from 'formik';
 import React, { forwardRef, useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { useController, useForm, useFormContext } from 'react-hook-form';

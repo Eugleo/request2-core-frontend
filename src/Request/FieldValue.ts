@@ -1,13 +1,13 @@
 import { FileInfo, fileInfoToString, stringToFileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
-import { NewProperty, Property, PropertyJSON, Selection } from './Request';
+import { New, Property, PropertyJSON, Selection } from './Request';
 
 export type FieldValue = string | number | Selection | Selection[] | FileInfo[];
 
 export function fieldToProperty(
-  acc: NewProperty[],
+  acc: New<Property>[],
   [name, value]: [string, FieldValue]
-): NewProperty[] {
+): New<Property>[] {
   if (typeof value === 'string') {
     return acc.concat([{ name, value }]);
   } else if (typeof value === 'number') {

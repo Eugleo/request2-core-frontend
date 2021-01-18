@@ -20,11 +20,11 @@ export function EditTeam(): JSX.Element {
         <TeamForm
           team={team}
           title={`Editing ${team.name}'s group`}
-          onSubmit={values =>
+          onSubmit={({ code, name }) =>
             authPut(`/teams/${id}`, {
               ...team,
-              code: values.code.content,
-              name: values.name.content,
+              code,
+              name,
             })
           }
           headerButtons={
