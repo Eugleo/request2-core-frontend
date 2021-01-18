@@ -72,7 +72,7 @@ export function Question({ children }: { children: ReactNode }): JSX.Element {
 }
 
 export function reqRule(
-  required: boolean | string,
+  required: boolean | string = true,
   msg = 'This field is required'
 ): {} | { required: string } {
   return required ? { required: typeof required === 'string' ? required : msg } : {};
