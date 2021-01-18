@@ -8,35 +8,81 @@ import React, { forwardRef, useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
 import { useController, useForm, useFormContext } from 'react-hook-form';
 
-import { FilesFieldValue } from '../../Request/FieldValue';
+import { FilesView } from '../../Request/FileView';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
-import { FileInfo } from '../../Utils/File';
+import { FileInfo, stringToFileInfo } from '../../Utils/File';
+import { Maybe } from '../../Utils/Maybe';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
-import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
+import {
+  ErrorMessage,
+  FieldProps,
+  FormErrors,
+  Question,
+  QuestionProps,
+  useFieldContext,
+} from './Question';
 
-export function FileInput({ id, className, required = false, q }: QuestionProps): JSX.Element {
+export function Files({ id, q, required = false }: QuestionProps): JSX.Element {
+  const { state, values } = useFieldContext();
+
+  if (state === 'edit') {
+    return <FilesField name={id} question={q} required={required} />;
+  }
+  const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
+  return (
+    <div>
+      <Question>{q}</Question>
+      <FilesView files={files} />
+    </div>
+  );
+}
+
+function FilesField({ name, question, required = false }: FieldProps) {
+  const form = useFormContext();
+
+  return (
+    <div>
+      <Question>{question}</Question>
+      <FileInput name={name} {...form} />
+    </div>
+  );
+}
+
+export function FileInput({
+  name,
+  required = false,
+  value = [],
+  errors,
+  register,
+  setValue,
+  unregister,
+}: {
+  register: Function;
+  errors: FormErrors;
+  value?: FileInfo[];
+  setValue: Function;
+  unregister: Function;
+  name: string;
+  required?: string | boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+}): JSX.Element {
   const [inProgress, setInProgress] = useState<number>(0);
-  const { register, watch, errors, setValue, unregister } = useFormContext();
   const [removableFiles, setRemovableFiles] = useState<Set<string>>(new Set());
 
   useEffect(() => {
-    register(id, {
-      validate: (val: FileInfo[] | null) =>
-        !required || (val && val.length > 0) || 'You have to upload at least one file',
+    const msg = typeof required === 'string' ? required : 'You have to upload at least one file';
+    register(name, {
+      validate: (val: FileInfo[] | null) => !required || (val && val.length > 0) || msg,
     });
-  }, [register, unregister, required, id]);
-
-  const value = watch(id, []) as FileInfo[];
-
-  console.log(value);
+  }, [register, unregister, required, name]);
 
   const removeFile = (file: FileInfo) => {
     // Possible bug, we're not removing the file from removableFiles
     setValue(
-      id,
+      name,
       value.filter(f => f !== file),
       { shouldValidate: true }
     );
@@ -54,20 +100,15 @@ export function FileInput({ id, className, required = false, q }: QuestionProps)
     setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
     if (items) {
       setInProgress(n => n - items.length);
-      setValue(id, value.concat(items), { shouldValidate: true });
+      setValue(name, value.concat(items), { shouldValidate: true });
     }
   });
 
-  const err = errors[id]?.message;
+  const err = errors[name]?.message;
 
   return (
-    <UploadDropZone
-      onDragOverClassName="bg-green-100"
-      grouped={false}
-      className={c('rounded-md', className)}
-    >
+    <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} className="rounded-md">
       <div>
-        <Question>{q}</Question>
         {value.length > 0 ? (
           <div className="flex flex-row justify-between items-baseline mb-1">
             <UploadButton />
