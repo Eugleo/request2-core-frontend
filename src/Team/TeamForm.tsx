@@ -1,14 +1,14 @@
-import { Form, Formik } from 'formik';
 import React, { ReactNode } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
-import { ShortText } from '../Common/Form/TextField';
+import { ShortTextInput } from '../Common/Form/NewTextField';
+import { Question } from '../Common/Form/Question';
 import { Card, Page } from '../Common/Layout';
-import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { Maybe } from '../Utils/Maybe';
 import { Team } from './Team';
 
-type TeamStub = { name: ShortTextFieldValue; code: ShortTextFieldValue };
+type TeamStub = { name: string; code: string };
 
 function validate(values: TeamStub) {
   const error: { name?: string; code?: string } = {};
@@ -38,29 +38,35 @@ export function TeamForm({
   headerButtons?: React.ReactNode;
 }): JSX.Element {
   const navigate = useNavigate();
+  const { register, errors, handleSubmit } = useForm<TeamStub>({
+    defaultValues: {
+      name: team?.name ?? '',
+      code: team?.code ?? '',
+    },
+  });
 
   return (
     <Page title={title} buttons={headerButtons}>
       <Card className="max-w-md w-full mx-auto">
-        <Formik
-          initialValues={{
-            code: createShortTextValue(team?.code),
-            name: createShortTextValue(team?.name),
-          }}
-          validate={validate}
-          onSubmit={async values => {
+        <form
+          className="flex flex-col items-start"
+          onSubmit={handleSubmit(async values => {
             await onSubmit(values);
             navigate(-1);
-          }}
+          })}
         >
-          <Form className="flex flex-col items-start">
-            <div className="px-6 mt-4 mb-8 w-full">
-              <ShortText path="name" label="Team leader" />
-              <ShortText path="code" label="Institutional code" />
+          <div className="px-6 mt-4 mb-8 w-full">
+            <div>
+              <Question>Team leader</Question>
+              <ShortTextInput name="name" />
             </div>
-            <div className="flex justify-end w-full px-6 py-3 bg-gray-100">{children}</div>
-          </Form>
-        </Formik>
+            <div>
+              <Question>Institutional code</Question>
+              <ShortTextInput name="code" />
+            </div>
+          </div>
+          <div className="flex justify-end w-full px-6 py-3 bg-gray-100">{children}</div>
+        </form>
       </Card>
     </Page>
   );

@@ -2,7 +2,6 @@ import React from 'react';
 import { useNavigate, useParams } from 'react-router';
 
 import * as Button from '../Common/Buttons';
-import { fieldValueToString } from '../Request/FieldValue';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
