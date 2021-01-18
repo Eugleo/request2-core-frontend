@@ -20,8 +20,6 @@ import {
   FormErrors,
 } from './Question';
 
-type HasCustom = { hasCustom?: boolean };
-
 type Choice = ReactElement<
   { value: string; children: Maybe<ReactNode>; label: Maybe<string> },
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -97,37 +95,97 @@ function getStyles(err: Maybe<string>) {
 
 export function MultipleChoice({
   id,
-  children,
-  className,
-  hasCustom = false,
-  required,
+  required = false,
   q,
-}: QuestionProps & { children: Choice[]; hasCustom?: boolean }): JSX.Element {
-  const { watch, errors } = useFormContext();
-  const value = watch(id, null) as { label: string; value: string }[] | null;
+  hasCustom = false,
+  children,
+}: QuestionProps & Omit<ChoiceProps, 'isText'>): JSX.Element {
+  const { state, values } = useFieldContext();
 
-  const showChildren = children
-    .filter(ch => value && ch.props.children && value.map(v => v.value).includes(ch.props.value))
-    .map(ch => ch.props.children);
+  if (state === 'edit') {
+    return (
+      <MultipleChoiceField name={id} question={q} required={required} hasCustom={hasCustom}>
+        {children}
+      </MultipleChoiceField>
+    );
+  }
+  const vals = values[id].split(';;;');
+  const selections = children
+    .filter(ch => vals.includes(ch.props.value))
+    .map(ch => ch.props.label ?? ch.props.value);
+  return (
+    <div>
+      <Question>{q}</Question>
+      <div className="divide-x-2 divide-gray-400">
+        {selections.map(v => (
+          <span key={v} className="text-sm text-gray-800">
+            {v}
+          </span>
+        ))}
+      </div>
+    </div>
+  );
+}
 
+function MultipleChoiceField({
+  name,
+  required,
+  children,
+  question,
+  hasCustom,
+}: FieldProps & { hasCustom: boolean; children: Choice[] }) {
+  const { watch, errors, control } = useFormContext();
+  const value = watch(name, null) as Selection | null;
+  return (
+    <div>
+      <CreatableQuestion q={question} hasCustom={hasCustom} />
+      <MultipleChoiceInput
+        name={name}
+        hasCustom={hasCustom}
+        required={required}
+        errors={errors}
+        control={control}
+      >
+        {children}
+      </MultipleChoiceInput>
+    </div>
+  );
+}
+
+export function MultipleChoiceInput({
+  name,
+  children,
+  required = false,
+  value,
+  hasCustom = false,
+  errors,
+  control,
+}: {
+  name: string;
+  value?: Maybe<Selection>;
+  children: Choice[];
+  hasCustom?: boolean;
+  errors: FormErrors;
+  required?: string | boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<Record<string, any>>;
+}): JSX.Element {
+  const err = errors[name]?.message;
   const options = children.map(ch => ({
     label: ch.props.label ?? ch.props.value,
     value: ch.props.value,
   }));
-
-  const err = errors[id]?.message;
-
   return (
     <div>
-      {q ? <CreatableQuestion q={q} hasCustom={hasCustom} /> : null}
       <Controller
-        name={id}
+        name={name}
+        control={control}
         defaultValue={[]}
         rules={{
-          validate: (val: { label: string; value: string }[] | null) =>
+          validate: (val: Selection[] | null) =>
             !required ||
             (val !== null && val.length > 0) ||
-            'You have to choose at least one option',
+            (typeof required === 'string' ? required : 'You have to choose at least one option'),
         }}
         render={field =>
           hasCustom ? (
@@ -153,7 +211,7 @@ export function MultipleChoice({
         }
       />
       <ErrorMessage error={err} />
-      {showChildren.length > 0 ? <div className="mt-6 space-y-6">{showChildren}</div> : null}
+      {getVisibleChildren(value, children)}
     </div>
   );
 }
@@ -186,7 +244,7 @@ export function SingleChoice({
   const choice = children.find(ch => ch.props.value === values[id]);
   const label = choice
     ? choice.props.label ?? choice.props.value
-    : `[ERROR]: Teh value ${values[id]} is invalid`;
+    : `[ERROR]: The value ${values[id]} is invalid`;
   return (
     <div>
       <Question>{q}</Question>
@@ -235,19 +293,6 @@ export function SingleChoiceField({
       )}
     </div>
   );
-}
-
-function getVisibleChildren(value: Maybe<Selection | string>, children: Choice[]): ReactNode {
-  let showChildren = null;
-  if (value) {
-    showChildren = children
-      .filter(ch =>
-        typeof value === 'string' ? value === ch.props.value : value.value === ch.props.value
-      )
-      .map(ch => ch.props.children);
-  }
-
-  return showChildren ? <div className="mt-6 space-y-6">{showChildren}</div> : null;
 }
 
 function SingleChoiceButtonsInput({
@@ -400,4 +445,17 @@ function CreatableQuestion({ hasCustom, q }: { q?: string; hasCustom: boolean })
       ) : null}
     </div>
   );
+}
+
+function getVisibleChildren(value: Maybe<Selection | string>, children: Choice[]): ReactNode {
+  let showChildren = null;
+  if (value) {
+    showChildren = children
+      .filter(ch =>
+        typeof value === 'string' ? value === ch.props.value : value.value === ch.props.value
+      )
+      .map(ch => ch.props.children);
+  }
+
+  return showChildren ? <div className="mt-6 space-y-6">{showChildren}</div> : null;
 }

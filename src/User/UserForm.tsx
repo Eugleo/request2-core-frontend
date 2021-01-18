@@ -1,32 +1,34 @@
 import { Form, Formik } from 'formik';
 import React from 'react';
+import { useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
-import { MultipleChoice, SingleChoice } from '../Common/Form/ChoiceField';
-import { ShortText } from '../Common/Form/TextField';
-import { Page } from '../Common/Layout';
-import {
-  createMultipleChoiceValue,
-  createMultipleChoiceValueFromArray,
-  createShortTextValue,
-  createSingleChoiceValue,
-  MultipleChoiceFieldValue,
-  ShortTextFieldValue,
-  SingleChoiceFieldValue,
-} from '../Request/FieldValue';
+import { MultipleChoiceInput, Option } from '../Common/Form/NewChoiceField';
+import { ShortTextInput } from '../Common/Form/NewTextField';
+import { Question, reqRule } from '../Common/Form/Question';
+import { Card, Page } from '../Common/Layout';
+import { Selection } from '../Request/Request';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
 import { comparing } from '../Utils/Func';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
-import { User } from './User';
+import { Role, User } from './User';
 
 export type UserStub = {
-  name: ShortTextFieldValue;
-  email: ShortTextFieldValue;
-  password: ShortTextFieldValue;
-  roles: MultipleChoiceFieldValue;
-  team: MultipleChoiceFieldValue;
+  name: string;
+  email: string;
+  password: string;
+  roles: Role[];
+  teamIds: number[];
+};
+
+export type UserFormFields = {
+  name: string;
+  email: string;
+  password: string;
+  roles: Selection[];
+  teamIds: Selection[];
 };
 
 export function UserForm({
@@ -51,63 +53,72 @@ export function UserForm({
   const selectedTeams = ok(result)
     ? user?.teamIds
         .map(id => result.data.values.find(team => team._id === id))
-        .map(team => team?.name)
-        .filter((t): t is string => t !== undefined)
+        .filter((t): t is WithID<Team> => t !== undefined)
+        .map(t => ({ value: t._id.toString(), label: t.name }))
     : [];
 
-  const initialValues = {
-    email: createShortTextValue(user?.email),
-    name: createShortTextValue(user?.name),
-    password: createShortTextValue(user?.password),
-    roles: createMultipleChoiceValue(user?.roles.join(';;;')),
-    team: createMultipleChoiceValueFromArray(selectedTeams),
+  const defaultValues: UserFormFields = {
+    email: user?.email ?? '',
+    name: user?.name ?? '',
+    password: user?.password ?? '',
+    roles: user?.roles.map(r => ({ label: r, value: r })) ?? [],
+    teamIds: selectedTeams ?? [],
   };
+
+  const { register, handleSubmit, control, errors } = useForm<UserFormFields>({ defaultValues });
 
   return (
     <Page title={title} buttons={headerButtons}>
       <Loader>
         {({ values: teams }) => (
-          <Formik
-            initialValues={initialValues}
-            onSubmit={values => {
-              const teamId: number[] = values.team.content
-                .map(name => teamIds.get(name))
-                .filter((t): t is number => t !== undefined);
-              if (teamId) {
-                onSubmit(values, teamId);
-              } else {
-                throw new Error('Selected team is not in values');
-              }
-            }}
+          <form
+            onSubmit={handleSubmit(values => {
+              const teamIds = values.teamIds.map(t => Number.parseInt(t.value));
+              onSubmit(
+                {
+                  ...values,
+                  teamIds,
+                  roles: values.roles
+                    .map(r => r.value)
+                    .filter((r): r is Role => ['Admin', 'Client', 'Operator'].includes(r)),
+                },
+                teamIds
+              );
+            })}
           >
-            <Form className="bg-white ring-1 ring-black ring-opacity-5 rounded-md max-w-2xl mx-auto">
+            <Card className="max-w-2xl">
               <div className="p-6">
-                <ShortText path="name" label="Name" />
-                <ShortText
-                  path="email"
-                  label="E-Mail"
-                  description="We don't send any emails at the moment, the email is used as a login name"
-                />
-                {user ? null : <ShortText path="password" type="password" label="Password" />}
-                <MultipleChoice
-                  path="roles"
-                  label="Roles"
-                  choices={['Admin', 'Operator', 'Client']}
-                />
-
-                <MultipleChoice
-                  path="team"
-                  label="Team"
-                  choices={teams.sort(comparing(t => t.name)).map(t => t.name)}
-                  description="Missing team among the choices? Be sure to add it in the 'Teams' tab"
-                />
+                <Question>Name</Question>
+                <ShortTextInput name="name" errors={errors} ref={register(reqRule(true))} />
+                <Question>E-mail address</Question>
+                <ShortTextInput name="email" errors={errors} ref={register(reqRule(true))} />
+                {user ? null : (
+                  <ShortTextInput
+                    name="password"
+                    type="password"
+                    errors={errors}
+                    ref={register(reqRule(true))}
+                  />
+                )}
+                <Question>Privileges</Question>
+                <MultipleChoiceInput name="roles" control={control} errors={errors}>
+                  <Option value="Admin" />
+                  <Option value="Client" />
+                  <Option value="Operator" />
+                </MultipleChoiceInput>
+                <Question>Teams</Question>
+                <MultipleChoiceInput name="teamIds" control={control} errors={errors}>
+                  {teams.sort(comparing(t => t.name)).map(t => (
+                    <Option key={t._id} value={t._id} label={t.name} />
+                  ))}
+                </MultipleChoiceInput>
               </div>
               <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
                 <Button.Cancel className="mr-3" />
                 <Button.Primary type="submit" title={submitTitle} status="Normal" />
               </div>
-            </Form>
-          </Formik>
+            </Card>
+          </form>
         )}
       </Loader>
     </Page>

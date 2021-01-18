@@ -3,7 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
-import { LongText } from '../Common/Form/NewTextField';
+import { LongTextInput } from '../Common/Form/NewTextField';
 import { RandomAvatar } from '../Page/UserView';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
@@ -69,10 +69,11 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
         })}
         className="px-6 py-3 border-t border-gray-300 shadow-md"
       >
-        <LongText
-          id="comment"
+        <LongTextInput
+          name="comment"
           placeholder="Enter your comment here..."
-          required="You have to enter something to submit it"
+          errors={form.errors}
+          ref={form.register({ required: 'You have to enter something to submit it' })}
         />
         <div className="flex flex-row-reverse">
           <Button.Primary type="submit">Post comment</Button.Primary>

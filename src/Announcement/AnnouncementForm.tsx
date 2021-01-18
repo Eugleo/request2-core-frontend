@@ -1,33 +1,15 @@
 import { Form, Formik } from 'formik';
 import { ReactNode } from 'react';
+import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router';
 
-import { LongText, ShortText } from '../Common/Form/TextField';
+import { LongTextInput, ShortTextInput } from '../Common/Form/NewTextField';
+import { Question, reqRule } from '../Common/Form/Question';
 import { Card, Page } from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
-import {
-  createLongTextValue,
-  createShortTextValue,
-  LongTextFieldValue,
-  ShortTextFieldValue,
-} from '../Request/FieldValue';
 import { Announcement } from './Announcement';
 
-type AnnStub = { title: ShortTextFieldValue; body: LongTextFieldValue };
-
-function validate(values: AnnStub) {
-  const error: { title?: string; body?: string } = {};
-
-  if (!values.title) {
-    error.title = 'This field is required';
-  }
-
-  if (!values.body) {
-    error.body = 'This field is required';
-  }
-
-  return error;
-}
+type AnnStub = { title: string; body: string };
 
 // TODO Handle failure
 export function AnnouncementForm({
@@ -42,40 +24,39 @@ export function AnnouncementForm({
   children: ReactNode;
 }): JSX.Element {
   const navigate = useNavigate();
+  const { register, errors, handleSubmit, watch } = useForm({
+    defaultValues = { title: ann?.title ?? '', body: ann?.body ?? '' },
+  });
+  const body = watch('body');
   return (
     <Page title={title}>
-      <Formik
-        initialValues={{
-          body: createLongTextValue(ann?.body),
-          title: createShortTextValue(ann?.title),
-        }}
-        onSubmit={async values => {
+      <form
+        className="grid grid-cols-2 gap-8"
+        onSubmit={handleSubmit(async values => {
           await onSubmit(values);
           navigate(-1);
-        }}
-        validate={validate}
-        validateOnChange
+        })}
       >
-        {({ values }) => (
-          <Form className="grid grid-cols-2 gap-8">
-            <Card
-              style={{ gridTemplateRows: 'auto 1fr auto' }}
-              className="grid grid-rows-3 px-6 py-3"
-            >
-              <ShortText path="title" label="Title" />
-              <LongText path="body" label="Body" className="font-mono text-sm mb-4 h-full" />
-              <div className="flex flex-row mb-4">{children}</div>
-            </Card>
-            <div>
-              <span className="text-sm text-gray-600 mb-1">Preview</span>
-              <Markdown
-                source={values.body.content}
-                className="border border-gray-300 rounded-sm pb-4 pt-6 px-6 mb-6"
-              />
-            </div>
-          </Form>
-        )}
-      </Formik>
+        <Card style={{ gridTemplateRows: 'auto 1fr auto' }} className="grid grid-rows-3 px-6 py-3">
+          <Question>The title of the announcement</Question>
+          <ShortTextInput name="title" ref={register(reqRule(true))} errors={errors} />
+          <Question>The announcement itself</Question>
+          <LongTextInput
+            name="body"
+            ref={register(reqRule(true))}
+            className="font-mono mb-4 h-full"
+            errors={errors}
+          />
+          <div className="flex flex-row mb-4">{children}</div>
+        </Card>
+        <div>
+          <span className="text-sm text-gray-600 mb-1">Preview</span>
+          <Markdown
+            source={body}
+            className="border border-gray-300 rounded-sm pb-4 pt-6 px-6 mb-6"
+          />
+        </div>
+      </form>
     </Page>
   );
 }

@@ -3,16 +3,14 @@ import React, { useState } from 'react';
 import { useAsyncGet } from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
-import { Request } from '../Request';
+import { PropertyJSON, Request } from '../Request';
 import { RequestResults } from '../RequestResults';
 import { RequestResultForm } from './RequestResultForm';
 
 export function ResultWidget({ requestId }: { requestId: number }): JSX.Element {
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
 
-  const { Loader, refresh } = useAsyncGet<WithID<ResultProperty>[]>(
-    `/requests/${requestId}/props/results`
-  );
+  const { Loader, refresh } = useAsyncGet<PropertyJSON[]>(`/requests/${requestId}/props`);
 
   return (
     <RequestLoader>
@@ -31,30 +29,30 @@ function ResultComponent({
   refresh,
 }: {
   request: WithID<Request>;
-  properties: WithID<ResultProperty>[];
+  properties: PropertyJSON[];
   refresh: () => void;
 }) {
-  console.log(properties.filter(p => p.name === 'human-time'));
   const activeProperties = properties.filter(p => p.active);
   const [isEditing, setIsEditing] = useState(activeProperties.length === 0);
 
-  return isEditing ? (
-    <Authorized roles={['Operator']}>
-      <RequestResultForm
-        request={request}
-        stopEditing={() => {
-          setIsEditing(false);
-        }}
-        refreshResults={refresh}
-        properties={activeProperties}
-      />
-    </Authorized>
-  ) : (
-    <RequestResults
-      properties={activeProperties}
-      startEditing={() => {
-        setIsEditing(true);
-      }}
-    />
-  );
+  return <div>ZDE BUDOU VÝSLEDKY</div>;
+  // return isEditing ? (
+  //   <Authorized roles={['Operator']}>
+  //     <RequestResultForm
+  //       request={request}
+  //       stopEditing={() => {
+  //         setIsEditing(false);
+  //       }}
+  //       refreshResults={refresh}
+  //       properties={activeProperties}
+  //     />
+  //   </Authorized>
+  // ) : (
+  //   <RequestResults
+  //     properties={activeProperties}
+  //     startEditing={() => {
+  //       setIsEditing(true);
+  //     }}
+  //   />
+  // );
 }
