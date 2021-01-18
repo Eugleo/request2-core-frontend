@@ -2,13 +2,25 @@
 import c from 'classnames';
 import { Fragment, ReactElement, ReactNode } from 'react';
 import * as Icon from 'react-feather';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Control, Controller, useFormContext } from 'react-hook-form';
 import Select from 'react-select/';
 import Creatable from 'react-select/creatable';
 import ReactTooltip from 'react-tooltip';
 
+import { Selection } from '../../Request/Request';
 import { Maybe } from '../../Utils/Maybe';
-import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
+import {
+  ErrorMessage,
+  FieldProps,
+  Question,
+  QuestionProps,
+  reqRule,
+  useFieldContext,
+  InputProps,
+  FormErrors,
+} from './Question';
+
+type HasCustom = { hasCustom?: boolean };
 
 type Choice = ReactElement<
   { value: string; children: Maybe<ReactNode>; label: Maybe<string> },
@@ -107,10 +119,7 @@ export function MultipleChoice({
 
   return (
     <div>
-      <div className="flex flex-row space-x-2 items-center mb-2">
-        <p className="text-md text-gray-700 font-semibold text-sm">{q}</p>
-        {hasCustom ? <Icon.Codepen className="text-green-400 w-4" /> : null}
-      </div>
+      {q ? <CreatableQuestion q={q} hasCustom={hasCustom} /> : null}
       <Controller
         name={id}
         defaultValue={[]}
@@ -149,111 +158,178 @@ export function MultipleChoice({
   );
 }
 
+type ChoiceProps = { hasCustom?: boolean; isText?: boolean; children: Choice[] };
+
 export function SingleChoice({
   id,
-  children,
-  hasCustom = false,
+  required = false,
   isText,
-  className,
-  required,
   q,
-}: QuestionProps & { children: Choice[]; hasCustom?: boolean; isText?: boolean }): JSX.Element {
-  const { watch, errors } = useFormContext();
-  const err = errors[id]?.message;
-  const value = watch(id) as string | { label: string; value: string } | null;
+  hasCustom = false,
+  children,
+}: QuestionProps & ChoiceProps): JSX.Element {
+  const { state, values } = useFieldContext();
 
-  const showChildren = children
-    .filter(ch => {
-      if (typeof value === 'string') {
-        return value === ch.props.value && ch.props.children;
-      } else if (value) {
-        return value.value === ch.props.value;
-      }
-    })
-    .map(ch => ch.props.children);
-
+  if (state === 'edit') {
+    return (
+      <SingleChoiceField
+        name={id}
+        question={q}
+        required={required}
+        hasCustom={hasCustom}
+        isText={isText}
+      >
+        {children}
+      </SingleChoiceField>
+    );
+  }
+  const choice = children.find(ch => ch.props.value === values[id]);
+  const label = choice
+    ? choice.props.label ?? choice.props.value
+    : `[ERROR]: Teh value ${values[id]} is invalid`;
   return (
     <div>
-      <CreatableQuestion q={q} hasCustom={hasCustom} />
-      {hasCustom || isText || (isText === undefined && children.length >= 4) ? (
-        <SingleChoiceText id={id} required={required} className={className} hasCustom={hasCustom}>
-          {children}
-        </SingleChoiceText>
-      ) : (
-        <SingleChoiceButtons id={id} required={required} className={className}>
-          {children}
-        </SingleChoiceButtons>
-      )}
-      <ErrorMessage error={err} />
-      {showChildren.length > 0 ? <div className="mt-6 space-y-6">{showChildren}</div> : null}
+      <Question>{q}</Question>
+      <p>
+        {label}
+        <span className="text-gray-400">(out of {children.length} total options)</span>
+      </p>
     </div>
   );
 }
 
-function SingleChoiceButtons({
-  id,
-  className,
+export function SingleChoiceField({
+  name,
+  question,
+  children,
+  hasCustom = false,
+  required,
+  isText = false,
+}: FieldProps & ChoiceProps): JSX.Element {
+  const { watch, errors, register, control } = useFormContext();
+  const value = watch(name, null) as Selection | null;
+
+  return (
+    <div>
+      <CreatableQuestion q={question} hasCustom={hasCustom} />
+      {hasCustom || isText || (isText === undefined && children.length >= 4) ? (
+        <SingleChoiceTextInput
+          name={name}
+          value={value}
+          required={required}
+          hasCustom={hasCustom}
+          errors={errors}
+          control={control}
+        >
+          {children}
+        </SingleChoiceTextInput>
+      ) : (
+        <SingleChoiceButtonsInput
+          name={name}
+          value={value}
+          errors={errors}
+          ref={register(reqRule(required, 'You have to choose an option'))}
+        >
+          {children}
+        </SingleChoiceButtonsInput>
+      )}
+    </div>
+  );
+}
+
+function getVisibleChildren(value: Maybe<Selection | string>, children: Choice[]): ReactNode {
+  let showChildren = null;
+  if (value) {
+    showChildren = children
+      .filter(ch =>
+        typeof value === 'string' ? value === ch.props.value : value.value === ch.props.value
+      )
+      .map(ch => ch.props.children);
+  }
+
+  return showChildren ? <div className="mt-6 space-y-6">{showChildren}</div> : null;
+}
+
+function SingleChoiceButtonsInput({
+  name,
   children,
   required = false,
-}: QuestionProps & { children: Choice[] }) {
-  const { register, errors } = useFormContext();
-
-  const err: Maybe<string> = errors[id]?.message;
-
+  value,
+  errors,
+  ...props
+}: Omit<InputProps<'input'>, 'value'> & { children: Choice[]; value?: Maybe<Selection | string> }) {
+  const err: Maybe<string> = errors[name]?.message;
   return (
     <div>
       {children.map(ch => (
         <Fragment key={ch.props.value}>
           <ChoiceField>
             <input
-              name={id}
+              name={name}
               id={ch.props.value}
               value={ch.props.value}
               type="radio"
-              ref={register(reqRule(required, 'You have to choose an option'))}
+              {...props}
               className={c(err && 'bg-red-100 border-red-400', 'text-green-500')}
             />
             <ChoiceLabel htmlFor={ch.props.value}>{ch.props.label ?? ch.props.value}</ChoiceLabel>
           </ChoiceField>
         </Fragment>
       ))}
+      <ErrorMessage error={err} />
+      {getVisibleChildren(value, children)}
     </div>
   );
 }
 
-function SingleChoiceText({
-  id,
-  className,
+function SingleChoiceTextInput({
+  name,
   children,
-  hasCustom,
   required = false,
-}: QuestionProps & { children: Choice[]; hasCustom: boolean }) {
-  const { errors } = useFormContext();
-  const err = errors[id]?.message;
+  value,
+  hasCustom,
+  errors,
+  control,
+}: {
+  name: string;
+  value?: Maybe<Selection | string>;
+  children: Choice[];
+  hasCustom: boolean;
+  errors: FormErrors;
+  required?: string | boolean;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  control: Control<Record<string, any>>;
+}) {
+  const err = errors[name]?.message;
   return (
-    <Controller
-      name={id}
-      rules={reqRule(required, 'You have to choose an option')}
-      as={
-        hasCustom ? (
-          <Creatable
-            className="react-select"
-            classNamePrefix={err ? 'react-select-error' : 'react-select'}
-            styles={getStyles(err)}
-          />
-        ) : (
-          <Select
-            className="react-select"
-            classNamePrefix={err ? 'react-select-error' : 'react-select'}
-            styles={getStyles(err)}
-          />
-        )
-      }
-      options={children.map(ch => ({
-        label: ch.props.label ?? ch.props.value,
-        value: ch.props.value,
-      }))}
-    />
+    <div>
+      <Controller
+        name={name}
+        rules={reqRule(required, 'You have to choose an option')}
+        control={control}
+        as={
+          hasCustom ? (
+            <Creatable
+              className="react-select"
+              classNamePrefix={err ? 'react-select-error' : 'react-select'}
+              styles={getStyles(err)}
+            />
+          ) : (
+            <Select
+              className="react-select"
+              classNamePrefix={err ? 'react-select-error' : 'react-select'}
+              styles={getStyles(err)}
+            />
+          )
+        }
+        options={children.map(ch => ({
+          label: ch.props.label ?? ch.props.value,
+          value: ch.props.value,
+        }))}
+      />
+      <ErrorMessage error={err} />
+      {getVisibleChildren(value, children)}
+    </div>
   );
 }
 

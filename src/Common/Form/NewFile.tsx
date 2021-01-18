@@ -11,7 +11,7 @@ import { useController, useForm, useFormContext } from 'react-hook-form';
 import { FilesFieldValue } from '../../Request/FieldValue';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
-import { File } from '../../Utils/File';
+import { FileInfo } from '../../Utils/File';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
@@ -24,16 +24,16 @@ export function FileInput({ id, className, required = false, q }: QuestionProps)
 
   useEffect(() => {
     register(id, {
-      validate: (val: File[] | null) =>
+      validate: (val: FileInfo[] | null) =>
         !required || (val && val.length > 0) || 'You have to upload at least one file',
     });
   }, [register, unregister, required, id]);
 
-  const value = watch(id, []) as File[];
+  const value = watch(id, []) as FileInfo[];
 
   console.log(value);
 
-  const removeFile = (file: File) => {
+  const removeFile = (file: FileInfo) => {
     // Possible bug, we're not removing the file from removableFiles
     setValue(
       id,
@@ -49,7 +49,7 @@ export function FileInput({ id, className, required = false, q }: QuestionProps)
   useItemFinishListener(item => {
     // Uwrap the response from Proxy
     const r = JSON.parse(JSON.stringify(item.uploadResponse));
-    const items = r?.data?.files as File[];
+    const items = r?.data?.files as FileInfo[];
 
     setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
     if (items) {
@@ -120,8 +120,8 @@ function FileComponent({
   onRemove,
   editable,
 }: {
-  file: File;
-  onRemove: (file: File) => void;
+  file: FileInfo;
+  onRemove: (file: FileInfo) => void;
   editable: boolean;
 }) {
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
@@ -167,7 +167,7 @@ const UploadButton2 = asUploadButton(
   ))
 );
 
-function PreviewButton({ file }: { file: File }) {
+function PreviewButton({ file }: { file: FileInfo }) {
   return (
     <a href={`${apiBase}/files/${file.hash}`}>
       <Icon.Eye className="stroke-2 text-gray-500 w-4 h-4 hover:text-gray-600" />
@@ -175,8 +175,8 @@ function PreviewButton({ file }: { file: File }) {
   );
 }
 
-function RemoveButton({ file, onRemove }: { file: File; onRemove: (file: File) => void }) {
-  const { authDel } = useAuth<File>();
+function RemoveButton({ file, onRemove }: { file: FileInfo; onRemove: (file: FileInfo) => void }) {
+  const { authDel } = useAuth<FileInfo>();
   return (
     <button
       type="button"

@@ -5,15 +5,14 @@ import { Navigate } from 'react-router';
 import { Card } from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { makeFieldPath, parseFieldName } from '../Utils/FieldPath';
-import { isFileProperty } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
-import { DetailProperty, Property, Request } from './Request';
+import { PropertyJSON, Request } from './Request';
 import { resolveInclude } from './RequestDetailForm';
 import { requestSchemas } from './RequestTypes';
 
 export function RequestDetails({ requestId }: { requestId: number }): JSX.Element {
-  const { Loader } = useAsyncGet<WithID<DetailProperty>[]>(`/requests/${requestId}/props/details`);
+  const { Loader } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
 
   // TODO Is there a better way?
@@ -35,22 +34,20 @@ export function RequestDetails({ requestId }: { requestId: number }): JSX.Elemen
               const relevantProperties = details.filter(p => p.active);
               const sections: {
                 title: string;
-                properties: WithID<Property>[];
+                properties: WithID<PropertyJSON>[];
               }[] = schema.sections
                 .map(s => {
                   const fields = s.fields.mapMaybe(f => resolveInclude(f));
                   const normalProps = fields
                     .filter(f => f.type !== 'files')
                     .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-                    .mapMaybe(f => relevantProperties.find(p => p.propertyName === f.fieldPath))
-                    .filter(p => p.propertyData !== '');
+                    .mapMaybe(f => relevantProperties.find(p => p.name === f.fieldPath))
+                    .filter(p => p.value !== '');
                   const fileProps = fields
                     .filter(f => f.type === 'files')
                     .map(f => ({ ...f, fieldPath: makeFieldPath(s.title, f.name) }))
-                    .flatMap(f =>
-                      relevantProperties.filter(p => p.propertyName.startsWith(f.fieldPath))
-                    )
-                    .filter(p => p.propertyData !== '');
+                    .flatMap(f => relevantProperties.filter(p => p.name.startsWith(f.fieldPath)))
+                    .filter(p => p.value !== '');
                   return {
                     properties: [...normalProps, ...fileProps],
                     title: s.title,
@@ -75,7 +72,7 @@ export function RequestDetails({ requestId }: { requestId: number }): JSX.Elemen
   );
 }
 
-function Section({ title, properties }: { title: string; properties: WithID<Property>[] }) {
+function Section({ title, properties }: { title: string; properties: WithID<PropertyJSON>[] }) {
   const files = properties.filter(isFileProperty);
   return (
     <div>
@@ -87,8 +84,8 @@ function Section({ title, properties }: { title: string; properties: WithID<Prop
           .filter(p => !isFileProperty(p))
           .map((p, ix) => (
             <PropertyView
-              name={parseFieldName(p.propertyName).field}
-              propertyData={p.propertyData}
+              name={parseFieldName(p.name).field}
+              propertyData={p.value}
               isEven={ix % 2 === 0}
               key={p._id}
             />
@@ -105,7 +102,7 @@ function PropertyView({
   isEven,
 }: {
   name: string;
-  propertyData: Property['propertyData'];
+  propertyData: PropertyJSON['value'];
   isEven: boolean;
 }) {
   return (

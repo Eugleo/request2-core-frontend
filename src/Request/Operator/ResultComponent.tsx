@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { useAsyncGet } from '../../Utils/Api';
 import { Authorized } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
-import { Request, ResultProperty } from '../Request';
+import { Request } from '../Request';
 import { RequestResults } from '../RequestResults';
 import { RequestResultForm } from './RequestResultForm';
 
@@ -34,7 +34,7 @@ function ResultComponent({
   properties: WithID<ResultProperty>[];
   refresh: () => void;
 }) {
-  console.log(properties.filter(p => p.propertyName === 'human-time'));
+  console.log(properties.filter(p => p.name === 'human-time'));
   const activeProperties = properties.filter(p => p.active);
   const [isEditing, setIsEditing] = useState(activeProperties.length === 0);
 
@@ -42,12 +42,19 @@ function ResultComponent({
     <Authorized roles={['Operator']}>
       <RequestResultForm
         request={request}
-        stopEditing={() => setIsEditing(false)}
+        stopEditing={() => {
+          setIsEditing(false);
+        }}
         refreshResults={refresh}
         properties={activeProperties}
       />
     </Authorized>
   ) : (
-    <RequestResults properties={activeProperties} startEditing={() => setIsEditing(true)} />
+    <RequestResults
+      properties={activeProperties}
+      startEditing={() => {
+        setIsEditing(true);
+      }}
+    />
   );
 }

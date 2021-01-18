@@ -3,7 +3,7 @@ import React from 'react';
 import { File } from 'react-feather';
 
 import { apiBase } from '../Utils/ApiBase';
-import { stringToFile } from '../Utils/File';
+import { stringToFileInfo } from '../Utils/File';
 import { WithID } from '../Utils/WithID';
 import { FileProperty } from './Request';
 
@@ -24,7 +24,7 @@ export function FilesView({
       </dt>
       <dd className="break-words text-sm text-gray-700">
         {files.map(f => (
-          <FileView key={f.propertyData} file={f} />
+          <FileView key={f.value} file={f} />
         ))}
       </dd>
     </div>
@@ -32,7 +32,7 @@ export function FilesView({
 }
 
 export function FileView({ file }: { file: FileProperty }): JSX.Element {
-  const { hash, name } = stringToFile(file.propertyData);
+  const { hash, name } = stringToFileInfo(file.value);
 
   return (
     <a href={`${apiBase}/files/${hash}`} className="text-gray-800">

@@ -52,7 +52,9 @@ export function SimpleText({
       name={field.name}
       onBlur={field.onBlur}
       value={field.value.content}
-      onChange={e => helpers.setValue({ content: e.target.value, type: 'text-short' })}
+      onChange={e => {
+        helpers.setValue({ content: e.target.value, type: 'text-short' });
+      }}
       {...props}
       className={c(simpleTextFieldClasses, className)}
     />
@@ -116,7 +118,9 @@ export function LongText({
         name={field.name}
         onBlur={field.onBlur}
         value={field.value.content}
-        onChange={e => helpers.setValue({ content: e.target.value, type: 'text-long' })}
+        onChange={e => {
+          helpers.setValue({ content: e.target.value, type: 'text-long' });
+        }}
         {...props}
       />
       <Description>{description}</Description>

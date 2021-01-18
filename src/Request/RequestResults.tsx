@@ -7,7 +7,7 @@ import { isFileProperty } from '../Utils/File';
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { FilesView } from './FileView';
-import { FileProperty, Property, ResultProperty } from './Request';
+import { FileProperty, PropertyJSON, ResultProperty } from './Request';
 
 export function RequestResults({
   properties,
@@ -16,7 +16,7 @@ export function RequestResults({
   properties: WithID<ResultProperty>[];
   startEditing: () => void;
 }): JSX.Element {
-  const files = properties.map(p => p as WithID<Property>).filter(isFileProperty);
+  const files = properties.map(p => p as WithID<PropertyJSON>).filter(isFileProperty);
   return (
     <div>
       <Card className="mb-4 border border-green-300 shadow-none">
@@ -24,7 +24,7 @@ export function RequestResults({
           title="Results"
           properties={properties
             .filter(p => p.propertyType === 'Result')
-            .filter(p => p.propertyData !== '')}
+            .filter(p => p.value !== '')}
           files={files}
           startEditing={startEditing}
         />
@@ -44,7 +44,7 @@ function Section({
   startEditing,
 }: {
   title: string;
-  properties: WithID<Property>[];
+  properties: WithID<PropertyJSON>[];
   files: WithID<FileProperty>[];
   startEditing: () => void;
 }) {
@@ -60,8 +60,8 @@ function Section({
       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-green-300">
         {properties.map((p, ix) => (
           <PropertyView
-            name={prettifyName(p.propertyName)}
-            propertyData={p.propertyData}
+            name={prettifyName(p.name)}
+            propertyData={p.value}
             isEven={ix % 2 === 0}
             key={p._id}
           />
@@ -78,7 +78,7 @@ function PropertyView({
   isEven,
 }: {
   name: string;
-  propertyData: Property['propertyData'];
+  propertyData: PropertyJSON['value'];
   isEven: boolean;
 }) {
   return (

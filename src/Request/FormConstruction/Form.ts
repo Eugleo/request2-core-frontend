@@ -1,4 +1,4 @@
-import { File as FileInfo } from '../../Utils/File';
+import { FileInfo } from '../../Utils/File';
 import { Maybe } from '../../Utils/Maybe';
 
 export type Form = {

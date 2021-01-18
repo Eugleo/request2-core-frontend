@@ -10,7 +10,7 @@ import * as Icon from 'react-feather';
 import { FilesFieldValue } from '../../Request/FieldValue';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
-import { File } from '../../Utils/File';
+import { FileInfo } from '../../Utils/File';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
@@ -40,7 +40,7 @@ export function Files({ name, className = '' }: { name: string; className?: stri
   const [field, meta, helpers] = useField<FilesFieldValue>({ name });
   const [inProgress, setInProgress] = useState<number>(0);
 
-  const removeFile = (file: File) => {
+  const removeFile = (file: FileInfo) => {
     helpers.setValue({ content: field.value.content.filter(f => f !== file), type: 'files' });
   };
 
@@ -107,8 +107,8 @@ function FileComponent({
   onRemove,
   editable,
 }: {
-  file: File;
-  onRemove: (file: File) => void;
+  file: FileInfo;
+  onRemove: (file: FileInfo) => void;
   editable: boolean;
 }) {
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
@@ -133,7 +133,7 @@ function FileComponent({
   );
 }
 
-function PreviewButton({ file }: { file: File }) {
+function PreviewButton({ file }: { file: FileInfo }) {
   return (
     <a href={`${apiBase}/files/${file.hash}`}>
       <Icon.Eye className="stroke-2 text-gray-500 w-4 h-4 hover:text-gray-600" />
@@ -141,8 +141,8 @@ function PreviewButton({ file }: { file: File }) {
   );
 }
 
-function RemoveButton({ file, onRemove }: { file: File; onRemove: (file: File) => void }) {
-  const { authDel } = useAuth<File>();
+function RemoveButton({ file, onRemove }: { file: FileInfo; onRemove: (file: FileInfo) => void }) {
+  const { authDel } = useAuth<FileInfo>();
   return (
     <button
       type="button"

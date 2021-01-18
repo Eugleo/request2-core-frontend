@@ -10,7 +10,7 @@ import { LongText, ShortText } from '../../Common/Form/TextField';
 import { Card } from '../../Common/Layout';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
-import { File, fileToString, isFileProperty } from '../../Utils/File';
+import { FileInfo, fileInfoToString, isFileProperty } from '../../Utils/File';
 import { WithID } from '../../Utils/WithID';
 import {
   createFilesValue,
@@ -23,9 +23,9 @@ import {
   LongTextFieldValue,
   ShortTextFieldValue,
 } from '../FieldValue';
-import { Property, Request } from '../Request';
+import { PropertyJSON, Request } from '../Request';
 
-type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
+type ResultProperty = PropertyJSON & { propertyType: 'Result' | 'ResultFile' };
 
 type ResultStub = {
   'human-time': ShortTextFieldValue;
@@ -54,13 +54,13 @@ function submit(
 
   const fileProps: ResultProperty[] = Object.entries(properties)
     .map(([, val]) => val)
-    .filter<{ type: 'files'; content: File[] }>(isFilesField)
+    .filter<{ type: 'files'; content: FileInfo[] }>(isFilesField)
     .flatMap(v => v.content)
     .map((f, ix) => ({
       active: true,
       authorId,
       dateAdded: Math.round(Date.now() / 1000),
-      propertyData: fileToString(f),
+      propertyData: fileInfoToString(f),
       propertyName: `file-${ix}`,
       propertyType: 'ResultFile',
       requestId: request._id,
@@ -102,7 +102,9 @@ function SubmitButton({ status }: { status: Status }) {
   return (
     <button
       type="submit"
-      onClick={() => uploady && uploady.processPending()}
+      onClick={() => {
+        uploady && uploady.processPending();
+      }}
       className="rounded-md text-white shadow-sm bg-green-400 hover:bg-green-500 px-3 py-2 inline-flex items-center focus:outline-none font-medium text-sm"
     >
       <SubmitButtonBody status={status} />
@@ -125,12 +127,12 @@ export function RequestResultForm({
   const [status, setStatus] = useState<Status>('Default');
 
   const getData = (name: string) => {
-    return resultProperties?.find(p => p.propertyName === name)?.propertyData;
+    return resultProperties?.find(p => p.name === name)?.value;
   };
 
   const files = resultProperties
     ?.filter(p => p.active && isFileProperty(p))
-    .map(p => p.propertyData)
+    .map(p => p.value)
     .join(';;;');
 
   const initialValues = {

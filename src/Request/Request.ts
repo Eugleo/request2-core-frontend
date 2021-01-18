@@ -1,8 +1,9 @@
-import { Code } from 'react-feather';
-
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
+import { FieldValue } from './FieldValue';
 import { Status } from './Status';
+
+export type Selection = { label: string; value: string };
 
 export type Request = {
   title: string;
@@ -13,62 +14,33 @@ export type Request = {
   dateCreated: number;
 };
 
-export type NewRequest = {
-  title: string;
-  teamId: number;
-  requestType: string;
-};
+export type NewRequest = New<Request>;
 
-export type PropertyType =
-  | 'Comment'
-  | 'Note'
-  | 'Result'
-  | 'General'
-  | 'Detail'
-  | 'File'
-  | 'ResultFile';
+export type PropertyJSON = Omit<Property, 'value'> & { value: string };
 
 export type Property = {
   requestId: number;
   authorId: number;
-  propertyType: PropertyType;
-  propertyName: string;
-  propertyData: string;
+  name: string;
+  value: FieldValue;
   dateAdded: number;
+  shouldLog: boolean;
   active: boolean;
 };
 
-export type NewProperty = {
-  name: string;
-  value: string;
-};
+export type NewProperty = New<Property>;
 
 export type Comment = {
   requestId: number;
   authorId: number;
   content: string;
-};
-
-export type ResultProperty = Property & { propertyType: 'Result' | 'ResultFile' };
-export type FileProperty = Property & { propertyType: 'ResultFile' | 'File' };
-export type DetailProperty = Property & { propertyType: 'Detail' | 'File' };
-
-export function isResultProperty(p: WithID<Property>): p is WithID<ResultProperty> {
-  return p?.propertyType === 'Result' || p?.propertyType === 'ResultFile';
-}
-
-export function isDetailProperty(p: WithID<Property>): p is WithID<DetailProperty> {
-  return p?.propertyType === 'Detail';
-}
-
-export type BareProperty = {
-  authorId: number;
-  propertyType: PropertyType;
-  propertyName: string;
-  propertyData: string;
   dateAdded: number;
-  active: boolean;
 };
+
+export type New<T> = Omit<
+  T,
+  'dateAdded' | 'authorId' | 'active' | 'shouldLog' | 'requestId' | 'status'
+>;
 
 // DON'T CHANGE THIS UNLESS YOU CHANGE Api.Query.Request AS WELL
 export function idToCode(id: number): string {

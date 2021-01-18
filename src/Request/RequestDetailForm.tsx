@@ -15,7 +15,7 @@ import { useAsyncGet } from '../Utils/Api';
 import { apiBase } from '../Utils/ApiBase';
 import { useAuth } from '../Utils/Auth';
 import { makeFieldPath } from '../Utils/FieldPath';
-import { fileToString } from '../Utils/File';
+import { fileInfoToString } from '../Utils/File';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import {
@@ -30,7 +30,7 @@ import {
   isEmpty,
   isFilesField,
 } from './FieldValue';
-import { BareProperty, DetailProperty, Property, PropertyType, Request } from './Request';
+import { BareProperty, DetailProperty, PropertyJSON, PropertyType, Request } from './Request';
 import { DetailField, Field, IndirectField, isField } from './RequestSchema';
 import { requestSchemas, requestValidations } from './RequestTypes';
 import fieldLib from './RequestTypes/field-library.json';
@@ -162,7 +162,7 @@ function RequestDetailForm({
               .flatMap(([name, value]) =>
                 isFilesField(value) ? value.content.map(file => ({ file, name })) : []
               )
-              .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileToString(file)));
+              .map(({ name, file }, ix) => mkProp(`${name}-${ix}`, 'File', fileInfoToString(file)));
 
             const status = mkProp('status', 'General', req.status);
             const title = mkProp('title', 'General', req.title);
@@ -224,13 +224,12 @@ function Section({
   );
 }
 
-function getDefValue(field: DetailField, properties: Maybe<Property[]>): FieldValue {
+function getDefValue(field: DetailField, properties: Maybe<PropertyJSON[]>): FieldValue {
   const files = properties
-    ?.filter(p => p.active && p.propertyName.startsWith(field.path))
-    .map(p => p.propertyData)
+    ?.filter(p => p.active && p.name.startsWith(field.path))
+    .map(p => p.value)
     .join(';;;');
-  const currentValue = properties?.find(p => p.active && p.propertyName === field.path)
-    ?.propertyData;
+  const currentValue = properties?.find(p => p.active && p.name === field.path)?.value;
   switch (field.type) {
     case 'text-short':
       return createShortTextValue(currentValue);

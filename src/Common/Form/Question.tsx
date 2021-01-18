@@ -1,10 +1,30 @@
-import { Fragment, ReactElement, ReactNode } from 'react';
+import { createContext, Fragment, PropsWithRef, ReactElement, ReactNode, useContext } from 'react';
 import * as Icon from 'react-feather';
-import { Controller, useFormContext } from 'react-hook-form';
+import { Controller, DeepMap, FieldError, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import Creatable from 'react-select/creatable';
 
 import { Maybe } from '../../Utils/Maybe';
+
+type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' };
+const FieldContext = createContext<FieldContext>({ values: {}, state: 'show' });
+
+export type FieldProps = { name: string; question: string; required: boolean | string };
+
+export function useFieldContext(): FieldContext {
+  return useContext(FieldContext);
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export type FormErrors = DeepMap<Record<string, any>, FieldError>;
+
+export type InputProps<T extends keyof JSX.IntrinsicElements> = PropsWithRef<
+  JSX.IntrinsicElements[T]
+> & {
+  name: string;
+  ref: PropsWithRef<JSX.IntrinsicElements[T]>['ref'];
+  errors: FormErrors;
+};
 
 export function Note({ children }: { children: ReactNode }): JSX.Element {
   return (
@@ -24,7 +44,12 @@ export function Note({ children }: { children: ReactNode }): JSX.Element {
   );
 }
 
-export type QuestionProps = { q?: string; id: string; className?: string; required?: boolean };
+export type QuestionProps = {
+  q: string;
+  id: string;
+  className?: string;
+  required?: boolean | string;
+};
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 
@@ -47,8 +72,8 @@ export function Question({ children }: { children: ReactNode }): JSX.Element {
 }
 
 export function reqRule(
-  required: boolean,
+  required: boolean | string,
   msg = 'This field is required'
 ): {} | { required: string } {
-  return required ? { required: msg } : {};
+  return required ? { required: typeof required === 'string' ? required : msg } : {};
 }

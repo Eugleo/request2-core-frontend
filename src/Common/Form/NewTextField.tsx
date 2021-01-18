@@ -1,7 +1,103 @@
 import c from 'classnames';
 import { useFormContext } from 'react-hook-form';
 
-import { ErrorMessage, Question, QuestionProps, reqRule } from './Question';
+import {
+  ErrorMessage,
+  Question,
+  QuestionProps,
+  reqRule,
+  useFieldContext,
+  FieldProps,
+  InputProps,
+} from './Question';
+
+export function ShortText({ id, q, required = false }: QuestionProps): JSX.Element {
+  const { state, values } = useFieldContext();
+  if (state === 'edit') {
+    return <ShortTextField name={id} question={q} required={required} />;
+  }
+  return (
+    <div>
+      <Question>{q}</Question>
+      <p className="text-sm text-gray-800">{values[id]}</p>
+    </div>
+  );
+}
+
+function ShortTextField({ name, question, required = false }: FieldProps) {
+  const { register, errors } = useFormContext();
+
+  return (
+    <div>
+      <Question>{question}</Question>
+      <ShortTextInput errors={errors} name={name} ref={register(reqRule(required))} />
+    </div>
+  );
+}
+
+export function ShortTextInput({
+  name,
+  errors,
+  className,
+  ...props
+}: InputProps<'input'>): JSX.Element {
+  const err = errors[name]?.message;
+
+  return (
+    <div>
+      <input
+        name={name}
+        className={c(className, 'border', baseClasses, err ? errorClasses : normalClasses)}
+        {...props}
+      />
+      <ErrorMessage error={err} />
+    </div>
+  );
+}
+
+export function LongText({ id, q, required = false }: QuestionProps): JSX.Element {
+  const { state, values } = useFieldContext();
+  if (state === 'edit') {
+    return <LongTextField name={id} question={q} required={required} />;
+  }
+  return (
+    <div>
+      <Question>{q}</Question>
+      <p className="text-sm text-gray-800">{values[id]}</p>
+    </div>
+  );
+}
+
+function LongTextField({ name, question, required }: FieldProps) {
+  const { register, errors } = useFormContext();
+  return (
+    <div>
+      <Question>{question}</Question>
+      <LongTextInput name={name} errors={errors} ref={register(reqRule(required))} />
+    </div>
+  );
+}
+
+export function LongTextInput({
+  name,
+  className,
+  style,
+  errors,
+  ...props
+}: InputProps<'textarea'>): JSX.Element {
+  const err = errors[name];
+
+  return (
+    <div>
+      <textarea
+        className={c(className, baseClasses, err ? errorClasses : normalClasses)}
+        {...props}
+        style={{ ...style, minHeight: '7rem' }}
+      />
+      <ErrorMessage error={err} />
+    </div>
+  );
+}
 
 export const baseClasses = [
   'border',
@@ -36,38 +132,3 @@ export const errorClasses = [
   'focus:ring-opacity-50',
   'focus:ring-red-300',
 ];
-
-export function ShortText({ id, q, className, required = false }: QuestionProps): JSX.Element {
-  const { register, errors } = useFormContext();
-  const err = errors[id]?.message;
-
-  return (
-    <div>
-      <Question>{q}</Question>
-      <input
-        name={id}
-        ref={register(reqRule(required))}
-        className={c(className, 'border', baseClasses, err ? errorClasses : normalClasses)}
-      />
-      <ErrorMessage error={err} />
-    </div>
-  );
-}
-
-export function LongText({ id, q, className, required = false }: QuestionProps): JSX.Element {
-  const { register, errors } = useFormContext();
-  const err = errors[id];
-
-  return (
-    <div>
-      <Question>{q}</Question>
-      <textarea
-        name={id}
-        ref={register(reqRule(required))}
-        style={{ minHeight: '7rem' }}
-        className={c(baseClasses, className, err ? errorClasses : normalClasses)}
-      />
-      <ErrorMessage error={err} />
-    </div>
-  );
-}

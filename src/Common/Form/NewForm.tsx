@@ -2,9 +2,10 @@ import Uploady from '@rpldy/uploady';
 import { ReactNode } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
-import { NewProperty, NewRequest } from '../../Request/Request';
+import { fieldToProperty } from '../../Request/FieldValue';
+import { FieldValue, NewProperty, NewRequest } from '../../Request/Request';
 import { apiBase } from '../../Utils/ApiBase';
-import { File, fileToString } from '../../Utils/File';
+import { FileInfo, fileInfoToString } from '../../Utils/File';
 import { Maybe } from '../../Utils/Maybe';
 import { Cancel, Primary } from '../Buttons';
 import { ShortText } from './NewTextField';
@@ -67,9 +68,6 @@ export function Section({ title, children }: { title: string; children: ReactNod
   );
 }
 
-type Selection = { label: string; value: string };
-type FieldValue = string | number | Selection | Selection[] | File[];
-
 async function onSubmit(data: FormValues, submit: SubmitFunction) {
   const req: RequestStub = {
     title: data.title,
@@ -77,27 +75,4 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
   };
   const props: NewProperty[] = Object.entries(data).reduce(fieldToProperty, []);
   submit(req, props);
-}
-
-function fieldToProperty(acc: NewProperty[], [name, value]: [string, FieldValue]): NewProperty[] {
-  if (typeof value === 'string') {
-    return acc.concat([{ name, value }]);
-  } else if (typeof value === 'number') {
-    return acc.concat([{ name, value: value.toString() }]);
-  } else if (Array.isArray(value)) {
-    if (value.length === 0) {
-      return acc.concat([{ name, value: '' }]);
-    }
-
-    if ('mime' in value[0]) {
-      return acc.concat(
-        (value as File[]).map((f, i) => ({ name: `${name}${i}`, value: fileToString(f) }))
-      );
-    } else if ('label' in value[0]) {
-      return acc.concat([{ name, value: (value as Selection[]).map(s => s.value).join(';;;') }]);
-    }
-  } else if (typeof value === 'object' && 'label' in value) {
-    return acc.concat([{ name, value: value.value }]);
-  }
-  throw new TypeError(`Field -> Property conversion failed: name=${name}, value is above`);
 }
