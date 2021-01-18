@@ -1,12 +1,10 @@
 import c from 'classnames';
-import { Form, Formik } from 'formik';
 import React from 'react';
 import { Search } from 'react-feather';
 import { useForm } from 'react-hook-form';
 
-import { createShortTextValue, ShortTextFieldValue } from '../Request/FieldValue';
 import { Secondary } from './Buttons';
-import { baseClasses, normalClasses } from './Form/NewTextField';
+import { baseClasses, normalClasses, ShortTextInput } from './Form/NewTextField';
 
 export function SearchBar({
   query,
@@ -20,7 +18,11 @@ export function SearchBar({
     <form className="mr-4 w-full relative" onSubmit={handleSubmit(onSubmit)}>
       <div className="flex flex-row items-stretch w-full justify-between space-x-4">
         <div className="flex-grow">
-          <input name="query" ref={register} className={c(baseClasses, 'pl-8', normalClasses)} />
+          <ShortTextInput
+            name="query"
+            ref={register}
+            className={c(baseClasses, 'pl-8', normalClasses)}
+          />
           <Search
             style={{
               height: '1rem',
