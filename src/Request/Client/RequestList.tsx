@@ -16,6 +16,7 @@ import { EditRequestPage } from '../EditRequest';
 import { NewRequestPage } from '../NewRequest';
 import { idToStr, Request } from '../Request';
 import { RequestPage } from '../RequestPage';
+import { requestTypeDisplayNames } from '../RequestTypes';
 import { statusStyle, statusToStr } from '../Status';
 
 export function Requests(): JSX.Element {
@@ -89,14 +90,10 @@ function RequestList() {
 }
 
 function NewRequestSection() {
-  const requestTypes: { title: string; type: string }[] = [];
-  const req = require.context('../RequestTypes', true, /^.*\.rcfg\.json$/imu);
-  req.keys().forEach(fileName => {
-    const type = /[^/]+(?=\.rcfg)/u.exec(fileName);
-    if (type) {
-      requestTypes.push({ title: req(fileName).title, type: type[0] });
-    }
-  });
+  const requestTypes = new Array(...requestTypeDisplayNames.entries()).map(([key, val]) => ({
+    type: key,
+    title: val.title,
+  }));
 
   return (
     <div

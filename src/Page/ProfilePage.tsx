@@ -45,7 +45,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
           >
             <div>
               <Question>Display name</Question>
-              <ShortTextInput name="name" errors={errors} ref={register(reqRule())} />
+              <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
             </div>
             <div>
               <Question>E-mail address</Question>
@@ -112,7 +112,7 @@ function PasswordSection() {
             name="password"
             type="password"
             errors={errors}
-            ref={register(reqRule())}
+            reg={register(reqRule())}
           />
         </div>
         <div>
@@ -120,7 +120,7 @@ function PasswordSection() {
           <ShortTextInput
             name="newPassword"
             errors={errors}
-            ref={register(reqRule())}
+            reg={register(reqRule())}
             type="password"
           />
         </div>
@@ -129,7 +129,7 @@ function PasswordSection() {
           <ShortTextInput
             name="newPasswordCheck"
             errors={errors}
-            ref={register(reqRule())}
+            reg={register(reqRule())}
             type="password"
           />
         </div>

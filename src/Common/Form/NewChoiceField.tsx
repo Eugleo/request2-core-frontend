@@ -286,7 +286,7 @@ export function SingleChoiceField({
           name={name}
           value={value}
           errors={errors}
-          ref={register(reqRule(required, 'You have to choose an option'))}
+          reg={register(reqRule(required, 'You have to choose an option'))}
         >
           {children}
         </SingleChoiceButtonsInput>
@@ -301,6 +301,7 @@ function SingleChoiceButtonsInput({
   required = false,
   value,
   errors,
+  reg,
   ...props
 }: Omit<InputProps<'input'>, 'value'> & { children: Choice[]; value?: Maybe<Selection | string> }) {
   const err: Maybe<string> = errors && name && errors[name]?.message;
@@ -311,6 +312,7 @@ function SingleChoiceButtonsInput({
           <ChoiceField>
             <input
               name={name}
+              ref={reg}
               id={ch.props.value}
               value={ch.props.value}
               type="radio"

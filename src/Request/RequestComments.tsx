@@ -73,7 +73,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
           name="comment"
           placeholder="Enter your comment here..."
           errors={form.errors}
-          ref={form.register({ required: 'You have to enter something to submit it' })}
+          reg={form.register({ required: 'You have to enter something to submit it' })}
         />
         <div className="flex flex-row-reverse">
           <Button.Primary type="submit">Post comment</Button.Primary>

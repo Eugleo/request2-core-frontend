@@ -7,7 +7,6 @@ import { New, Property, PropertyJSON, Request } from '../../Request/Request';
 import { Proteomics } from '../../Request/RequestTypes/Proteomics';
 import { apiBase } from '../../Utils/ApiBase';
 import { WithID } from '../../Utils/WithID';
-import { Cancel, Primary } from '../Buttons';
 import { Page } from '../Layout';
 import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';

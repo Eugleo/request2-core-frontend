@@ -6,8 +6,8 @@ import Creatable from 'react-select/creatable';
 
 import { Maybe } from '../../Utils/Maybe';
 
-type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' };
-const FieldContext = createContext<FieldContext>({ values: {}, state: 'show' });
+export type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' };
+export const FieldContext = createContext<FieldContext>({ values: {}, state: 'show' });
 
 export type FieldProps = { name: string; question: string; required: boolean | string };
 
@@ -22,7 +22,7 @@ export type InputProps<T extends keyof JSX.IntrinsicElements> = PropsWithRef<
   JSX.IntrinsicElements[T]
 > & {
   name?: string;
-  ref?: PropsWithRef<JSX.IntrinsicElements[T]>['ref'];
+  reg?: PropsWithRef<JSX.IntrinsicElements[T]>['ref'];
   errors?: FormErrors;
 };
 

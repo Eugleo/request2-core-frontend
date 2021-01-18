@@ -85,15 +85,15 @@ export function UserForm({
             <Card className="max-w-2xl">
               <div className="p-6">
                 <Question>Name</Question>
-                <ShortTextInput name="name" errors={errors} ref={register(reqRule())} />
+                <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
                 <Question>E-mail address</Question>
-                <ShortTextInput name="email" errors={errors} ref={register(reqRule())} />
+                <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
                 {user ? null : (
                   <ShortTextInput
                     name="password"
                     type="password"
                     errors={errors}
-                    ref={register(reqRule())}
+                    reg={register(reqRule())}
                   />
                 )}
                 <Question>Privileges</Question>

@@ -85,7 +85,7 @@ export function RegisterPage(): JSX.Element {
               <ShortTextInput
                 name="name"
                 placeholder="Arthur Dent"
-                ref={register({
+                reg={register({
                   ...reqRule(),
                   validate: val =>
                     val.name.length < 3 ||
@@ -99,7 +99,7 @@ export function RegisterPage(): JSX.Element {
               <ShortTextInput
                 name="password"
                 type="password"
-                ref={register({
+                reg={register({
                   ...reqRule(),
                   validate: val =>
                     val.length > 8 || 'The password needs to have at least 8 characters',
@@ -109,7 +109,7 @@ export function RegisterPage(): JSX.Element {
               <ShortTextInput
                 name="passwordCheck"
                 type="password"
-                ref={register({
+                reg={register({
                   ...reqRule(),
                   validate: val => val === pwd || "The passwords don't match",
                 })}

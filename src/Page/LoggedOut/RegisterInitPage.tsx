@@ -43,7 +43,7 @@ export function RegisterInitPage(): JSX.Element {
           ) : (
             <>
               <Question>E-mail address</Question>
-              <ShortTextInput name="email" errors={errors} ref={register(reqRule())} />
+              <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />

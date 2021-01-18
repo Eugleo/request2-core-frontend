@@ -39,13 +39,13 @@ export function AnnouncementForm({
         <Card style={{ gridTemplateRows: 'auto 1fr auto' }} className="grid grid-rows-3 px-6 py-3">
           <div>
             <Question>The title of the announcement</Question>
-            <ShortTextInput name="title" ref={register(reqRule())} errors={errors} />
+            <ShortTextInput name="title" reg={register(reqRule())} errors={errors} />
           </div>
           <div>
             <Question>The announcement itself</Question>
             <LongTextInput
               name="body"
-              ref={register(reqRule())}
+              reg={register(reqRule())}
               className="font-mono mb-4 h-full"
               errors={errors}
             />

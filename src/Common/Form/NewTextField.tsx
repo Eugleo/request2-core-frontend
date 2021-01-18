@@ -1,6 +1,7 @@
 import c from 'classnames';
 import { useFormContext } from 'react-hook-form';
 
+import { ResultWidget } from '../../Request/Operator/ResultComponent';
 import {
   ErrorMessage,
   Question,
@@ -30,7 +31,7 @@ function ShortTextField({ name, question, required = false }: FieldProps) {
   return (
     <div>
       <Question>{question}</Question>
-      <ShortTextInput errors={errors} name={name} ref={register(reqRule(required))} />
+      <ShortTextInput errors={errors} name={name} reg={register(reqRule(required))} />
     </div>
   );
 }
@@ -39,6 +40,7 @@ export function ShortTextInput({
   name,
   errors,
   className,
+  reg,
   ...props
 }: InputProps<'input'>): JSX.Element {
   const err = errors && name && errors[name]?.message;
@@ -48,6 +50,7 @@ export function ShortTextInput({
       <input
         name={name}
         className={c(className, 'border', baseClasses, err ? errorClasses : normalClasses)}
+        ref={reg}
         {...props}
       />
       <ErrorMessage error={err} />
@@ -73,7 +76,7 @@ function LongTextField({ name, question, required }: FieldProps) {
   return (
     <div>
       <Question>{question}</Question>
-      <LongTextInput name={name} errors={errors} ref={register(reqRule(required))} />
+      <LongTextInput name={name} errors={errors} reg={register(reqRule(required))} />
     </div>
   );
 }
@@ -83,6 +86,7 @@ export function LongTextInput({
   className,
   style,
   errors,
+  reg,
   ...props
 }: InputProps<'textarea'>): JSX.Element {
   const err = errors && name && errors[name];
@@ -91,6 +95,7 @@ export function LongTextInput({
     <div>
       <textarea
         className={c(className, baseClasses, err ? errorClasses : normalClasses)}
+        ref={reg}
         {...props}
         style={{ ...style, minHeight: '7rem' }}
       />

@@ -1,8 +1,9 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 
 import { Cancel, Primary } from '../Common/Buttons';
 import { NewForm } from '../Common/Form/NewForm';
+import { FieldContext } from '../Common/Form/Question';
 import { Page } from '../Common/Layout';
 import { Modal } from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
@@ -21,11 +22,13 @@ export function NewRequestPage(): JSX.Element {
   const { requestType } = useParams();
   const { authPost } = useAuth<{ request: New<Request>; properties: New<Property>[] }>();
 
-  const name = requestTypeDisplayNames.get(requestType);
+  const name = requestTypeDisplayNames.get(requestType)?.word;
+
+  const xont: FieldContext = useMemo(() => ({ state: 'edit', values: {} }), []);
 
   if (name) {
     return (
-      <>
+      <FieldContext.Provider value={xont}>
         {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
 
         <NewForm
@@ -48,7 +51,7 @@ export function NewRequestPage(): JSX.Element {
           <Cancel />
           <Primary type="submit">Submit new request</Primary>
         </NewForm>
-      </>
+      </FieldContext.Provider>
     );
   }
 

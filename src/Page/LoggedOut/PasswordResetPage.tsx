@@ -30,7 +30,7 @@ export function PasswordResetInitPage({ email }: { email?: string | undefined })
         <CenteredForm>
           <div>
             <Question>Email address associated with your account</Question>
-            <ShortTextInput name="email" errors={errors} ref={register(reqRule())} />
+            <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
           </div>
           <Primary
             type="submit"
@@ -74,7 +74,7 @@ export function PasswordResetPage(): JSX.Element {
               name="password"
               type="password"
               errors={errors}
-              ref={register({
+              reg={register({
                 ...reqRule(),
                 validate: val =>
                   val.length > 8 || 'The password needs to have at least 8 characters',
@@ -87,7 +87,7 @@ export function PasswordResetPage(): JSX.Element {
               name="passwordCheck"
               type="password"
               errors={errors}
-              ref={register({
+              reg={register({
                 ...reqRule(),
                 validate: val => val === pwd || "The passwords don't match",
               })}

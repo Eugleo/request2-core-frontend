@@ -80,12 +80,12 @@ export function LoginPage(): JSX.Element {
             <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
           ) : null}
           <Question>E-mail address</Question>
-          <ShortTextInput name="email" ref={register(reqRule())} errors={errors} />
+          <ShortTextInput name="email" reg={register(reqRule())} errors={errors} />
           <Question>Password</Question>
           <ShortTextInput
             name="password"
             type="password"
-            ref={register(reqRule())}
+            reg={register(reqRule())}
             errors={errors}
           />
           <div className="mb-6">

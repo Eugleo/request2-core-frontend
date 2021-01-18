@@ -5,7 +5,7 @@ import { useItemFinishListener, useItemStartListener } from '@rpldy/uploady';
 import c from 'classnames';
 import React, { forwardRef, useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
-import { useController, useForm, useFormContext } from 'react-hook-form';
+import { useFormContext } from 'react-hook-form';
 
 import { FilesView } from '../../Request/FileView';
 import { apiBase } from '../../Utils/ApiBase';

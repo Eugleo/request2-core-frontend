@@ -20,7 +20,7 @@ export function SearchBar({
         <div className="flex-grow">
           <ShortTextInput
             name="query"
-            ref={register}
+            reg={register}
             className={c(baseClasses, 'pl-8', normalClasses)}
           />
           <Search
