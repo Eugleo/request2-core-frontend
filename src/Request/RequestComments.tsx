@@ -56,30 +56,30 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   const { authPost } = useAuth<New<Comment>>();
   const form = useForm<{ comment: string }>();
 
-  return (
-    <FormProvider {...form}>
-      <form
-        onSubmit={form.handleSubmit(async ({ comment }) => {
-          const r = await authPost(`/requests/${requestId}/comments`, { content: comment });
+  const c = form.watch('comment');
 
-          if (r.status === 201) {
-            refresh();
-            form.reset();
-          }
-        })}
-        className="px-6 py-3 border-t border-gray-300 shadow-md"
-      >
-        <LongTextInput
-          name="comment"
-          placeholder="Enter your comment here..."
-          errors={form.errors}
-          reg={form.register({ required: 'You have to enter something to submit it' })}
-        />
-        <div className="flex flex-row-reverse">
-          <Button.Primary type="submit">Post comment</Button.Primary>
-        </div>
-      </form>
-    </FormProvider>
+  return (
+    <form
+      onSubmit={form.handleSubmit(async ({ comment }) => {
+        const r = await authPost(`/requests/${requestId}/comments`, { content: comment });
+
+        if (r.status === 201) {
+          refresh();
+          form.reset();
+        }
+      })}
+      className="px-6 py-3 border-t border-gray-300 shadow-md"
+    >
+      <LongTextInput
+        name="comment"
+        placeholder="Enter your comment here..."
+        errors={form.errors}
+        reg={form.register({ required: 'You have to enter something to submit it' })}
+      />
+      <div className="flex flex-row-reverse mt-2">
+        <Button.Primary type="submit">Post comment</Button.Primary>
+      </div>
+    </form>
   );
 }
 

@@ -27,7 +27,7 @@ export function CenteredPage({
 
 export function CenteredForm({ children }: { children: React.ReactNode }): JSX.Element {
   return (
-    <div className="rounded-md ring-1 ring-black ring-opacity-5 bg-white w-full px-6 py-6">
+    <div className="rounded-md border border-gray-300 shadow-sm bg-white w-full p-6">
       {children}
     </div>
   );

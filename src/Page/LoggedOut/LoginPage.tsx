@@ -75,7 +75,7 @@ export function LoginPage(): JSX.Element {
           verifyLogin(values.email, values.password, dispatch, setLoginFailed)
         )}
       >
-        <Card>
+        <CenteredForm>
           {loginFailed ? (
             <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
           ) : null}
@@ -95,7 +95,7 @@ export function LoginPage(): JSX.Element {
           </div>
 
           <Button.Primary type="submit" title="Log in" status="Normal" className="w-full" />
-        </Card>
+        </CenteredForm>
       </form>
     </CenteredPage>
   );

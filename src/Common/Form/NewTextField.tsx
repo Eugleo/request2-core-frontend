@@ -94,6 +94,7 @@ export function LongTextInput({
   return (
     <div>
       <textarea
+        name={name}
         className={c(className, baseClasses, err ? errorClasses : normalClasses)}
         ref={reg}
         {...props}
