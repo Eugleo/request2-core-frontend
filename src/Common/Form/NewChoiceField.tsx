@@ -161,8 +161,6 @@ export function SingleChoice({
 }: QuestionProps & ChoiceProps): JSX.Element {
   const { state, values } = useFieldContext();
 
-  console.log(values);
-
   if (state === 'edit') {
     return (
       <SingleChoiceField
@@ -178,9 +176,12 @@ export function SingleChoice({
     );
   }
   const choice = children.find(ch => ch.props.value === values[id]);
-  const label = choice
-    ? choice.props.label ?? choice.props.value
-    : `[ERROR]: The value ${values[id]} is invalid`;
+  let label = '[neither option has been chosen]';
+  if (values[id] !== '') {
+    label = choice
+      ? choice.props.label ?? choice.props.value
+      : `[ERROR]: The value ${values[id]} is invalid`;
+  }
   return (
     <div>
       <Question>{q}</Question>
@@ -303,8 +304,6 @@ function SingleChoiceTextInput({
     value: ch.props.value,
   }));
 
-  console.log(defaultSelection);
-
   return (
     <div>
       <Controller
@@ -312,7 +311,7 @@ function SingleChoiceTextInput({
         rules={reqRule(required, 'You have to choose an option')}
         control={control}
         defaultValue={defaultSelection}
-        render={f =>
+        render={field =>
           hasCustom ? (
             <Creatable
               className="react-select"
@@ -320,6 +319,7 @@ function SingleChoiceTextInput({
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
               options={options}
+              {...field}
             />
           ) : (
             <Select
@@ -328,6 +328,7 @@ function SingleChoiceTextInput({
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
               options={options}
+              {...field}
             />
           )
         }
