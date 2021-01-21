@@ -29,16 +29,10 @@ export function NewForm({
   | { requestType: string }
   | { request: WithID<Request>; properties: PropertyJSON[] }
 )): JSX.Element {
-  const defaultValues =
-    'request' in props
-      ? groupFiles(props.properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {})
-      : {};
-
   const form = useForm<FormValues>({
     mode: 'all',
-    defaultValues,
   });
-  const title = form.watch('Title');
+  const title: string | null = form.watch('Title', 'request' in props ? props.request.title : '');
 
   const requestType = 'requestType' in props ? props.requestType : props.request.requestType;
   let requestForm = null;

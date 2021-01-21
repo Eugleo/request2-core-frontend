@@ -15,7 +15,14 @@ import {
 export function ShortText({ id, q, required = false }: QuestionProps): JSX.Element {
   const { state, values } = useFieldContext();
   if (state === 'edit') {
-    return <ShortTextField name={id} question={q} required={required} />;
+    return (
+      <ShortTextField
+        name={id}
+        question={q}
+        required={required}
+        defaultValue={values[id] ?? null}
+      />
+    );
   }
   return (
     <div>
@@ -25,13 +32,23 @@ export function ShortText({ id, q, required = false }: QuestionProps): JSX.Eleme
   );
 }
 
-function ShortTextField({ name, question, required = false }: FieldProps) {
+function ShortTextField({
+  name,
+  question,
+  required = false,
+  defaultValue,
+}: FieldProps & { defaultValue: string }) {
   const { register, errors } = useFormContext();
 
   return (
     <div>
       <Question>{question}</Question>
-      <ShortTextInput errors={errors} name={name} reg={register(reqRule(required))} />
+      <ShortTextInput
+        errors={errors}
+        name={name}
+        reg={register(reqRule(required))}
+        defaultValue={defaultValue}
+      />
     </div>
   );
 }
@@ -61,7 +78,9 @@ export function ShortTextInput({
 export function LongText({ id, q, required = false }: QuestionProps): JSX.Element {
   const { state, values } = useFieldContext();
   if (state === 'edit') {
-    return <LongTextField name={id} question={q} required={required} />;
+    return (
+      <LongTextField name={id} question={q} required={required} defaultValue={values[id] ?? null} />
+    );
   }
   return (
     <div>
@@ -71,12 +90,22 @@ export function LongText({ id, q, required = false }: QuestionProps): JSX.Elemen
   );
 }
 
-function LongTextField({ name, question, required }: FieldProps) {
+function LongTextField({
+  name,
+  question,
+  required,
+  defaultValue,
+}: FieldProps & { defaultValue: string }) {
   const { register, errors } = useFormContext();
   return (
     <div>
       <Question>{question}</Question>
-      <LongTextInput name={name} errors={errors} reg={register(reqRule(required))} />
+      <LongTextInput
+        name={name}
+        errors={errors}
+        reg={register(reqRule(required))}
+        defaultValue={defaultValue}
+      />
     </div>
   );
 }

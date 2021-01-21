@@ -161,6 +161,8 @@ export function SingleChoice({
 }: QuestionProps & ChoiceProps): JSX.Element {
   const { state, values } = useFieldContext();
 
+  console.log(values);
+
   if (state === 'edit') {
     return (
       <SingleChoiceField
@@ -169,6 +171,7 @@ export function SingleChoice({
         required={required}
         hasCustom={hasCustom}
         isText={isText}
+        defaultValue={values[id] ?? null}
       >
         {children}
       </SingleChoiceField>
@@ -197,9 +200,10 @@ export function SingleChoiceField({
   hasCustom = false,
   required,
   isText = false,
-}: FieldProps & ChoiceProps): JSX.Element {
+  defaultValue,
+}: FieldProps & ChoiceProps & { defaultValue: string }): JSX.Element {
   const { watch, errors, register, control } = useFormContext();
-  const value = watch(name, null) as Selection | null;
+  const value = watch(name, defaultValue) as string | Selection | null;
 
   return (
     <div>
@@ -212,6 +216,7 @@ export function SingleChoiceField({
           hasCustom={hasCustom}
           errors={errors}
           control={control}
+          defaultValue={defaultValue}
         >
           {children}
         </SingleChoiceTextInput>
@@ -221,6 +226,7 @@ export function SingleChoiceField({
           value={value}
           errors={errors}
           reg={register(reqRule(required, 'You have to choose an option'))}
+          defaultValue={defaultValue}
         >
           {children}
         </SingleChoiceButtonsInput>
@@ -236,6 +242,7 @@ function SingleChoiceButtonsInput({
   value,
   errors,
   reg,
+  defaultValue,
   ...props
 }: Omit<InputProps<'input'>, 'value'> & { children: Choice[]; value?: Maybe<Selection | string> }) {
   const err: Maybe<string> = errors && name && errors[name]?.message;
@@ -250,6 +257,7 @@ function SingleChoiceButtonsInput({
               id={ch.props.value}
               value={ch.props.value}
               type="radio"
+              defaultChecked={ch.props.value === defaultValue}
               {...props}
               className={c(err && 'bg-red-100 border-red-400', 'text-green-500')}
             />
@@ -268,6 +276,7 @@ function SingleChoiceTextInput({
   children,
   required = false,
   value,
+  defaultValue,
   hasCustom,
   errors,
   control,
@@ -277,36 +286,51 @@ function SingleChoiceTextInput({
   children: Choice[];
   hasCustom: boolean;
   errors: FormErrors;
+  defaultValue?: string;
   required?: string | boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<Record<string, any>>;
 }) {
   const err = errors[name]?.message;
+  const choice = children.find(ch => ch.props.value === defaultValue);
+  const defaultSelection: Selection | null =
+    defaultValue && choice
+      ? { label: choice.props.label ?? choice.props.value, value: choice.props.value }
+      : null;
+
+  const options = children.map(ch => ({
+    label: ch.props.label ?? ch.props.value,
+    value: ch.props.value,
+  }));
+
+  console.log(defaultSelection);
+
   return (
     <div>
       <Controller
         name={name}
         rules={reqRule(required, 'You have to choose an option')}
         control={control}
-        as={
+        defaultValue={defaultSelection}
+        render={f =>
           hasCustom ? (
             <Creatable
               className="react-select"
+              defaultValue={defaultSelection}
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
+              options={options}
             />
           ) : (
             <Select
               className="react-select"
+              defaultValue={defaultSelection}
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
+              options={options}
             />
           )
         }
-        options={children.map(ch => ({
-          label: ch.props.label ?? ch.props.value,
-          value: ch.props.value,
-        }))}
       />
       <ErrorMessage error={err} />
       {getVisibleChildren(value, children)}
