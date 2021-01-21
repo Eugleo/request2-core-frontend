@@ -29,9 +29,9 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
   return (
     <div
       style={{ gridTemplateRows: '1fr auto' }}
-      className="bg-white border-l border-gray-300 relative grid grid-rows-2 max-h-full overflow-auto"
+      className="p-6 rounded-md shadow-sm bg-white border-l border-gray-300 relative grid grid-rows-2 overflow-auto"
     >
-      <div className="p-6 flex flex-col overflow-scroll">
+      <div className="p-6 flex flex-col overflow-scroll space-y-6">
         <Loader>
           {comments => (
             <>
@@ -56,8 +56,6 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   const { authPost } = useAuth<New<Comment>>();
   const form = useForm<{ comment: string }>();
 
-  const c = form.watch('comment');
-
   return (
     <form
       onSubmit={form.handleSubmit(async ({ comment }) => {
@@ -68,7 +66,6 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
           form.reset();
         }
       })}
-      className="px-6 py-3 border-t border-gray-300 shadow-md"
     >
       <LongTextInput
         name="comment"

@@ -43,7 +43,7 @@ function EditForm({
     <NewForm
       defaultValues={getDefaultValues(properties)}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      defaultTitle={`New ${requestTypeDisplayNames.get(request.requestType)?.word!} request`}
+      defaultTitle={`Editing a ${requestTypeDisplayNames.get(request.requestType)?.word!} request`}
       request={request}
       requestType={request.requestType}
       submit={async (req: { title: string; teamId: number }, properties: New<Property>[]) => {

@@ -1,17 +1,15 @@
-import React, { useMemo, useState } from 'react';
-import { Navigate, useNavigate, useParams } from 'react-router-dom';
+import React, { useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 import { Cancel, Primary } from '../Common/Buttons';
 import { NewForm } from '../Common/Form/NewForm';
-import { FieldContext } from '../Common/Form/Question';
 import { Page } from '../Common/Layout';
 import { Modal } from '../Common/Modal';
 import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
-import { idToStr, New, Property, PropertyJSON, Request } from './Request';
+import { idToStr, New, Property, Request } from './Request';
 import { requestTypeDisplayNames } from './RequestTypes';
-import { Proteomics } from './RequestTypes/Proteomics';
 
 // TODO Check that the field names are unique
 export function NewRequestPage(): JSX.Element {
