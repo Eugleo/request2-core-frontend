@@ -26,73 +26,6 @@ type Choice = ReactElement<
   any
 >;
 
-function getStyles(err: Maybe<string>) {
-  return {
-    control: (provided: Object, state: { isFocused: boolean }) => ({
-      ...provided,
-      boxShadow: undefined,
-      border: undefined,
-      borderRadius: undefined,
-      borderColor: undefined,
-      borderWidth: undefined,
-      '&:hover': {
-        borderColor: undefined,
-      },
-      '--tw-border-opacity': 1,
-      ...(state.isFocused
-        ? {
-            '--tw-ring-opacity': 0.5,
-            '--tw-ring-color': err
-              ? 'rgba(252, 165, 165, var(--tw-ring-opacity))'
-              : 'rgba(147, 197, 253, var(--tw-ring-opacity))',
-            '--tw-ring-offset-shadow':
-              'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
-            '--tw-ring-shadow':
-              'var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-            'box-shadow':
-              'var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)',
-            'border-color': err
-              ? 'rgba(248, 113, 113, var(--tw-border-opacity))'
-              : 'rgba(96, 165, 250, var(--tw-border-opacity))',
-          }
-        : {
-            borderColor: err
-              ? 'rgba(252, 165, 165, var(--tw-border-opacity))'
-              : 'rgba(209, 213, 219, var(--tw-border-opacity))',
-            '&:hover': {
-              borderColor: err
-                ? 'rgba(248, 113, 113, var(--tw-border-opacity))'
-                : 'rgba(156, 163, 175, var(--tw-border-opacity))',
-            },
-          }),
-      transition: undefined,
-    }),
-    singleValue: (provided: Object) => ({ ...provided, color: undefined }),
-    valueContainer: (provided: Object) => ({ ...provided, padding: undefined }),
-    multiValue: (provided: Object) => ({
-      ...provided,
-      borderRadius: undefined,
-      backgroundColor: undefined,
-      borderWidth: undefined,
-    }),
-    multiValueLabel: (provided: Object) => ({
-      ...provided,
-      color: undefined,
-      borderRadius: undefined,
-      fontSize: undefined,
-      padding: undefined,
-      paddingLeft: undefined,
-    }),
-    multiValueRemove: (provided: Object) => ({
-      ...provided,
-      borderRadius: undefined,
-      paddingLeft: undefined,
-      paddingRight: undefined,
-      color: undefined,
-    }),
-  };
-}
-
 export function MultipleChoice({
   id,
   required = false,
@@ -135,7 +68,7 @@ function MultipleChoiceField({
   hasCustom,
 }: FieldProps & { hasCustom: boolean; children: Choice[] }) {
   const { watch, errors, control } = useFormContext();
-  const value = watch(name, null) as Selection | null;
+
   return (
     <div>
       <CreatableQuestion q={question} hasCustom={hasCustom} />
@@ -248,10 +181,11 @@ export function SingleChoice({
   return (
     <div>
       <Question>{q}</Question>
-      <p>
+      <p className="text-sm text-gray-800">
         {label}
-        <span className="text-gray-400">(out of {children.length} total options)</span>
+        <span className="text-gray-400"> (out of {children.length} total options)</span>
       </p>
+      {getVisibleChildren(choice?.props.value, children)}
     </div>
   );
 }
@@ -456,8 +390,82 @@ function getVisibleChildren(value: Maybe<Selection | string>, children: Choice[]
       .filter(ch =>
         typeof value === 'string' ? value === ch.props.value : value.value === ch.props.value
       )
-      .map(ch => ch.props.children);
+      .filter(ch => ch.props.children)
+      .map(ch => (
+        <div className="space-y-6" key={ch.props.value}>
+          {ch.props.children}
+        </div>
+      ));
   }
 
-  return showChildren ? <div className="mt-6 space-y-6">{showChildren}</div> : null;
+  return showChildren && showChildren.length > 0 ? (
+    <div className="mt-6 space-y-6">{showChildren}</div>
+  ) : null;
+}
+
+function getStyles(err: Maybe<string>) {
+  return {
+    control: (provided: Object, state: { isFocused: boolean }) => ({
+      ...provided,
+      boxShadow: undefined,
+      border: undefined,
+      borderRadius: undefined,
+      borderColor: undefined,
+      borderWidth: undefined,
+      '&:hover': {
+        borderColor: undefined,
+      },
+      '--tw-border-opacity': 1,
+      ...(state.isFocused
+        ? {
+            '--tw-ring-opacity': 0.5,
+            '--tw-ring-color': err
+              ? 'rgba(252, 165, 165, var(--tw-ring-opacity))'
+              : 'rgba(147, 197, 253, var(--tw-ring-opacity))',
+            '--tw-ring-offset-shadow':
+              'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
+            '--tw-ring-shadow':
+              'var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
+            'box-shadow':
+              'var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)',
+            'border-color': err
+              ? 'rgba(248, 113, 113, var(--tw-border-opacity))'
+              : 'rgba(96, 165, 250, var(--tw-border-opacity))',
+          }
+        : {
+            borderColor: err
+              ? 'rgba(252, 165, 165, var(--tw-border-opacity))'
+              : 'rgba(209, 213, 219, var(--tw-border-opacity))',
+            '&:hover': {
+              borderColor: err
+                ? 'rgba(248, 113, 113, var(--tw-border-opacity))'
+                : 'rgba(156, 163, 175, var(--tw-border-opacity))',
+            },
+          }),
+      transition: undefined,
+    }),
+    singleValue: (provided: Object) => ({ ...provided, color: undefined }),
+    valueContainer: (provided: Object) => ({ ...provided, padding: undefined }),
+    multiValue: (provided: Object) => ({
+      ...provided,
+      borderRadius: undefined,
+      backgroundColor: undefined,
+      borderWidth: undefined,
+    }),
+    multiValueLabel: (provided: Object) => ({
+      ...provided,
+      color: undefined,
+      borderRadius: undefined,
+      fontSize: undefined,
+      padding: undefined,
+      paddingLeft: undefined,
+    }),
+    multiValueRemove: (provided: Object) => ({
+      ...provided,
+      borderRadius: undefined,
+      paddingLeft: undefined,
+      paddingRight: undefined,
+      color: undefined,
+    }),
+  };
 }

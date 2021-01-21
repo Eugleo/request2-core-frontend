@@ -71,8 +71,8 @@ export function LoginPage(): JSX.Element {
       imageAlt="The Request 2 logo"
     >
       <form
-        onSubmit={handleSubmit((values: LoginStub) =>
-          verifyLogin(values.email, values.password, dispatch, setLoginFailed)
+        onSubmit={handleSubmit(async (values: LoginStub) =>
+          verifyLogin(values.email, values.password, dispatch, setLoginFailed).catch(console.log)
         )}
       >
         <CenteredForm>

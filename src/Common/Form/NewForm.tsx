@@ -12,7 +12,7 @@ import { ShortText } from './NewTextField';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
-type FormValues = { title: string; teamId: string } & Record<string, FieldValue>;
+type FormValues = { Title: string; TeamId: string } & Record<string, FieldValue>;
 
 export type SubmitFunction = (request: RequestStub, properties: New<Property>[]) => void;
 
@@ -29,14 +29,16 @@ export function NewForm({
   | { requestType: string }
   | { request: WithID<Request>; properties: PropertyJSON[] }
 )): JSX.Element {
+  const defaultValues =
+    'request' in props
+      ? groupFiles(props.properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {})
+      : {};
+
   const form = useForm<FormValues>({
     mode: 'all',
-    defaultValues:
-      'request' in props
-        ? groupFiles(props.properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {})
-        : {},
+    defaultValues,
   });
-  const title = form.watch('title');
+  const title = form.watch('Title');
 
   const requestType = 'requestType' in props ? props.requestType : props.request.requestType;
   let requestForm = null;
@@ -55,11 +57,11 @@ export function NewForm({
           <FormProvider {...form}>
             <form
               onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
-              className="space-y-8"
+              className="space-y-8 max-w-5xl w-full mx-auto"
             >
               <Section title="General information">
-                <ShortText q="What should be this request called?" id="title" required />
-                <TeamField id="teamId" />
+                <ShortText q="What should be this request called?" id="Title" required />
+                <TeamField id="TeamId" />
               </Section>
               {requestForm}
               <div className="h-0.5 w-full bg-gray-200" />
@@ -74,12 +76,12 @@ export function NewForm({
 
 export function Section({ title, children }: { title: string; children: ReactNode }): JSX.Element {
   return (
-    <div className="grid grid-cols-4 gap-4">
+    <div className="grid grid-cols-3 gap-4">
       <div className="col-span-1">
-        <h2 className="font-medium text-lg">{title}</h2>
+        <h2 className="font-medium text-lg sticky top-0">{title}</h2>
       </div>
-      <div className="col-span-3">
-        <div className="p-6 bg-white  rounded-md shadow-sm space-y-6">{children}</div>
+      <div className="col-span-2">
+        <div className="p-6 bg-white rounded-md shadow-sm space-y-6">{children}</div>
       </div>
     </div>
   );
@@ -87,8 +89,8 @@ export function Section({ title, children }: { title: string; children: ReactNod
 
 async function onSubmit(data: FormValues, submit: SubmitFunction) {
   const req: RequestStub = {
-    title: data.title,
-    teamId: Number.parseInt(data.teamId),
+    title: data.Title,
+    teamId: Number.parseInt(data.TeamId),
   };
   const props: New<Property>[] = Object.entries(data).reduce(fieldToProperty, []);
   submit(req, props);

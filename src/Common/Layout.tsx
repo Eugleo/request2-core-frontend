@@ -37,15 +37,15 @@ export function Header({
 }
 
 export function Body({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="p-6">{children}</div>;
+  return (
+    <div className="pt-6 px-6 bg-gray-100 overflow-auto">
+      <div className="mb-6">{children}</div>
+    </div>
+  );
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }): JSX.Element {
-  return (
-    <div className="h-screen overflow-x-hidden overflow-y-auto flex flex-col bg-gray-100">
-      {children}
-    </div>
-  );
+  return <div className="h-screen flex flex-col bg-gray-100">{children}</div>;
 }
 
 export function Page({

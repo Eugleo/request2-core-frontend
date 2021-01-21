@@ -26,22 +26,28 @@ export type InputProps<T extends keyof JSX.IntrinsicElements> = PropsWithRef<
   errors?: FormErrors;
 };
 
-export function Note({ children }: { children: ReactNode }): JSX.Element {
-  return (
-    <div className="bg-white rounded-md border border-blue-300 overflow-hidden">
-      <div className="flex bg-blue-100 px-3 py-2 items-center">
-        <Icon.Info className="text-blue-900 w-5 mr-2" />
-        <h3 className="font-medium text-sm text-blue-900">Note</h3>
+export function Note({ children }: { children: ReactNode }): JSX.Element | null {
+  const { state } = useFieldContext();
+
+  if (state === 'edit') {
+    return (
+      <div className="bg-white rounded-md border border-blue-300 overflow-hidden">
+        <div className="flex bg-blue-100 px-3 py-2 items-center">
+          <Icon.Info className="text-blue-900 w-5 mr-2" />
+          <h3 className="font-medium text-sm text-blue-900">Note</h3>
+        </div>
+        <div className="p-4">
+          {typeof children === 'string' ? (
+            <p className="text-sm text-gray-700">{children}</p>
+          ) : (
+            children
+          )}
+        </div>
       </div>
-      <div className="p-4">
-        {typeof children === 'string' ? (
-          <p className="text-sm text-gray-700">{children}</p>
-        ) : (
-          children
-        )}
-      </div>
-    </div>
-  );
+    );
+  }
+
+  return null;
 }
 
 export type QuestionProps = {

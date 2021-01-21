@@ -27,12 +27,12 @@ export function fieldToProperty(
   } else if (typeof value === 'object' && 'label' in value) {
     return acc.concat([{ name, value: value.value }]);
   }
-  throw new TypeError(`Field -> Property conversion failed: name=${name}, value is above`);
+  throw new Error(`Field -> Property conversion failed: name=${name}, value is above`);
 }
 
 // Only groups active properties
 export function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
-  return props
+  const properties = props
     .filter(p => p.active)
     .sort(comparing(p => p.name))
     .reduce<[string | null, PropertyJSON | null, PropertyJSON[]]>(
@@ -43,5 +43,7 @@ export function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
         return [p.name, p, q ? acc.concat(q) : acc];
       },
       [null, null, []]
-    )[2];
+    );
+
+  return properties[2].concat(properties[1] ?? []);
 }
