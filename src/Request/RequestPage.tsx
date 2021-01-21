@@ -6,12 +6,13 @@ import { FieldContext } from '../Common/Form/Question';
 import * as Page from '../Common/Layout';
 import { useAsyncGet } from '../Utils/Api';
 import { WithID } from '../Utils/WithID';
-import { groupFiles } from './FieldValue';
+import { getDefaultValues } from './FieldValue';
 import { ResultWidget } from './Operator/ResultComponent';
 import { idToStr, PropertyJSON, Request } from './Request';
 import { RequestComments } from './RequestComments';
 import { RequestStatus } from './RequestStatus';
 import { Proteomics } from './RequestTypes/Proteomics';
+import { getRequestFormForType } from './RequestTypes/RequestTypes';
 
 export function RequestPage(): JSX.Element {
   const { id } = useParams();
@@ -56,23 +57,11 @@ function RequestComponent({ requestId }: { requestId: number }) {
 }
 
 function Details({ requestType, properties }: { requestType: string; properties: PropertyJSON[] }) {
-  const props = useMemo(
-    () => groupFiles(properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {}),
-    [properties]
-  );
-
-  let requestForm = null;
-
-  switch (requestType) {
-    case 'proteomics':
-    case 'lipidomics':
-    case 'small molecule':
-      requestForm = Proteomics;
-  }
+  const props = useMemo(() => getDefaultValues(properties), [properties]);
 
   return (
     <FieldContext.Provider value={{ state: 'show', values: props }}>
-      {requestForm}
+      {getRequestFormForType(requestType)}
     </FieldContext.Provider>
   );
 }

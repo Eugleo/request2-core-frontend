@@ -24,14 +24,13 @@ export function NewRequestPage(): JSX.Element {
 
   const name = requestTypeDisplayNames.get(requestType)?.word;
 
-  const xont: FieldContext = useMemo(() => ({ state: 'edit', values: {} }), []);
-
   if (name) {
     return (
-      <FieldContext.Provider value={xont}>
+      <>
         {modalInfo.show && modalInfo.request ? <CodeModal request={modalInfo.request} /> : null}
 
         <NewForm
+          defaultValues={{}}
           defaultTitle={`New ${name} request`}
           requestType={requestType}
           submit={async (request, properties) => {
@@ -51,7 +50,7 @@ export function NewRequestPage(): JSX.Element {
           <Cancel />
           <Primary type="submit">Submit new request</Primary>
         </NewForm>
-      </FieldContext.Provider>
+      </>
     );
   }
 

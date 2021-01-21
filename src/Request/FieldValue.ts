@@ -1,3 +1,5 @@
+import { useMemo } from 'react';
+
 import { FileInfo, fileInfoToString, stringToFileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
 import { New, Property, PropertyJSON, Selection } from './Request';
@@ -33,7 +35,7 @@ export function fieldToProperty(
 }
 
 // Only groups active properties
-export function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
+function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
   const properties = props
     .filter(p => p.active)
     .sort(comparing(p => p.name))
@@ -48,4 +50,8 @@ export function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
     );
 
   return properties[2].concat(properties[1] ?? []);
+}
+
+export function getDefaultValues(properties: PropertyJSON[]): Record<string, string> {
+  return groupFiles(properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {});
 }

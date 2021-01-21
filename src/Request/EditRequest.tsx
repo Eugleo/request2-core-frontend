@@ -7,7 +7,7 @@ import { FieldContext } from '../Common/Form/Question';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
-import { groupFiles } from './FieldValue';
+import { getDefaultValues } from './FieldValue';
 import { New, Property, PropertyJSON, Request } from './Request';
 import { requestTypeDisplayNames } from './RequestTypes';
 
@@ -38,31 +38,26 @@ function EditForm({
     request: { title: string; teamId: number };
     properties: New<Property>[];
   }>();
-  const props = useMemo(
-    () => groupFiles(properties).reduce((acc, p) => ({ ...acc, [p.name]: p.value }), {}),
-    [properties]
-  );
-  console.log(props);
+
   return (
-    <FieldContext.Provider value={{ state: 'edit', values: props }}>
-      <NewForm
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        defaultTitle={`New ${requestTypeDisplayNames.get(request.requestType)?.word!} request`}
-        request={request}
-        properties={properties}
-        submit={async (req: { title: string; teamId: number }, properties: New<Property>[]) => {
-          const r = await authPut(`/requests/${request._id}`, {
-            properties,
-            request: req,
-          });
-          if (r.ok) {
-            navigate(-1);
-          }
-        }}
-      >
-        <Cancel />
-        <Primary type="submit">Save changes</Primary>
-      </NewForm>
-    </FieldContext.Provider>
+    <NewForm
+      defaultValues={getDefaultValues(properties)}
+      // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+      defaultTitle={`New ${requestTypeDisplayNames.get(request.requestType)?.word!} request`}
+      request={request}
+      requestType={request.requestType}
+      submit={async (req: { title: string; teamId: number }, properties: New<Property>[]) => {
+        const r = await authPut(`/requests/${request._id}`, {
+          properties,
+          request: req,
+        });
+        if (r.ok) {
+          navigate(-1);
+        }
+      }}
+    >
+      <Cancel />
+      <Primary type="submit">Save changes</Primary>
+    </NewForm>
   );
 }
