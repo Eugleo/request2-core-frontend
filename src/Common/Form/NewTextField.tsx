@@ -70,7 +70,13 @@ export function ShortTextInput({
     <div>
       <input
         name={name}
-        className={c(className, 'border', baseClasses, err ? errorClasses : normalClasses)}
+        className={c(
+          className,
+          'border',
+          baseClasses,
+          err && errorClasses,
+          !props.disabled && !err && normalClasses
+        )}
         ref={reg}
         {...props}
       />
@@ -128,7 +134,12 @@ export function LongTextInput({
     <div>
       <textarea
         name={name}
-        className={c(className, baseClasses, err ? errorClasses : normalClasses)}
+        className={c(
+          className,
+          baseClasses,
+          err && errorClasses,
+          !props.disabled && !err && normalClasses
+        )}
         ref={reg}
         {...props}
         style={{ ...style, minHeight: '7rem' }}
@@ -148,7 +159,7 @@ export const baseClasses = [
   'py-2',
   'px-3',
   'font-normal',
-  'disabled:text-gray-400 disabled:bg-gray-200 disabled:shadow-none',
+  'disabled:text-gray-400 disabled:bg-gray-100 disabled:shadow-none',
   'transition-colors',
 ];
 

@@ -11,30 +11,45 @@ import logoSrc from '../assets/logoII.svg';
 
 export function Sidebar(): JSX.Element {
   return (
-    <nav className="h-full sticky bg-gray-50 border-gray-200 border-r w-64 z-10 flex flex-col items-stretch">
-      <div className="mb-8 flex flex-row items-center px-4 mt-4">
-        <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9 mr-4" />
-        <p className="text-2xl font-bold text-black">Request 2</p>
-      </div>
-      <div className="flex flex-col justify-between flex-grow">
-        <div className="space-y-3 flex flex-col px-2">
-          <Authentized>
-            <Authorized roles={['Client']}>
-              <NavLink to="/me/requests" icon={<Icon.FileText />} text="My requests" />
-            </Authorized>
-            <Authorized roles={['Operator']}>
-              <NavLink to="/requests" icon={<Icon.List />} text="Client's request" />
-            </Authorized>
-            <NavLink to="/announcements" icon={<Icon.Globe />} text="Announcements" />
-            <Authorized roles={['Operator', 'Admin']}>
-              <NavLink to="/teams" icon={<Icon.Users />} text="Teams" />
-            </Authorized>
-          </Authentized>
-          <Authorized roles={['Operator', 'Admin']}>
-            <NavLink to="/admin/users" icon={<Icon.UserPlus />} text="Users" />
-          </Authorized>
+    <nav className="top-0 z-20 bg-gray-800 px-6 sticky">
+      <div className="border-b border-gray-600 flex flex-row items-stretch">
+        <div className="flex flex-row items-center py-4 mr-6">
+          <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9" />
         </div>
-        <div className="space-y-2 flex flex-col">
+        <div className="flex flex-row justify-between flex-grow items-center">
+          <div className="space-x-4 flex flex-row py-2 items-center">
+            <Authentized>
+              <Authorized roles={['Client']}>
+                <NavLink
+                  to="/me/requests"
+                  icon={<Icon.FileText className="w-5 h-5" />}
+                  text="My requests"
+                />
+              </Authorized>
+              <Authorized roles={['Operator']}>
+                <NavLink
+                  to="/requests"
+                  icon={<Icon.List className="w-5 h-5" />}
+                  text="Client's request"
+                />
+              </Authorized>
+              <NavLink
+                to="/announcements"
+                icon={<Icon.Globe className="w-5 h-5" />}
+                text="Announcements"
+              />
+              <Authorized roles={['Operator', 'Admin']}>
+                <NavLink to="/teams" icon={<Icon.Users className="w-5 h-5" />} text="Teams" />
+              </Authorized>
+            </Authentized>
+            <Authorized roles={['Operator', 'Admin']}>
+              <NavLink
+                to="/admin/users"
+                icon={<Icon.UserPlus className="w-5 h-5" />}
+                text="Users"
+              />
+            </Authorized>
+          </div>
           <Authentized>
             <UserButton />
           </Authentized>
@@ -48,13 +63,12 @@ function UserButton() {
   const { auth } = useAuth();
   return (
     <Link to="/me">
-      <div className="px-4 hover:bg-gray-100 flex flex-row items-center py-4 border-t border-gray-200">
-        <div className="bg-gray-200 rounded-full p-2 mr-4">
-          <Icon.User className="text-gray-600 h-6 w-6" />
+      <div className="flex flex-row items-center">
+        <div className="mr-4 text-right">
+          <p className="flex-grow text-sm text-gray-200 font-medium">{auth.user.name}</p>
         </div>
-        <div>
-          <p className="flex-grow text-sm text-gray-700 font-medium">{auth.user.name}</p>
-          <p className="text-gray-400 text-xs">View profile</p>
+        <div className="bg-gray-500 rounded-full p-1">
+          <Icon.User className="text-gray-900 w-5 h-5" />
         </div>
       </div>
     </Link>
@@ -80,13 +94,12 @@ function NavLink({
       end={end}
       to={to}
       className={c(
-        'w-full px-3 py-2 rounded-md text-sm',
-        doesMatch ? 'bg-gray-200 text-gray-600' : 'hover:bg-gray-100 text-gray-400',
+        'px-3 py-2 rounded-md text-sm',
+        doesMatch ? 'bg-gray-900 text-white' : 'hover:bg-gray-800 text-gray-200',
         className
       )}
     >
-      <div className="flex flex-row items-center font-semibold">
-        <span className={c('mr-4 w-6', doesMatch ? 'text-gray-500' : 'text-gray-400')}>{icon}</span>
+      <div className="flex flex-row items-center font-semibold h-full">
         <p className="text-md font-medium text-opacity-90">{text}</p>
       </div>
     </RouterNavLink>

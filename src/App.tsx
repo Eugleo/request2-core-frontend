@@ -83,7 +83,7 @@ function useLogin() {
 export function App(): JSX.Element {
   return (
     <AuthProvider>
-      <div className="App bg-white h-screen max-h-screen w-screen">
+      <div className="App bg-gray-100 w-screen flex flex-col h-screen">
         <Router>
           <AppBody />
         </Router>
@@ -147,25 +147,20 @@ function NormalRoutes() {
         </Routes>
       }
     >
-      <div
-        className="grid grid-cols-2 h-screen w-screen"
-        style={{ gridTemplateColumns: 'auto 1fr' }}
-      >
-        <Sidebar />
-        <Routes>
-          <Route path="/me" element={<MyProfilePage />} />
-          <Route path="/login" element={<Navigate to="/me/requests" />} />
-          <Route path="/admin/users/*" element={<UserRouter />} />
-          <Route path="/me/*">
-            <Route path="requests/*" element={<RequestsAsClient />} />
-          </Route>
-          <Route path="/requests/*" element={<RequestsAsOperator />} />
-          <Route path="/announcements/*" element={<AnnouncementRouter />} />
-          <Route path="/teams/*" element={<TeamRouter />} />
-          <Route path="/" element={<Navigate to="/me/requests" />} />
-          <Route path="/*" element={<NotFound404 />} />
-        </Routes>
-      </div>
+      <Sidebar />
+      <Routes>
+        <Route path="/me" element={<MyProfilePage />} />
+        <Route path="/login" element={<Navigate to="/me/requests" />} />
+        <Route path="/admin/users/*" element={<UserRouter />} />
+        <Route path="/me/*">
+          <Route path="requests/*" element={<RequestsAsClient />} />
+        </Route>
+        <Route path="/requests/*" element={<RequestsAsOperator />} />
+        <Route path="/announcements/*" element={<AnnouncementRouter />} />
+        <Route path="/teams/*" element={<TeamRouter />} />
+        <Route path="/" element={<Navigate to="/me/requests" />} />
+        <Route path="/*" element={<NotFound404 />} />
+      </Routes>
     </Authentized>
   );
 }

@@ -40,7 +40,7 @@ export function Table({
   children: ReactNode;
 }): JSX.Element {
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <table className="min-w-full divide-y divide-gray-200">
         <thead className="col-gap-12 py-3 bg-gray-50 bordr-b border-gray-200">
           <tr>

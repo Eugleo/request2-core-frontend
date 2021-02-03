@@ -43,24 +43,22 @@ export function NewForm({
   return (
     <FieldContext.Provider value={state}>
       <Page title={title ? `${defaultTitle}: ${title}` : defaultTitle}>
-        <div className="mx-auto">
-          <Uploady destination={{ url: `${apiBase}/files` }}>
-            <FormProvider {...form}>
-              <form
-                onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
-                className="space-y-8 max-w-5xl w-full mx-auto"
-              >
-                <Section title="General information">
-                  <ShortText q="What should be this request called?" id="Title" required />
-                  <TeamField id="TeamId" />
-                </Section>
-                {getRequestFormForType(requestType)}
-                <div className="h-0.5 w-full bg-gray-200" />
-                <div className="flex justify-end flex-row w-full space-x-6">{children}</div>
-              </form>
-            </FormProvider>
-          </Uploady>
-        </div>
+        <Uploady destination={{ url: `${apiBase}/files` }}>
+          <FormProvider {...form}>
+            <form
+              onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
+              className="space-y-8"
+            >
+              <Section title="General information">
+                <ShortText q="What should be this request called?" id="Title" required />
+                <TeamField id="TeamId" />
+              </Section>
+              {getRequestFormForType(requestType)}
+              <div className="h-0.5 w-full bg-gray-200" />
+              <div className="flex justify-end flex-row w-full space-x-6 relative">{children}</div>
+            </form>
+          </FormProvider>
+        </Uploady>
       </Page>
     </FieldContext.Provider>
   );
@@ -73,7 +71,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
     return (
       <div className="grid grid-cols-3 gap-4">
         <div className="col-span-1">
-          <h2 className="font-medium text-lg sticky top-0">{title}</h2>
+          <h2 className="font-medium text-lg sticky top-3">{title}</h2>
         </div>
         <div className="col-span-2">
           <Card>

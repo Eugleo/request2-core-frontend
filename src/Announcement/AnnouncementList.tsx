@@ -50,7 +50,7 @@ function AnnouncementList() {
           <Button.Create title="New announcement" />
         </Authorized>
       </div>
-      <div className="flex flex-col">
+      <div className="space-y-6">
         <Loader>
           {({ values, total }) => (
             <>
@@ -74,7 +74,7 @@ function Item({
   const { Loader } = useAsyncGet<WithID<User>>(`/users/${authorId}`);
 
   return (
-    <Card className="mb-6">
+    <Card>
       <div className="flex px-6 py-3 items-center border-b border-gray-200">
         <div className="flex flex-col not-sr-onlyitems-center">
           <Link

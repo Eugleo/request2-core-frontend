@@ -9,7 +9,12 @@ module.exports = {
     },
   },
   variants: {
-    extend: {},
+    extend: {
+      textColor: ['disabled'],
+      backgroundColor: ['disabled'],
+      boxShadow: ['disabled'],
+      borderWidth: ['disabled'],
+    },
   },
   plugins: [require('@tailwindcss/forms')],
 };

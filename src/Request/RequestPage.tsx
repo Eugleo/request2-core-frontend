@@ -28,39 +28,41 @@ function RequestComponent({ requestId }: { requestId: number }) {
 
   return (
     <Page.ContentWrapper>
-      <Page.Header className="col-span-2">
+      <Page.Header>
         <Page.Title className="mr-6">
           <RequestLoader>{request => <p>{request.title}</p>}</RequestLoader>
         </Page.Title>
-        <h2 className="text-gray-500 font-mono text-2xl leading-tight">
+        <h2 className="text-blue-400 font-mono">
           <RequestLoader>
-            {request => <p>{`${idToStr(request).type}/${idToStr(request).code}`}</p>}
+            {request => (
+              <p className="px-4 py-1 text-md rounded-full bg-blue-100 border border-blue-300 font-mono">{`${
+                idToStr(request).type
+              }/${idToStr(request).code}`}</p>
+            )}
           </RequestLoader>
         </h2>
         <Page.Spacer />
         <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
       </Page.Header>
 
-      <div className="pt-6 px-6 overflow-auto">
-        <div className="mb-6">
-          <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2 space-y-6">
-              <RequestLoader>
-                {({ requestType }) => (
-                  <Loader>
-                    {properties => <Details requestType={requestType} properties={properties} />}
-                  </Loader>
-                )}
-              </RequestLoader>
-            </div>
+      <Page.Body>
+        <div className="grid grid-cols-3 gap-6">
+          <div className="col-span-2 space-y-6">
+            <RequestLoader>
+              {({ requestType }) => (
+                <Loader>
+                  {properties => <Details requestType={requestType} properties={properties} />}
+                </Loader>
+              )}
+            </RequestLoader>
+          </div>
 
-            <div className="space-y-6 col-span-1">
-              <RequestComments requestId={requestId} />
-              <Loader>{properties => <Log properties={properties} />}</Loader>
-            </div>
+          <div className="space-y-6 col-span-1">
+            <RequestComments requestId={requestId} />
+            <Loader>{properties => <Log properties={properties} />}</Loader>
           </div>
         </div>
-      </div>
+      </Page.Body>
     </Page.ContentWrapper>
   );
 }

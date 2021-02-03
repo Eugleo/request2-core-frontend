@@ -25,27 +25,22 @@ export function Header({
   className?: string;
 }): JSX.Element {
   return (
-    <div
-      className={c(
-        'flex flex-row space-between items-center w-full sticky px-6 py-4 bg-white border-b border-gray-300 top-0 z-50',
-        className
-      )}
-    >
+    <div className={c('flex flex-row space-between items-center w-full py-8', className)}>
       {children}
     </div>
   );
 }
 
 export function Body({ children }: { children: React.ReactNode }): JSX.Element {
-  return (
-    <div className="pt-6 px-6 bg-gray-100 overflow-auto">
-      <div className="mb-6">{children}</div>
-    </div>
-  );
+  return <div className="z-10 relative pb-8">{children}</div>;
 }
 
 export function ContentWrapper({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="h-screen flex flex-col bg-gray-100">{children}</div>;
+  return (
+    <div className="flex flex-col bg-gray-100 px-8 relative flex-grow overflow-scroll">
+      {children}
+    </div>
+  );
 }
 
 export function Page({
@@ -66,14 +61,6 @@ export function Page({
       </Header>
       <Body>{children}</Body>
     </ContentWrapper>
-  );
-}
-
-export function SidebarWrapper({ children }: { children: React.ReactNode }): JSX.Element {
-  return (
-    <div style={{ gridTemplateColumns: 'auto 1fr' }} className="grid grid-cols-2">
-      {children}
-    </div>
   );
 }
 

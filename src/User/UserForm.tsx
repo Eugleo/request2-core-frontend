@@ -83,31 +83,43 @@ export function UserForm({
             })}
           >
             <Card className="max-w-2xl">
-              <div className="p-6">
-                <Question>Name</Question>
-                <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
-                <Question>E-mail address</Question>
-                <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+              <div className="p-6 space-y-6">
+                <div>
+                  <Question>Name</Question>
+                  <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
+                </div>
+                <div>
+                  <Question>E-mail address</Question>
+                  <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+                </div>
                 {user ? null : (
-                  <ShortTextInput
-                    name="password"
-                    type="password"
-                    errors={errors}
-                    reg={register(reqRule())}
-                  />
+                  <div>
+                    <Question>Password</Question>
+
+                    <ShortTextInput
+                      name="password"
+                      type="password"
+                      errors={errors}
+                      reg={register(reqRule())}
+                    />
+                  </div>
                 )}
-                <Question>Privileges</Question>
-                <MultipleChoiceInput name="roles" control={control} errors={errors}>
-                  <Option value="Admin" />
-                  <Option value="Client" />
-                  <Option value="Operator" />
-                </MultipleChoiceInput>
-                <Question>Teams</Question>
-                <MultipleChoiceInput name="teamIds" control={control} errors={errors}>
-                  {teams.sort(comparing(t => t.name)).map(t => (
-                    <Option key={t._id} value={t._id} label={t.name} />
-                  ))}
-                </MultipleChoiceInput>
+                <div>
+                  <Question>Privileges</Question>
+                  <MultipleChoiceInput name="roles" control={control} errors={errors}>
+                    <Option value="Admin" />
+                    <Option value="Client" />
+                    <Option value="Operator" />
+                  </MultipleChoiceInput>
+                </div>
+                <div>
+                  <Question>Teams</Question>
+                  <MultipleChoiceInput name="teamIds" control={control} errors={errors}>
+                    {teams.sort(comparing(t => t.name)).map(t => (
+                      <Option key={t._id} value={t._id} label={t.name} />
+                    ))}
+                  </MultipleChoiceInput>
+                </div>
               </div>
               <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
                 <Button.Cancel className="mr-3" />

@@ -21,7 +21,7 @@ export function SearchBar({
           <ShortTextInput
             name="query"
             reg={register}
-            className={c(baseClasses, 'pl-8', normalClasses)}
+            className={c('pl-8', 'border-none bg-white shadow-none rounded-lg', normalClasses)}
           />
           <Search
             style={{
