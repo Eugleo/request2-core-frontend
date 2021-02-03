@@ -79,41 +79,51 @@ export function RegisterPage(): JSX.Element {
             </p>
           ) : (
             <>
-              <Question>E-mail address</Question>
-              <ShortTextInput disabled value={email} />
-              <Question>Display name</Question>
-              <ShortTextInput
-                name="name"
-                placeholder="Arthur Dent"
-                reg={register({
-                  ...reqRule(),
-                  validate: val =>
-                    val.name.length < 3 ||
-                    val.name.split(' ').length < 2 ||
-                    'Please provide your full name and surname',
-                })}
-              />
-              <Question>Team</Question>
-              <ShortTextInput disabled value="You will be assigned a team by our admin" />
-              <Question>Your password</Question>
-              <ShortTextInput
-                name="password"
-                type="password"
-                reg={register({
-                  ...reqRule(),
-                  validate: val =>
-                    val.length > 8 || 'The password needs to have at least 8 characters',
-                })}
-              />
-              <Question>Enter the password again</Question>
-              <ShortTextInput
-                name="passwordCheck"
-                type="password"
-                reg={register({
-                  ...reqRule(),
-                  validate: val => val === pwd || "The passwords don't match",
-                })}
-              />
+              <div>
+                <Question>E-mail address</Question>
+                <ShortTextInput disabled value={email} />
+              </div>
+              <div>
+                <Question>Display name</Question>
+                <ShortTextInput
+                  name="name"
+                  placeholder="Arthur Dent"
+                  reg={register({
+                    ...reqRule(),
+                    validate: val =>
+                      val.name.length < 3 ||
+                      val.name.split(' ').length < 2 ||
+                      'Please provide your full name and surname',
+                  })}
+                />
+              </div>
+              <div>
+                <Question>Team</Question>
+                <ShortTextInput disabled value="You will be assigned a team by our admin" />
+              </div>
+              <div>
+                <Question>Your password</Question>
+                <ShortTextInput
+                  name="password"
+                  type="password"
+                  reg={register({
+                    ...reqRule(),
+                    validate: val =>
+                      val.length > 8 || 'The password needs to have at least 8 characters',
+                  })}
+                />
+              </div>
+              <div>
+                <Question>Enter the password again</Question>
+                <ShortTextInput
+                  name="passwordCheck"
+                  type="password"
+                  reg={register({
+                    ...reqRule(),
+                    validate: val => val === pwd || "The passwords don't match",
+                  })}
+                />
+              </div>
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />

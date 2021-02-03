@@ -76,22 +76,26 @@ export function LoginPage(): JSX.Element {
         )}
       >
         <CenteredForm>
-          {loginFailed ? (
-            <p className="text-red-600 text-xs mb-5">Password or email is incorrect</p>
-          ) : null}
-          <Question>E-mail address</Question>
-          <ShortTextInput name="email" reg={register(reqRule())} errors={errors} />
-          <Question>Password</Question>
-          <ShortTextInput
-            name="password"
-            type="password"
-            reg={register(reqRule())}
-            errors={errors}
-          />
-          <div className="mb-6">
-            <Link to={`/password-reset/${email}`} className="text-xs">
-              Forgot your password?
-            </Link>
+          <div>
+            {loginFailed ? (
+              <p className="text-red-600 text-xs mb-2">Password or email is incorrect</p>
+            ) : null}
+            <Question>E-mail address</Question>
+            <ShortTextInput name="email" reg={register(reqRule())} errors={errors} />
+          </div>
+          <div>
+            <Question>Password</Question>
+            <ShortTextInput
+              name="password"
+              type="password"
+              reg={register(reqRule())}
+              errors={errors}
+            />
+            <div>
+              <Link to={`/password-reset/${email}`} className="text-xs">
+                Forgot your password?
+              </Link>
+            </div>
           </div>
 
           <Button.Primary type="submit" title="Log in" status="Normal" className="w-full" />

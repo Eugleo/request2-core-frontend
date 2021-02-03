@@ -42,8 +42,10 @@ export function RegisterInitPage(): JSX.Element {
             </p>
           ) : (
             <>
-              <Question>E-mail address</Question>
-              <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+              <div>
+                <Question>E-mail address</Question>
+                <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+              </div>
               {regState === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
@@ -56,7 +58,7 @@ export function RegisterInitPage(): JSX.Element {
                 />
               )}
               {regState === 'problem' && (
-                <p className="text-red-600 mb-5">
+                <p className="text-red-600 text-xs">
                   Something went wrong. If the problem persists, contact the administrator.
                 </p>
               )}
