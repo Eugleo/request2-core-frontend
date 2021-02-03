@@ -162,10 +162,6 @@ function NormalRoutes() {
           <Route path="/requests/*" element={<RequestsAsOperator />} />
           <Route path="/announcements/*" element={<AnnouncementRouter />} />
           <Route path="/teams/*" element={<TeamRouter />} />
-          <Route path="/register">
-            <Route path="new" element={<RegisterInitPage />} />
-            <Route path=":email/:token" element={<RegisterPage />} />
-          </Route>
           <Route path="/" element={<Navigate to="/me/requests" />} />
           <Route path="/*" element={<NotFound404 />} />
         </Routes>

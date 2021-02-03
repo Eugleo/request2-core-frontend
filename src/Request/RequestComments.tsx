@@ -1,6 +1,6 @@
 import c from 'classnames';
 import React, { useEffect, useRef } from 'react';
-import { FormProvider, useForm } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
 import { LongTextInput } from '../Common/Form/NewTextField';
@@ -29,9 +29,9 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
   return (
     <div
       style={{ gridTemplateRows: '1fr auto' }}
-      className="p-6 rounded-md shadow-sm bg-white border-l border-gray-300 relative grid grid-rows-2 overflow-auto"
+      className="p-6 rounded-md shadow-sm bg-white relative grid grid-rows-2 overflow-auto"
     >
-      <div className="p-6 flex flex-col overflow-scroll space-y-6">
+      <div className="overflow-scroll space-y-6">
         <Loader>
           {comments => (
             <>

@@ -1,7 +1,8 @@
 import React from 'react';
-import { Route, Routes, useSearchParams } from 'react-router-dom';
+import { Route, Routes } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
+import { useQuery } from '../Common/Hooks';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { SearchBar } from '../Common/SearchBar';
@@ -49,8 +50,7 @@ function TeamTableItem({ team }: { team: WithID<Team> }) {
 
 function TeamList() {
   const { limit, offset, currentPage } = usePagination(10);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') ?? 'active:true';
+  const [query, setQuery] = useQuery('active:true');
   const { Loader } = Api.useAsyncGet<{ values: WithID<Team>[]; total: number }>(
     Api.urlWithParams('/teams', { limit, offset, query })
   );
@@ -61,7 +61,7 @@ function TeamList() {
         <SearchBar
           query={padWithSpace(query)}
           onSubmit={values => {
-            setSearchParams({ query: values.query.trim() });
+            setQuery(values.query.trim());
           }}
         />
         <Button.Create title="New team" />

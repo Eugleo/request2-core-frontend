@@ -56,14 +56,14 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
             </div>
           </form>
           <Question>Research groups</Question>
-          <div className="grid col-gap-2 grid-flow-col auto-cols-max mb-6 mt-2">
+          <div className="flex flex-row space-x-2 mb-6">
             {user.teams.map(t => (
               <Pill key={t._id} text={t.name} className="bg-gray-200 text-gray-900" />
             ))}
           </div>
           <Question>Privileges</Question>
 
-          <div className="grid col-gap-2 grid-flow-col auto-cols-max mb-6 mt-2">
+          <div className="flex flex-row space-x-2">
             {user.roles.map(r => (
               <Pill key={r} text={r} className="bg-gray-200 text-gray-900" />
             ))}

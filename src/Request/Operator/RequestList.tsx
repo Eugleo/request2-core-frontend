@@ -1,8 +1,9 @@
 import moment from 'moment';
 import React from 'react';
-import { Link, Route, Routes, useSearchParams } from 'react-router-dom';
+import { Link, Route, Routes } from 'react-router-dom';
 
 import { Secondary } from '../../Common/Buttons';
+import { useQuery } from '../../Common/Hooks';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import { SearchBar } from '../../Common/SearchBar';
@@ -53,8 +54,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 
 function RequestList() {
   const { limit, offset } = usePagination(10);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') ?? '-status:deleted';
+  const [query, setQuery] = useQuery("-status:deleted'");
   const { Loader } = Api.useAsyncGet<{ values: WithID<Request>[]; total: number }>(
     Api.urlWithParams('/requests', { limit, offset, query })
   );
@@ -65,7 +65,7 @@ function RequestList() {
         <SearchBar
           query={padWithSpace(query)}
           onSubmit={values => {
-            setSearchParams({ query: values.query.trim() });
+            setQuery(values.query.trim());
           }}
         />
         <Secondary className="flex-shrink-0" type="submit" title="Search" />

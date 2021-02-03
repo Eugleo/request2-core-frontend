@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router';
 
 export function useOnClickOutside<T extends Node>(handler: () => void): React.RefObject<T> {
   const ref = useRef<T>(null);
@@ -36,9 +37,13 @@ export function useHover<T extends Node>(): [React.RefObject<T>, boolean] {
 
   const ref = useRef<T>(null);
 
-  const handleMouseOver = () => setValue(true);
+  const handleMouseOver = () => {
+    setValue(true);
+  };
 
-  const handleMouseOut = () => setValue(false);
+  const handleMouseOut = () => {
+    setValue(false);
+  };
 
   useEffect(() => {
     const node = ref.current;
@@ -57,4 +62,16 @@ export function useHover<T extends Node>(): [React.RefObject<T>, boolean] {
   }, [ref]);
 
   return [ref, value];
+}
+
+export function useQuery(def = 'active:true'): [string, (query: string) => void] {
+  const q = new URLSearchParams(useLocation().search);
+  const navigate = useNavigate();
+
+  function setQ(query: string) {
+    const search = new URLSearchParams({ query }).toString();
+    navigate({ search: search.length > 0 ? `?${search.toString()}` : '' });
+  }
+
+  return [q.get('query') ?? def, setQ];
 }

@@ -1,7 +1,7 @@
 import React from 'react';
-import { useSearchParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
+import { useQuery } from '../Common/Hooks';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { SearchBar } from '../Common/SearchBar';
@@ -59,8 +59,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
 
 export function UserList(): JSX.Element {
   const { limit, offset, currentPage } = usePagination(10);
-  const [searchParams, setSearchParams] = useSearchParams();
-  const query = searchParams.get('query') ?? 'active:true';
+  const [query, setQuery] = useQuery('active:true');
   const { Loader } = Api.useAsyncGet<{ values: WithID<User>[]; total: number }>(
     Api.urlWithParams('/users', { limit, offset, query })
   );
@@ -71,7 +70,7 @@ export function UserList(): JSX.Element {
         <SearchBar
           query={padWithSpace(query)}
           onSubmit={values => {
-            setSearchParams({ query: values.query.trim() });
+            setQuery(values.query.trim());
           }}
         />
         <Button.Create title="New user" />
