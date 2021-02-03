@@ -1,13 +1,15 @@
 import { ReactNode } from 'react';
+import { LogOut } from 'react-feather';
 import { useForm } from 'react-hook-form';
 
-import { Primary } from '../Common/Buttons';
+import { Primary, Secondary, Tertiary } from '../Common/Buttons';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Question, reqRule } from '../Common/Form/Question';
 import { Page } from '../Common/Layout';
 import { Pill } from '../Common/Table';
 import { UserDetails } from '../User/User';
 import { useAuth } from '../Utils/Auth';
+import { useAuthDispatch } from '../Utils/AuthContext';
 import { WithID } from '../Utils/WithID';
 
 export function MyProfilePage(): JSX.Element {
@@ -17,7 +19,8 @@ export function MyProfilePage(): JSX.Element {
 
 // TODO Add validation and better error reporting
 export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Element {
-  const { authPut } = useAuth();
+  const { authPut, authPost, auth } = useAuth();
+  const dispatch = useAuthDispatch();
   const { register, errors, handleSubmit } = useForm<{ name: string }>({
     defaultValues: {
       name: '',
@@ -25,51 +28,68 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
   });
 
   return (
-    <Page title="Profile">
-      <div className="px-6 mb-6">
-        <Section title="Account details">
-          <form
-            className="mb-6"
-            onSubmit={handleSubmit(async ({ name }) => {
-              const r = await authPut('/me', {
-                name,
-              });
+    <Page
+      title={`${auth.user.name}`}
+      buttons={
+        <Secondary
+          status="Danger"
+          onClick={async () => {
+            const r = await authPost('/logout', {});
+            if (r.ok) {
+              localStorage.removeItem('apiKey');
+              dispatch({ type: 'LOGOUT' });
+            } else {
+              const body = await r.text();
+              console.log(`Couldn't log out, response body was ${body}`);
+            }
+          }}
+        >
+          Log out
+        </Secondary>
+      }
+    >
+      <Section title="Account details">
+        <form
+          className="mb-6"
+          onSubmit={handleSubmit(async ({ name }) => {
+            const r = await authPut('/me', {
+              name,
+            });
 
-              if (r.ok) {
-                console.log('Display name successfully updated');
-              } else {
-                const js = await r.json();
-                console.log(js.error);
-              }
-            })}
-          >
-            <div>
-              <Question>Display name</Question>
-              <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
-            </div>
-            <div>
-              <Question>E-mail address</Question>
-              <ShortTextInput name="email" disabled />
-            </div>
-            <div className="mt-2 flex flex-row-reverse">
-              <Primary type="submit">Save changes</Primary>
-            </div>
-          </form>
-          <Question>Research groups</Question>
-          <div className="flex flex-row space-x-2 mb-6">
-            {user.teams.map(t => (
-              <Pill key={t._id} text={t.name} className="bg-gray-200 text-gray-900" />
-            ))}
+            if (r.ok) {
+              console.log('Display name successfully updated');
+            } else {
+              const js = await r.json();
+              console.log(js.error);
+            }
+          })}
+        >
+          <div>
+            <Question>Display name</Question>
+            <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
           </div>
-          <Question>Privileges</Question>
+          <div>
+            <Question>E-mail address</Question>
+            <ShortTextInput name="email" disabled />
+          </div>
+          <div className="mt-2 flex flex-row-reverse">
+            <Primary type="submit">Save changes</Primary>
+          </div>
+        </form>
+        <Question>Research groups</Question>
+        <div className="flex flex-row space-x-2 mb-6">
+          {user.teams.map(t => (
+            <Pill key={t._id} text={t.name} className="bg-gray-200 text-gray-900" />
+          ))}
+        </div>
+        <Question>Privileges</Question>
 
-          <div className="flex flex-row space-x-2">
-            {user.roles.map(r => (
-              <Pill key={r} text={r} className="bg-gray-200 text-gray-900" />
-            ))}
-          </div>
-        </Section>
-      </div>
+        <div className="flex flex-row space-x-2">
+          {user.roles.map(r => (
+            <Pill key={r} text={r} className="bg-gray-200 text-gray-900" />
+          ))}
+        </div>
+      </Section>
     </Page>
   );
 }
