@@ -44,7 +44,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
       <div className="pt-6 px-6 overflow-auto">
         <div className="mb-6">
           <div className="grid grid-cols-3 gap-6">
-            <div className="col-span-2">
+            <div className="col-span-2 space-y-6">
               <RequestLoader>
                 {({ requestType }) => (
                   <Loader>

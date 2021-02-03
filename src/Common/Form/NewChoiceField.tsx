@@ -8,6 +8,7 @@ import Creatable from 'react-select/creatable';
 import ReactTooltip from 'react-tooltip';
 
 import { Selection } from '../../Request/Request';
+import { comparing } from '../../Utils/Func';
 import { Maybe } from '../../Utils/Maybe';
 import {
   ErrorMessage,
@@ -49,9 +50,12 @@ export function MultipleChoice({
   return (
     <div>
       <Question>{q}</Question>
-      <div className="divide-x-2 divide-gray-400">
+      <div className="flex flex-wrap gap-2">
         {selections.map(v => (
-          <span key={v} className="text-sm text-gray-800">
+          <span
+            key={v}
+            className="text-sm text-gray-800 px-3 py-1 rounded-full bg-gray-50 border border-gray-100"
+          >
             {v}
           </span>
         ))}
@@ -158,8 +162,9 @@ export function SingleChoice({
   q,
   hasCustom = false,
   children,
-}: QuestionProps & ChoiceProps): JSX.Element {
+}: QuestionProps & Omit<ChoiceProps, 'children'> & { children: Choice | Choice[] }): JSX.Element {
   const { state, values } = useFieldContext();
+  const choices = Array.isArray(children) ? children : [children];
 
   if (state === 'edit') {
     return (
@@ -171,11 +176,11 @@ export function SingleChoice({
         isText={isText}
         defaultValue={values[id] ?? null}
       >
-        {children}
+        {choices}
       </SingleChoiceField>
     );
   }
-  const choice = children.find(ch => ch.props.value === values[id]);
+  const choice = choices.find(ch => ch.props.value === values[id]);
   let label = '[neither option has been chosen]';
   if (values[id] !== '') {
     label = choice
@@ -187,9 +192,9 @@ export function SingleChoice({
       <Question>{q}</Question>
       <p className="text-sm text-gray-800">
         {label}
-        <span className="text-gray-400"> (out of {children.length} total options)</span>
+        <span className="text-gray-400"> (out of {choices.length} total options)</span>
       </p>
-      {getVisibleChildren(choice?.props.value, children)}
+      {getVisibleChildren(choice?.props.value, choices)}
     </div>
   );
 }
@@ -249,20 +254,20 @@ function SingleChoiceButtonsInput({
   const err: Maybe<string> = errors && name && errors[name]?.message;
   return (
     <div>
-      {children.map(ch => (
-        <Fragment key={ch.props.value}>
+      {toOptions(children).map(({ value, label }) => (
+        <Fragment key={value}>
           <ChoiceField>
             <input
               name={name}
               ref={reg}
-              id={ch.props.value}
-              value={ch.props.value}
+              id={`${name}/${value}`}
+              value={value}
               type="radio"
-              defaultChecked={ch.props.value === defaultValue}
+              defaultChecked={value === defaultValue}
               {...props}
               className={c(err && 'bg-red-100 border-red-400', 'text-green-500')}
             />
-            <ChoiceLabel htmlFor={ch.props.value}>{ch.props.label ?? ch.props.value}</ChoiceLabel>
+            <ChoiceLabel htmlFor={`${name}/${value}`}>{label ?? value}</ChoiceLabel>
           </ChoiceField>
         </Fragment>
       ))}
@@ -270,6 +275,15 @@ function SingleChoiceButtonsInput({
       {getVisibleChildren(value, children)}
     </div>
   );
+}
+
+function toOptions(choices: Choice[]) {
+  return choices
+    .map(ch => ({
+      label: ch.props.label ?? ch.props.value,
+      value: ch.props.value,
+    }))
+    .sort(comparing(o => o.label));
 }
 
 function SingleChoiceTextInput({
@@ -299,10 +313,7 @@ function SingleChoiceTextInput({
       ? { label: choice.props.label ?? choice.props.value, value: choice.props.value }
       : null;
 
-  const options = children.map(ch => ({
-    label: ch.props.label ?? ch.props.value,
-    value: ch.props.value,
-  }));
+  const options = toOptions(children);
 
   return (
     <div>
@@ -346,6 +357,30 @@ export function Option({
 }: {
   value: number | string;
   children?: ReactNode;
+  label?: string;
+}): Choice {
+  return <span />;
+}
+
+export function Yes({
+  children,
+  value = 'Yes',
+  label = 'Yes',
+}: {
+  children?: ReactNode;
+  value?: string;
+  label?: string;
+}): Choice {
+  return <span />;
+}
+
+export function No({
+  children,
+  value = 'No',
+  label = 'No',
+}: {
+  children?: ReactNode;
+  value?: string;
   label?: string;
 }): Choice {
   return <span />;

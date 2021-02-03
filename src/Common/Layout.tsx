@@ -86,7 +86,7 @@ export function Card({
   className?: string;
   style?: React.CSSProperties;
 }): JSX.Element {
-  const classes = 'bg-white overflow-hidden shadow-smooth rounded-lg';
+  const classes = 'bg-white shadow-smooth rounded-lg';
   return (
     <div style={style} className={c(classes, className)}>
       {children}

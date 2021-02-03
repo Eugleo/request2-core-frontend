@@ -36,12 +36,8 @@ export function Note({ children }: { children: ReactNode }): JSX.Element | null 
           <Icon.Info className="text-blue-900 w-5 mr-2" />
           <h3 className="font-medium text-sm text-blue-900">Note</h3>
         </div>
-        <div className="p-4">
-          {typeof children === 'string' ? (
-            <p className="text-sm text-gray-700">{children}</p>
-          ) : (
-            children
-          )}
+        <div className="p-4 text-sm text-gray-700">
+          {typeof children === 'string' ? <p>{children}</p> : children}
         </div>
       </div>
     );

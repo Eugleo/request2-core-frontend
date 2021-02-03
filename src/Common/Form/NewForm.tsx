@@ -85,13 +85,13 @@ export function Section({ title, children }: { title: string; children: ReactNod
   }
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <div>
         <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50">
           {title}
         </h2>
       </div>
-      <div className="px-6 pb-6 pt-4">{children}</div>
+      <div className="px-6 pb-6 pt-4 space-y-6">{children}</div>
     </Card>
   );
 }
@@ -103,4 +103,8 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
   };
   const props: New<Property>[] = Object.entries(data).reduce(fieldToProperty, []);
   submit(req, props);
+}
+
+export function Form({ children }: { children: ReactNode }): JSX.Element {
+  return <>{children}</>;
 }
