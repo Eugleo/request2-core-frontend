@@ -6,16 +6,10 @@ import React, { ReactNode } from 'react';
 import * as Icon from 'react-feather';
 import { Link, NavLink as RouterNavLink, useMatch } from 'react-router-dom';
 
-import { Tertiary } from '../Common/Buttons';
-import { Spacer } from '../Common/Layout';
-import { Authentized, Authorized, NotAuthentized, useAuth } from '../Utils/Auth';
-import { useAuthDispatch } from '../Utils/AuthContext';
+import { Authentized, Authorized, useAuth } from '../Utils/Auth';
 import logoSrc from '../assets/logoII.svg';
 
 export function Sidebar(): JSX.Element {
-  const { authPost } = useAuth();
-  const dispatch = useAuthDispatch();
-
   return (
     <nav className="h-full sticky bg-gray-50 border-gray-200 border-r w-64 z-10 flex flex-col items-stretch">
       <div className="mb-8 flex flex-row items-center px-4 mt-4">

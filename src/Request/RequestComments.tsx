@@ -4,6 +4,7 @@ import { useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
 import { LongTextInput } from '../Common/Form/NewTextField';
+import { Card } from '../Common/Layout';
 import { RandomAvatar } from '../Page/UserView';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
@@ -27,28 +28,30 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
   });
 
   return (
-    <div
-      style={{ gridTemplateRows: '1fr auto' }}
-      className="p-6 rounded-md shadow-sm bg-white relative grid grid-rows-2 overflow-auto"
-    >
-      <div className="overflow-scroll space-y-6">
-        <Loader>
-          {comments => (
-            <>
-              {comments.sort(comparing(c => c.dateAdded)).map(prop => (
-                <CommentComponent
-                  isMine={prop.authorId === auth.user._id}
-                  text={prop.content}
-                  key={prop._id}
-                />
-              ))}
-              <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
-            </>
-          )}
-        </Loader>
+    <Card>
+      <div
+        style={{ gridTemplateRows: '1fr auto' }}
+        className="p-6 shadow-sm relative grid grid-rows-2 overflow-auto"
+      >
+        <div className="overflow-scroll space-y-6">
+          <Loader>
+            {comments => (
+              <>
+                {comments.sort(comparing(c => c.dateAdded)).map(prop => (
+                  <CommentComponent
+                    isMine={prop.authorId === auth.user._id}
+                    text={prop.content}
+                    key={prop._id}
+                  />
+                ))}
+                <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
+              </>
+            )}
+          </Loader>
+        </div>
+        <CommentComposer requestId={requestId} refresh={refreshComments} />
       </div>
-      <CommentComposer requestId={requestId} refresh={refreshComments} />
-    </div>
+    </Card>
   );
 }
 

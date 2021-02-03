@@ -27,7 +27,11 @@ export function ShortText({ id, q, required = false }: QuestionProps): JSX.Eleme
   return (
     <div>
       <Question>{q}</Question>
-      <p className="text-sm text-gray-800">{values[id] === '' ? '[no value given]' : values[id]}</p>
+      {values[id] === '' ? (
+        <p className="text-sm text-gray-400">[no value given]</p>
+      ) : (
+        <p className="text-sm text-gray-800">{values[id]}</p>
+      )}
     </div>
   );
 }

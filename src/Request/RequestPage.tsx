@@ -77,19 +77,20 @@ function Details({ requestType, properties }: { requestType: string; properties:
 
 function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
   return (
-    <div className="bg-white rounded-md shadow-sm overflow-hidden">
-      <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
-        <Clock className="mr-2 w-4 text-yellow-600" />
-        <h2 className="text-lg font-semibold">Changelog</h2>
+    <Page.Card>
+      <div className="rounded-md overflow-hidden">
+        <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
+          <h2 className="text-lg font-semibold">Changelog</h2>
+        </div>
+        <div className="divide-y divide-gray-200">
+          {properties
+            .filter(p => p.shouldLog)
+            .map(p => (
+              <LogItem key={p._id} property={p} />
+            ))}
+        </div>
       </div>
-      <div className="px-6 divide-y divide-gray-200">
-        {properties
-          .filter(p => p.shouldLog)
-          .map(p => (
-            <LogItem key={p._id} property={p} />
-          ))}
-      </div>
-    </div>
+    </Page.Card>
   );
 }
 
@@ -97,7 +98,7 @@ function LogItem({ property }: { property: PropertyJSON }) {
   const { result } = useAsyncGet<User>(`/users/${property.authorId}`);
 
   return (
-    <div className="flex flex-row items-center py-5">
+    <div className="flex flex-row items-center py-5 px-6">
       <div className="bg-blue-100 rounded-full p-2 mr-4">
         <Edit3 className="w-5 text-blue-500 h-5" />
       </div>

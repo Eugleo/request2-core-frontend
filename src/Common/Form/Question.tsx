@@ -74,7 +74,7 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
 }
 
 export function Question({ children }: { children: ReactNode }): JSX.Element {
-  return <p className="text-md text-gray-700 font-semibold mb-2 text-sm">{children}</p>;
+  return <p className="text-md text-gray-900 font-semibold mb-2 text-sm">{children}</p>;
 }
 
 export function reqRule(

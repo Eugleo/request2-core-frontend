@@ -8,9 +8,9 @@ import { Proteomics } from '../../Request/RequestTypes/Proteomics';
 import { getRequestFormForType } from '../../Request/RequestTypes/RequestTypes';
 import { apiBase } from '../../Utils/ApiBase';
 import { WithID } from '../../Utils/WithID';
-import { Page } from '../Layout';
+import { Card, Page } from '../Layout';
 import { ShortText } from './NewTextField';
-import { FieldContext } from './Question';
+import { FieldContext, useFieldContext } from './Question';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
@@ -67,15 +67,32 @@ export function NewForm({
 }
 
 export function Section({ title, children }: { title: string; children: ReactNode }): JSX.Element {
+  const { state } = useFieldContext();
+
+  if (state === 'edit') {
+    return (
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-1">
+          <h2 className="font-medium text-lg sticky top-0">{title}</h2>
+        </div>
+        <div className="col-span-2">
+          <Card>
+            <div className="p-6 space-y-6">{children}</div>
+          </Card>
+        </div>
+      </div>
+    );
+  }
+
   return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-1">
-        <h2 className="font-medium text-lg sticky top-0">{title}</h2>
+    <Card>
+      <div>
+        <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50">
+          {title}
+        </h2>
       </div>
-      <div className="col-span-2">
-        <div className="p-6 bg-white rounded-md shadow-sm space-y-6">{children}</div>
-      </div>
-    </div>
+      <div className="px-6 pb-6 pt-4">{children}</div>
+    </Card>
   );
 }
 
