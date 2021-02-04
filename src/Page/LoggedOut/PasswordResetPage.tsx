@@ -5,7 +5,7 @@ import { Primary } from '../../Common/Buttons';
 import { ShortTextInput } from '../../Common/Form/NewTextField';
 import { Question, reqRule } from '../../Common/Form/Question';
 import * as Api from '../../Utils/Api';
-import keySrc from '../../assets/key.png';
+import keySrc from '../../assets/key.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
 export function PasswordResetInitPageWithEmail(): JSX.Element {

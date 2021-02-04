@@ -1,6 +1,6 @@
 {
-    "name": "Request II",
-    "short_name": "Request II",
+    "name": "Request 2",
+    "short_name": "Request 2",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,7 +13,7 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#2c7a7b",
-    "background_color": "#2c7a7b",
+    "theme_color": "#ffffff",
+    "background_color": "#ffffff",
     "display": "standalone"
 }

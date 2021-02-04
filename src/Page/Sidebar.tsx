@@ -2,7 +2,7 @@ import '../styles/index.css';
 
 import c from 'classnames';
 import { To } from 'history';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
 import * as Icon from 'react-feather';
 import { Link, NavLink as RouterNavLink, useMatch } from 'react-router-dom';
 
@@ -11,7 +11,7 @@ import logoSrc from '../assets/logo2.svg';
 
 export function Sidebar(): JSX.Element {
   return (
-    <nav className="top-0 z-20 bg-gray-100 px-6 sticky">
+    <nav className={c('top-0 z-20 bg-gray-100 px-6 sticky')}>
       <div className="border-b border-gray-200 flex flex-row items-stretch">
         <div className="flex flex-row items-center py-4 mr-6">
           <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9" />
