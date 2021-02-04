@@ -35,7 +35,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
   return (
     <Row>
       <Cell>
-        <Link to={request._id.toString()} className="text-black hover:text-green-700">
+        <Link to={request._id.toString()} className="text-black hover:text-indigo-700">
           {request.title}
         </Link>
       </Cell>

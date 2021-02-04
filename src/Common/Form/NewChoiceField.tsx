@@ -265,7 +265,7 @@ function SingleChoiceButtonsInput({
               type="radio"
               defaultChecked={value === defaultValue}
               {...props}
-              className={c(err && 'bg-red-100 border-red-400', 'text-green-500')}
+              className={c(err && 'bg-red-100 border-red-400', 'text-indigo-500')}
             />
             <ChoiceLabel htmlFor={`${name}/${value}`}>{label ?? value}</ChoiceLabel>
           </ChoiceField>

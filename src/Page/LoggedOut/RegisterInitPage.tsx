@@ -37,7 +37,7 @@ export function RegisterInitPage(): JSX.Element {
       >
         <CenteredForm>
           {regState === 'success' ? (
-            <p className="text-green-600 mb-5">
+            <p className="text-indigo-600 mb-5">
               Registration started correctly! Please check your mailbox for an activation e-mail.
             </p>
           ) : (

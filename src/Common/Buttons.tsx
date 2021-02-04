@@ -27,7 +27,7 @@ export function primaryClasses(status: Status): ClassValue[] {
     'text-white',
     'shadow-sm',
     status === 'Danger' && 'bg-red-400 hover:bg-red-500',
-    status === 'Normal' && 'bg-green-500 hover:bg-green-600',
+    status === 'Normal' && 'bg-indigo-500 hover:bg-indigo-600',
   ];
 }
 
