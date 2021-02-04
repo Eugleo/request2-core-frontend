@@ -14,7 +14,7 @@ export function Sidebar(): JSX.Element {
     <nav className={c('top-0 z-20 bg-gray-100 px-6 sticky')}>
       <div className="border-b border-gray-200 flex flex-row items-stretch">
         <div className="flex flex-row items-center py-4 mr-6">
-          <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9" />
+          <img alt="Request 2 logo" src={logoSrc} className="flex-grow-0 w-7" />
         </div>
         <div className="flex flex-row justify-between flex-grow items-center">
           <div className="space-x-4 flex flex-row py-2 items-center">

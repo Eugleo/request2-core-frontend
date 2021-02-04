@@ -11,7 +11,7 @@ import * as Api from '../../Utils/Api';
 import { authHeaders } from '../../Utils/Auth';
 import { useAuthDispatch } from '../../Utils/AuthContext';
 import { Errors } from '../../Utils/Errors';
-import logoSrc from '../../assets/logo2.svg';
+import logoSrc from '../../assets/logo2old.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
 export async function getUserInfo(apiKey: string): Promise<{ data: UserDetails }> {
