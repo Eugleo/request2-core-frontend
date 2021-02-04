@@ -11,8 +11,8 @@ import logoSrc from '../assets/logo2.svg';
 
 export function Sidebar(): JSX.Element {
   return (
-    <nav className="top-0 z-20 bg-indigo-800 px-6 sticky">
-      <div className="border-b border-gray-600 flex flex-row items-stretch">
+    <nav className="top-0 z-20 bg-gray-100 px-6 sticky">
+      <div className="border-b border-gray-200 flex flex-row items-stretch">
         <div className="flex flex-row items-center py-4 mr-6">
           <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9" />
         </div>
@@ -63,11 +63,12 @@ function UserButton() {
   const { auth } = useAuth();
   return (
     <Link to="/me">
-      <div className="flex flex-row items-center">
+      <div className="flex flex-row items-center hover:bg-indigo-100 rounded-lg py-2 px-3">
         <div className="mr-4 text-right">
-          <p className="flex-grow text-sm text-indigo-200 font-medium">{auth.user.name}</p>
+          <p className="flex-grow text-sm text-indigo-900 font-medium">{auth.user.name}</p>
+          <p className="flex-grow text-xs text-indigo-400 ">View profile</p>
         </div>
-        <div className="bg-indigo-400 rounded-full p-1">
+        <div className="bg-indigo-200 rounded-full p-2">
           <Icon.User className="text-indigo-900 w-5 h-5" />
         </div>
       </div>
@@ -95,7 +96,7 @@ function NavLink({
       to={to}
       className={c(
         'px-3 py-2 rounded-md text-sm',
-        doesMatch ? 'bg-indigo-900 text-white' : 'hover:text-indigo-100 text-indigo-200',
+        doesMatch ? 'bg-indigo-200 text-indigo-800' : 'hover:text-indigo-500 text-indigo-400',
         className
       )}
     >
