@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Question } from '../Common/Form/Question';
-import { Card, Page } from '../Common/Layout';
+import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
 import { Maybe } from '../Utils/Maybe';
 import { Team } from './Team';
 
@@ -32,28 +32,40 @@ export function TeamForm({
   });
 
   return (
-    <Page title={title} buttons={headerButtons}>
-      <Card className="w-full overflow-hidden max-w-2xl">
-        <form
-          className="flex flex-col items-start"
-          onSubmit={handleSubmit(async values => {
-            await onSubmit(values);
-            navigate(-1);
-          })}
-        >
-          <div className="p-6 space-y-6 w-full">
-            <div>
-              <Question>Team leader</Question>
-              <ShortTextInput name="name" />
-            </div>
-            <div>
-              <Question>Institutional code</Question>
-              <ShortTextInput name="code" />
-            </div>
-          </div>
-          <div className="flex justify-end w-full px-6 py-3 bg-gray-50">{children}</div>
-        </form>
-      </Card>
-    </Page>
+    <ContentWrapper>
+      <div className="max-w-4xl w-full mx-auto">
+        <Header>
+          <Title>{title}</Title>
+          {headerButtons && (
+            <>
+              <Spacer /> {headerButtons}
+            </>
+          )}
+        </Header>
+        <Body>
+          <Card className="w-full overflow-hidden">
+            <form
+              className="flex flex-col items-start"
+              onSubmit={handleSubmit(async values => {
+                await onSubmit(values);
+                navigate(-1);
+              })}
+            >
+              <div className="p-6 space-y-6 w-full">
+                <div>
+                  <Question>Team leader</Question>
+                  <ShortTextInput name="name" />
+                </div>
+                <div>
+                  <Question>Institutional code</Question>
+                  <ShortTextInput name="code" />
+                </div>
+              </div>
+              <div className="flex justify-end w-full px-6 py-3 bg-gray-50">{children}</div>
+            </form>
+          </Card>
+        </Body>
+      </div>
+    </ContentWrapper>
   );
 }

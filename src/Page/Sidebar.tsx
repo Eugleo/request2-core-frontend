@@ -7,11 +7,11 @@ import * as Icon from 'react-feather';
 import { Link, NavLink as RouterNavLink, useMatch } from 'react-router-dom';
 
 import { Authentized, Authorized, useAuth } from '../Utils/Auth';
-import logoSrc from '../assets/logoII.svg';
+import logoSrc from '../assets/logo2.svg';
 
 export function Sidebar(): JSX.Element {
   return (
-    <nav className="top-0 z-20 bg-gray-800 px-6 sticky">
+    <nav className="top-0 z-20 bg-indigo-800 px-6 sticky">
       <div className="border-b border-gray-600 flex flex-row items-stretch">
         <div className="flex flex-row items-center py-4 mr-6">
           <img alt="Request II logo" src={logoSrc} className="flex-grow-0 w-9" />
@@ -65,10 +65,10 @@ function UserButton() {
     <Link to="/me">
       <div className="flex flex-row items-center">
         <div className="mr-4 text-right">
-          <p className="flex-grow text-sm text-gray-200 font-medium">{auth.user.name}</p>
+          <p className="flex-grow text-sm text-indigo-200 font-medium">{auth.user.name}</p>
         </div>
-        <div className="bg-gray-500 rounded-full p-1">
-          <Icon.User className="text-gray-900 w-5 h-5" />
+        <div className="bg-indigo-400 rounded-full p-1">
+          <Icon.User className="text-indigo-900 w-5 h-5" />
         </div>
       </div>
     </Link>
@@ -95,7 +95,7 @@ function NavLink({
       to={to}
       className={c(
         'px-3 py-2 rounded-md text-sm',
-        doesMatch ? 'bg-gray-900 text-white' : 'hover:bg-gray-800 text-gray-200',
+        doesMatch ? 'bg-indigo-900 text-white' : 'hover:text-indigo-100 text-indigo-200',
         className
       )}
     >

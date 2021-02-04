@@ -5,7 +5,7 @@ import { useForm } from 'react-hook-form';
 import { Primary, Secondary, Tertiary } from '../Common/Buttons';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Question, reqRule } from '../Common/Form/Question';
-import { Card, Page } from '../Common/Layout';
+import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
 import { Pill } from '../Common/Table';
 import { UserDetails } from '../User/User';
 import { useAuth } from '../Utils/Auth';
@@ -28,91 +28,95 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
   });
 
   return (
-    <Page
-      title={`${auth.user.name}`}
-      buttons={
-        <Secondary
-          status="Danger"
-          onClick={async () => {
-            const r = await authPost('/logout', {});
-            if (r.ok) {
-              localStorage.removeItem('apiKey');
-              dispatch({ type: 'LOGOUT' });
-            } else {
-              const body = await r.text();
-              console.log(`Couldn't log out, response body was ${body}`);
-            }
-          }}
-        >
-          Log out
-        </Secondary>
-      }
-    >
-      <div className="space-y-6">
-        <Section title="Basic information">
-          <form
-            className="space-y-6"
-            onSubmit={handleSubmit(async ({ name }) => {
-              const r = await authPut('/me', {
-                name,
-              });
-
+    <ContentWrapper>
+      <div className="max-w-4xl mx-auto w-full">
+        <Header>
+          <Title>{`${auth.user.name}`}</Title>
+          <Spacer />
+          <Secondary
+            status="Danger"
+            onClick={async () => {
+              const r = await authPost('/logout', {});
               if (r.ok) {
-                console.log('Display name successfully updated');
+                localStorage.removeItem('apiKey');
+                dispatch({ type: 'LOGOUT' });
               } else {
-                const js = await r.json();
-                console.log(js.error);
+                const body = await r.text();
+                console.log(`Couldn't log out, response body was ${body}`);
               }
-            })}
+            }}
           >
-            <div className="space-y-6 p-6">
-              <div>
-                <Question>Display name</Question>
-                <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
-              </div>
-              <div>
-                <Question>E-mail address</Question>
-                <ShortTextInput name="email" disabled />
-              </div>
-            </div>
-            <Footer>
-              <Primary type="submit">Save changes</Primary>
-            </Footer>
-          </form>
-        </Section>
+            Log out
+          </Secondary>
+        </Header>
+        <Body>
+          <div className="space-y-6">
+            <Section title="Basic information">
+              <form
+                className="space-y-6"
+                onSubmit={handleSubmit(async ({ name }) => {
+                  const r = await authPut('/me', {
+                    name,
+                  });
 
-        <PasswordSection />
+                  if (r.ok) {
+                    console.log('Display name successfully updated');
+                  } else {
+                    const js = await r.json();
+                    console.log(js.error);
+                  }
+                })}
+              >
+                <div className="space-y-6 p-6">
+                  <div>
+                    <Question>Display name</Question>
+                    <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
+                  </div>
+                  <div>
+                    <Question>E-mail address</Question>
+                    <ShortTextInput name="email" disabled />
+                  </div>
+                </div>
+                <Footer>
+                  <Primary type="submit">Save changes</Primary>
+                </Footer>
+              </form>
+            </Section>
 
-        <Section title="Account details">
-          <div className="p-6">
-            <div>
-              <Question>Research groups</Question>
-              <div className="flex flex-row space-x-2 mb-6">
-                {user.teams.map(t => (
-                  <Pill
-                    key={t._id}
-                    text={t.name}
-                    className="bg-gray-100 text-gray-900 border border-gray-200"
-                  />
-                ))}
+            <PasswordSection />
+
+            <Section title="Account details">
+              <div className="p-6">
+                <div>
+                  <Question>Research groups</Question>
+                  <div className="flex flex-row space-x-2 mb-6">
+                    {user.teams.map(t => (
+                      <Pill
+                        key={t._id}
+                        text={t.name}
+                        className="bg-gray-100 text-gray-900 border border-gray-200"
+                      />
+                    ))}
+                  </div>
+                </div>
+                <div>
+                  <Question>Privileges</Question>
+                  <div className="flex flex-row space-x-2">
+                    {user.roles.map(r => (
+                      <Pill
+                        key={r}
+                        text={r}
+                        className="bg-gray-100 text-gray-900 border border-gray-200"
+                      />
+                    ))}
+                  </div>
+                </div>
               </div>
-            </div>
-            <div>
-              <Question>Privileges</Question>
-              <div className="flex flex-row space-x-2">
-                {user.roles.map(r => (
-                  <Pill
-                    key={r}
-                    text={r}
-                    className="bg-gray-100 text-gray-900 border border-gray-200"
-                  />
-                ))}
-              </div>
-            </div>
+            </Section>
           </div>
-        </Section>
+        </Body>
       </div>
-    </Page>
+    </ContentWrapper>
   );
 }
 

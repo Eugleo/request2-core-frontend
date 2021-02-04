@@ -5,7 +5,7 @@ import * as Button from '../Common/Buttons';
 import { MultipleChoiceInput, Option } from '../Common/Form/NewChoiceField';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Question, reqRule } from '../Common/Form/Question';
-import { Card, Page } from '../Common/Layout';
+import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
 import { Selection } from '../Request/Request';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
@@ -67,68 +67,80 @@ export function UserForm({
   const { register, handleSubmit, control, errors } = useForm<UserFormFields>({ defaultValues });
 
   return (
-    <Page title={title} buttons={headerButtons}>
-      <Loader>
-        {({ values: teams }) => (
-          <form
-            onSubmit={handleSubmit(values => {
-              const teamIds = values.teamIds.map(t => Number.parseInt(t.value));
-              onSubmit({
-                ...values,
-                teamIds,
-                roles: values.roles
-                  .map(r => r.value)
-                  .filter((r): r is Role => ['Admin', 'Client', 'Operator'].includes(r)),
-              });
-            })}
-          >
-            <Card className="max-w-2xl">
-              <div className="p-6 space-y-6">
-                <div>
-                  <Question>Name</Question>
-                  <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
-                </div>
-                <div>
-                  <Question>E-mail address</Question>
-                  <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
-                </div>
-                {user ? null : (
-                  <div>
-                    <Question>Password</Question>
+    <ContentWrapper>
+      <div className="max-w-4xl w-full mx-auto">
+        <Header>
+          <Title>{title}</Title>
+          {headerButtons && (
+            <>
+              <Spacer /> {headerButtons}
+            </>
+          )}
+        </Header>
+        <Body>
+          <Loader>
+            {({ values: teams }) => (
+              <form
+                onSubmit={handleSubmit(values => {
+                  const teamIds = values.teamIds.map(t => Number.parseInt(t.value));
+                  onSubmit({
+                    ...values,
+                    teamIds,
+                    roles: values.roles
+                      .map(r => r.value)
+                      .filter((r): r is Role => ['Admin', 'Client', 'Operator'].includes(r)),
+                  });
+                })}
+              >
+                <Card>
+                  <div className="p-6 space-y-6">
+                    <div>
+                      <Question>Name</Question>
+                      <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
+                    </div>
+                    <div>
+                      <Question>E-mail address</Question>
+                      <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+                    </div>
+                    {user ? null : (
+                      <div>
+                        <Question>Password</Question>
 
-                    <ShortTextInput
-                      name="password"
-                      type="password"
-                      errors={errors}
-                      reg={register(reqRule())}
-                    />
+                        <ShortTextInput
+                          name="password"
+                          type="password"
+                          errors={errors}
+                          reg={register(reqRule())}
+                        />
+                      </div>
+                    )}
+                    <div>
+                      <Question>Privileges</Question>
+                      <MultipleChoiceInput name="roles" control={control} errors={errors}>
+                        <Option value="Admin" />
+                        <Option value="Client" />
+                        <Option value="Operator" />
+                      </MultipleChoiceInput>
+                    </div>
+                    <div>
+                      <Question>Teams</Question>
+                      <MultipleChoiceInput name="teamIds" control={control} errors={errors}>
+                        {teams.sort(comparing(t => t.name)).map(t => (
+                          <Option key={t._id} value={t._id} label={t.name} />
+                        ))}
+                      </MultipleChoiceInput>
+                    </div>
                   </div>
-                )}
-                <div>
-                  <Question>Privileges</Question>
-                  <MultipleChoiceInput name="roles" control={control} errors={errors}>
-                    <Option value="Admin" />
-                    <Option value="Client" />
-                    <Option value="Operator" />
-                  </MultipleChoiceInput>
-                </div>
-                <div>
-                  <Question>Teams</Question>
-                  <MultipleChoiceInput name="teamIds" control={control} errors={errors}>
-                    {teams.sort(comparing(t => t.name)).map(t => (
-                      <Option key={t._id} value={t._id} label={t.name} />
-                    ))}
-                  </MultipleChoiceInput>
-                </div>
-              </div>
-              <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
-                <Button.Cancel className="mr-3" />
-                <Button.Primary type="submit" title={submitTitle} status="Normal" />
-              </div>
-            </Card>
-          </form>
-        )}
-      </Loader>
-    </Page>
+                  <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
+                    <Button.Cancel className="mr-3" />
+                    <Button.Primary type="submit" title={submitTitle} status="Normal" />
+                  </div>
+                </Card>
+              </form>
+            )}
+          </Loader>
+        </Body>
+      </div>
+    </ContentWrapper>
   );
 }

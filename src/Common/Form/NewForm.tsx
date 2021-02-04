@@ -8,7 +8,7 @@ import { Proteomics } from '../../Request/RequestTypes/Proteomics';
 import { getRequestFormForType } from '../../Request/RequestTypes/RequestTypes';
 import { apiBase } from '../../Utils/ApiBase';
 import { WithID } from '../../Utils/WithID';
-import { Card, Page } from '../Layout';
+import { Body, Card, ContentWrapper, Header, Page, Title } from '../Layout';
 import { ShortText } from './NewTextField';
 import { FieldContext, useFieldContext } from './Question';
 import { TeamField } from './RequestInfoFields';
@@ -42,24 +42,33 @@ export function NewForm({
 
   return (
     <FieldContext.Provider value={state}>
-      <Page title={title ? `${defaultTitle}: ${title}` : defaultTitle}>
-        <Uploady destination={{ url: `${apiBase}/files` }}>
-          <FormProvider {...form}>
-            <form
-              onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
-              className="space-y-8"
-            >
-              <Section title="General information">
-                <ShortText q="What should be this request called?" id="Title" required />
-                <TeamField id="TeamId" />
-              </Section>
-              {getRequestFormForType(requestType)}
-              <div className="h-0.5 w-full bg-gray-200" />
-              <div className="flex justify-end flex-row w-full space-x-6 relative">{children}</div>
-            </form>
-          </FormProvider>
-        </Uploady>
-      </Page>
+      <ContentWrapper>
+        <div className="max-w-4xl mx-auto w-full">
+          <Header>
+            <Title>{title ? `${defaultTitle}: ${title}` : defaultTitle}</Title>
+          </Header>
+          <Body>
+            <Uploady destination={{ url: `${apiBase}/files` }}>
+              <FormProvider {...form}>
+                <form
+                  onSubmit={form.handleSubmit(values => onSubmit(values, submit))}
+                  className="space-y-8"
+                >
+                  <Section title="General information">
+                    <ShortText q="What should be this request called?" id="Title" required />
+                    <TeamField id="TeamId" />
+                  </Section>
+                  {getRequestFormForType(requestType)}
+                  <div className="h-0.5 w-full bg-gray-200" />
+                  <div className="flex justify-end flex-row w-full space-x-6 relative">
+                    {children}
+                  </div>
+                </form>
+              </FormProvider>
+            </Uploady>
+          </Body>
+        </div>
+      </ContentWrapper>
     </FieldContext.Provider>
   );
 }
