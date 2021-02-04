@@ -12,8 +12,8 @@ import { formatDate } from '../Utils/Date';
 
 export function RandomAvatar(): JSX.Element {
   return (
-    <div className="bg-green-700 rounded-full h-10 w-10 flex justify-center items-center">
-      <User className="text-white" />
+    <div className="bg-indigo-100 rounded-full h-10 w-10 flex justify-center items-center">
+      <User className="text-indigo-400" />
     </div>
   );
 }
@@ -34,7 +34,9 @@ export function UserView(): JSX.Element {
         type="button"
         className="hover:text-gray-200 focus:outline-none"
         onClick={() => {
-          !showDetails && setShowDetails(true);
+          if (!showDetails) {
+            setShowDetails(true);
+          }
         }}
       >
         <div style={{ padding: '-1px' }} className="flex w-full h-full items-stretch">
