@@ -7,7 +7,7 @@ import * as Icon from 'react-feather';
 import { Link, NavLink as RouterNavLink, useMatch } from 'react-router-dom';
 
 import { Authentized, Authorized, useAuth } from '../Utils/Auth';
-import logoSrc from '../assets/logo2.svg';
+import logoSrc from '../assets/logo2new.svg';
 
 export function Sidebar(): JSX.Element {
   return (

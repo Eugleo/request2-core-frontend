@@ -48,7 +48,7 @@
   }
 
   .react-select input {
-    @apply focus:outline-none focus:ring-0 !important;
+    @apply focus:outline-none focus:ring-0 -my-2 !important;
   }
 
   .white-tooltip {

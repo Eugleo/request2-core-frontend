@@ -181,19 +181,27 @@ export function SingleChoice({
     );
   }
   const choice = choices.find(ch => ch.props.value === values[id]);
-  let label = '[neither option has been chosen]';
-  if (values[id] !== '') {
-    label = choice
-      ? choice.props.label ?? choice.props.value
-      : `[ERROR]: The value ${values[id]} is invalid`;
+
+  let label;
+  if (!values[id] || values[id] === '') {
+    label = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
+  } else if (values[id] && values[id] !== '' && choice) {
+    label = (
+      <p className="text-sm text-gray-800">
+        {choice.props.label ?? choice.props.value}
+        <span className="text-gray-400"> (out of {choices.length} total options)</span>
+      </p>
+    );
+  } else if (!choice) {
+    label = (
+      <p className="text-sm text-gray-400">{`[ERROR]: The value ${values[id]} is invalid`}</p>
+    );
   }
+
   return (
     <div>
       <Question>{q}</Question>
-      <p className="text-sm text-gray-800">
-        {label}
-        <span className="text-gray-400"> (out of {choices.length} total options)</span>
-      </p>
+      {label}
       {getVisibleChildren(choice?.props.value, choices)}
     </div>
   );
@@ -426,11 +434,14 @@ function MultiValueRemove(props: any) {
 
 function CreatableQuestion({ hasCustom, q }: { q?: string; hasCustom: boolean }) {
   return (
-    <div className="flex flex-row space-x-2 items-center mb-2">
-      <p className="text-md text-gray-700 font-semibold text-sm">{q}</p>
+    <div className="flex flex-row space-x-2 items-center mb-2 relative">
+      <p className="text-md text-gray-900 font-semibold text-sm">{q}</p>
       {hasCustom ? (
         <>
-          <Icon.Box className="text-green-400 w-3.5" data-tip="You can enter your own option" />
+          <Icon.Box
+            className="text-green-400 w-3.5 absolute top-0 right-0.5"
+            data-tip="You can enter your own option"
+          />
           <ReactTooltip
             type="light"
             effect="solid"

@@ -1,11 +1,11 @@
-<svg width="162" height="162" viewBox="0 0 162 162" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <circle cx="25" cy="25" r="22" fill="#C7D2FE" />
-  <circle cx="25" cy="81" r="22" fill="#C7D2FE" />
-  <circle cx="81" cy="25" r="22" fill="#C7D2FE" />
-  <circle cx="25" cy="137" r="25" fill="#4338CA" />
-  <circle cx="81" cy="82" r="22" fill="#C7D2FE" />
-  <circle cx="137" cy="82" r="22" fill="#C7D2FE" />
-  <circle cx="81" cy="138" r="22" fill="#C7D2FE" />
-  <circle cx="137" cy="25" r="25" fill="#4338CA" />
-  <circle cx="137" cy="138" r="22" fill="#C7D2FE" />
+<svg width="159" height="159" viewBox="0 0 159 159" fill="none" xmlns="http://www.w3.org/2000/svg">
+<circle cx="25" cy="22" r="22" fill="#C7D2FE"/>
+<circle cx="25" cy="78" r="22" fill="#C7D2FE"/>
+<circle cx="81" cy="22" r="22" fill="#C7D2FE"/>
+<circle cx="25" cy="134" r="25" fill="#4338CA"/>
+<circle cx="137" cy="23" r="22" fill="#C7D2FE"/>
+<circle cx="137" cy="79" r="22" fill="#C7D2FE"/>
+<circle cx="81" cy="135" r="22" fill="#C7D2FE"/>
+<circle cx="81" cy="78" r="25" fill="#4338CA"/>
+<circle cx="137" cy="135" r="22" fill="#C7D2FE"/>
 </svg>

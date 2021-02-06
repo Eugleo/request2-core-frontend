@@ -95,7 +95,11 @@ export function LongText({ id, q, required = false }: QuestionProps): JSX.Elemen
   return (
     <div>
       <Question>{q}</Question>
-      <p className="text-sm text-gray-800">{values[id]}</p>
+      {values[id] && values[id].length > 0 ? (
+        <p className="text-sm text-gray-800">{values[id]}</p>
+      ) : (
+        <p className="text-sm text-gray-400">[no value]</p>
+      )}
     </div>
   );
 }
