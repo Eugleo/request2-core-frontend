@@ -92,7 +92,7 @@ export function UserForm({
                   });
                 })}
               >
-                <Card>
+                <Card className="">
                   <div className="p-6 space-y-6">
                     <div>
                       <Question>Name</Question>
@@ -131,7 +131,7 @@ export function UserForm({
                       </MultipleChoiceInput>
                     </div>
                   </div>
-                  <div className="flex justify-end w-full px-6 py-3 bg-gray-100">
+                  <div className="flex justify-end w-full px-6 py-3 bg-gray-50 rounded-b-lg">
                     <Button.Cancel className="mr-3" />
                     <Button.Primary type="submit" title={submitTitle} status="Normal" />
                   </div>

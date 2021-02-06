@@ -1,5 +1,9 @@
 export const requestTypeDisplayNames: Map<string, { title: string; word: string }> = new Map([
-  ['proteomics', { title: 'Proteomics', word: 'proteomics' }],
-  ['lipidomics', { title: 'Lipidomics', word: 'lipidomics' }],
-  // ['small-molecule', { title: 'Small molecule', word: 'small molecule' }],
+  ['proteomics', { title: 'Proteomics analysis', word: 'proteomics' }],
+  ['lipidomics', { title: 'Lipidomics analysis', word: 'lipidomics' }],
+  ['ms-imaging', { title: 'Mass spectrometry imaging', word: 'MS imaging' }],
+  [
+    'small-molecules',
+    { title: 'Quantitative analysis of small molecules', word: 'small molecules' },
+  ],
 ]);

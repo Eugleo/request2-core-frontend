@@ -27,10 +27,10 @@ export function ShortText({ id, q, required = false }: QuestionProps): JSX.Eleme
   return (
     <div>
       <Question>{q}</Question>
-      {values[id] === '' ? (
-        <p className="text-sm text-gray-400">[no value given]</p>
-      ) : (
+      {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
+      ) : (
+        <p className="text-sm text-gray-400">[no value given]</p>
       )}
     </div>
   );
@@ -98,7 +98,7 @@ export function LongText({ id, q, required = false }: QuestionProps): JSX.Elemen
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
-        <p className="text-sm text-gray-400">[no value]</p>
+        <p className="text-sm text-gray-400">[no value given]</p>
       )}
     </div>
   );
