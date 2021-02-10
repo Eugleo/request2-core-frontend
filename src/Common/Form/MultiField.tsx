@@ -23,7 +23,7 @@ export function MultiField({
 
   const maybeCount = Number.parseInt(values[countId] ?? 0);
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
-  const fields = new Array(count)
+  const fields = Array.from({ length: count })
     .fill(null)
     .map((_, i) => i)
     .map(children);
@@ -57,7 +57,7 @@ function MultiFieldField({
         <div>
           <Question>Details about each sample</Question>
           <div className="space-y-2">
-            {new Array(count)
+            {Array.from({ length: count })
               .fill(null)
               .map((_, i) => i)
               .map(i => (

@@ -90,7 +90,7 @@ function RequestList() {
 }
 
 function NewRequestSection() {
-  const requestTypes = new Array(...requestTypeDisplayNames.entries()).map(([key, val]) => ({
+  const requestTypes = [...requestTypeDisplayNames.entries()].map(([key, val]) => ({
     type: key,
     title: val.title,
   }));

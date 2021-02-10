@@ -47,7 +47,7 @@ export function idToCode(id: number): string {
     return [[...dgs, Math.floor(rst / k ** n)], rst % k ** n];
   }
 
-  const code = [...new Array(10).keys()]
+  const code = [...Array.from({ length: 10 }).keys()]
     .reverse()
     .reduce(helper, [[], id])[0]
     .map((i: number) => table[i])

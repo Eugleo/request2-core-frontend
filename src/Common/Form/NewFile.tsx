@@ -99,7 +99,7 @@ export function FileInput({
     setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
     if (items) {
       setInProgress(n => n - items.length);
-      setValue(name, value.concat(items), { shouldValidate: true });
+      setValue(name, [...value, ...items], { shouldValidate: true });
     }
   });
 

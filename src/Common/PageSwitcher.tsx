@@ -27,7 +27,7 @@ function getPages(
     Math.abs(currentPage - n) > bufferAround;
 
   return (
-    [...new Array(finalPage + 1).keys()]
+    [...Array.from({ length: finalPage + 1 }).keys()]
       // Hide pages according to basic rules
       .map((n: number) => ({ hidden: shouldBeHidden(n), number: n }))
       // Unhide a page if it's surrounded by shown pages
