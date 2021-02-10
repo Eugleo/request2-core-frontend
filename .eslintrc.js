@@ -17,6 +17,8 @@ module.exports = {
     // 'no-underscore-dangle': 0,
     'react/button-has-type': 0,
     'sonarjs/no-duplicate-string': 0,
+    'unicorn/prefer-spread':0,
+    'unicorn/no-new-array':0,
     // 'react/jsx-filename-extension': [2, { extensions: ['.jsx', '.tsx'] }],
     // 'react/jsx-props-no-spreading': [
     //   1,
