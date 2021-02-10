@@ -65,7 +65,7 @@ export function ShortTextInput({
   ...props
 }: InputProps<'input'>): JSX.Element {
   const err = errors && name && errors[name]?.message;
-
+  console.log(err);
   return (
     <div>
       <input

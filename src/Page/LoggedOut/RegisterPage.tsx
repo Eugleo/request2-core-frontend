@@ -92,10 +92,11 @@ export function RegisterPage(): JSX.Element {
                   reg={register({
                     ...reqRule(),
                     validate: val =>
-                      val.name.length < 3 ||
-                      val.name.split(' ').length < 2 ||
+                      val.length > 3 ||
+                      val.split(' ').length > 2 ||
                       'Please provide your full name and surname',
                   })}
+                  errors={errors}
                 />
               </div>
               <div>
@@ -112,6 +113,7 @@ export function RegisterPage(): JSX.Element {
                     validate: val =>
                       val.length > 8 || 'The password needs to have at least 8 characters',
                   })}
+                  errors={errors}
                 />
               </div>
               <div>
@@ -123,6 +125,7 @@ export function RegisterPage(): JSX.Element {
                     ...reqRule(),
                     validate: val => val === pwd || "The passwords don't match",
                   })}
+                  errors={errors}
                 />
               </div>
               {regState.state === 'loading' ? (

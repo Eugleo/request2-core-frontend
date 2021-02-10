@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { useNavigate } from 'react-router-dom';
 
 import { ShortTextInput } from '../Common/Form/NewTextField';
-import { Question } from '../Common/Form/Question';
+import { Question, reqRule } from '../Common/Form/Question';
 import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
 import { Maybe } from '../Utils/Maybe';
 import { Team } from './Team';
@@ -54,11 +54,11 @@ export function TeamForm({
               <div className="p-6 space-y-6 w-full">
                 <div>
                   <Question>Team leader</Question>
-                  <ShortTextInput name="name" />
+                  <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
                 </div>
                 <div>
                   <Question>Institutional code</Question>
-                  <ShortTextInput name="code" />
+                  <ShortTextInput name="code" errors={errors} reg={register(reqRule())} />
                 </div>
               </div>
               <div className="flex justify-end w-full px-6 py-3 bg-gray-50">{children}</div>
