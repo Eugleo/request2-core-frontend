@@ -23,7 +23,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
   const dispatch = useAuthDispatch();
   const { register, errors, handleSubmit } = useForm<{ name: string }>({
     defaultValues: {
-      name: '',
+      name: user.name,
     },
   });
 
