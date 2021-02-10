@@ -1,3 +1,4 @@
+import c from 'classnames';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 import { Clock, Edit3 } from 'react-feather';
@@ -5,9 +6,12 @@ import { useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { FieldContext } from '../Common/Form/Question';
+import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
+import { useAuth } from '../Utils/Auth';
+import { useAuthState } from '../Utils/AuthContext';
 import { WithID } from '../Utils/WithID';
 import { getDefaultValues } from './FieldValue';
 import { ResultWidget } from './Operator/ResultComponent';
@@ -16,6 +20,7 @@ import { RequestComments } from './RequestComments';
 import { RequestStatus } from './RequestStatus';
 import { Proteomics } from './RequestTypes/Proteomics';
 import { getRequestFormForType } from './RequestTypes/RequestTypes';
+import { Status, statusToStr } from './Status';
 
 export function RequestPage(): JSX.Element {
   const { id } = useParams();
@@ -58,6 +63,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
           </div>
 
           <div className="space-y-6 col-span-1">
+            <StatusSelect requestId={requestId} />
             <RequestComments requestId={requestId} />
             <Loader>{properties => <Log properties={properties} />}</Loader>
           </div>
@@ -74,6 +80,148 @@ function Details({ requestType, properties }: { requestType: string; properties:
     <FieldContext.Provider value={{ state: 'show', values: props }}>
       {getRequestFormForType(requestType)}
     </FieldContext.Provider>
+  );
+}
+
+function StatusSelect({ requestId }: { requestId: number }) {
+  const { result, refresh } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
+  const status = result.status === 'Success' ? result.data.status : null;
+
+  return (
+    <Page.Card className="overflow-hidden">
+      <div className="py-6 space-y-6">
+        <div className="flex flex-col space-y-4 justify-items-stretch">
+          <div>
+            <StatusButton
+              status="Pending"
+              isSelected={status === 'Pending'}
+              color="bg-yellow-400"
+              bgColor="bg-yellow-200"
+              position="start"
+              requestId={requestId}
+              refresh={refresh}
+            />
+            <StatusButton
+              status="InProgress"
+              isSelected={status === 'InProgress'}
+              color="bg-blue-400"
+              bgColor="bg-blue-200"
+              position="middle"
+              requestId={requestId}
+              refresh={refresh}
+            />
+            <StatusButton
+              status="Done"
+              isSelected={status === 'Done'}
+              color="bg-green-400"
+              bgColor="bg-green-200"
+              position="end"
+              requestId={requestId}
+              refresh={refresh}
+            />
+          </div>
+          <div>
+            <StatusButton
+              status="AwaitingInput"
+              isSelected={status === 'AwaitingInput'}
+              color="bg-purple-400"
+              bgColor="bg-purple-200"
+              position="alone"
+              requestId={requestId}
+              refresh={refresh}
+            />
+          </div>
+          <div className="bg-gray-100 h-0.5" />
+          <div>
+            <StatusButton
+              status="Deleted"
+              isSelected={status === 'Deleted'}
+              color="bg-red-400"
+              bgColor="bg-red-200"
+              position="alone"
+              requestId={requestId}
+              refresh={refresh}
+            />
+          </div>
+        </div>
+      </div>
+    </Page.Card>
+  );
+}
+
+function StatusButton({
+  isSelected,
+  color,
+  status,
+  position,
+  requestId,
+  bgColor,
+  refresh,
+}: {
+  isSelected: boolean;
+  color: string;
+  bgColor: string;
+  status: Status;
+  position: 'start' | 'middle' | 'end' | 'alone';
+  requestId: number | null;
+  refresh: () => void;
+}) {
+  const { authPut, auth } = useAuth<{ status: Status }>();
+  const [ref, isHovered] = useHover<HTMLButtonElement>();
+
+  const hasPermissions = auth.user.roles.includes('Admin') || auth.user.roles.includes('Operator');
+
+  let rounding = 'rounded-full';
+  switch (position) {
+    case 'start':
+      rounding = 'rounded-t-full';
+      break;
+    case 'end':
+      rounding = 'rounded-b-full';
+      break;
+    case 'middle':
+      rounding = 'rounded-none';
+      break;
+    default:
+      rounding = 'rounded-full';
+  }
+
+  return (
+    <button
+      className={c(
+        'px-6 items-center flex flex-row justify-start',
+        hasPermissions && 'cursor-pointer'
+      )}
+      ref={ref}
+      onClick={async () => {
+        if (hasPermissions && requestId) {
+          const r = await authPut(`/requests/${requestId}/status`, { status });
+          if (r.ok) {
+            refresh();
+          }
+        }
+      }}
+    >
+      <div
+        className={c(
+          'p-3 bg-gray-100 flex-grow-0 mr-4 transition-colors duration-150',
+          rounding,
+          hasPermissions && isHovered && !isSelected && 'bg-gray-200',
+          isSelected && bgColor
+        )}
+      >
+        <div className={c('rounded-full w-3 h-3', isSelected ? color : 'bg-white')} />
+      </div>
+      <p
+        className={c(
+          'text-sm flex-grow transition-colors duration-150 text-gray-500',
+          hasPermissions && isHovered && !isSelected && 'text-gray-900',
+          isSelected && 'text-gray-900 font-semibold'
+        )}
+      >
+        {statusToStr(status)}
+      </p>
+    </button>
   );
 }
 

@@ -21,11 +21,11 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
 
   const messageEndRef = useRef<HTMLDivElement>(null);
 
-  useEffect(() => {
-    if (messageEndRef?.current) {
-      messageEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
-    }
-  });
+  // useEffect(() => {
+  //   if (messageEndRef?.current) {
+  //     messageEndRef.current.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  //   }
+  // });
 
   return (
     <Card>
