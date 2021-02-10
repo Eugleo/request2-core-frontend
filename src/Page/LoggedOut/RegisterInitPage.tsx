@@ -9,8 +9,10 @@ import { post } from '../../Utils/Api';
 import logoSrc from '../../assets/register.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
+type RegState = { state: 'init' | 'loading' | 'success' } | { state: 'problem'; message: string };
+
 export function RegisterInitPage(): JSX.Element {
-  const [regState, setState] = useState('init');
+  const [regState, setState] = useState<RegState>({ state: 'init' });
   const { register, errors, watch, handleSubmit } = useForm<{ email: string }>({
     defaultValues: {
       email: '',
@@ -26,17 +28,23 @@ export function RegisterInitPage(): JSX.Element {
     >
       <form
         onSubmit={handleSubmit(async ({ email }) => {
-          setState('loading');
+          setState({ state: 'loading' });
           const r = await post('/register-init', { email });
           if (r.ok) {
-            setState('success');
+            setState({ state: 'success' });
           } else {
-            setState('problem');
+            const js = await r.json();
+            setState({
+              state: 'problem',
+              message:
+                js.error ??
+                'Something went wrong. If the problem persists, contact the administrator.',
+            });
           }
         })}
       >
         <CenteredForm>
-          {regState === 'success' ? (
+          {regState.state === 'success' ? (
             <p className="text-indigo-600 mb-5">
               Registration started correctly! Please check your mailbox for an activation e-mail.
             </p>
@@ -46,7 +54,7 @@ export function RegisterInitPage(): JSX.Element {
                 <Question>E-mail address</Question>
                 <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
               </div>
-              {regState === 'loading' ? (
+              {regState.state === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
                 </div>
@@ -57,10 +65,8 @@ export function RegisterInitPage(): JSX.Element {
                   className="w-full mt-6"
                 />
               )}
-              {regState === 'problem' && (
-                <p className="text-red-600 text-xs">
-                  Something went wrong. If the problem persists, contact the administrator.
-                </p>
+              {regState.state === 'problem' && (
+                <p className="text-red-600 text-xs">{regState.message}</p>
               )}
             </>
           )}

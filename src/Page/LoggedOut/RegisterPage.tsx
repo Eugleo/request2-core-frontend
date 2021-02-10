@@ -12,7 +12,7 @@ import { Errors } from '../../Utils/Errors';
 import logoSrc from '../../assets/register.svg';
 import { CenteredForm, CenteredPage } from './CenteredPage';
 
-type RegState = 'init' | 'loading' | 'success' | 'problem';
+type RegState = { state: 'init' | 'loading' | 'success' } | { state: 'problem'; message: string };
 
 type RegistrationStub = {
   email: string;
@@ -31,7 +31,7 @@ type RegistrationField = {
 
 export function RegisterPage(): JSX.Element {
   const { email, token } = useParams();
-  const [regState, setState] = useState<RegState>('init');
+  const [regState, setState] = useState<RegState>({ state: 'init' });
   const { register, errors, watch, handleSubmit } = useForm<RegistrationField>({
     defaultValues: {
       name: '',
@@ -51,7 +51,7 @@ export function RegisterPage(): JSX.Element {
     >
       <form
         onSubmit={handleSubmit(async ({ name, password }: RegistrationStub) => {
-          setState('loading');
+          setState({ state: 'loading' });
 
           const r = await post<User & { token: string }>(`/register`, {
             active: true,
@@ -65,15 +65,16 @@ export function RegisterPage(): JSX.Element {
           });
 
           if (r.ok) {
-            setState('success');
+            setState({ state: 'success' });
           } else {
-            setState('problem');
-            console.log(r);
+            const js = await r.json();
+            setState({ state: 'problem', message: js.error ?? 'Something went wrong' });
+            console.log(js);
           }
         })}
       >
         <CenteredForm>
-          {regState === 'success' ? (
+          {regState.state === 'success' ? (
             <p className="text-green-600 mb-5">
               Registration finished correctly! You can now <Link to="/login">log in</Link>.
             </p>
@@ -124,17 +125,15 @@ export function RegisterPage(): JSX.Element {
                   })}
                 />
               </div>
-              {regState === 'loading' ? (
+              {regState.state === 'loading' ? (
                 <div className="m-auto">
                   <AtomSpinner />
                 </div>
               ) : (
                 <Button.Primary type="submit" title="Finish registration" className="mt-6 w-full" />
               )}
-              {regState === 'problem' && (
-                <p className="text-red-600 mb-5">
-                  Something went wrong. If the problem persists, contact the administrator.
-                </p>
+              {regState.state === 'problem' && (
+                <p className="text-red-600 mb-5">{regState.message}</p>
               )}
             </>
           )}
