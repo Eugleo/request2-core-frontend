@@ -11,6 +11,7 @@ import * as Page from '../Common/Layout';
 import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
+import { comparing } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
 import { getDefaultValues } from './FieldValue';
 import { idToStr, PropertyJSON, Request } from './Request';
@@ -87,6 +88,9 @@ function StatusSelect({ requestId }: { requestId: number }) {
 
   return (
     <Page.Card className="overflow-hidden">
+      <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
+        <h2 className="text-lg font-semibold">Status</h2>
+      </div>
       <div className="py-6 space-y-6">
         <div className="flex flex-col space-y-6 justify-items-stretch">
           <div>
@@ -230,9 +234,10 @@ function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
         <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
           <h2 className="text-lg font-semibold">Changelog</h2>
         </div>
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 max-h-64 overflow-scroll">
           {properties
             .filter(p => p.shouldLog)
+            .sort(comparing(p => -p.dateAdded))
             .map(p => (
               <LogItem key={p._id} property={p} />
             ))}

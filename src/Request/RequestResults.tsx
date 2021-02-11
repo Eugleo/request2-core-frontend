@@ -45,6 +45,9 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
         <FormProvider {...form}>
           <FieldContext.Provider value={{ state, values: results }}>
             <Card className="overflow-hidden">
+              <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
+                <h2 className="text-lg font-semibold">Results</h2>
+              </div>
               <form
                 onSubmit={form.handleSubmit(async values => {
                   const properties = Object.entries(values).reduce(fieldToProperty, []);
@@ -90,6 +93,19 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
   return (
     <FieldContext.Provider value={{ state, values: results }}>
       <Card className="overflow-hidden">
+        <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center justify-between">
+          <h2 className="text-lg font-semibold">Results</h2>
+          <Authorized roles={['Admin', 'Operator']}>
+            <button
+              onClick={() => {
+                setState('edit');
+              }}
+              className="text-sm font-medium text-gray-600 hover:text-gray-700"
+            >
+              Edit
+            </button>
+          </Authorized>
+        </div>
         <form>
           <div className="p-6 space-y-6">
             <Files q="Result files" id="Result Files" />
@@ -104,17 +120,6 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
               </p>
             </div>
           </div>
-          <Authorized roles={['Admin', 'Operator']}>
-            <div className="bg-gray-50 px-6 py-4 flex justify-end">
-              <Button.Secondary
-                onClick={() => {
-                  setState('edit');
-                }}
-              >
-                Edit
-              </Button.Secondary>
-            </div>
-          </Authorized>
         </form>
       </Card>
     </FieldContext.Provider>
