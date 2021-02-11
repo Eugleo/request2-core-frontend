@@ -61,11 +61,11 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
               >
                 <div className="p-6 space-y-6">
                   <Files q="Result files" id="Result Files" />
-                  <LongText q="Result description" id="Result Description" />
+                  <LongText q="Result description" id="Result Description" required />
                   <div>
                     <div className="flex flex-row space-x-6 mb-3">
-                      <ShortText q="Human time" id="Human Time" />
-                      <ShortText q="Machine time" id="Machine Time" />
+                      <ShortText q="Human time" id="Human Time" required />
+                      <ShortText q="Machine time" id="Machine Time" required />
                     </div>
                     <p className="text-sm text-gray-400">
                       The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
@@ -96,31 +96,44 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
         <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center justify-between">
           <h2 className="text-lg font-semibold">Results</h2>
           <Authorized roles={['Admin', 'Operator']}>
-            <button
-              onClick={() => {
-                setState('edit');
-              }}
-              className="text-sm font-medium text-gray-600 hover:text-gray-700"
-            >
-              Edit
-            </button>
+            {results['Human Time'] ? (
+              <button
+                onClick={() => {
+                  setState('edit');
+                }}
+                className="text-sm font-medium text-gray-600 hover:text-gray-700"
+              >
+                Edit
+              </button>
+            ) : (
+              <button
+                onClick={() => {
+                  setState('edit');
+                }}
+                className="text-sm font-medium text-indigo-700 hover:text-indigo-800"
+              >
+                Upload results
+              </button>
+            )}
           </Authorized>
         </div>
-        <form>
-          <div className="p-6 space-y-6">
-            <Files q="Result files" id="Result Files" />
-            <LongText q="Result description" id="Result Description" />
-            <div>
-              <div className="flex flex-row space-x-6 mb-3">
-                <ShortText q="Human time" id="Human Time" />
-                <ShortText q="Machine time" id="Machine Time" />
+        {results['Human Time'] ? (
+          <form>
+            <div className="p-6 space-y-6">
+              <Files q="Result files" id="Result Files" />
+              <LongText q="Result description" id="Result Description" />
+              <div>
+                <div className="grid grid-cols-2 gap-6 mb-2">
+                  <ShortText q="Human time" id="Human Time" />
+                  <ShortText q="Machine time" id="Machine Time" />
+                </div>
+                <p className="text-sm text-gray-400">
+                  The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
+                </p>
               </div>
-              <p className="text-sm text-gray-400">
-                The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
-              </p>
             </div>
-          </div>
-        </form>
+          </form>
+        ) : null}
       </Card>
     </FieldContext.Provider>
   );
