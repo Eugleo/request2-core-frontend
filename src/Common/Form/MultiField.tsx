@@ -65,7 +65,9 @@ function MultiFieldField({
               .fill(null)
               .map((_, i) => i)
               .map(i => (
-                <div className="rounded-lg bg-gray-50 py-3 px-4">{children(i)}</div>
+                <div key={i} className="rounded-lg bg-gray-50 py-3 px-4">
+                  {children(i)}
+                </div>
               ))}
           </div>
         </div>
