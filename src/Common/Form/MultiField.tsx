@@ -32,7 +32,11 @@ export function MultiField({
     <div className="space-y-2 rounded-lg">
       <Question>Details about each sample</Question>
       {fields.length > 0 ? (
-        fields.map(f => <div className="rounded-lg bg-gray-50 py-3 px-4">{f}</div>)
+        fields.map((f, ix) => (
+          <div key={ix} className="rounded-lg bg-gray-50 py-3 px-4">
+            {f}
+          </div>
+        ))
       ) : (
         <p className="text-gray-400 text-sm">[no values have been entered]</p>
       )}

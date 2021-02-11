@@ -13,10 +13,8 @@ type RegState = { state: 'init' | 'loading' | 'success' } | { state: 'problem'; 
 
 export function RegisterInitPage(): JSX.Element {
   const [regState, setState] = useState<RegState>({ state: 'init' });
-  const { register, errors, watch, handleSubmit } = useForm<{ email: string }>({
-    defaultValues: {
-      email: '',
-    },
+  const { register, errors, handleSubmit } = useForm<{ email: string }>({
+    defaultValues: { email: '' },
   });
 
   return (

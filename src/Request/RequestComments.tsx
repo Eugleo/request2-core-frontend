@@ -28,24 +28,26 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
   // });
 
   return (
-    <Card>
+    <Card className="overflow-hidden">
       <div
         style={{ gridTemplateRows: '1fr auto' }}
-        className="p-6 shadow-sm relative grid grid-rows-2 overflow-auto"
+        className="shadow-sm relative grid grid-rows-2 overflow-auto"
       >
-        <div className="overflow-scroll space-y-6">
+        <div className="overflow-scroll">
           <Loader>
             {comments => (
-              <>
-                {comments.sort(comparing(c => c.dateAdded)).map(prop => (
-                  <CommentComponent
-                    isMine={prop.authorId === auth.user._id}
-                    text={prop.content}
-                    key={prop._id}
-                  />
-                ))}
-                <div className="pt-4 flex-shrink-0" ref={messageEndRef} />
-              </>
+              <div>
+                <div className="p-6 space-y-6">
+                  {comments.sort(comparing(c => c.dateAdded)).map(prop => (
+                    <CommentComponent
+                      isMine={prop.authorId === auth.user._id}
+                      text={prop.content}
+                      key={prop._id}
+                    />
+                  ))}
+                </div>
+                {comments.length > 0 ? <div className="h-0.5 bg-gray-100" /> : null}
+              </div>
             )}
           </Loader>
         </div>
@@ -70,13 +72,15 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
         }
       })}
     >
-      <LongTextInput
-        name="comment"
-        placeholder="Enter your comment here..."
-        errors={form.errors}
-        reg={form.register({ required: 'You have to enter something to submit it' })}
-      />
-      <div className="flex flex-row-reverse mt-2">
+      <div className="p-6">
+        <LongTextInput
+          name="comment"
+          placeholder="Enter your comment here..."
+          errors={form.errors}
+          reg={form.register({ required: 'You have to enter something to submit it' })}
+        />
+      </div>
+      <div className="bg-gray-50 px-6 py-4 flex flex-row-reverse">
         <Button.Primary type="submit">Post comment</Button.Primary>
       </div>
     </form>

@@ -1,7 +1,7 @@
 import c from 'classnames';
 import moment from 'moment';
 import React, { useMemo } from 'react';
-import { Clock, Edit3 } from 'react-feather';
+import { Edit3 } from 'react-feather';
 import { useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
@@ -11,14 +11,11 @@ import * as Page from '../Common/Layout';
 import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
-import { useAuthState } from '../Utils/AuthContext';
 import { WithID } from '../Utils/WithID';
 import { getDefaultValues } from './FieldValue';
-import { ResultWidget } from './Operator/ResultComponent';
 import { idToStr, PropertyJSON, Request } from './Request';
 import { RequestComments } from './RequestComments';
-import { RequestStatus } from './RequestStatus';
-import { Proteomics } from './RequestTypes/Proteomics';
+import { RequestResults } from './RequestResults';
 import { getRequestFormForType } from './RequestTypes/RequestTypes';
 import { Status, statusToStr } from './Status';
 
@@ -63,6 +60,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
           </div>
 
           <div className="space-y-6 col-span-1">
+            <RequestResults requestId={requestId} />
             <StatusSelect requestId={requestId} />
             <RequestComments requestId={requestId} />
             <Loader>{properties => <Log properties={properties} />}</Loader>
@@ -90,7 +88,7 @@ function StatusSelect({ requestId }: { requestId: number }) {
   return (
     <Page.Card className="overflow-hidden">
       <div className="py-6 space-y-6">
-        <div className="flex flex-col space-y-4 justify-items-stretch">
+        <div className="flex flex-col space-y-6 justify-items-stretch">
           <div>
             <StatusButton
               status="Pending"

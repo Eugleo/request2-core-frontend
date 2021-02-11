@@ -1,109 +1,116 @@
+import Uploady from '@rpldy/uploady';
 import c from 'classnames';
-import React from 'react';
+import React, { useState } from 'react';
+import { FormProvider, useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
+import { Files } from '../Common/Form/NewFile';
+import { Form, SubmitFunction } from '../Common/Form/NewForm';
+import { LongText, ShortText } from '../Common/Form/NewTextField';
+import { FieldContext } from '../Common/Form/Question';
 import { Card, Spacer } from '../Common/Layout';
+import { useAsyncGet } from '../Utils/Api';
+import { apiBase } from '../Utils/ApiBase';
+import { Authorized, useAuth } from '../Utils/Auth';
 import { capitalize } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
-import { FilesView } from './FileView';
-import { PropertyJSON } from './Request';
+import { fieldToProperty, FieldValue, getDefaultValues } from './FieldValue';
+import { New, Property, PropertyJSON } from './Request';
 
-// export function RequestResults({
-//   properties,
-//   startEditing,
-// }: {
-//   properties: WithID<ResultProperty>[];
-//   startEditing: () => void;
-// }): JSX.Element {
-//   const files = properties.map(p => p as WithID<PropertyJSON>).filter(isFileProperty);
-//   return (
-//     <div>
-//       <Card className="mb-4 border border-green-300 shadow-none">
-//         <Section
-//           title="Results"
-//           properties={properties
-//             .filter(p => p.propertyType === 'Result')
-//             .filter(p => p.value !== '')}
-//           files={files}
-//           startEditing={startEditing}
-//         />
-//       </Card>
-//     </div>
-//   );
-// }
-
-function prettifyName(name: string) {
-  return capitalize(name.replaceAll('-', ' '));
+function numFromString(str: string, def = 0) {
+  const n = Number.parseInt(str);
+  return Number.isNaN(n) ? def : n;
 }
 
-// function Section({
-//   title,
-//   properties,
-//   files,
-//   startEditing,
-// }: {
-//   title: string;
-//   properties: WithID<PropertyJSON>[];
-//   files: WithID<FileProperty>[];
-//   startEditing: () => void;
-// }) {
-//   return (
-//     <div>
-//       <div className={c('px-6 py-6 flex items-center border-green-300')}>
-//         <h2 className="text-lg font-medium text-green-500">{title}</h2>
-//         <Spacer />
-//         <Button.Secondary onClick={startEditing}>
-//           {properties.length > 0 ? 'Edit' : 'Upload results'}
-//         </Button.Secondary>
-//       </div>
-//       <dl style={{ gridAutoRows: 'minmax(1fr, auto)' }} className="border-green-300">
-//         {properties.map((p, ix) => (
-//           <PropertyView
-//             name={prettifyName(p.name)}
-//             propertyData={p.value}
-//             isEven={ix % 2 === 0}
-//             key={p._id}
-//           />
-//         ))}
-//         {files.length > 0 ? <FilesView files={files} isEven={properties.length % 2 !== 1} /> : null}
-//       </dl>
-//     </div>
-//   );
-// }
+type FormValues = { Title: string; TeamId: string } & Record<string, FieldValue>;
 
-// function PropertyView({
-//   name,
-//   propertyData,
-//   isEven,
-// }: {
-//   name: string;
-//   propertyData: PropertyJSON['value'];
-//   isEven: boolean;
-// }) {
-//   return (
-//     <div
-//       style={{ gridTemplateColumns: '1fr 2fr' }}
-//       className={c('gap-10 py-4 px-6 grid grid-cols-2', isEven ? 'bg-gray-100' : 'bg-white')}
-//     >
-//       <dt className="text-sm font-medium text-gray-600 flex-grow leading-5">{name}</dt>
-//       {propertyData.includes(';;;') ? (
-//         <dd className="flex flex-row flex-wrap">
-//           {propertyData
-//             .split(';;;')
-//             .map(txt => (
-//               <span key={txt} className="text-sm leading-5 text-gray-700">
-//                 {txt}
-//               </span>
-//             ))
-//             .intersperse(ix => (
-//               <span key={ix} className="text-sm text-gray-500 px-4">
-//                 /
-//               </span>
-//             ))}
-//         </dd>
-//       ) : (
-//         <dd className="break-words text-sm text-gray-700">{propertyData}</dd>
-//       )}
-//     </div>
-//   );
-// }
+export function RequestResults({ requestId }: { requestId: number }): JSX.Element {
+  const form = useForm();
+  const { result, refresh } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
+  const { authPut } = useAuth<{ properties: New<Property>[] }>();
+  const results = result.status === 'Success' ? getDefaultValues(result.data) : {};
+  const [state, setState] = useState<'show' | 'edit'>('show');
+
+  const totalTime =
+    numFromString(form.watch('Human Time')) + numFromString(form.watch('Machine Time'));
+
+  if (state === 'edit') {
+    return (
+      <Uploady destination={{ url: `${apiBase}/files` }}>
+        <FormProvider {...form}>
+          <FieldContext.Provider value={{ state, values: results }}>
+            <Card className="overflow-hidden">
+              <form
+                onSubmit={form.handleSubmit(async values => {
+                  const properties = Object.entries(values).reduce(fieldToProperty, []);
+                  const r = await authPut(`/requests/${requestId}/results`, { properties });
+
+                  if (r.ok) {
+                    refresh();
+                    setState('show');
+                  }
+                })}
+              >
+                <div className="p-6 space-y-6">
+                  <Files q="Result files" id="Result Files" />
+                  <LongText q="Result description" id="Result Description" />
+                  <div>
+                    <div className="flex flex-row space-x-6 mb-3">
+                      <ShortText q="Human time" id="Human Time" />
+                      <ShortText q="Machine time" id="Machine Time" />
+                    </div>
+                    <p className="text-sm text-gray-400">
+                      The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
+                    </p>
+                  </div>
+                </div>
+                <div className="bg-gray-50 px-6 py-4 flex justify-end">
+                  <Button.Tertiary
+                    onClick={() => {
+                      setState('show');
+                    }}
+                  >
+                    Cancel
+                  </Button.Tertiary>
+                  <Button.Primary type="submit">Submit results</Button.Primary>
+                </div>
+              </form>
+            </Card>
+          </FieldContext.Provider>
+        </FormProvider>
+      </Uploady>
+    );
+  }
+  return (
+    <FieldContext.Provider value={{ state, values: results }}>
+      <Card className="overflow-hidden">
+        <form>
+          <div className="p-6 space-y-6">
+            <Files q="Result files" id="Result Files" />
+            <LongText q="Result description" id="Result Description" />
+            <div>
+              <div className="flex flex-row space-x-6 mb-3">
+                <ShortText q="Human time" id="Human Time" />
+                <ShortText q="Machine time" id="Machine Time" />
+              </div>
+              <p className="text-sm text-gray-400">
+                The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
+              </p>
+            </div>
+          </div>
+          <Authorized roles={['Admin', 'Operator']}>
+            <div className="bg-gray-50 px-6 py-4 flex justify-end">
+              <Button.Secondary
+                onClick={() => {
+                  setState('edit');
+                }}
+              >
+                Edit
+              </Button.Secondary>
+            </div>
+          </Authorized>
+        </form>
+      </Card>
+    </FieldContext.Provider>
+  );
+}
