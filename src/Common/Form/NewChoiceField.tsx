@@ -36,30 +36,43 @@ export function MultipleChoice({
 }: QuestionProps & Omit<ChoiceProps, 'isText'>): JSX.Element {
   const { state, values } = useFieldContext();
 
+  const selection = values[id] ? values[id].split(';;;') : [];
+  const defaultValue = children
+    .filter(ch => selection.includes(ch.props.value))
+    .map(ch => ({ label: ch.props.label ?? ch.props.value, value: ch.props.value }));
+
   if (state === 'edit') {
     return (
-      <MultipleChoiceField name={id} question={q} required={required} hasCustom={hasCustom}>
+      <MultipleChoiceField
+        name={id}
+        question={q}
+        required={required}
+        hasCustom={hasCustom}
+        defaultValue={defaultValue}
+      >
         {children}
       </MultipleChoiceField>
     );
   }
-  const vals = values[id].split(';;;');
-  const selections = children
-    .filter(ch => vals.includes(ch.props.value))
-    .map(ch => ch.props.label ?? ch.props.value);
+
+  let selections;
+  if (defaultValue.length === 0) {
+    selections = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
+  } else {
+    selections = defaultValue.map(v => (
+      <span
+        key={v.value}
+        className="text-sm text-gray-800 px-3 py-1 rounded-full bg-gray-50 border border-gray-100"
+      >
+        {v.label}
+      </span>
+    ));
+  }
+
   return (
     <div>
       <Question>{q}</Question>
-      <div className="flex flex-wrap gap-2">
-        {selections.map(v => (
-          <span
-            key={v}
-            className="text-sm text-gray-800 px-3 py-1 rounded-full bg-gray-50 border border-gray-100"
-          >
-            {v}
-          </span>
-        ))}
-      </div>
+      <div className="flex flex-wrap gap-2">{selections}</div>
     </div>
   );
 }
@@ -70,7 +83,8 @@ function MultipleChoiceField({
   children,
   question,
   hasCustom,
-}: FieldProps & { hasCustom: boolean; children: Choice[] }) {
+  defaultValue,
+}: FieldProps & { hasCustom: boolean; children: Choice[]; defaultValue: Selection[] }) {
   const { watch, errors, control } = useFormContext();
 
   return (
@@ -82,6 +96,8 @@ function MultipleChoiceField({
         required={required}
         errors={errors}
         control={control}
+        value={watch(name, [])}
+        defaultValue={defaultValue}
       >
         {children}
       </MultipleChoiceInput>
@@ -97,12 +113,14 @@ export function MultipleChoiceInput({
   hasCustom = false,
   errors,
   control,
+  defaultValue = [],
 }: {
   name: string;
   value?: Maybe<Selection>;
   children: Choice[];
   hasCustom?: boolean;
   errors: FormErrors;
+  defaultValue?: Selection[];
   required?: string | boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<Record<string, any>>;
@@ -117,7 +135,7 @@ export function MultipleChoiceInput({
       <Controller
         name={name}
         control={control}
-        defaultValue={[]}
+        defaultValue={defaultValue}
         rules={{
           validate: (val: Selection[] | null) =>
             !required ||
@@ -133,6 +151,7 @@ export function MultipleChoiceInput({
               {...field}
               options={options}
               styles={getStyles(err)}
+              components={{ MultiValueRemove }}
             />
           ) : (
             <Select
@@ -481,7 +500,6 @@ function getStyles(err: Maybe<string>) {
       boxShadow: undefined,
       border: undefined,
       borderRadius: undefined,
-      borderColor: undefined,
       borderWidth: undefined,
       '&:hover': {
         borderColor: undefined,
@@ -497,9 +515,9 @@ function getStyles(err: Maybe<string>) {
               'var(--tw-ring-inset) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)',
             '--tw-ring-shadow':
               'var(--tw-ring-inset) 0 0 0 calc(4px + var(--tw-ring-offset-width)) var(--tw-ring-color)',
-            'box-shadow':
+            boxShadow:
               'var(--tw-ring-offset-shadow), var(--tw-ring-shadow), var(--tw-shadow, 0 0 #0000)',
-            'border-color': err
+            borderColor: err
               ? 'rgba(248, 113, 113, var(--tw-border-opacity))'
               : 'rgba(96, 165, 250, var(--tw-border-opacity))',
           }
