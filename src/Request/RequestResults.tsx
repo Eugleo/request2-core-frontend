@@ -90,6 +90,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
     );
   }
   const totalTime = getTotalTime(results['Human Time'], results['Machine Time']);
+
   return (
     <FieldContext.Provider value={{ state, values: results }}>
       <Card className="overflow-hidden">

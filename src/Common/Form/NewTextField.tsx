@@ -106,7 +106,7 @@ export function LongText({ id, q, required = false }: QuestionProps): JSX.Elemen
 function LongTextField({
   name,
   question,
-  required,
+  required = false,
   defaultValue,
 }: FieldProps & { defaultValue: string }) {
   const { register, errors } = useFormContext();
@@ -131,7 +131,7 @@ export function LongTextInput({
   reg,
   ...props
 }: InputProps<'textarea'>): JSX.Element {
-  const err = errors && name && errors[name];
+  const err = errors && name && errors[name]?.message;
 
   return (
     <div>
