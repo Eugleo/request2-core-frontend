@@ -11,7 +11,6 @@ import { FilesView } from '../../Request/FileView';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { FileInfo, stringToFileInfo } from '../../Utils/File';
-import { Maybe } from '../../Utils/Maybe';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
@@ -26,11 +25,11 @@ import {
 
 export function Files({ id, q, required = false }: QuestionProps): JSX.Element {
   const { state, values } = useFieldContext();
+  const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
 
   if (state === 'edit') {
-    return <FilesField name={id} question={q} required={required} />;
+    return <FilesField name={id} question={q} required={required} defaultValue={files} />;
   }
-  const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
   return (
     <div>
       <Question>{q}</Question>
@@ -39,13 +38,25 @@ export function Files({ id, q, required = false }: QuestionProps): JSX.Element {
   );
 }
 
-function FilesField({ name, question, required = false }: FieldProps) {
+function FilesField({
+  name,
+  question,
+  required = false,
+  defaultValue,
+}: FieldProps & { defaultValue: FileInfo[] }) {
   const form = useFormContext();
+
+  const currentValue = form.watch(name, null);
 
   return (
     <div>
       <Question>{question}</Question>
-      <FileInput name={name} {...form} />
+      <FileInput
+        name={name}
+        {...form}
+        value={currentValue === null ? defaultValue : currentValue}
+        required={required}
+      />
     </div>
   );
 }
@@ -96,8 +107,8 @@ export function FileInput({
     const r = JSON.parse(JSON.stringify(item.uploadResponse));
     const items = r?.data?.files as FileInfo[];
 
-    setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
     if (items) {
+      setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
       setInProgress(n => n - items.length);
       setValue(name, [...value, ...items], { shouldValidate: true });
     }
@@ -139,7 +150,7 @@ export function FileInput({
           <div
             className={c(
               'py-2 px-4 text-xs',
-              err ? 'bg-red-100 text-red-500' : ' bg-gray-100 text-gray-500'
+              err ? 'bg-red-100 text-red-500' : 'bg-gray-100 text-gray-500'
             )}
           >
             {inProgress > 0 ? (
@@ -180,7 +191,15 @@ function FileComponent({
       className="rounded-sm text-sm px-2 py-1 flex flex-row items-center hover:bg-gray-100"
     >
       <Icon.File className={c('h-3 w-3 mr-2', editable ? 'text-gray-700' : 'text-gray-500')} />
-      <p className={c(editable ? 'text-gray-900' : 'text-gray-600')}>{file.name}</p> <Spacer />
+      <p
+        className={c(
+          'whitespace-nowrap overflow-hidden',
+          editable ? 'text-gray-900' : 'text-gray-600'
+        )}
+      >
+        {file.name}
+      </p>{' '}
+      <Spacer />
       {isHovered ? <SideButton /> : null}
     </div>
   );

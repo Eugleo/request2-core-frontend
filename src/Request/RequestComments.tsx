@@ -35,20 +35,24 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
       >
         <div className="overflow-scroll">
           <Loader>
-            {comments => (
-              <div>
-                <div className="p-6 space-y-6">
-                  {comments.sort(comparing(c => c.dateAdded)).map(prop => (
-                    <CommentComponent
-                      isMine={prop.authorId === auth.user._id}
-                      text={prop.content}
-                      key={prop._id}
-                    />
-                  ))}
+            {comments =>
+              comments.length > 0 ? (
+                <div>
+                  <div className="p-6 space-y-6">
+                    {comments.sort(comparing(c => c.dateAdded)).map(prop => (
+                      <CommentComponent
+                        isMine={prop.authorId === auth.user._id}
+                        text={prop.content}
+                        key={prop._id}
+                      />
+                    ))}
+                  </div>
+                  <div className="h-0.5 bg-gray-100" />
                 </div>
-                {comments.length > 0 ? <div className="h-0.5 bg-gray-100" /> : null}
-              </div>
-            )}
+              ) : (
+                <>{null}</>
+              )
+            }
           </Loader>
         </div>
         <CommentComposer requestId={requestId} refresh={refreshComments} />

@@ -25,7 +25,8 @@ export function fieldToProperty(
       return [
         ...acc,
         ...(value as FileInfo[]).map((f, i) => ({
-          name: `${name}${i}`,
+          // TODO This is fragile, add propertyType to the table
+          name: `${name} (${i})`,
           value: fileInfoToString(f),
         })),
       ];
@@ -43,6 +44,12 @@ function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
   const properties = props
     .filter(p => p.active)
     .sort(comparing(p => p.name))
+    // TODO This is fragile, add propertyType to the table
+    .map(p => {
+      const m = /^(.*) \(\d+\)$/u.exec(p.name);
+      const name = m ? m[1] : p.name;
+      return { ...p, name };
+    })
     .reduce<[string | null, PropertyJSON | null, PropertyJSON[]]>(
       ([name, q, acc], p) => {
         if (q && p.name === name) {

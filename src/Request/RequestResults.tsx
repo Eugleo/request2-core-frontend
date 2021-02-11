@@ -17,24 +17,29 @@ import { WithID } from '../Utils/WithID';
 import { fieldToProperty, FieldValue, getDefaultValues } from './FieldValue';
 import { New, Property, PropertyJSON } from './Request';
 
+type FormValues = { Title: string; TeamId: string } & Record<string, FieldValue>;
+
 function numFromString(str: string, def = 0) {
   const n = Number.parseInt(str);
   return Number.isNaN(n) ? def : n;
 }
 
-type FormValues = { Title: string; TeamId: string } & Record<string, FieldValue>;
+function getTotalTime(human: string, machine: string) {
+  return numFromString(human) + numFromString(machine);
+}
 
 export function RequestResults({ requestId }: { requestId: number }): JSX.Element {
-  const form = useForm();
   const { result, refresh } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
-  const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const results = result.status === 'Success' ? getDefaultValues(result.data) : {};
+  const form = useForm({ defaultValues: results });
+  const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const [state, setState] = useState<'show' | 'edit'>('show');
 
-  const totalTime =
-    numFromString(form.watch('Human Time')) + numFromString(form.watch('Machine Time'));
-
   if (state === 'edit') {
+    const totalTime = getTotalTime(
+      form.watch('Human Time') ?? results['Human Time'],
+      form.watch('Machine Time') ?? results['Machine Time']
+    );
     return (
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <FormProvider {...form}>
@@ -81,6 +86,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
       </Uploady>
     );
   }
+  const totalTime = getTotalTime(results['Human Time'], results['Machine Time']);
   return (
     <FieldContext.Provider value={{ state, values: results }}>
       <Card className="overflow-hidden">
