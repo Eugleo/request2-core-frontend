@@ -5,6 +5,8 @@ import * as Icon from 'react-feather';
 import { Control, Controller, useFormContext } from 'react-hook-form';
 import Select from 'react-select/';
 import Creatable from 'react-select/creatable';
+import { valueContainerCSS } from 'react-select/src/components/containers';
+import { cleanValue } from 'react-select/src/utils';
 import ReactTooltip from 'react-tooltip';
 
 import { Selection } from '../../Request/Request';
@@ -77,14 +79,18 @@ export function MultipleChoice({
   );
 }
 
-function MultipleChoiceField({
+export function MultipleChoiceField({
   name,
   required,
   children,
   question,
   hasCustom,
   defaultValue,
-}: FieldProps & { hasCustom: boolean; children: Choice[]; defaultValue: Selection[] }) {
+}: FieldProps & {
+  hasCustom: boolean;
+  children: Choice[];
+  defaultValue: Selection[];
+}): JSX.Element {
   const { watch, errors, control } = useFormContext();
 
   return (
@@ -116,7 +122,7 @@ export function MultipleChoiceInput({
   defaultValue = [],
 }: {
   name: string;
-  value?: Maybe<Selection>;
+  value?: Maybe<Selection[]>;
   children: Choice[];
   hasCustom?: boolean;
   errors: FormErrors;
@@ -473,13 +479,21 @@ function CreatableQuestion({ hasCustom, q }: { q?: string; hasCustom: boolean })
   );
 }
 
-function getVisibleChildren(value: Maybe<Selection | string>, children: Choice[]): ReactNode {
+function getVisibleChildren(
+  value: Maybe<Selection | string | Selection[]>,
+  children: Choice[]
+): ReactNode {
   let showChildren = null;
   if (value) {
     showChildren = children
-      .filter(ch =>
-        typeof value === 'string' ? value === ch.props.value : value.value === ch.props.value
-      )
+      .filter(ch => {
+        if (Array.isArray(value)) {
+          return value.map(v => v.value).includes(ch.props.value);
+        } else if (typeof value === 'string') {
+          return value === ch.props.value;
+        }
+        return value.value === ch.props.value;
+      })
       .filter(ch => ch.props.children)
       .map(ch => (
         <div className="space-y-6" key={ch.props.value}>

@@ -1,5 +1,6 @@
 import Uploady from '@rpldy/uploady';
 import { ReactNode, useMemo, useState } from 'react';
+import { AlertTriangle, Info } from 'react-feather';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { fieldToProperty, FieldValue } from '../../Request/FieldValue';
@@ -7,10 +8,11 @@ import { New, Property, PropertyJSON, Request } from '../../Request/Request';
 import { Proteomics } from '../../Request/RequestTypes/Proteomics';
 import { getRequestFormForType } from '../../Request/RequestTypes/RequestTypes';
 import { apiBase } from '../../Utils/ApiBase';
+import { useAuth } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
 import { Body, Card, ContentWrapper, Header, Page, Title } from '../Layout';
 import { ShortText } from './NewTextField';
-import { FieldContext, useFieldContext } from './Question';
+import { FieldContext, useFieldContext, Warning } from './Question';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
@@ -33,12 +35,31 @@ export function NewForm({
   requestType: string;
   request?: WithID<Request>;
 }): JSX.Element {
+  const { auth } = useAuth();
   const form = useForm<FormValues>({ mode: 'all' });
   const title: string | null = form.watch('Title', request?.title ?? '');
 
   const state: FieldContext = useMemo(() => ({ state: 'edit', values: defaultValues }), [
     defaultValues,
   ]);
+
+  if (auth.user.teams.length === 0) {
+    return (
+      <Page title="Error: No research group">
+        <div className="bg-white rounded-md border border-yellow-300 overflow-hidden">
+          <div className="flex bg-yellow-100 px-3 py-2 items-center">
+            <AlertTriangle className="text-yellow-900 w-5 mr-2" />
+            <h3 className="font-medium text-sm text-yellow-900">Beware!</h3>
+          </div>
+          <div className="p-4 text-sm text-gray-700">
+            <p>
+              You have to be assigned a research group before you'll be able to create requests.
+            </p>
+          </div>
+        </div>
+      </Page>
+    );
+  }
 
   return (
     <FieldContext.Provider value={state}>

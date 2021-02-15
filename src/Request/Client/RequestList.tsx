@@ -1,15 +1,16 @@
 import { To } from 'history';
 import moment from 'moment';
 import React from 'react';
+import { Info } from 'react-feather';
 import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
-import { Secondary } from '../../Common/Buttons';
+import { Note } from '../../Common/Form/Question';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import { SearchBar } from '../../Common/SearchBar';
 import { Cell, Pill, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
-import { Authorized } from '../../Utils/Auth';
+import { Authorized, useAuth } from '../../Utils/Auth';
 import { padWithSpace } from '../../Utils/Func';
 import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
@@ -90,10 +91,25 @@ function RequestList() {
 }
 
 function NewRequestSection() {
+  const { auth } = useAuth();
   const requestTypes = [...requestTypeDisplayNames.entries()].map(([key, val]) => ({
     type: key,
     title: val.title,
   }));
+
+  if (auth.user.teams.length === 0) {
+    return (
+      <div className="bg-white rounded-md border border-blue-300 overflow-hidden">
+        <div className="flex bg-blue-100 px-3 py-2 items-center">
+          <Info className="text-blue-900 w-5 mr-2" />
+          <h3 className="font-medium text-sm text-blue-900">Note</h3>
+        </div>
+        <div className="p-4 text-sm text-gray-700">
+          <p>You have to be assigned a research group before you'll be able to create requests.</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div

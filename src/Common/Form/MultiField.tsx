@@ -1,8 +1,8 @@
 import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { ShortText } from './NewTextField';
-import { FieldProps, Question, QuestionProps, useFieldContext } from './Question';
+import { ShortText, ShortTextInput } from './NewTextField';
+import { ErrorMessage, FieldProps, Question, QuestionProps, useFieldContext } from './Question';
 
 export function MultiField({
   q,
@@ -50,18 +50,34 @@ function MultiFieldField({
   required,
   children,
 }: FieldProps & { children: (id: number) => ReactNode }) {
-  const { watch, errors } = useFormContext();
+  const { watch, errors, register } = useFormContext();
   const maybeCount = Number.parseInt(watch(name, 0));
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
 
   return (
     <div className="space-y-6">
-      <ShortText id={name} q={question} required={required} />
+      <div>
+        <Question>{question}</Question>
+        <ShortTextInput
+          name={name}
+          reg={register({
+            required,
+            validate: val => {
+              const n = Number.parseInt(val);
+              if (Number.isNaN(n) || n < 0 || n > 15) {
+                return 'Enter a valid whole number betweeen 0 and 15';
+              }
+              return false;
+            },
+          })}
+        />
+        <ErrorMessage error={errors[name]?.message} />
+      </div>
       {count > 0 ? (
         <div>
           <Question>Details about each sample</Question>
           <div className="space-y-2">
-            {Array.from({ length: count })
+            {Array.from({ length: Math.min(Math.max(count, 0), 15) })
               .fill(null)
               .map((_, i) => i)
               .map(i => (
