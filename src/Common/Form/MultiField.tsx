@@ -12,17 +12,17 @@ export function MultiField({
 }: QuestionProps & { children: (id: number) => ReactNode }): JSX.Element {
   const { state, values } = useFieldContext();
   const countId = `${id} Count`;
+  const maybeCount = Number.parseInt(values[countId] ?? 0);
+  const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
 
   if (state === 'edit') {
     return (
-      <MultiFieldField question={q} name={countId} required={required}>
+      <MultiFieldField question={q} name={countId} required={required} defaultValue={count}>
         {children}
       </MultiFieldField>
     );
   }
 
-  const maybeCount = Number.parseInt(values[countId] ?? 0);
-  const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
   const fields = Array.from({ length: count })
     .fill(null)
     .map((_, i) => i)
@@ -49,17 +49,22 @@ function MultiFieldField({
   name,
   required,
   children,
-}: FieldProps & { children: (id: number) => ReactNode }) {
+  defaultValue,
+}: FieldProps & { children: (id: number) => ReactNode; defaultValue: number }) {
   const { watch, errors, register } = useFormContext();
-  const maybeCount = Number.parseInt(watch(name, 0));
+  const maybeCount = Number.parseInt(watch(name, defaultValue));
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
+
+  console.log(defaultValue);
 
   return (
     <div className="space-y-6">
       <div>
         <Question>{question}</Question>
         <ShortTextInput
+          defaultValue={defaultValue}
           name={name}
+          errors={errors}
           reg={register({
             required,
             validate: val => {
@@ -71,7 +76,6 @@ function MultiFieldField({
             },
           })}
         />
-        <ErrorMessage error={errors[name]?.message} />
       </div>
       {count > 0 ? (
         <div>
