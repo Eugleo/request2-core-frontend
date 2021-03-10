@@ -67,7 +67,7 @@ function MultiFieldField({
               if (Number.isNaN(n) || n < 0 || n > 15) {
                 return 'Enter a valid whole number betweeen 0 and 15';
               }
-              return false;
+              return true;
             },
           })}
         />
