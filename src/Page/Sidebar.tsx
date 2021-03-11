@@ -3,14 +3,9 @@ import '../styles/index.css';
 import c from 'classnames';
 import { To } from 'history';
 import React, { ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { AtomSpinner } from 'react-epic-spinners';
 import * as Icon from 'react-feather';
-import { useForm } from 'react-hook-form';
-import { Link, NavLink as RouterNavLink, useLocation, useMatch } from 'react-router-dom';
+import { Link, NavLink as RouterNavLink, useMatch } from 'react-router-dom';
 
-import { Primary, Tertiary } from '../Common/Buttons';
-import { LongTextInput } from '../Common/Form/NewTextField';
-import { useOnClickOutside } from '../Common/Hooks';
 import { Authentized, Authorized, useAuth } from '../Utils/Auth';
 import logoSrc from '../assets/logo2new.svg';
 
@@ -56,124 +51,11 @@ export function Sidebar(): JSX.Element {
             </Authorized>
           </div>
           <Authentized>
-            <div className="flex flex-row space-x-2 items-center">
-              <UserButton />
-              <FeedbackButton />
-            </div>
+            <UserButton />
           </Authentized>
         </div>
       </div>
     </nav>
-  );
-}
-
-type Feedback = {
-  path: string;
-  content: string;
-  datetime: number;
-};
-
-type State = 'minimised' | 'input' | 'waiting' | 'success' | 'error';
-
-function FeedbackButton() {
-  const [isMinimised, setIsMinimised] = useState<State>('minimised');
-  const { authPost, auth } = useAuth<Feedback>();
-  const ref = useOnClickOutside<HTMLDivElement>(() => {
-    setIsMinimised('minimised');
-  });
-  const form = useForm();
-  const { pathname } = useLocation();
-
-  let buttonChildren;
-  switch (isMinimised) {
-    case 'input':
-      buttonChildren = 'Send feedback';
-      break;
-    case 'error':
-      buttonChildren = (
-        <div className="flex flex-row">
-          <Icon.AlertTriangle className="text-white mr-2 w-5 h-5" />
-          Error
-        </div>
-      );
-      break;
-    case 'waiting':
-      buttonChildren = (
-        <div>
-          <AtomSpinner color="white" size={30} />
-        </div>
-      );
-      break;
-    case 'success':
-      buttonChildren = (
-        <div className="flex flex-row">
-          <Icon.Check className="text-white mr-2 w-5 h-5" />
-          Success
-        </div>
-      );
-  }
-
-  return (
-    <div>
-      <button
-        className="bg-indigo-700 text-sm rounded-md text-indigo-100 py-2 px-4 hover:bg-indigo-600"
-        onClick={() => {
-          setIsMinimised(m => (m === 'minimised' ? 'input' : m));
-        }}
-      >
-        Give us feedback!
-      </button>
-      {isMinimised === 'minimised' ? null : (
-        <div ref={ref} className="bg-white shadow-lg p-6 absolute top-14 rounded-lg w-64 right-8">
-          <form
-            onSubmit={form.handleSubmit(async ({ content }) => {
-              setIsMinimised('waiting');
-              const r = await authPost('/feedback', {
-                path: pathname,
-                content,
-                datetime: Date.now() / 1000,
-              });
-              if (r.ok) {
-                setIsMinimised('success');
-              } else {
-                setIsMinimised('error');
-              }
-            })}
-          >
-            <LongTextInput
-              name="pathname"
-              placeholder="I noticed that..."
-              reg={form.register()}
-              className="mb-2"
-            />
-            <div className="flex flex-row justify-between">
-              <button
-                type="submit"
-                disabled={isMinimised !== 'input'}
-                className={c(
-                  'rounded-lg px-4 py-2 font-medium text-sm text-white',
-                  isMinimised === 'input' && 'bg-indigo-500 hover:bg-indigo-600',
-                  isMinimised !== 'input' && 'bg-indigo-400 cursor-default'
-                )}
-              >
-                {buttonChildren}
-              </button>
-              {isMinimised === 'error' || isMinimised === 'success' ? (
-                <button
-                  className="text-sm text-gray-600 hover:text-gray-800 font-medium px-2"
-                  onClick={() => {
-                    setIsMinimised('input');
-                    form.reset();
-                  }}
-                >
-                  Try again
-                </button>
-              ) : null}
-            </div>
-          </form>
-        </div>
-      )}
-    </div>
   );
 }
 
