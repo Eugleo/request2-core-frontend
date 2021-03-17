@@ -141,7 +141,7 @@ function FeedbackButton() {
             })}
           >
             <LongTextInput
-              name="pathname"
+              name="content"
               placeholder="I noticed that..."
               reg={form.register()}
               className="mb-2"
