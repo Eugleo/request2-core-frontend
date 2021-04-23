@@ -118,16 +118,16 @@ function FormComponent({
       <Card className="">
         <div className="p-6 space-y-6">
           <div>
-            <Question>Name</Question>
+            <Question required>Name</Question>
             <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
           </div>
           <div>
-            <Question>E-mail address</Question>
+            <Question required>E-mail address</Question>
             <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
           </div>
           {user ? null : (
             <div>
-              <Question>Password</Question>
+              <Question required>Password</Question>
               <ShortTextInput
                 name="password"
                 type="password"
@@ -137,7 +137,7 @@ function FormComponent({
             </div>
           )}
           <div>
-            <Question>Privileges</Question>
+            <Question required="You have to assign at least one role">Privileges</Question>
             <MultipleChoiceInput
               name="roles"
               control={control}
@@ -152,7 +152,7 @@ function FormComponent({
             </MultipleChoiceInput>
           </div>
           <div>
-            <Question>Teams</Question>
+            <Question required={false}>Teams</Question>
             <MultipleChoiceInput
               name="teamIds"
               control={control}

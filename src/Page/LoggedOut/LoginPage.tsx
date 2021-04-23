@@ -80,11 +80,11 @@ export function LoginPage(): JSX.Element {
             {loginFailed ? (
               <p className="text-red-600 text-xs mb-2">Password or email is incorrect</p>
             ) : null}
-            <Question>E-mail address</Question>
+            <Question required="You have to enter an email address">E-mail address</Question>
             <ShortTextInput name="email" reg={register(reqRule())} errors={errors} />
           </div>
           <div>
-            <Question>Password</Question>
+            <Question required="You have to enter a password">Password</Question>
             <ShortTextInput
               name="password"
               type="password"

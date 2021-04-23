@@ -53,11 +53,11 @@ export function TeamForm({
             >
               <div className="p-6 space-y-6 w-full">
                 <div>
-                  <Question>Team leader</Question>
+                  <Question required>Team leader</Question>
                   <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
                 </div>
                 <div>
-                  <Question>Institutional code</Question>
+                  <Question required>Institutional code</Question>
                   <ShortTextInput name="code" errors={errors} reg={register(reqRule())} />
                 </div>
               </div>

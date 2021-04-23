@@ -26,7 +26,7 @@ export function ShortText({ id, q, required = false }: QuestionProps): JSX.Eleme
   }
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
@@ -46,7 +46,7 @@ function ShortTextField({
 
   return (
     <div>
-      <Question>{question}</Question>
+      <Question required={required}>{question}</Question>
       <ShortTextInput
         errors={errors}
         name={name}
@@ -93,7 +93,7 @@ export function LongText({ id, q, required = false }: QuestionProps): JSX.Elemen
   }
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
@@ -112,7 +112,7 @@ function LongTextField({
   const { register, errors } = useFormContext();
   return (
     <div>
-      <Question>{question}</Question>
+      <Question required={required}>{question}</Question>
       <LongTextInput
         name={name}
         errors={errors}
@@ -161,7 +161,7 @@ export function Number({ id, q, required = false }: QuestionProps): JSX.Element 
   }
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
@@ -181,7 +181,7 @@ function NumberField({
 
   return (
     <div>
-      <Question>{question}</Question>
+      <Question required={required}>{question}</Question>
       <NumberInput
         errors={errors}
         name={name}

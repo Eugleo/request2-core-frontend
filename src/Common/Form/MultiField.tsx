@@ -30,7 +30,7 @@ export function MultiField({
 
   return (
     <div className="space-y-2 rounded-lg">
-      <Question>Details about each sample</Question>
+      <Question required={required}>Details about each sample</Question>
       {fields.length > 0 ? (
         fields.map((f, ix) => (
           <div key={ix} className="rounded-lg bg-gray-50 py-3 px-4">
@@ -55,12 +55,10 @@ function MultiFieldField({
   const maybeCount = Number.parseInt(watch(name, defaultValue));
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
 
-  console.log(defaultValue);
-
   return (
     <div className="space-y-6">
       <div>
-        <Question>{question}</Question>
+        <Question required={required}>{question}</Question>
         <ShortTextInput
           defaultValue={defaultValue}
           name={name}
@@ -79,7 +77,7 @@ function MultiFieldField({
       </div>
       {count > 0 ? (
         <div>
-          <Question>Details about each sample</Question>
+          <Question required={required}>Details about each sample</Question>
           <div className="space-y-2">
             {Array.from({ length: Math.min(Math.max(count, 0), 15) })
               .fill(null)

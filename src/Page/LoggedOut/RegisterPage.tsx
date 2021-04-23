@@ -81,11 +81,11 @@ export function RegisterPage(): JSX.Element {
           ) : (
             <>
               <div>
-                <Question>E-mail address</Question>
+                <Question required={false}>E-mail address</Question>
                 <ShortTextInput disabled value={email} />
               </div>
               <div>
-                <Question>Display name</Question>
+                <Question required>Display name</Question>
                 <ShortTextInput
                   name="name"
                   placeholder="Arthur Dent"
@@ -100,11 +100,11 @@ export function RegisterPage(): JSX.Element {
                 />
               </div>
               <div>
-                <Question>Team</Question>
+                <Question required={false}>Team</Question>
                 <ShortTextInput disabled value="You will be assigned a team by our admin" />
               </div>
               <div>
-                <Question>Your password</Question>
+                <Question required>Your password</Question>
                 <ShortTextInput
                   name="password"
                   type="password"
@@ -117,7 +117,7 @@ export function RegisterPage(): JSX.Element {
                 />
               </div>
               <div>
-                <Question>Enter the password again</Question>
+                <Question required>Enter the password again</Question>
                 <ShortTextInput
                   name="passwordCheck"
                   type="password"

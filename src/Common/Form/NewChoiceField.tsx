@@ -73,7 +73,7 @@ export function MultipleChoice({
 
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       <div className="flex flex-wrap gap-2">{selections}</div>
     </div>
   );
@@ -95,7 +95,9 @@ export function MultipleChoiceField({
 
   return (
     <div>
-      <CreatableQuestion q={question} hasCustom={hasCustom} />
+      <Question required={required} hasCustom={hasCustom}>
+        {question}
+      </Question>
       <MultipleChoiceInput
         name={name}
         hasCustom={hasCustom}
@@ -225,7 +227,7 @@ export function SingleChoice({
 
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       {label}
       {getVisibleChildren(choice?.props.value, choices)}
     </div>
@@ -246,7 +248,9 @@ export function SingleChoiceField({
 
   return (
     <div>
-      <CreatableQuestion q={question} hasCustom={hasCustom} />
+      <Question required={required} hasCustom={hasCustom}>
+        {question}
+      </Question>
       {hasCustom || isText || (isText === undefined && children.length >= 4) ? (
         <SingleChoiceTextInput
           name={name}
@@ -454,28 +458,6 @@ function MultiValueRemove(props: any) {
     >
       <Icon.X className="w-4" />
     </button>
-  );
-}
-
-function CreatableQuestion({ hasCustom, q }: { q?: string; hasCustom: boolean }) {
-  return (
-    <div className="flex flex-row space-x-2 items-center mb-2 relative">
-      <p className="text-md text-gray-900 font-semibold text-sm">{q}</p>
-      {hasCustom ? (
-        <>
-          <Icon.Box
-            className="text-green-400 w-3.5 absolute top-0 right-0.5"
-            data-tip="You can enter your own option"
-          />
-          <ReactTooltip
-            type="light"
-            effect="solid"
-            backgroundColor="rgba(243, 244, 246, 1)"
-            className="white-tooltip"
-          />
-        </>
-      ) : null}
-    </div>
   );
 }
 

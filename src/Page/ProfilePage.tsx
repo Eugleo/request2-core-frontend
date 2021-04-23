@@ -69,11 +69,11 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
               >
                 <div className="space-y-6 p-6">
                   <div>
-                    <Question>Display name</Question>
+                    <Question required>Display name</Question>
                     <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
                   </div>
                   <div>
-                    <Question>E-mail address</Question>
+                    <Question required={false}>E-mail address</Question>
                     <ShortTextInput name="email" disabled />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
             <Section title="Account details">
               <div className="p-6">
                 <div>
-                  <Question>Research groups</Question>
+                  <Question required={false}>Research groups</Question>
                   <div className="flex flex-row space-x-2 mb-6">
                     {user.teams.map(t => (
                       <Pill
@@ -100,7 +100,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                   </div>
                 </div>
                 <div>
-                  <Question>Privileges</Question>
+                  <Question required={false}>Privileges</Question>
                   <div className="flex flex-row space-x-2">
                     {user.roles.map(r => (
                       <Pill
@@ -155,7 +155,7 @@ function PasswordSection() {
       >
         <div className="space-y-6 p-6">
           <div>
-            <Question>Old password</Question>
+            <Question required>Old password</Question>
             <ShortTextInput
               name="password"
               type="password"
@@ -164,7 +164,7 @@ function PasswordSection() {
             />
           </div>
           <div>
-            <Question>Enter the new password</Question>
+            <Question required>Enter the new password</Question>
             <ShortTextInput
               name="newPassword"
               errors={errors}
@@ -173,7 +173,7 @@ function PasswordSection() {
             />
           </div>
           <div>
-            <Question>Repeat the new password</Question>
+            <Question required>Repeat the new password</Question>
             <ShortTextInput
               name="newPasswordCheck"
               errors={errors}

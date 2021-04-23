@@ -3,6 +3,7 @@ import * as Icon from 'react-feather';
 import { Controller, DeepMap, FieldError, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
 import Creatable from 'react-select/creatable';
+import ReactTooltip from 'react-tooltip';
 
 import { Maybe } from '../../Utils/Maybe';
 
@@ -89,8 +90,54 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
   return null;
 }
 
-export function Question({ children }: { children: ReactNode }): JSX.Element {
-  return <p className="text-md text-gray-900 font-semibold mb-2 text-sm">{children}</p>;
+// export function Question({ children }: { children: ReactNode }): JSX.Element {
+//   return <p className="text-md text-gray-900 font-semibold mb-2 text-sm">{children}</p>;
+// }
+
+export function Question({
+  hasCustom = false,
+  required = false,
+  children,
+}: {
+  children: ReactNode;
+  required: boolean | string;
+  hasCustom?: boolean;
+}): JSX.Element {
+  return (
+    <div className="flex flex-row space-x-2 items-center mb-2 relative">
+      <p className="text-md text-gray-900 font-semibold text-sm">{children}</p>
+      {typeof required === 'string' || required ? (
+        <>
+          <Icon.CheckCircle
+            style={{ top: '1px' }}
+            className="text-blue-400 w-3.5 relative"
+            data-tip={typeof required === 'string' ? required : 'This field is required'}
+          />
+          <ReactTooltip
+            type="light"
+            effect="solid"
+            backgroundColor="rgba(243, 244, 246, 1)"
+            className="white-tooltip"
+          />
+        </>
+      ) : null}
+      {hasCustom ? (
+        <>
+          <Icon.Inbox
+            style={{ top: '1px' }}
+            className="text-pink-400 w-3.5 relative"
+            data-tip="You can enter your own option"
+          />
+          <ReactTooltip
+            type="light"
+            effect="solid"
+            backgroundColor="rgba(243, 244, 246, 1)"
+            className="white-tooltip"
+          />
+        </>
+      ) : null}
+    </div>
+  );
 }
 
 export function reqRule(

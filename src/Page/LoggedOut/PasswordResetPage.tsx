@@ -29,7 +29,7 @@ export function PasswordResetInitPage({ email }: { email?: string | undefined })
       >
         <CenteredForm>
           <div>
-            <Question>Email address associated with your account</Question>
+            <Question required>Email address associated with your account</Question>
             <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
           </div>
           <Primary
@@ -69,7 +69,7 @@ export function PasswordResetPage(): JSX.Element {
       >
         <CenteredForm>
           <div>
-            <Question>Please enter your new password</Question>
+            <Question required>Please enter your new password</Question>
             <ShortTextInput
               name="password"
               type="password"
@@ -82,7 +82,7 @@ export function PasswordResetPage(): JSX.Element {
             />
           </div>
           <div>
-            <Question>Please repeat the password</Question>
+            <Question required>Please repeat the password</Question>
             <ShortTextInput
               name="passwordCheck"
               type="password"

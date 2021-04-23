@@ -49,7 +49,7 @@ export function RegisterInitPage(): JSX.Element {
           ) : (
             <>
               <div>
-                <Question>E-mail address</Question>
+                <Question required>E-mail address</Question>
                 <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
               </div>
               {regState.state === 'loading' ? (

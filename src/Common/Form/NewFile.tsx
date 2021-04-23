@@ -32,7 +32,7 @@ export function Files({ id, q, required = false }: QuestionProps): JSX.Element {
   }
   return (
     <div>
-      <Question>{q}</Question>
+      <Question required={required}>{q}</Question>
       <FilesView files={files} />
     </div>
   );
@@ -50,7 +50,7 @@ function FilesField({
 
   return (
     <div>
-      <Question>{question}</Question>
+      <Question required={required}>{question}</Question>
       <FileInput
         name={name}
         {...form}
@@ -199,7 +199,7 @@ function FileComponent({
         )}
       >
         {file.name}
-      </p>{' '}
+      </p>
       <Spacer />
       {isHovered ? <SideButton /> : null}
     </div>
