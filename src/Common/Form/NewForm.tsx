@@ -61,6 +61,8 @@ export function NewForm({
     );
   }
 
+  console.log(form.errors);
+
   return (
     <FieldContext.Provider value={state}>
       <ContentWrapper>

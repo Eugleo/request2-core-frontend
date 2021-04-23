@@ -87,6 +87,7 @@ export function FileInput({
     register(name, {
       validate: (val: FileInfo[] | null) => !required || (val && val.length > 0) || msg,
     });
+    return () => unregister(name);
   }, [register, unregister, required, name]);
 
   const removeFile = (file: FileInfo) => {
