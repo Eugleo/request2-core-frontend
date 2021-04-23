@@ -152,6 +152,66 @@ export function LongTextInput({
   );
 }
 
+export function Number({ id, q, required = false }: QuestionProps): JSX.Element {
+  const { state, values } = useFieldContext();
+  if (state === 'edit') {
+    return (
+      <NumberField name={id} question={q} required={required} defaultValue={values[id] ?? null} />
+    );
+  }
+  return (
+    <div>
+      <Question>{q}</Question>
+      {values[id] && values[id].length > 0 ? (
+        <p className="text-sm text-gray-800">{values[id]}</p>
+      ) : (
+        <p className="text-sm text-gray-400">[no value given]</p>
+      )}
+    </div>
+  );
+}
+
+function NumberField({
+  name,
+  question,
+  required = false,
+  defaultValue,
+}: FieldProps & { defaultValue: string }) {
+  const { register, errors } = useFormContext();
+
+  return (
+    <div>
+      <Question>{question}</Question>
+      <NumberInput
+        errors={errors}
+        name={name}
+        reg={register({ ...reqRule(required) })}
+        defaultValue={defaultValue}
+      />
+    </div>
+  );
+}
+
+export function NumberInput({
+  name,
+  errors,
+  className,
+  reg,
+  ...props
+}: InputProps<'input'>): JSX.Element {
+  return (
+    <ShortTextInput
+      name={name}
+      errors={errors}
+      className={className}
+      reg={reg}
+      type="number"
+      step="any"
+      {...props}
+    />
+  );
+}
+
 export const baseClasses = [
   'border',
   'w-full',
