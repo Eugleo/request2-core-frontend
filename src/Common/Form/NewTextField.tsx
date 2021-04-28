@@ -18,7 +18,7 @@ export function ShortText({
   optional = false,
   errorMsg = 'This field is required',
 }: QuestionProps): JSX.Element {
-  const required = !optional || errorMsg;
+  const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (
@@ -96,7 +96,7 @@ export function LongText({
   optional = false,
   errorMsg = 'This field is required',
 }: QuestionProps): JSX.Element {
-  const required = !optional || errorMsg;
+  const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (
@@ -170,7 +170,7 @@ export function Number({
   optional = false,
   errorMsg = 'You have to enter a number',
 }: QuestionProps): JSX.Element {
-  const required = !optional || errorMsg;
+  const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (

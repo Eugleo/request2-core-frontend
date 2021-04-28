@@ -38,7 +38,7 @@ export function MultipleChoice({
   children = [],
   description,
 }: QuestionProps & Omit<ChoiceProps, 'isText'>): JSX.Element {
-  const required = !optional || errorMsg;
+  const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
 
   const selection = values[id] ? values[id].split(';;;') : [];
@@ -244,7 +244,7 @@ export function SingleChoice({
   hasCustom = false,
   children = [],
 }: QuestionProps & Omit<ChoiceProps, 'children'> & { children: Choice | Choice[] }): JSX.Element {
-  const required = !optional || errorMsg;
+  const required = !optional && errorMsg;
 
   const { state, values } = useFieldContext();
   const choices = Array.isArray(children) ? children : [children];
