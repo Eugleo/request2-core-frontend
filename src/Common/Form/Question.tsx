@@ -111,10 +111,12 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
 export function Question({
   hasCustom = false,
   required = false,
+  multiple = false,
   children,
 }: {
   children: ReactNode;
   required: boolean | string;
+  multiple?: boolean;
   hasCustom?: boolean;
 }): JSX.Element {
   return (
@@ -140,8 +142,36 @@ export function Question({
           <Icon.PenTool
             style={{ top: '1px' }}
             className="text-pink-400 w-3.5 relative"
-            data-tip="You can enter your own option"
+            data-tip={`You can type in your own option${multiple ? 's' : ''}`}
           />
+          {/* <div
+            className="rounded-full bg-pink-100 text-xs text-pink-500 py-0.5 px-2 flex flex-row items-center"
+            data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
+          >
+            <p className="cursor-default">custom</p>
+          </div> */}
+          <ReactTooltip
+            type="light"
+            effect="solid"
+            backgroundColor="rgba(243, 244, 246, 1)"
+            className="white-tooltip"
+          />
+        </>
+      ) : null}
+      {multiple ? (
+        <>
+          <Icon.Grid
+            style={{ top: '1px' }}
+            className="text-purple-400 w-3.5 relative mr-1"
+            data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
+          />
+          {/* <div
+            className="rounded-full bg-purple-100 text-xs text-purple-500 py-0.5 px-2 flex flex-row items-center"
+            data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
+          >
+
+            <p className="cursor-default">multi</p>
+          </div> */}
           <ReactTooltip
             type="light"
             effect="solid"

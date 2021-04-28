@@ -100,7 +100,7 @@ export function MultipleChoiceField({
 
   return (
     <div>
-      <Question required={required} hasCustom={hasCustom}>
+      <Question required={required} hasCustom={hasCustom} multiple>
         {question}
       </Question>
       <MultipleChoiceInput
