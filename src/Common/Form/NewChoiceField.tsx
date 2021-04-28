@@ -3,7 +3,7 @@ import c from 'classnames';
 import React, { Fragment, ReactElement, ReactNode } from 'react';
 import * as Icon from 'react-feather';
 import { Control, Controller, useFormContext } from 'react-hook-form';
-import Select from 'react-select/';
+import Select, { components } from 'react-select/';
 import Creatable from 'react-select/creatable';
 import { valueContainerCSS } from 'react-select/src/components/containers';
 import { cleanValue } from 'react-select/src/utils';
@@ -126,6 +126,29 @@ function Description({ children }: { children: React.ReactNode }) {
   return <>{children}</>;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function MenuList({ text, emptyText, children, ...rest }: any) {
+  if (rest.options.filter((o: { __isNew__: boolean }) => !o.__isNew__).length === 0) {
+    return (
+      <components.MenuList {...rest}>
+        <div>
+          <p className="text-xs text-gray-400 px-8 text-center py-1">Type in the values</p>
+        </div>
+        {rest.options.length > 0 ? children : null}
+      </components.MenuList>
+    );
+  }
+
+  return (
+    <components.MenuList {...rest}>
+      <div>
+        <p className="text-xs text-gray-400 px-8 text-center py-1 mb-1">{text}</p>
+      </div>
+      {children}
+    </components.MenuList>
+  );
+}
+
 export function MultipleChoiceInput({
   name,
   children,
@@ -167,12 +190,21 @@ export function MultipleChoiceInput({
           hasCustom ? (
             <Creatable
               isMulti
+              formatCreateLabel={customOptionFormatter}
               className="react-select"
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               {...field}
               options={options}
               styles={getStyles(err)}
-              components={{ MultiValueRemove }}
+              components={{
+                MultiValueRemove,
+                MenuList: pr => (
+                  <MenuList
+                    text="In addition to selecting some of the preset values, you can type in your own values as well"
+                    {...pr}
+                  />
+                ),
+              }}
             />
           ) : (
             <Select
@@ -182,7 +214,15 @@ export function MultipleChoiceInput({
               className="react-select"
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
-              components={{ MultiValueRemove }}
+              components={{
+                MultiValueRemove,
+                MenuList: pr => (
+                  <MenuList
+                    text="Select some of the preset values by clicking on them, or by using up/down arrows + ENTER"
+                    {...pr}
+                  />
+                ),
+              }}
             />
           )
         }
@@ -339,6 +379,15 @@ function toOptions(choices: Choice[]) {
     .sort(comparing(o => o.label));
 }
 
+function customOptionFormatter(str: string) {
+  return (
+    <p>
+      <span className="text-gray-500">Custom: </span>
+      {str} <span className="text-gray-500">(confirm by pressing ENTER)</span>
+    </p>
+  );
+}
+
 function SingleChoiceTextInput({
   name,
   children,
@@ -378,11 +427,20 @@ function SingleChoiceTextInput({
         render={field =>
           hasCustom ? (
             <Creatable
+              formatCreateLabel={customOptionFormatter}
               className="react-select"
               defaultValue={defaultSelection}
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
               options={options}
+              components={{
+                MenuList: pr => (
+                  <MenuList
+                    text="You can either select one of the preset values, or type in your own"
+                    {...pr}
+                  />
+                ),
+              }}
               {...field}
             />
           ) : (
@@ -392,6 +450,14 @@ function SingleChoiceTextInput({
               classNamePrefix={err ? 'react-select-error' : 'react-select'}
               styles={getStyles(err)}
               options={options}
+              components={{
+                MenuList: pr => (
+                  <MenuList
+                    text="Select one of the preset values by clicking on it, or by using up/down arrows + ENTER"
+                    {...pr}
+                  />
+                ),
+              }}
               {...field}
             />
           )
