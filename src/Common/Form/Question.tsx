@@ -1,4 +1,11 @@
-import { createContext, Fragment, PropsWithRef, ReactElement, ReactNode, useContext } from 'react';
+import React, {
+  createContext,
+  Fragment,
+  PropsWithRef,
+  ReactElement,
+  ReactNode,
+  useContext,
+} from 'react';
 import * as Icon from 'react-feather';
 import { Controller, DeepMap, FieldError, useFormContext } from 'react-hook-form';
 import Select from 'react-select';
@@ -10,7 +17,12 @@ import { Maybe } from '../../Utils/Maybe';
 export type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' };
 export const FieldContext = createContext<FieldContext>({ values: {}, state: 'show' });
 
-export type FieldProps = { name: string; question: string; required: boolean | string };
+export type FieldProps = {
+  name: string;
+  question: string;
+  required: boolean | string;
+  description?: Maybe<React.ReactNode>;
+};
 
 export function useFieldContext(): FieldContext {
   return useContext(FieldContext);
@@ -71,7 +83,9 @@ export type QuestionProps = {
   q: string;
   id: string;
   className?: string;
-  required?: boolean | string;
+  optional?: boolean | string;
+  errorMsg?: string;
+  description?: string;
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -106,12 +120,12 @@ export function Question({
   return (
     <div className="flex flex-row space-x-2 items-center mb-2 relative">
       <p className="text-md text-gray-900 font-semibold text-sm">{children}</p>
-      {typeof required === 'string' || required ? (
+      {typeof required !== 'string' && !required ? (
         <>
-          <Icon.CheckCircle
+          <Icon.Coffee
             style={{ top: '1px' }}
             className="text-blue-400 w-3.5 relative"
-            data-tip={typeof required === 'string' ? required : 'This field is required'}
+            data-tip="This field is optional"
           />
           <ReactTooltip
             type="light"
@@ -123,7 +137,7 @@ export function Question({
       ) : null}
       {hasCustom ? (
         <>
-          <Icon.Inbox
+          <Icon.PenTool
             style={{ top: '1px' }}
             className="text-pink-400 w-3.5 relative"
             data-tip="You can enter your own option"

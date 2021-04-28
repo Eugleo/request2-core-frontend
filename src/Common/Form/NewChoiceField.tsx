@@ -1,6 +1,6 @@
 /* eslint-disable react/jsx-handler-names */
 import c from 'classnames';
-import { Fragment, ReactElement, ReactNode } from 'react';
+import React, { Fragment, ReactElement, ReactNode } from 'react';
 import * as Icon from 'react-feather';
 import { Control, Controller, useFormContext } from 'react-hook-form';
 import Select from 'react-select/';
@@ -31,11 +31,14 @@ type Choice = ReactElement<
 
 export function MultipleChoice({
   id,
-  required = false,
+  optional = false,
+  errorMsg = 'You have to choose at least one option',
   q,
   hasCustom = false,
-  children,
+  children = [],
+  description,
 }: QuestionProps & Omit<ChoiceProps, 'isText'>): JSX.Element {
+  const required = !optional || errorMsg;
   const { state, values } = useFieldContext();
 
   const selection = values[id] ? values[id].split(';;;') : [];
@@ -51,6 +54,7 @@ export function MultipleChoice({
         required={required}
         hasCustom={hasCustom}
         defaultValue={defaultValue}
+        description={description}
       >
         {children}
       </MultipleChoiceField>
@@ -86,6 +90,7 @@ export function MultipleChoiceField({
   question,
   hasCustom,
   defaultValue,
+  description,
 }: FieldProps & {
   hasCustom: boolean;
   children: Choice[];
@@ -109,8 +114,16 @@ export function MultipleChoiceField({
       >
         {children}
       </MultipleChoiceInput>
+      <Description>{description}</Description>
     </div>
   );
+}
+
+function Description({ children }: { children: React.ReactNode }) {
+  if (typeof children === 'string') {
+    return <p className="text-xs text-gray-400 mt-1">{children}</p>;
+  }
+  return <>{children}</>;
 }
 
 export function MultipleChoiceInput({
@@ -180,16 +193,19 @@ export function MultipleChoiceInput({
   );
 }
 
-type ChoiceProps = { hasCustom?: boolean; isText?: boolean; children: Choice[] };
+type ChoiceProps = { hasCustom?: boolean; isText?: boolean; children?: Choice[] };
 
 export function SingleChoice({
   id,
-  required = false,
+  optional = false,
+  errorMsg = 'You have to choose an option',
   isText,
   q,
   hasCustom = false,
-  children,
+  children = [],
 }: QuestionProps & Omit<ChoiceProps, 'children'> & { children: Choice | Choice[] }): JSX.Element {
+  const required = !optional || errorMsg;
+
   const { state, values } = useFieldContext();
   const choices = Array.isArray(children) ? children : [children];
 
@@ -237,7 +253,7 @@ export function SingleChoice({
 export function SingleChoiceField({
   name,
   question,
-  children,
+  children = [],
   hasCustom = false,
   required,
   isText = false,

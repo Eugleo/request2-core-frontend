@@ -78,7 +78,7 @@ export function NewForm({
                   className="space-y-8"
                 >
                   <Section title="General information">
-                    <ShortText q="What should be this request called?" id="Title" required />
+                    <ShortText q="What should be this request called?" id="Title" />
                     <TeamField id="TeamId" />
                   </Section>
                   {getRequestFormForType(requestType)}

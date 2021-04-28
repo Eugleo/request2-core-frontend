@@ -12,7 +12,13 @@ import {
   InputProps,
 } from './Question';
 
-export function ShortText({ id, q, required = false }: QuestionProps): JSX.Element {
+export function ShortText({
+  id,
+  q,
+  optional = false,
+  errorMsg = 'This field is required',
+}: QuestionProps): JSX.Element {
+  const required = !optional || errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (
@@ -84,7 +90,13 @@ export function ShortTextInput({
   );
 }
 
-export function LongText({ id, q, required = false }: QuestionProps): JSX.Element {
+export function LongText({
+  id,
+  q,
+  optional = false,
+  errorMsg = 'This field is required',
+}: QuestionProps): JSX.Element {
+  const required = !optional || errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (
@@ -152,7 +164,13 @@ export function LongTextInput({
   );
 }
 
-export function Number({ id, q, required = false }: QuestionProps): JSX.Element {
+export function Number({
+  id,
+  q,
+  optional = false,
+  errorMsg = 'You have to enter a number',
+}: QuestionProps): JSX.Element {
+  const required = !optional || errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (

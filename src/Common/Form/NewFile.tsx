@@ -23,7 +23,13 @@ import {
   useFieldContext,
 } from './Question';
 
-export function Files({ id, q, required = false }: QuestionProps): JSX.Element {
+export function Files({
+  id,
+  q,
+  optional = false,
+  errorMsg = 'You have to upload at least one file',
+}: QuestionProps): JSX.Element {
+  const required = !optional || errorMsg;
   const { state, values } = useFieldContext();
   const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
 

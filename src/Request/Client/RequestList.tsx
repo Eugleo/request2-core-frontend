@@ -117,7 +117,7 @@ function NewRequestSection() {
         gridAutoRows: '1fr',
         gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
       }}
-      className="grid gap-6 h-32"
+      className="grid gap-6"
     >
       {requestTypes.map(rt => (
         <NewRequestButton key={rt.title} link={`new/${rt.type}`} name={rt.title} />

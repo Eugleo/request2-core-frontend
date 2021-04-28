@@ -60,12 +60,12 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
                 })}
               >
                 <div className="p-6 space-y-6">
-                  <Files q="Result files" id="Result Files" />
-                  <LongText q="Result description" id="Result Description" required />
+                  <Files q="Result files" id="Result Files" optional />
+                  <LongText q="Result description" id="Result Description" />
                   <div>
                     <div className="flex flex-row space-x-6 mb-3">
-                      <ShortText q="Human time" id="Human Time" required />
-                      <ShortText q="Machine time" id="Machine Time" required />
+                      <ShortText q="Human time" id="Human Time" />
+                      <ShortText q="Machine time" id="Machine Time" />
                     </div>
                     <p className="text-sm text-gray-400">
                       The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}

@@ -7,9 +7,12 @@ import { ErrorMessage, FieldProps, Question, QuestionProps, useFieldContext } fr
 export function MultiField({
   q,
   id,
-  required = false,
+  optional = false,
+  errorMsg = 'You have to input a number',
   children,
 }: QuestionProps & { children: (id: number) => ReactNode }): JSX.Element {
+  const required = !optional && errorMsg;
+
   const { state, values } = useFieldContext();
   const countId = `${id} Count`;
   const maybeCount = Number.parseInt(values[countId] ?? 0);
