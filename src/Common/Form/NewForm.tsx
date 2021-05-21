@@ -1,12 +1,11 @@
 import Uploady from '@rpldy/uploady';
-import { ReactNode, useMemo, useState } from 'react';
-import { AlertTriangle, Info } from 'react-feather';
+import { ReactNode, useMemo } from 'react';
+import { AlertTriangle } from 'react-feather';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import { fieldToProperty, FieldValue } from '../../Request/FieldValue';
 import { New, Property, PropertyJSON, Request } from '../../Request/Request';
-import { Proteomics } from '../../Request/RequestTypes/Proteomics';
-import { getRequestFormForType } from '../../Request/RequestTypes/RequestTypes';
+import { requests } from '../../Request/RequestTypes/RequestTypes';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
@@ -39,9 +38,10 @@ export function NewForm({
   const form = useForm<FormValues>({ mode: 'all' });
   const title: string | null = form.watch('Title', request?.title ?? '');
 
-  const state: FieldContext = useMemo(() => ({ state: 'edit', values: defaultValues }), [
-    defaultValues,
-  ]);
+  const state: FieldContext = useMemo(
+    () => ({ state: 'edit', values: defaultValues }),
+    [defaultValues]
+  );
 
   if (auth.user.teams.length === 0) {
     return (
@@ -81,7 +81,7 @@ export function NewForm({
                     <ShortText q="What should be this request called?" id="Title" />
                     <TeamField id="TeamId" />
                   </Section>
-                  {getRequestFormForType(requestType)}
+                  {requests.get(requestType)?.formComponent}
                   <div className="h-0.5 w-full bg-gray-200" />
                   <div className="flex justify-end flex-row w-full space-x-6 relative">
                     {children}

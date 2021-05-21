@@ -197,7 +197,7 @@ export function MultipleChoiceInput({
                 MultiValueRemove,
                 MenuList: pr => (
                   <MenuList
-                    text="In addition to selecting some of the preset values, you can type in your own values as well"
+                    text="In addition to selecting some of the preset values, you can type in your own values"
                     {...pr}
                   />
                 ),
@@ -215,7 +215,7 @@ export function MultipleChoiceInput({
                 MultiValueRemove,
                 MenuList: pr => (
                   <MenuList
-                    text="Select some of the preset values by clicking on them, or by using up/down arrows + ENTER"
+                    text="Select one or more of the preset values by clicking them, or by using up/down arrows + ENTER"
                     {...pr}
                   />
                 ),

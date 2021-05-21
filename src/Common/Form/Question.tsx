@@ -1,15 +1,6 @@
-import React, {
-  createContext,
-  Fragment,
-  PropsWithRef,
-  ReactElement,
-  ReactNode,
-  useContext,
-} from 'react';
+import React, { createContext, PropsWithRef, ReactNode, useContext } from 'react';
 import * as Icon from 'react-feather';
-import { Controller, DeepMap, FieldError, useFormContext } from 'react-hook-form';
-import Select from 'react-select';
-import Creatable from 'react-select/creatable';
+import { DeepMap, FieldError } from 'react-hook-form';
 import ReactTooltip from 'react-tooltip';
 
 import { Maybe } from '../../Utils/Maybe';

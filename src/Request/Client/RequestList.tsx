@@ -1,6 +1,5 @@
 import { To } from 'history';
 import moment from 'moment';
-import React from 'react';
 import { Info } from 'react-feather';
 import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
 
@@ -17,7 +16,7 @@ import { EditRequestPage } from '../EditRequest';
 import { NewRequestPage } from '../NewRequest';
 import { idToStr, Request } from '../Request';
 import { RequestPage } from '../RequestPage';
-import { requestTypeDisplayNames } from '../RequestTypes';
+import { requests } from '../RequestTypes/RequestTypes';
 import { statusStyle, statusToStr } from '../Status';
 
 export function Requests(): JSX.Element {
@@ -92,9 +91,9 @@ function RequestList() {
 
 function NewRequestSection() {
   const { auth } = useAuth();
-  const requestTypes = [...requestTypeDisplayNames.entries()].map(([key, val]) => ({
+  const requestTypes = [...requests.entries()].map(([key, { newRequestButtonText }]) => ({
     type: key,
-    title: val.title,
+    title: newRequestButtonText,
   }));
 
   if (auth.user.teams.length === 0) {

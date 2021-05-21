@@ -17,7 +17,7 @@ import { getDefaultValues } from './FieldValue';
 import { idToStr, PropertyJSON, Request } from './Request';
 import { RequestComments } from './RequestComments';
 import { RequestResults } from './RequestResults';
-import { getRequestFormForType } from './RequestTypes/RequestTypes';
+import { requests } from './RequestTypes/RequestTypes';
 import { Status, statusToStr } from './Status';
 
 export function RequestPage(): JSX.Element {
@@ -77,7 +77,7 @@ function Details({ requestType, properties }: { requestType: string; properties:
 
   return (
     <FieldContext.Provider value={{ state: 'show', values: props }}>
-      {getRequestFormForType(requestType)}
+      {requests.get(requestType)?.formComponent}
     </FieldContext.Provider>
   );
 }

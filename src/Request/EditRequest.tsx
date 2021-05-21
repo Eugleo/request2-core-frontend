@@ -9,7 +9,7 @@ import { useAuth } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { getDefaultValues } from './FieldValue';
 import { New, Property, PropertyJSON, Request } from './Request';
-import { requestTypeDisplayNames } from './RequestTypes';
+import { requests } from './RequestTypes/RequestTypes';
 
 export function EditRequestPage(): JSX.Element {
   const { id } = useParams();
@@ -34,16 +34,17 @@ function EditForm({
   properties: PropertyJSON[];
 }) {
   const navigate = useNavigate();
-  const { authPut } = useAuth<{
-    request: { title: string; teamId: number };
-    properties: New<Property>[];
-  }>();
+  const { authPut } =
+    useAuth<{
+      request: { title: string; teamId: number };
+      properties: New<Property>[];
+    }>();
 
   return (
     <NewForm
       defaultValues={getDefaultValues(properties)}
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      defaultTitle={`Editing a ${requestTypeDisplayNames.get(request.requestType)?.word!} request`}
+      defaultTitle={`Editing a request for ${requests.get(request.requestType)?.titleText!}`}
       request={request}
       requestType={request.requestType}
       submit={async (req: { title: string; teamId: number }, properties: New<Property>[]) => {

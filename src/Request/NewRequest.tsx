@@ -9,7 +9,7 @@ import { useAuth } from '../Utils/Auth';
 import { Maybe } from '../Utils/Maybe';
 import { WithID } from '../Utils/WithID';
 import { idToStr, New, Property, Request } from './Request';
-import { requestTypeDisplayNames } from './RequestTypes';
+import { requests } from './RequestTypes/RequestTypes';
 
 // TODO Check that the field names are unique
 export function NewRequestPage(): JSX.Element {
@@ -20,7 +20,7 @@ export function NewRequestPage(): JSX.Element {
   const { requestType } = useParams();
   const { authPost } = useAuth<{ request: New<Request>; properties: New<Property>[] }>();
 
-  const name = requestTypeDisplayNames.get(requestType)?.word;
+  const name = requests.get(requestType)?.titleText;
 
   if (name) {
     return (
@@ -29,7 +29,7 @@ export function NewRequestPage(): JSX.Element {
 
         <NewForm
           defaultValues={{}}
-          defaultTitle={`New ${name} request`}
+          defaultTitle={`New request for ${name}`}
           requestType={requestType}
           submit={async (request, properties) => {
             const r = await authPost('/requests', {
