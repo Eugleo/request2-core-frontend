@@ -87,7 +87,7 @@ function FeedbackButton() {
   let buttonChildren;
   switch (isMinimised) {
     case 'input':
-      buttonChildren = 'Send feedback';
+      buttonChildren = 'Send';
       break;
     case 'error':
       buttonChildren = (
@@ -116,12 +116,12 @@ function FeedbackButton() {
   return (
     <div>
       <button
-        className="bg-indigo-700 text-sm rounded-md text-indigo-100 py-2 px-4 hover:bg-indigo-600"
+        className="bg-indigo-500 text-white font-medium text-sm rounded-md py-2 px-4 hover:bg-indigo-600"
         onClick={() => {
           setIsMinimised(m => (m === 'minimised' ? 'input' : m));
         }}
       >
-        Give us feedback!
+        One-click to send feedback
       </button>
       {isMinimised === 'minimised' ? null : (
         <div ref={ref} className="bg-white shadow-lg p-6 absolute top-14 rounded-lg w-64 right-8">
