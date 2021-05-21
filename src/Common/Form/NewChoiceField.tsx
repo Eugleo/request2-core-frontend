@@ -5,9 +5,6 @@ import * as Icon from 'react-feather';
 import { Control, Controller, useFormContext } from 'react-hook-form';
 import Select, { components } from 'react-select/';
 import Creatable from 'react-select/creatable';
-import { valueContainerCSS } from 'react-select/src/components/containers';
-import { cleanValue } from 'react-select/src/utils';
-import ReactTooltip from 'react-tooltip';
 
 import { Selection } from '../../Request/Request';
 import { comparing } from '../../Utils/Func';
@@ -242,14 +239,22 @@ export function SingleChoice({
   isText,
   q,
   hasCustom = false,
+  autoFillIn = false,
   children = [],
-}: QuestionProps & Omit<ChoiceProps, 'children'> & { children: Choice | Choice[] }): JSX.Element {
+}: QuestionProps &
+  Omit<ChoiceProps, 'children'> & {
+    children: Choice | Choice[];
+    autoFillIn?: boolean;
+  }): JSX.Element {
   const required = !optional && errorMsg;
 
   const { state, values } = useFieldContext();
   const choices = Array.isArray(children) ? children : [children];
 
   if (state === 'edit') {
+    const substitute = autoFillIn && choices.length === 1 ? choices[0].props.value : null;
+    const defaultValue = values[id] ?? substitute;
+
     return (
       <SingleChoiceField
         name={id}
@@ -257,7 +262,7 @@ export function SingleChoice({
         required={required}
         hasCustom={hasCustom}
         isText={isText}
-        defaultValue={values[id] ?? null}
+        defaultValue={defaultValue}
       >
         {choices}
       </SingleChoiceField>
