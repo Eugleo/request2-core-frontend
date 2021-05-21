@@ -2,6 +2,8 @@ import c from 'classnames';
 import { ClassValue } from 'classnames/types';
 import { To } from 'history';
 import React, { ReactNode } from 'react';
+import { AtomSpinner } from 'react-epic-spinners';
+import { AlertTriangle, Check } from 'react-feather';
 import { Link, useNavigate } from 'react-router-dom';
 
 type Status = 'Normal' | 'Danger';
@@ -128,6 +130,53 @@ export function Cancel({ className }: { className?: string }): JSX.Element {
         navigate(-1);
       }}
     />
+  );
+}
+
+export type NetworkStatus = 'waiting' | 'error' | 'success' | 'default';
+export function PrimaryWithNetwork({
+  type,
+  onClick,
+  title,
+  className,
+  status,
+  network,
+}: SubmitButtonParams & { network: NetworkStatus }): JSX.Element {
+  const cl = c(primaryClasses(status || 'Normal'), className);
+
+  let buttonChildren;
+  switch (network) {
+    case 'default':
+      buttonChildren = title;
+      break;
+    case 'error':
+      buttonChildren = (
+        <div className="flex flex-row">
+          <AlertTriangle className="text-white mr-2 w-5 h-5" />
+          Error
+        </div>
+      );
+      break;
+    case 'waiting':
+      buttonChildren = (
+        <div>
+          <AtomSpinner color="white" size={30} />
+        </div>
+      );
+      break;
+    case 'success':
+      buttonChildren = (
+        <div className="flex flex-row">
+          <Check className="text-white mr-2 w-5 h-5" />
+          Success
+        </div>
+      );
+  }
+
+  return (
+    <button type={type} onClick={onClick} className={c(baseClasses, cl)}>
+      {buttonChildren}
+    </button>
   );
 }
 

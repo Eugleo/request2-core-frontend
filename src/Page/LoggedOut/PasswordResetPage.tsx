@@ -1,7 +1,8 @@
+import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { useParams } from 'react-router';
 
-import { Primary } from '../../Common/Buttons';
+import { Primary, PrimaryWithNetwork, NetworkStatus } from '../../Common/Buttons';
 import { ShortTextInput } from '../../Common/Form/NewTextField';
 import { Question, reqRule } from '../../Common/Form/Question';
 import * as Api from '../../Utils/Api';
@@ -17,6 +18,9 @@ export function PasswordResetInitPage({ email }: { email?: string | undefined })
   const { errors, register, handleSubmit } = useForm<{ email: string }>({
     defaultValues: { email },
   });
+
+  const [status, setStatus] = useState<NetworkStatus>('default');
+
   return (
     <CenteredPage
       title="Reset your password"
@@ -25,18 +29,27 @@ export function PasswordResetInitPage({ email }: { email?: string | undefined })
       imageAlt="A key logo"
     >
       <form
-        onSubmit={handleSubmit(values => Api.post(`/password-reset-init`, { email: values.email }))}
+        onSubmit={handleSubmit(async values => {
+          setStatus('waiting');
+          const r = await Api.post(`/password-reset-init`, { email: values.email });
+          if (r.ok) {
+            setStatus('success');
+          } else {
+            setStatus('error');
+          }
+        })}
       >
         <CenteredForm>
           <div>
             <Question required>Email address associated with your account</Question>
             <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
           </div>
-          <Primary
+          <PrimaryWithNetwork
             type="submit"
             title="Send recovery link"
             status="Normal"
             className="w-full mt-6"
+            network={status}
           />
         </CenteredForm>
       </form>
