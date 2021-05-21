@@ -73,7 +73,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                     <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
                   </div>
                   <div>
-                    <Question required={false}>E-mail address</Question>
+                    <Question showIcons={false}>E-mail address</Question>
                     <ShortTextInput name="email" disabled />
                   </div>
                 </div>
@@ -88,7 +88,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
             <Section title="Account details">
               <div className="p-6">
                 <div>
-                  <Question required={false}>Research groups</Question>
+                  <Question showIcons={false}>Research groups</Question>
                   <div className="flex flex-row space-x-2 mb-6">
                     {user.teams.map(t => (
                       <Pill
@@ -100,7 +100,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                   </div>
                 </div>
                 <div>
-                  <Question required={false}>Privileges</Question>
+                  <Question showIcons={false}>Privileges</Question>
                   <div className="flex flex-row space-x-2">
                     {user.roles.map(r => (
                       <Pill

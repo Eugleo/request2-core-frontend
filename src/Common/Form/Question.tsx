@@ -112,62 +112,81 @@ export function Question({
   hasCustom = false,
   required = false,
   multiple = false,
+  showIcons = true,
   children,
 }: {
   children: ReactNode;
-  required: boolean | string;
+  required?: boolean | string;
   multiple?: boolean;
   hasCustom?: boolean;
+  showIcons?: boolean;
 }): JSX.Element {
   return (
     <div className="flex flex-row space-x-2 items-center mb-2 relative">
       <p className="text-md text-gray-900 font-semibold text-sm">{children}</p>
-      {typeof required !== 'string' && !required ? (
+
+      {showIcons ? (
         <>
-          <Icon.Coffee
-            style={{ top: '1px' }}
-            className="text-blue-400 w-3.5 relative"
-            data-tip="This field is optional"
-          />
-          <ReactTooltip
-            type="light"
-            effect="solid"
-            backgroundColor="rgba(243, 244, 246, 1)"
-            className="white-tooltip"
-          />
-        </>
-      ) : null}
-      {hasCustom ? (
-        <>
-          <Icon.PenTool
-            style={{ top: '1px' }}
-            className="text-pink-400 w-3.5 relative"
-            data-tip={`You can type in your own option${multiple ? 's' : ''}`}
-          />
-          <ReactTooltip
-            type="light"
-            effect="solid"
-            backgroundColor="rgba(243, 244, 246, 1)"
-            className="white-tooltip"
-          />
-        </>
-      ) : null}
-      {multiple ? (
-        <>
-          <Icon.Grid
-            style={{ top: '1px' }}
-            className="text-purple-400 w-3.5 relative mr-1"
-            data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
-          />
-          <ReactTooltip
-            type="light"
-            effect="solid"
-            backgroundColor="rgba(243, 244, 246, 1)"
-            className="white-tooltip"
-          />
+          {typeof required !== 'string' && !required ? <Required /> : null}
+          {hasCustom ? <Custom multiple={multiple} /> : null}
+          {multiple ? <Multiple hasCustom={hasCustom} /> : null}
         </>
       ) : null}
     </div>
+  );
+}
+
+function Required() {
+  return (
+    <>
+      <Icon.Coffee
+        style={{ top: '1px' }}
+        className="text-blue-400 w-3.5 relative"
+        data-tip="This field is optional"
+      />
+      <ReactTooltip
+        type="light"
+        effect="solid"
+        backgroundColor="rgba(243, 244, 246, 1)"
+        className="white-tooltip"
+      />
+    </>
+  );
+}
+
+function Custom({ multiple }: { multiple: boolean }) {
+  return (
+    <>
+      <Icon.PenTool
+        style={{ top: '1px' }}
+        className="text-pink-400 w-3.5 relative"
+        data-tip={`You can type in your own option${multiple ? 's' : ''}`}
+      />
+      <ReactTooltip
+        type="light"
+        effect="solid"
+        backgroundColor="rgba(243, 244, 246, 1)"
+        className="white-tooltip"
+      />
+    </>
+  );
+}
+
+function Multiple({ hasCustom }: { hasCustom: boolean }) {
+  return (
+    <>
+      <Icon.Grid
+        style={{ top: '1px' }}
+        className="text-purple-400 w-3.5 relative mr-1"
+        data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
+      />
+      <ReactTooltip
+        type="light"
+        effect="solid"
+        backgroundColor="rgba(243, 244, 246, 1)"
+        className="white-tooltip"
+      />
+    </>
   );
 }
 
