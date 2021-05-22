@@ -62,6 +62,7 @@ function FilesField({
         {...form}
         value={currentValue === null ? defaultValue : currentValue}
         required={required}
+        defaultValue={defaultValue}
       />
     </div>
   );
@@ -75,9 +76,11 @@ export function FileInput({
   register,
   setValue,
   unregister,
+  defaultValue,
 }: {
   register: Function;
   errors: FormErrors;
+  defaultValue: FileInfo[];
   value?: FileInfo[];
   setValue: Function;
   unregister: Function;
@@ -91,10 +94,13 @@ export function FileInput({
   useEffect(() => {
     const msg = typeof required === 'string' ? required : 'You have to upload at least one file';
     register(name, {
-      validate: (val: FileInfo[] | null) => !required || (val && val.length > 0) || msg,
+      validate: (val: FileInfo[] | null) => {
+        return !required || (val && val.length > 0) || msg;
+      },
     });
+    setValue(name, defaultValue, { shouldValidate: true });
     return () => unregister(name);
-  }, [register, unregister, required, name]);
+  }, [register, unregister, required, name, setValue, defaultValue]);
 
   const removeFile = (file: FileInfo) => {
     // Possible bug, we're not removing the file from removableFiles
