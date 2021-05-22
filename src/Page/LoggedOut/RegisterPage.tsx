@@ -81,7 +81,7 @@ export function RegisterPage(): JSX.Element {
           ) : (
             <>
               <div>
-                <Question required={false}>E-mail address</Question>
+                <Question showIcons={false}>E-mail address</Question>
                 <ShortTextInput disabled value={email} />
               </div>
               <div>
@@ -100,7 +100,7 @@ export function RegisterPage(): JSX.Element {
                 />
               </div>
               <div>
-                <Question required={false}>Team</Question>
+                <Question showIcons={false}>Team</Question>
                 <ShortTextInput disabled value="You will be assigned a team by our admin" />
               </div>
               <div>
