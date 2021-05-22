@@ -56,7 +56,7 @@ function RequestList() {
   const [searchParams, setSearchParams] = useSearchParams();
   const query = searchParams.get('query') ?? '-status:deleted';
   const { Loader } = Api.useAsyncGet<{ values: WithID<Request>[]; total: number }>(
-    Api.urlWithParams('/requests', { limit, offset, query })
+    Api.urlWithParams('/me/requests', { limit, offset, query })
   );
 
   return (
@@ -76,13 +76,15 @@ function RequestList() {
           />
         </div>
         <Loader>
-          {({ values }) => (
-            <Table columns={['Name', 'ID code', 'Created', 'Status']}>
-              {values.map(r => (
-                <RequestTableItem key={r._id} request={r} />
-              ))}
-            </Table>
-          )}
+          {({ values }) => {
+            return (
+              <Table columns={['Name', 'ID code', 'Created', 'Status']}>
+                {values.map(r => (
+                  <RequestTableItem key={r._id} request={r} />
+                ))}
+              </Table>
+            );
+          }}
         </Loader>
       </Page>
     </Authorized>
