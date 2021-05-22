@@ -11,6 +11,7 @@ import { FilesView } from '../../Request/FileView';
 import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { FileInfo, stringToFileInfo } from '../../Utils/File';
+import { Maybe } from '../../Utils/Maybe';
 import * as Button from '../Buttons';
 import { useHover } from '../Hooks';
 import { Spacer } from '../Layout';
@@ -34,7 +35,7 @@ export function Files({
   const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
 
   if (state === 'edit') {
-    return <FilesField name={id} question={q} required={required} defaultValue={files} />;
+    return <FilesField name={id} question={q} required={required} defaultValue={values[id]} />;
   }
   return (
     <div>
@@ -49,7 +50,7 @@ function FilesField({
   question,
   required = false,
   defaultValue,
-}: FieldProps & { defaultValue: FileInfo[] }) {
+}: FieldProps & { defaultValue: string }) {
   const form = useFormContext();
 
   const currentValue = form.watch(name, null);
@@ -60,12 +61,26 @@ function FilesField({
       <FileInput
         name={name}
         {...form}
-        value={currentValue === null ? defaultValue : currentValue}
+        value={currentValue}
         required={required}
         defaultValue={defaultValue}
       />
     </div>
   );
+}
+
+function stringToFiles(s: Maybe<string> | FileInfo[]) {
+  switch (s) {
+    case '':
+    case undefined:
+    case null:
+      return [];
+    default:
+      if (typeof s === 'string') {
+        return s.split(';;;').map(stringToFileInfo);
+      }
+      return s;
+  }
 }
 
 export function FileInput({
@@ -80,8 +95,8 @@ export function FileInput({
 }: {
   register: Function;
   errors: FormErrors;
-  defaultValue: FileInfo[];
-  value?: FileInfo[];
+  defaultValue: Maybe<string>;
+  value?: Maybe<FileInfo[]>;
   setValue: Function;
   unregister: Function;
   name: string;
@@ -98,15 +113,22 @@ export function FileInput({
         return !required || (val && val.length > 0) || msg;
       },
     });
-    setValue(name, defaultValue, { shouldValidate: true });
+
+    const initialValue: FileInfo[] = stringToFiles(defaultValue);
+
+    setValue(name, initialValue, {
+      shouldValidate: true,
+    });
     return () => unregister(name);
   }, [register, unregister, required, name, setValue, defaultValue]);
+
+  const currentValue = stringToFiles(value);
 
   const removeFile = (file: FileInfo) => {
     // Possible bug, we're not removing the file from removableFiles
     setValue(
       name,
-      value.filter(f => f !== file),
+      stringToFiles(value).filter(f => f !== file),
       { shouldValidate: true }
     );
   };
@@ -123,7 +145,7 @@ export function FileInput({
     if (items) {
       setRemovableFiles(r => items.reduce((acc, f) => acc.add(f.hash), r));
       setInProgress(n => n - items.length);
-      setValue(name, [...value, ...items], { shouldValidate: true });
+      setValue(name, [...currentValue, ...items], { shouldValidate: true });
     }
   });
 
@@ -132,7 +154,7 @@ export function FileInput({
   return (
     <UploadDropZone onDragOverClassName="bg-green-100" grouped={false} className="rounded-md">
       <div>
-        {value.length > 0 ? (
+        {currentValue.length > 0 ? (
           <div className="flex flex-row justify-between items-baseline mb-1">
             <UploadButton />
           </div>
@@ -144,8 +166,8 @@ export function FileInput({
           )}
         >
           <div className="pt-3 pb-3 px-4 ">
-            {value.length > 0 ? (
-              value.map(f => (
+            {currentValue.length > 0 ? (
+              currentValue.map(f => (
                 <FileComponent
                   editable={removableFiles.has(f.hash)}
                   onRemove={removeFile}

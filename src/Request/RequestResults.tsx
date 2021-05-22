@@ -17,8 +17,6 @@ import { WithID } from '../Utils/WithID';
 import { fieldToProperty, FieldValue, getDefaultValues } from './FieldValue';
 import { New, Property, PropertyJSON } from './Request';
 
-type FormValues = { Title: string; TeamId: string } & Record<string, FieldValue>;
-
 function numFromString(str: string, def = 0) {
   const n = Number.parseInt(str);
   return Number.isNaN(n) ? def : n;
@@ -34,9 +32,6 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
   const form = useForm({ defaultValues: results });
   const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const [state, setState] = useState<'show' | 'edit'>('show');
-
-  console.log(results);
-  console.log(state);
 
   if (state === 'edit') {
     const totalTime = getTotalTime(

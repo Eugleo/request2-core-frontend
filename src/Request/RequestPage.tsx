@@ -236,7 +236,7 @@ function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
         <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
           <h2 className="text-lg font-semibold">Changelog</h2>
           <Page.Spacer />
-          <p className="text-gray-500 text-sm font-medium ml-3">{updatedProps.length} items</p>
+          <p className="text-gray-600 text-sm font-medium ml-3">{updatedProps.length} items</p>
         </div>
         <div className="divide-y divide-gray-200 max-h-64 overflow-scroll">
           {updatedProps.sort(comparing(p => -p.dateAdded)).map(p => (
