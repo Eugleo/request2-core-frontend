@@ -146,7 +146,7 @@ export function LongTextInput({
   const err = errors && name && errors[name]?.message;
 
   return (
-    <div>
+    <div className="h-full">
       <textarea
         name={name}
         className={c(

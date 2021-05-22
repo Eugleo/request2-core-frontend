@@ -2,6 +2,7 @@ import c from 'classnames';
 import moment from 'moment';
 import React from 'react';
 import { Link, Route, Routes, useSearchParams } from 'react-router-dom';
+import { defaultTheme } from 'react-select';
 
 import * as Button from '../Common/Buttons';
 import { Card, Page } from '../Common/Layout';
@@ -50,19 +51,40 @@ function AnnouncementList() {
           <Button.Create title="New announcement" />
         </Authorized>
       </div>
-      <div className="space-y-6">
+      <div>
         <Loader>
           {({ values, total }) => (
             <>
-              {values.map(ann => (
-                <Item key={ann._id} ann={ann} />
-              ))}
+              <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-10">
+                {values.map(ann => (
+                  <Item key={ann._id} ann={ann} />
+                ))}
+              </div>
               <Pagination currentPage={currentPage} limit={limit} total={total} />
             </>
           )}
         </Loader>
       </div>
     </Page>
+  );
+}
+
+export function StatusBadge({ active }: { active: boolean }): JSX.Element {
+  return (
+    <span
+      className={c(
+        active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
+        'px-2.5 py-0.5 rounded-full inline-flex flex-row items-center'
+      )}
+    >
+      <span
+        className={c(
+          active ? 'bg-green-500' : 'bg-red-500',
+          'relative inline-flex rounded-full h-2 w-2 mr-2'
+        )}
+      />
+      <span className="text-sm font-bold">{active ? 'Active' : 'Archived'}</span>
+    </span>
   );
 }
 
@@ -73,39 +95,51 @@ function Item({
 }) {
   const { Loader } = useAsyncGet<WithID<User>>(`/users/${authorId}`);
 
+  const paragraphs = body.split(/\n\w*\n/u);
+
+  let paraText: string;
+  switch (paragraphs.length) {
+    case 0:
+    case 1:
+      paraText = 'This is the whole announcement';
+      break;
+    case 2:
+      paraText = '1 more paragraph inside';
+      break;
+    default:
+      paraText = `${paragraphs.length - 1} more paragraphs inside`;
+  }
+
   return (
-    <Card>
-      <div className="flex px-6 py-3 items-center border-b border-gray-200">
-        <div className="flex flex-col not-sr-onlyitems-center">
-          <Link
-            to={_id.toString()}
-            className={c(
-              'text-xl font-medium text-black hover:text-green-700',
-              active ? 'text-black' : 'text-gray-400'
-            )}
-          >
-            {title}
-          </Link>
-          <Loader>
-            {data => (
-              <p className={c('text-sm', active ? 'text-gray-500' : 'text-gray-300')}>
-                <span>
-                  Created by <span className="font-medium">{data.name}</span>{' '}
-                </span>
-                {moment.unix(dateCreated).fromNow()}
+    <Link to={_id.toString()}>
+      <div className="rounded-xl transition-all duration-150 group">
+        <StatusBadge active={active} />
+        <h2 className="text-2xl font-bold mb-4 mt-4 group-hover:text-indigo-800 transition-all group-hover:underline">
+          {title}
+        </h2>
+
+        <Markdown
+          source={paragraphs.length > 0 ? paragraphs[0] : '_No textual content_'}
+          className={c('text-gray-800 mb-4')}
+        />
+
+        <Loader>
+          {data => (
+            <div className={c('text-sm text-gray-800')}>
+              <p className="text-black font-medium">{data.name}</p>
+              <p>
+                {moment.unix(dateCreated).fromNow()} · {paraText}
               </p>
-            )}
-          </Loader>
-        </div>
-        <div className="flex-grow" />
-        <Authorized roles={['Admin']}>
-          <Button.Edit link={`/announcements/${_id}/edit`} />
-        </Authorized>
+            </div>
+          )}
+        </Loader>
       </div>
-      <Markdown
-        source={body}
-        className={c('px-6 pt-3 pb-1', active ? 'text-gray-700' : 'text-gray-400')}
-      />
-    </Card>
+    </Link>
   );
+}
+
+{
+  /* <Authorized roles={['Admin']}>
+  <Button.Edit link={`/announcements/${_id}/edit`} />
+</Authorized>; */
 }
