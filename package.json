@@ -37,7 +37,8 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   },
   "scripts": {
-    "start": "BROWSER=none craco start",
+    "start_analytics": "REACT_APP_TARGET=analytics BROWSER=none craco start",
+    "start_msms": "BROWSER=none REACT_APP_TARGET=msms craco start",
     "build": "craco build",
     "test": "craco test",
     "eject": "react-scripts eject"
