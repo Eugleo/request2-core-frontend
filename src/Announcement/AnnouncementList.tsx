@@ -55,7 +55,7 @@ function AnnouncementList() {
         <Loader>
           {({ values, total }) => (
             <>
-              <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-10">
+              <div className="grid xl:grid-cols-3 lg:grid-cols-2 gap-6">
                 {values.map(ann => (
                   <Item key={ann._id} ann={ann} />
                 ))}
@@ -114,18 +114,18 @@ function Item({
     <Link to={_id.toString()}>
       <div className="rounded-xl transition-all duration-150 group">
         <StatusBadge active={active} />
-        <h2 className="text-2xl font-bold mb-4 mt-4 group-hover:text-indigo-800 transition-all group-hover:underline">
+        <h2 className="text-2xl font-bold mb-4 mt-4 transition-all group-hover:underline">
           {title}
         </h2>
 
         <Markdown
           source={paragraphs.length > 0 ? paragraphs[0] : '_No textual content_'}
-          className={c('text-gray-800 mb-4')}
+          className={c('text-gray-700 mb-4')}
         />
 
         <Loader>
           {data => (
-            <div className={c('text-sm text-gray-800')}>
+            <div className={c('text-sm text-gray-600')}>
               <p className="text-black font-medium">{data.name}</p>
               <p>
                 {moment.unix(dateCreated).fromNow()} · {paraText}
