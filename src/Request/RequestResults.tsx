@@ -35,6 +35,9 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
   const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const [state, setState] = useState<'show' | 'edit'>('show');
 
+  console.log(results);
+  console.log(state);
+
   if (state === 'edit') {
     const totalTime = getTotalTime(
       form.watch('Human Time') ?? results['Human Time'],

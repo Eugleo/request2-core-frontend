@@ -53,6 +53,7 @@ export function NewForm({
           </div>
           <div className="p-4 text-sm text-gray-700">
             <p>
+              {/* TODO Koho kontaktovat  */}
               You have to be assigned a research group before you'll be able to create requests.
             </p>
           </div>
