@@ -13,7 +13,7 @@ import { formatDate } from '../Utils/Date';
 export function RandomAvatar(): JSX.Element {
   return (
     <div className="bg-indigo-100 rounded-full h-10 w-10 flex justify-center items-center">
-      <User className="text-indigo-400" />
+      <User className="text-indigo-800" />
     </div>
   );
 }

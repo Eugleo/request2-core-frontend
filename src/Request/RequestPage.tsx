@@ -8,6 +8,7 @@ import * as Button from '../Common/Buttons';
 import { FieldContext } from '../Common/Form/Question';
 import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
+import { Pill } from '../Common/Table';
 import { User } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
@@ -228,19 +229,19 @@ function StatusButton({
 }
 
 function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
+  const updatedProps = properties.filter(p => p.shouldLog);
   return (
     <Page.Card>
       <div className="rounded-md overflow-hidden">
         <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
           <h2 className="text-lg font-semibold">Changelog</h2>
+          <Page.Spacer />
+          <p className="text-gray-500 text-sm font-medium ml-3">{updatedProps.length} items</p>
         </div>
         <div className="divide-y divide-gray-200 max-h-64 overflow-scroll">
-          {properties
-            .filter(p => p.shouldLog)
-            .sort(comparing(p => -p.dateAdded))
-            .map(p => (
-              <LogItem key={p._id} property={p} />
-            ))}
+          {updatedProps.sort(comparing(p => -p.dateAdded)).map(p => (
+            <LogItem key={p._id} property={p} />
+          ))}
         </div>
       </div>
     </Page.Card>
@@ -257,11 +258,10 @@ function LogItem({ property }: { property: PropertyJSON }) {
       </div>
       <div>
         <p className="text-gray-600 text-sm">
-          A property with id <span className="bg-gray-100 rounded-sm px-1">{property.name}</span>{' '}
-          has been changed
-          {result.status === 'Success' ? ` by ${result.data.name}` : ''}
+          {result.status === 'Success' ? `${result.data.name}` : 'Somebody'} changed{' '}
+          <span className="bg-gray-100 rounded-sm px-1">{property.name}</span>
         </p>
-        <p className="text-xs text-gray-400 mt-1">({moment.unix(property.dateAdded).fromNow()})</p>
+        <p className="text-sm text-gray-400 mt-1">{moment.unix(property.dateAdded).fromNow()}</p>
       </div>
     </div>
   );
