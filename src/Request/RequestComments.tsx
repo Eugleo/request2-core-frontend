@@ -97,8 +97,8 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
 function CommentComponent({ isMine, text }: { isMine: boolean; text: string }) {
   function Avatar() {
     return (
-      <div className="flex flex-col items-stretch col-span-1 justify-start h-full">
-        <RandomAvatar />
+      <div className={c('flex flex-col items-center h-full justify-start')}>
+        <RandomAvatar me={isMine} />
       </div>
     );
   }
@@ -107,7 +107,7 @@ function CommentComponent({ isMine, text }: { isMine: boolean; text: string }) {
     return (
       <p
         className={c(
-          'col-span-4 bg-gray-100 text-sm tet-gray-700 rounded-md border-gray-200 border p-3',
+          'col-span-2 bg-gray-100 text-sm tet-gray-700 rounded-md border-gray-200 border p-3',
           isMine ? 'text-left' : 'text-right'
         )}
       >
@@ -117,14 +117,16 @@ function CommentComponent({ isMine, text }: { isMine: boolean; text: string }) {
   }
 
   return (
-    <div className={c('grid grid-cols-5 gap-2 max-w-sm w-full')}>
+    <div className={c('grid grid-cols-5 gap-2 w-full')}>
       {isMine ? (
         <>
           <Avatar />
           <Body />
+          <div className="col-span-2" />
         </>
       ) : (
         <>
+          <div className="col-span-2" />
           <Body />
           <Avatar />
         </>

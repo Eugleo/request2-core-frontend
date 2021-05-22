@@ -8,7 +8,7 @@ import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
 import { SearchBar } from '../../Common/SearchBar';
 import { Cell, Pill, Row, Table } from '../../Common/Table';
-import { User } from '../../User/User';
+import { User, UserName } from '../../User/User';
 import * as Api from '../../Utils/Api';
 import { padWithSpace } from '../../Utils/Func';
 import { ok } from '../../Utils/Loader';
@@ -29,7 +29,7 @@ export function Requests(): JSX.Element {
 }
 
 function RequestTableItem({ request }: { request: WithID<Request> }) {
-  const { result } = Api.useAsyncGet<User>(`/users/${request.authorId}`);
+  const { result } = Api.useAsyncGet<UserName>(`/users/${request.authorId}/name`);
   const { type, code } = idToStr(request);
 
   return (

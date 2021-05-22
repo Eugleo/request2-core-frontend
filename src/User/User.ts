@@ -13,6 +13,10 @@ export type User = {
   active: boolean;
 };
 
+export type UserName = {
+  name: string;
+};
+
 export type UserDetails = {
   _id: number;
   name: string;

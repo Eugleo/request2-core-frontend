@@ -1,6 +1,7 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import c from 'classnames';
 import React, { useState } from 'react';
 import { User } from 'react-feather';
 
@@ -10,9 +11,14 @@ import { useAuth } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
 import { formatDate } from '../Utils/Date';
 
-export function RandomAvatar(): JSX.Element {
+export function RandomAvatar({ me }: { me: boolean }): JSX.Element {
   return (
-    <div className="bg-indigo-100 rounded-full h-10 w-10 flex justify-center items-center">
+    <div
+      className={c(
+        'rounded-full h-10 w-10 flex justify-center items-center',
+        me ? 'bg-indigo-100' : 'bg-gray-200'
+      )}
+    >
       <User className="text-indigo-800" />
     </div>
   );
@@ -40,7 +46,7 @@ export function UserView(): JSX.Element {
         }}
       >
         <div style={{ padding: '-1px' }} className="flex w-full h-full items-stretch">
-          <RandomAvatar />
+          <RandomAvatar me />
         </div>
       </button>
     </div>

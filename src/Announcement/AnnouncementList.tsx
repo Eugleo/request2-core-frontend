@@ -9,7 +9,7 @@ import { Card, Page } from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { SearchBar } from '../Common/SearchBar';
-import { User } from '../User/User';
+import { User, UserName } from '../User/User';
 import { useAsyncGetMany, useAsyncGet, urlWithParams } from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { padWithSpace } from '../Utils/Func';
@@ -93,7 +93,7 @@ function Item({
 }: {
   ann: WithID<Announcement>;
 }) {
-  const { Loader } = useAsyncGet<WithID<User>>(`/users/${authorId}`);
+  const { Loader } = useAsyncGet<UserName>(`/users/${authorId}/name`);
 
   const paragraphs = body.split(/\n\w*\n/u);
 

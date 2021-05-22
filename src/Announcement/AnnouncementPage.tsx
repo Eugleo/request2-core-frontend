@@ -4,7 +4,7 @@ import { useParams } from 'react-router-dom';
 import { SecondaryLinked } from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
-import { User } from '../User/User';
+import { User, UserName } from '../User/User';
 import * as Api from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
@@ -46,7 +46,7 @@ export function AnnouncementPage(): JSX.Element {
 }
 
 function Author({ ann }: { ann: WithID<Announcement> }) {
-  const { Loader } = Api.useAsyncGet<WithID<User>>(`/users/${ann.authorId}`);
+  const { Loader } = Api.useAsyncGet<UserName>(`/users/${ann.authorId}/name`);
   return (
     <Loader>
       {author => (

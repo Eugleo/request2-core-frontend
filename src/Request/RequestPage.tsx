@@ -9,7 +9,7 @@ import { FieldContext } from '../Common/Form/Question';
 import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { Pill } from '../Common/Table';
-import { User } from '../User/User';
+import { User, UserName } from '../User/User';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { comparing } from '../Utils/Func';
@@ -249,7 +249,7 @@ function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
 }
 
 function LogItem({ property }: { property: PropertyJSON }) {
-  const { result } = useAsyncGet<User>(`/users/${property.authorId}`);
+  const { result } = useAsyncGet<UserName>(`/users/${property.authorId}/name`);
 
   return (
     <div className="flex flex-row items-center py-5 px-6">
