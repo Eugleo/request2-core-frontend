@@ -33,7 +33,7 @@ export function Sidebar(): JSX.Element {
                 <NavLink
                   to="/requests"
                   icon={<Icon.List className="w-5 h-5" />}
-                  text="Client's request"
+                  text="Client's requests"
                 />
               </Authorized>
               <NavLink

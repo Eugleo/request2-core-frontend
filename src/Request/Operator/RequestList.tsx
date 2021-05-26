@@ -54,7 +54,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
 
 function RequestList() {
   const { limit, offset } = usePagination(10);
-  const [query, setQuery] = useQuery("-status:deleted'");
+  const [query, setQuery] = useQuery('-status:deleted');
   const { Loader } = Api.useAsyncGet<{ values: WithID<Request>[]; total: number }>(
     Api.urlWithParams('/requests', { limit, offset, query })
   );
