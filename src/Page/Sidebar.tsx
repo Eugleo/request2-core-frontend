@@ -42,7 +42,7 @@ export function Sidebar(): JSX.Element {
                 text="Announcements"
               />
               <Authorized roles={['Operator', 'Admin']}>
-                <NavLink to="/teams" icon={<Icon.Users className="w-5 h-5" />} text="Teams" />
+                <NavLink to="/admin/teams" icon={<Icon.Users className="w-5 h-5" />} text="Teams" />
               </Authorized>
             </Authentized>
             <Authorized roles={['Operator', 'Admin']}>

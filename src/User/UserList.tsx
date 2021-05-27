@@ -12,6 +12,7 @@ import { padWithSpace } from '../Utils/Func';
 import { ok } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 import { User } from './User';
+import { LinkToProfile } from './UserProfile';
 
 function TeamPill({ teamId }: { teamId: number }) {
   const { Loader } = Api.useAsyncGet<Team>(`/teams/${teamId}`);
@@ -28,7 +29,9 @@ function TeamPill({ teamId }: { teamId: number }) {
 function UserTableItem({ user }: { user: WithID<User> }) {
   return (
     <Row>
-      <Cell>{user.active ? user.name : <span className="text-gray-600">{user.name}</span>}</Cell>
+      <Cell>
+        <LinkToProfile userId={user._id} />
+      </Cell>
       <Cell className="text-gray-700">{user.email}</Cell>
       <Cell className="text-gray-700">
         <div className="flex flex-row items-center flex-wrap -mb-2">

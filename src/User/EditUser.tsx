@@ -18,13 +18,15 @@ function EditUserForm({ user }: { user: WithID<User> }) {
   const { authPut, authDel } = useAuth<User>();
   const navigate = useNavigate();
 
-  const onSubmit = async ({ email, name, roles, teamIds }: UserStub) => {
+  const onSubmit = async ({ email, name, roles, teamIds, telephone, room }: UserStub) => {
     const response = await authPut(`/users/${user._id}`, {
       ...user,
       email,
       name,
       roles,
       teamIds,
+      telephone,
+      room,
     });
 
     if (response.status === 200) {

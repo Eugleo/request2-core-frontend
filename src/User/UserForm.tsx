@@ -4,7 +4,7 @@ import { useForm } from 'react-hook-form';
 import * as Button from '../Common/Buttons';
 import { MultipleChoiceInput, Option } from '../Common/Form/NewChoiceField';
 import { ShortTextInput } from '../Common/Form/NewTextField';
-import { Question, reqRule } from '../Common/Form/Question';
+import { Description, Question, reqRule } from '../Common/Form/Question';
 import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
 import { Selection } from '../Request/Request';
 import { Team } from '../Team/Team';
@@ -18,17 +18,21 @@ import { Role, User } from './User';
 export type UserStub = {
   name: string;
   email: string;
-  password: string;
+  password: Maybe<string>;
   roles: Role[];
   teamIds: number[];
+  telephone: string;
+  room: string;
 };
 
 export type UserFormFields = {
   name: string;
   email: string;
-  password: string;
+  password: Maybe<string>;
   roles: Selection[];
   teamIds: Maybe<Selection[]>;
+  telephone: string;
+  room: string;
 };
 
 export function UserForm({
@@ -94,9 +98,11 @@ function FormComponent({
   const defaultValues: UserFormFields = {
     email: user?.email ?? '',
     name: user?.name ?? '',
-    password: user?.password ?? '',
     roles: user?.roles.map(r => ({ label: r, value: r })) ?? [],
     teamIds: selectedTeams,
+    telephone: user?.telephone ?? '',
+    room: user?.room ?? '',
+    password: undefined,
   };
 
   const { register, handleSubmit, control, errors, watch } = useForm<UserFormFields>({
@@ -105,6 +111,8 @@ function FormComponent({
   return (
     <form
       onSubmit={handleSubmit(values => {
+        console.log(values);
+
         const teamIds = values.teamIds?.map(t => Number.parseInt(t.value)) ?? [];
         onSubmit({
           ...values,
@@ -115,7 +123,7 @@ function FormComponent({
         });
       })}
     >
-      <Card className="">
+      <Card>
         <div className="p-6 space-y-6">
           <div>
             <Question required>Name</Question>
@@ -124,6 +132,28 @@ function FormComponent({
           <div>
             <Question required>E-mail address</Question>
             <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+          </div>
+          <div>
+            <Question required>Telephone number</Question>
+            <ShortTextInput
+              name="telephone"
+              placeholder="163"
+              reg={register(reqRule())}
+              errors={errors}
+            />
+            <Description>
+              Input either the IOCB telehpone number, or if need be your mobile number
+            </Description>
+          </div>
+          <div>
+            <Question required>Room</Question>
+            <ShortTextInput
+              name="room"
+              placeholder="A 1.89"
+              reg={register(reqRule())}
+              errors={errors}
+            />
+            <Description>The pattern is '[building code] [floor number].[door number]'</Description>
           </div>
           {user ? null : (
             <div>

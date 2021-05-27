@@ -10,6 +10,7 @@ import { Markdown } from '../Common/MdRender';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
 import { SearchBar } from '../Common/SearchBar';
 import { User, UserName } from '../User/User';
+import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGetMany, useAsyncGet, urlWithParams } from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { padWithSpace } from '../Utils/Func';
@@ -93,8 +94,6 @@ function Item({
 }: {
   ann: WithID<Announcement>;
 }) {
-  const { Loader } = useAsyncGet<UserName>(`/users/${authorId}/name`);
-
   const paragraphs = body.split(/\n\w*\n/u);
 
   let paraText: string;
@@ -123,16 +122,12 @@ function Item({
           className={c('text-gray-700 mb-4')}
         />
 
-        <Loader>
-          {data => (
-            <div className={c('text-sm text-gray-600')}>
-              <p className="text-black font-medium">{data.name}</p>
-              <p>
-                {moment.unix(dateCreated).fromNow()} · {paraText}
-              </p>
-            </div>
-          )}
-        </Loader>
+        <div className={c('text-sm text-gray-600')}>
+          <LinkToProfile userId={authorId} />
+          <p>
+            {moment.unix(dateCreated).fromNow()} · {paraText}
+          </p>
+        </div>
       </div>
     </Link>
   );

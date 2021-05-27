@@ -4,59 +4,94 @@ import { useForm } from 'react-hook-form';
 
 import { Primary, Secondary, Tertiary } from '../Common/Buttons';
 import { ShortTextInput } from '../Common/Form/NewTextField';
-import { Question, reqRule } from '../Common/Form/Question';
-import { Body, Card, ContentWrapper, Header, Page, Spacer, Title } from '../Common/Layout';
+import { Description, Question, reqRule } from '../Common/Form/Question';
+import * as Page from '../Common/Layout';
 import { Pill } from '../Common/Table';
 import { UserDetails } from '../User/User';
+import { UserContactInfo, UserProfile, UserProfileHeader } from '../User/UserProfile';
+import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
 import { WithID } from '../Utils/WithID';
 
 export function MyProfilePage(): JSX.Element {
   const { auth } = useAuth();
+  return <MyProfileBase id={auth.user._id} />;
+}
+
+function MyProfileBase({ id }: { id: number }) {
+  const { Loader, result } = useAsyncGet<UserDetails>(`/users/${id}/profile`);
+  const { authPost } = useAuth();
+  const dispatch = useAuthDispatch();
+
+  return (
+    <Page.ContentWrapper>
+      <div className="max-w-2xl mx-auto w-full">
+        <UserProfileHeader Loader={Loader} result={result} />
+        <Page.Body>
+          <UserContactInfo Loader={Loader} />
+          <div className="flex flex-row -mt-2">
+            <Secondary
+              status="Danger"
+              onClick={async () => {
+                const r = await authPost('/logout', {});
+                if (r.ok) {
+                  localStorage.removeItem('apiKey');
+                  dispatch({ type: 'LOGOUT' });
+                } else {
+                  const body = await r.text();
+                  console.log(`Couldn't log out, response body was ${body}`);
+                }
+              }}
+            >
+              Log out
+            </Secondary>
+          </div>
+        </Page.Body>
+      </div>
+    </Page.ContentWrapper>
+  );
+}
+
+type UserEdit = {
+  name: string;
+  telephone: string;
+  room: string;
+};
+
+export function EditMyProfile(): JSX.Element {
+  const { auth } = useAuth();
   return <ProfilePage user={auth.user} />;
 }
 
 // TODO Add validation and better error reporting
 export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Element {
-  const { authPut, authPost, auth } = useAuth();
-  const dispatch = useAuthDispatch();
-  const { register, errors, handleSubmit } = useForm<{ name: string }>({
+  const { authPost, auth } = useAuth();
+  const { authPut } = useAuth<UserEdit>();
+  const { register, errors, handleSubmit } = useForm<UserEdit>({
     defaultValues: {
       name: user.name,
+      telephone: user.telephone,
+      room: user.room,
     },
   });
 
   return (
-    <ContentWrapper>
+    <Page.ContentWrapper>
       <div className="max-w-4xl mx-auto w-full">
-        <Header>
-          <Title>{`${auth.user.name}`}</Title>
-          <Spacer />
-          <Secondary
-            status="Danger"
-            onClick={async () => {
-              const r = await authPost('/logout', {});
-              if (r.ok) {
-                localStorage.removeItem('apiKey');
-                dispatch({ type: 'LOGOUT' });
-              } else {
-                const body = await r.text();
-                console.log(`Couldn't log out, response body was ${body}`);
-              }
-            }}
-          >
-            Log out
-          </Secondary>
-        </Header>
-        <Body>
+        <Page.Header>
+          <Page.Title>{`${auth.user.name}`}</Page.Title>
+        </Page.Header>
+        <Page.Body>
           <div className="space-y-6">
             <Section title="Basic information">
               <form
                 className="space-y-6"
-                onSubmit={handleSubmit(async ({ name }) => {
+                onSubmit={handleSubmit(async ({ name, telephone, room }) => {
                   const r = await authPut('/me', {
                     name,
+                    telephone,
+                    room,
                   });
 
                   if (r.ok) {
@@ -75,6 +110,30 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                   <div>
                     <Question showIcons={false}>E-mail address</Question>
                     <ShortTextInput name="email" disabled />
+                  </div>
+                  <div>
+                    <Question required>Telephone number</Question>
+                    <ShortTextInput
+                      name="telephone"
+                      placeholder="163"
+                      reg={register(reqRule())}
+                      errors={errors}
+                    />
+                    <Description>
+                      Input either the IOCB telehpone number, or if need be your mobile number
+                    </Description>
+                  </div>
+                  <div>
+                    <Question required>Room</Question>
+                    <ShortTextInput
+                      name="room"
+                      placeholder="A 1.89"
+                      reg={register(reqRule())}
+                      errors={errors}
+                    />
+                    <Description>
+                      The pattern is '[building code] [floor number].[door number]'
+                    </Description>
                   </div>
                 </div>
                 <Footer>
@@ -114,9 +173,9 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
               </div>
             </Section>
           </div>
-        </Body>
+        </Page.Body>
       </div>
-    </ContentWrapper>
+    </Page.ContentWrapper>
   );
 }
 
@@ -201,7 +260,7 @@ function Section({ title, children }: { title: string; children: ReactNode }) {
         <h2 className="font-medium text-lg sticky top-3">{title}</h2>
       </div>
       <div className="col-span-2">
-        <Card className="overflow-hidden">{children}</Card>
+        <Page.Card className="overflow-hidden">{children}</Page.Card>
       </div>
     </div>
   );

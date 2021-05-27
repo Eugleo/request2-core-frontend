@@ -79,7 +79,12 @@ export type QuestionProps = {
   description?: string;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function Description({ children }: { children: React.ReactNode }): JSX.Element {
+  if (typeof children === 'string') {
+    return <p className="text-xs text-gray-400 mt-1">{children}</p>;
+  }
+  return <>{children}</>;
+}
 
 export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element | null {
   if (error) {

@@ -13,6 +13,7 @@ import {
   ErrorMessage,
   FieldProps,
   Question,
+  Description,
   QuestionProps,
   reqRule,
   useFieldContext,
@@ -114,13 +115,6 @@ export function MultipleChoiceField({
       <Description>{description}</Description>
     </div>
   );
-}
-
-function Description({ children }: { children: React.ReactNode }) {
-  if (typeof children === 'string') {
-    return <p className="text-xs text-gray-400 mt-1">{children}</p>;
-  }
-  return <>{children}</>;
 }
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any

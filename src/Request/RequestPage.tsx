@@ -1,7 +1,7 @@
 import c from 'classnames';
 import moment from 'moment';
 import React, { useMemo } from 'react';
-import { Edit3 } from 'react-feather';
+import { Box, Calendar, Edit3, Package } from 'react-feather';
 import { useParams } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
@@ -10,6 +10,7 @@ import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { Pill } from '../Common/Table';
 import { User, UserName } from '../User/User';
+import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { comparing } from '../Utils/Func';
@@ -32,22 +33,39 @@ function RequestComponent({ requestId }: { requestId: number }) {
 
   return (
     <Page.ContentWrapper>
-      <Page.Header>
-        <Page.Title className="mr-6">
-          <RequestLoader>{request => <p>{request.title}</p>}</RequestLoader>
-        </Page.Title>
-        <h2 className="text-blue-400 font-mono">
-          <RequestLoader>
-            {request => (
-              <p className="px-4 py-1 text-md rounded-full bg-blue-100 border border-blue-300 font-mono">{`${
-                idToStr(request).type
-              }/${idToStr(request).code}`}</p>
-            )}
-          </RequestLoader>
-        </h2>
-        <Page.Spacer />
-        <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
-      </Page.Header>
+      <div className="py-8 space-y-2">
+        <div className="flex flex-row items-center">
+          <Page.Title className="mr-6">
+            <RequestLoader>{request => <p>{request.title}</p>}</RequestLoader>
+          </Page.Title>
+          <h2 className="text-blue-400 font-mono">
+            <RequestLoader>
+              {request => (
+                <Pill
+                  className="bg-blue-100 text-blue-600 font-medium text-sm"
+                  text={`${idToStr(request).type}/${idToStr(request).code}`}
+                />
+              )}
+            </RequestLoader>
+          </h2>
+          <Page.Spacer />
+          <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
+        </div>
+        <RequestLoader>
+          {request => (
+            <div className="flex flex-row items-center space-x-3">
+              <Calendar className="w-4 h-4 text-gray-700" />
+              <p className="text-sm text-gray-600">
+                Created {moment.unix(request.dateCreated).fromNow()} by{' '}
+                <LinkToProfile
+                  userId={request.authorId}
+                  className="text-gray-700 hover:text-indigo-700"
+                />
+              </p>
+            </div>
+          )}
+        </RequestLoader>
+      </div>
 
       <Page.Body>
         <div className="grid grid-cols-3 gap-6">
@@ -249,8 +267,6 @@ function Log({ properties }: { properties: WithID<PropertyJSON>[] }) {
 }
 
 function LogItem({ property }: { property: PropertyJSON }) {
-  const { result } = useAsyncGet<UserName>(`/users/${property.authorId}/name`);
-
   return (
     <div className="flex flex-row items-center py-5 px-6">
       <div className="bg-blue-100 rounded-full p-2 mr-4">
@@ -258,7 +274,7 @@ function LogItem({ property }: { property: PropertyJSON }) {
       </div>
       <div>
         <p className="text-gray-600 text-sm">
-          {result.status === 'Success' ? `${result.data.name}` : 'Somebody'} changed{' '}
+          <LinkToProfile userId={property.authorId} /> updated{' '}
           <span className="bg-gray-100 rounded-sm px-1">{property.name}</span>
         </p>
         <p className="text-sm text-gray-400 mt-1">{moment.unix(property.dateAdded).fromNow()}</p>

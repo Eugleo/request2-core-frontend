@@ -14,11 +14,12 @@ import {
 import { RegisterInitPage } from './Page/LoggedOut/RegisterInitPage';
 import { RegisterPage } from './Page/LoggedOut/RegisterPage';
 import { NotFound404 } from './Page/NotFound404';
-import { MyProfilePage } from './Page/ProfilePage';
+import { EditMyProfile, MyProfilePage } from './Page/ProfilePage';
 import { Sidebar } from './Page/Sidebar';
 import { Requests as RequestsAsClient } from './Request/Client/RequestList';
 import { Requests as RequestsAsOperator } from './Request/Operator/RequestList';
 import { TeamRouter } from './Team/TeamList';
+import { GeneralUserProfile, UserProfile } from './User/UserProfile';
 import { UserRouter } from './User/UserRouter';
 import { get } from './Utils/Api';
 import { Authentized } from './Utils/Auth';
@@ -150,14 +151,16 @@ function NormalRoutes() {
       <Sidebar />
       <Routes>
         <Route path="/me" element={<MyProfilePage />} />
-        <Route path="/login" element={<Navigate to="/me/requests" />} />
-        <Route path="/admin/users/*" element={<UserRouter />} />
         <Route path="/me/*">
+          <Route path="edit" element={<EditMyProfile />} />
           <Route path="requests/*" element={<RequestsAsClient />} />
         </Route>
+        <Route path="/login" element={<Navigate to="/me/requests" />} />
+        <Route path="/admin/users/*" element={<UserRouter />} />
+        <Route path="/users/:id/profile" element={<GeneralUserProfile />} />
         <Route path="/requests/*" element={<RequestsAsOperator />} />
         <Route path="/announcements/*" element={<AnnouncementRouter />} />
-        <Route path="/teams/*" element={<TeamRouter />} />
+        <Route path="/admin/teams/*" element={<TeamRouter />} />
         <Route path="/" element={<Navigate to="/me/requests" />} />
         <Route path="/*" element={<NotFound404 />} />
       </Routes>

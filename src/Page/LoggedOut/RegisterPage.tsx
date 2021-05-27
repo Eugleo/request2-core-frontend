@@ -5,7 +5,7 @@ import { Link, useParams } from 'react-router-dom';
 
 import * as Button from '../../Common/Buttons';
 import { ShortTextInput } from '../../Common/Form/NewTextField';
-import { Question, reqRule } from '../../Common/Form/Question';
+import { Description, Question, reqRule } from '../../Common/Form/Question';
 import { User } from '../../User/User';
 import { post } from '../../Utils/Api';
 import { Errors } from '../../Utils/Errors';
@@ -20,25 +20,31 @@ type RegistrationStub = {
   password: string;
   passwordCheck: string;
   token: string;
-  teamId: string;
+  telephone: string;
+  room: string;
 };
 
 type RegistrationField = {
   name: string;
   password: string;
   passwordCheck: string;
+  telephone: string;
+  room: string;
+};
+
+type RegistrationUser = {
+  email: string;
+  token: string;
+  name: string;
+  password: string;
+  telephone: string;
+  room: string;
 };
 
 export function RegisterPage(): JSX.Element {
   const { email, token } = useParams();
   const [regState, setState] = useState<RegState>({ state: 'init' });
-  const { register, errors, watch, handleSubmit } = useForm<RegistrationField>({
-    defaultValues: {
-      name: '',
-      password: '',
-      passwordCheck: '',
-    },
-  });
+  const { register, errors, watch, handleSubmit } = useForm<RegistrationField>();
 
   const pwd = watch('password');
 
@@ -50,18 +56,16 @@ export function RegisterPage(): JSX.Element {
       imageAlt="A user icon"
     >
       <form
-        onSubmit={handleSubmit(async ({ name, password }: RegistrationStub) => {
+        onSubmit={handleSubmit(async ({ name, password, room, telephone }: RegistrationStub) => {
           setState({ state: 'loading' });
 
-          const r = await post<User & { token: string }>(`/register`, {
-            active: true,
-            dateCreated: Date.now(),
+          const r = await post<RegistrationUser>(`/register`, {
             email,
             name,
             password,
-            roles: ['Client'],
-            teamIds: [],
             token,
+            room,
+            telephone,
           });
 
           if (r.ok) {
@@ -100,6 +104,32 @@ export function RegisterPage(): JSX.Element {
                 />
               </div>
               <div>
+                <Question required>Telephone number</Question>
+                <ShortTextInput
+                  name="telephone"
+                  placeholder="163"
+                  reg={register(reqRule())}
+                  errors={errors}
+                />
+                <Description>
+                  Input either the IOCB telehpone number, or if need be your mobile number
+                </Description>
+              </div>
+              <div>
+                <Question required>Where can we find you?</Question>
+                <ShortTextInput
+                  name="room"
+                  placeholder="A 1.89"
+                  reg={register(
+                    reqRule('We need this information in case we need to contact you personally')
+                  )}
+                  errors={errors}
+                />
+                <Description>
+                  The pattern is '[building code] [floor number].[door number]'
+                </Description>
+              </div>
+              <div>
                 <Question showIcons={false}>Team</Question>
                 <ShortTextInput disabled value="You will be assigned a team by our admin" />
               </div>
@@ -133,7 +163,7 @@ export function RegisterPage(): JSX.Element {
                   <AtomSpinner />
                 </div>
               ) : (
-                <Button.Primary type="submit" title="Finish registration" className="mt-6 w-full" />
+                <Button.Primary type="submit" title="Finish registration" className="w-full" />
               )}
               {regState.state === 'problem' && (
                 <p className="text-red-600 mb-5">{regState.message}</p>

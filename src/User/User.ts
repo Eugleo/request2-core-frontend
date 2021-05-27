@@ -11,6 +11,8 @@ export type User = {
   teamIds: number[];
   dateCreated: number;
   active: boolean;
+  telephone: string;
+  room: string;
 };
 
 export type UserName = {
@@ -20,9 +22,12 @@ export type UserName = {
 export type UserDetails = {
   _id: number;
   name: string;
+  email: string;
   roles: Role[];
   teams: WithID<Team>[];
-  dateCreated: Date;
+  dateCreated: number;
+  telephone: string;
+  room: string;
 };
 
 export type UserInfo = {
