@@ -6,8 +6,9 @@ import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom
 import { Note } from '../../Common/Form/Question';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
+import { Pill, RequestStatusPill } from '../../Common/Pills';
 import { SearchBar } from '../../Common/SearchBar';
-import { Cell, Pill, Row, Table } from '../../Common/Table';
+import { Cell, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized, useAuth } from '../../Utils/Auth';
 import { padWithSpace } from '../../Utils/Func';
@@ -17,7 +18,6 @@ import { NewRequestPage } from '../NewRequest';
 import { idToStr, Request } from '../Request';
 import { RequestPage } from '../RequestPage';
 import { requests } from '../RequestTypes/RequestTypes';
-import { statusStyle, statusToStr } from '../Status';
 
 export function Requests(): JSX.Element {
   return (
@@ -45,7 +45,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
       </Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
-        <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />
+        <RequestStatusPill status={request.status} />
       </Cell>
     </Row>
   );

@@ -4,12 +4,12 @@ import { useParams } from 'react-router-dom';
 import { SecondaryLinked } from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
+import { ActivityPill } from '../Common/Pills';
 import { User, UserName } from '../User/User';
 import * as Api from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
 import { Announcement } from './Announcement';
-import { StatusBadge } from './AnnouncementList';
 
 export function AnnouncementPage(): JSX.Element {
   const { id } = useParams();
@@ -23,7 +23,7 @@ export function AnnouncementPage(): JSX.Element {
             <div className="py-8">
               <div className="flex flex-row space-between items-center mb-2">
                 <Page.Title className="mr-6">{ann.title}</Page.Title>
-                <StatusBadge active={ann.active} />
+                <ActivityPill active={ann.active} />
                 <Page.Spacer />
                 <Authorized roles={['Admin']}>
                   <SecondaryLinked to={`/announcements/${ann._id}/edit`} title="Edit" />

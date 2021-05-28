@@ -1,34 +1,17 @@
-import { ClassValue } from 'classnames/types';
-
 export type Status = 'Pending' | 'InProgress' | 'Done' | 'AwaitingInput' | 'Deleted';
 
-export function statusStyle(status: Status): string {
+export function getStatusColor(status: Status): { general: string; indicator: string } {
   switch (status) {
-    case 'Pending':
-      return 'bg-blue-100 text-blue-500 border border-blue-300';
     case 'InProgress':
-      return 'bg-orange-100 text-orange-600 border border-orange-300';
+      return { general: 'bg-blue-200 text-blue-900', indicator: 'bg-blue-400' };
     case 'Done':
-      return 'bg-green-100 text-green-500 border border-green-300';
-    case 'AwaitingInput':
-      return 'bg-red-100 text-red-400 border border-red-300';
-    default:
-      return 'bg-purple-100 text-purple-400 border border-purple-300';
-  }
-}
-
-export function statusStyleHover(status: Status): string {
-  switch (status) {
+      return { general: 'bg-green-200 text-green-900', indicator: 'bg-green-400' };
     case 'Pending':
-      return 'hover:bg-blue-100 hover:text-blue-500';
-    case 'InProgress':
-      return 'hover:bg-orange-100 hover:text-orange-600';
-    case 'Done':
-      return 'hover:bg-green-100 hover:text-green-500';
+      return { general: 'bg-yellow-200 text-yellow-900', indicator: 'bg-yellow-400' };
     case 'AwaitingInput':
-      return 'hover:bg-red-100 hover:text-red-400';
+      return { general: 'bg-purple-200 text-purple-900', indicator: 'bg-purple-400' };
     default:
-      return 'hover:bg-purple-100 hover:text-purple-400';
+      return { general: 'bg-red-200 text-red-900', indicator: 'bg-red-400' };
   }
 }
 

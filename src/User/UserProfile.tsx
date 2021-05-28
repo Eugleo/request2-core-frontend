@@ -7,7 +7,8 @@ import { Link } from 'react-router-dom';
 
 import { SecondaryLinked } from '../Common/Buttons';
 import * as Page from '../Common/Layout';
-import { Pill } from '../Common/Table';
+import { ActivityPill, Pill } from '../Common/Pills';
+import { MyProfilePage } from '../Page/ProfilePage';
 import { useAsyncGet } from '../Utils/Api';
 import { Authorized, useAuth } from '../Utils/Auth';
 import { useAuthState } from '../Utils/AuthContext';
@@ -16,16 +17,28 @@ import { UserDetails, UserName } from './User';
 
 export function LinkToProfile({
   userId,
-  className = 'hover:text-indigo-800 text-black i',
+  className = 'hover:text-indigo-800 text-black',
 }: {
   userId: number;
   className?: string;
 }): JSX.Element {
+  const { auth } = useAuth();
   const { result } = useAsyncGet<UserName>(`/users/${userId}/name`);
+
+  if (auth.user._id === userId) {
+    return (
+      <Link to="/me" className={c('inline-block', className)}>
+        <p>
+          <span className="font-medium">{auth.user.name}</span> (you)
+        </p>
+      </Link>
+    );
+  }
+
   return (
     <Link to={`/users/${userId}/profile`} className={c('inline-block', className)}>
       <p className="font-medium">
-        {result.status === 'Success' ? <span>° {result.data.name}</span> : 'Anonymous User'}
+        {result.status === 'Success' ? <span>{result.data.name}</span> : 'Anonymous User'}
       </p>
     </Link>
   );
@@ -42,6 +55,7 @@ function Descriptor({ name, children }: { name: string; children: React.ReactNod
 
 export function GeneralUserProfile(): JSX.Element {
   const { id } = useParams();
+
   return <UserProfile id={id} />;
 }
 
@@ -58,12 +72,9 @@ export function UserProfileHeader({
     <div className="py-8 space-y-2">
       <div className="flex flex-row space-x-4 items-center">
         <Page.Title>{result.status === 'Success' ? result.data.name : 'User profile'}</Page.Title>
+        {result.status === 'Success' ? <ActivityPill active={result.data.active} /> : null}
         {result.status === 'Success' && result.data.roles.filter(r => r !== 'Client').length > 0
-          ? result.data.roles
-              .filter(r => r !== 'Client')
-              .map(r => (
-                <Pill key={r} className="bg-gray-200 text-gray-600 font-medium text-sm" text={r} />
-              ))
+          ? result.data.roles.filter(r => r !== 'Client').map(r => <Pill key={r}>{r}</Pill>)
           : null}
         <Page.Spacer />
         {result.status === 'Success' ? <EditButton userId={result.data._id} /> : null}

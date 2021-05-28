@@ -54,7 +54,3 @@ export function Table({
     </Card>
   );
 }
-
-export function Pill({ text, className }: { text: string; className: string }): JSX.Element {
-  return <span className={c('py-1 px-3 text-xs rounded-full', className)}>{text}</span>;
-}

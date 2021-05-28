@@ -119,7 +119,7 @@ function FeedbackButton() {
           setIsMinimised(m => (m === 'minimised' ? 'input' : m));
         }}
       >
-        One-click to send feedback
+        One click to send feedback
       </button>
       {isMinimised === 'minimised' ? null : (
         <div ref={ref} className="bg-white shadow-lg p-6 absolute top-14 rounded-lg w-64 right-8">

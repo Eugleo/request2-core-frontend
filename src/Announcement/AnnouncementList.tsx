@@ -8,6 +8,7 @@ import * as Button from '../Common/Buttons';
 import { Card, Page } from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
+import { ActivityPill, PillWithIndicator } from '../Common/Pills';
 import { SearchBar } from '../Common/SearchBar';
 import { User, UserName } from '../User/User';
 import { LinkToProfile } from '../User/UserProfile';
@@ -70,25 +71,6 @@ function AnnouncementList() {
   );
 }
 
-export function StatusBadge({ active }: { active: boolean }): JSX.Element {
-  return (
-    <span
-      className={c(
-        active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800',
-        'px-2.5 py-0.5 rounded-full inline-flex flex-row items-center'
-      )}
-    >
-      <span
-        className={c(
-          active ? 'bg-green-500' : 'bg-red-500',
-          'relative inline-flex rounded-full h-2 w-2 mr-2'
-        )}
-      />
-      <span className="text-sm font-bold">{active ? 'Active' : 'Archived'}</span>
-    </span>
-  );
-}
-
 function Item({
   ann: { _id, active, title, body, authorId, dateCreated },
 }: {
@@ -112,7 +94,7 @@ function Item({
   return (
     <Link to={_id.toString()}>
       <div className="rounded-xl transition-all duration-150 group">
-        <StatusBadge active={active} />
+        <ActivityPill active={active} />
         <h2 className="text-2xl font-bold mb-4 mt-4 transition-all group-hover:underline">
           {title}
         </h2>

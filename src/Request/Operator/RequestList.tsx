@@ -6,8 +6,9 @@ import { Secondary } from '../../Common/Buttons';
 import { useQuery } from '../../Common/Hooks';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
+import { Pill, RequestStatusPill } from '../../Common/Pills';
 import { SearchBar } from '../../Common/SearchBar';
-import { Cell, Pill, Row, Table } from '../../Common/Table';
+import { Cell, Row, Table } from '../../Common/Table';
 import { User, UserName } from '../../User/User';
 import * as Api from '../../Utils/Api';
 import { padWithSpace } from '../../Utils/Func';
@@ -16,7 +17,6 @@ import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
 import { idToStr, Request } from '../Request';
 import { RequestPage } from '../RequestPage';
-import { statusStyle, statusToStr } from '../Status';
 
 export function Requests(): JSX.Element {
   return (
@@ -46,7 +46,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
       <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading'}</Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
-        <Pill text={statusToStr(request.status)} className={statusStyle(request.status)} />
+        <RequestStatusPill status={request.status} />
       </Cell>
     </Row>
   );

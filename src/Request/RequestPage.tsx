@@ -8,7 +8,7 @@ import * as Button from '../Common/Buttons';
 import { FieldContext } from '../Common/Form/Question';
 import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
-import { Pill } from '../Common/Table';
+import { Pill } from '../Common/Pills';
 import { User, UserName } from '../User/User';
 import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
@@ -20,7 +20,7 @@ import { idToStr, PropertyJSON, Request } from './Request';
 import { RequestComments } from './RequestComments';
 import { RequestResults } from './RequestResults';
 import { requests } from './RequestTypes/RequestTypes';
-import { Status, statusToStr } from './Status';
+import { getStatusColor, Status, statusToStr } from './Status';
 
 export function RequestPage(): JSX.Element {
   const { id } = useParams();
@@ -41,10 +41,9 @@ function RequestComponent({ requestId }: { requestId: number }) {
           <h2 className="text-blue-400 font-mono">
             <RequestLoader>
               {request => (
-                <Pill
-                  className="bg-blue-100 text-blue-600 font-medium text-sm"
-                  text={`${idToStr(request).type}/${idToStr(request).code}`}
-                />
+                <Pill className="bg-blue-100 text-blue-600 font-medium text-sm">
+                  {idToStr(request).type}/{idToStr(request).code}
+                </Pill>
               )}
             </RequestLoader>
           </h2>
@@ -116,8 +115,6 @@ function StatusSelect({ requestId }: { requestId: number }) {
             <StatusButton
               status="Pending"
               isSelected={status === 'Pending'}
-              color="bg-yellow-400"
-              bgColor="bg-yellow-200"
               position="start"
               requestId={requestId}
               refresh={refresh}
@@ -125,8 +122,6 @@ function StatusSelect({ requestId }: { requestId: number }) {
             <StatusButton
               status="InProgress"
               isSelected={status === 'InProgress'}
-              color="bg-blue-400"
-              bgColor="bg-blue-200"
               position="middle"
               requestId={requestId}
               refresh={refresh}
@@ -134,8 +129,6 @@ function StatusSelect({ requestId }: { requestId: number }) {
             <StatusButton
               status="Done"
               isSelected={status === 'Done'}
-              color="bg-green-400"
-              bgColor="bg-green-200"
               position="end"
               requestId={requestId}
               refresh={refresh}
@@ -145,8 +138,6 @@ function StatusSelect({ requestId }: { requestId: number }) {
             <StatusButton
               status="AwaitingInput"
               isSelected={status === 'AwaitingInput'}
-              color="bg-purple-400"
-              bgColor="bg-purple-200"
               position="alone"
               requestId={requestId}
               refresh={refresh}
@@ -157,8 +148,6 @@ function StatusSelect({ requestId }: { requestId: number }) {
             <StatusButton
               status="Deleted"
               isSelected={status === 'Deleted'}
-              color="bg-red-400"
-              bgColor="bg-red-200"
               position="alone"
               requestId={requestId}
               refresh={refresh}
@@ -172,16 +161,12 @@ function StatusSelect({ requestId }: { requestId: number }) {
 
 function StatusButton({
   isSelected,
-  color,
   status,
   position,
   requestId,
-  bgColor,
   refresh,
 }: {
   isSelected: boolean;
-  color: string;
-  bgColor: string;
   status: Status;
   position: 'start' | 'middle' | 'end' | 'alone';
   requestId: number | null;
@@ -228,10 +213,15 @@ function StatusButton({
           'p-3 bg-gray-100 flex-grow-0 mr-4 transition-colors duration-150',
           rounding,
           hasPermissions && isHovered && !isSelected && 'bg-gray-200',
-          isSelected && bgColor
+          isSelected && getStatusColor(status).general
         )}
       >
-        <div className={c('rounded-full w-3 h-3', isSelected ? color : 'bg-white')} />
+        <div
+          className={c(
+            'rounded-full w-3 h-3',
+            isSelected ? getStatusColor(status).indicator : 'bg-white'
+          )}
+        />
       </div>
       <p
         className={c(

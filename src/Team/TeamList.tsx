@@ -5,8 +5,9 @@ import * as Button from '../Common/Buttons';
 import { useQuery } from '../Common/Hooks';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
+import { ActivityPill } from '../Common/Pills';
 import { SearchBar } from '../Common/SearchBar';
-import { Cell, Pill, Row, Table } from '../Common/Table';
+import { Cell, Row, Table } from '../Common/Table';
 import * as Api from '../Utils/Api';
 import { padWithSpace } from '../Utils/Func';
 import { WithID } from '../Utils/WithID';
@@ -33,15 +34,11 @@ function TeamTableItem({ team }: { team: WithID<Team> }) {
         {team.code}
       </Cell>
       <Cell>
-        {team.active ? (
-          <Pill text="Active" className="text-green-500 bg-green-100 border-green-300" />
-        ) : (
-          <Pill text="Inactive" className="text-red-500 bg-red-100 border-red-300" />
-        )}
+        <ActivityPill active={team.active} />
       </Cell>
       <Cell className="w-2">
         <div className="flex justify-right">
-          <Button.Edit link={`/teams/${team._id}/edit`} />
+          <Button.Edit link={`/admin/teams/${team._id}/edit`} />
         </div>
       </Cell>
     </Row>

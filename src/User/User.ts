@@ -28,6 +28,7 @@ export type UserDetails = {
   dateCreated: number;
   telephone: string;
   room: string;
+  active: boolean;
 };
 
 export type UserInfo = {

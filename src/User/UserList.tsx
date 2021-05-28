@@ -4,8 +4,9 @@ import * as Button from '../Common/Buttons';
 import { useQuery } from '../Common/Hooks';
 import { Page } from '../Common/Layout';
 import { usePagination, Pagination } from '../Common/PageSwitcher';
+import { ActivityPill, Pill } from '../Common/Pills';
 import { SearchBar } from '../Common/SearchBar';
-import { Cell, Pill, Row, Table } from '../Common/Table';
+import { Cell, Row, Table } from '../Common/Table';
 import { Team } from '../Team/Team';
 import * as Api from '../Utils/Api';
 import { padWithSpace } from '../Utils/Func';
@@ -17,13 +18,7 @@ import { LinkToProfile } from './UserProfile';
 function TeamPill({ teamId }: { teamId: number }) {
   const { Loader } = Api.useAsyncGet<Team>(`/teams/${teamId}`);
 
-  return (
-    <Loader>
-      {team => (
-        <Pill text={team.name} className="text-gray-600 bg-gray-100 border-gray-300 mr-2 mb-2" />
-      )}
-    </Loader>
-  );
+  return <Loader>{team => <Pill>{team.name}</Pill>}</Loader>;
 }
 
 function UserTableItem({ user }: { user: WithID<User> }) {
@@ -34,7 +29,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
       </Cell>
       <Cell className="text-gray-700">{user.email}</Cell>
       <Cell className="text-gray-700">
-        <div className="flex flex-row items-center flex-wrap -mb-2">
+        <div className="flex flex-row items-center flex-wrap gap-2">
           {user.teamIds.map(id => (
             <TeamPill key={id} teamId={id} />
           ))}
@@ -43,13 +38,14 @@ function UserTableItem({ user }: { user: WithID<User> }) {
       <Cell>
         <div className="flex">
           {user.roles
-            .map(r => (
-              <Pill key={r} text={r} className="text-green-500 bg-green-100 border-green-300" />
-            ))
+            .map(r => <Pill key={r}>{r}</Pill>)
             .intersperse(ix => (
               <span key={ix} className="px-1" />
             ))}
         </div>
+      </Cell>
+      <Cell>
+        <ActivityPill active={user.active} />
       </Cell>
       <Cell className="w-2">
         <div className="flex justify-right">
@@ -81,7 +77,7 @@ export function UserList(): JSX.Element {
       <Loader>
         {data => (
           <>
-            <Table columns={['Name', 'Email', 'Team Leader', 'Roles', '']}>
+            <Table columns={['Name', 'Email', 'Team Leader', 'Roles', 'Status', '']}>
               {data.values.map(v => (
                 <UserTableItem key={v._id} user={v} />
               ))}

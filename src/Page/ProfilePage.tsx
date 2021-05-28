@@ -6,7 +6,7 @@ import { Primary, Secondary, Tertiary } from '../Common/Buttons';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Description, Question, reqRule } from '../Common/Form/Question';
 import * as Page from '../Common/Layout';
-import { Pill } from '../Common/Table';
+import { Pill } from '../Common/Pills';
 import { UserDetails } from '../User/User';
 import { UserContactInfo, UserProfile, UserProfileHeader } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
@@ -152,9 +152,10 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                     {user.teams.map(t => (
                       <Pill
                         key={t._id}
-                        text={t.name}
                         className="bg-gray-100 text-gray-900 border border-gray-200"
-                      />
+                      >
+                        {t.name}
+                      </Pill>
                     ))}
                   </div>
                 </div>
@@ -162,11 +163,9 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                   <Question showIcons={false}>Privileges</Question>
                   <div className="flex flex-row space-x-2">
                     {user.roles.map(r => (
-                      <Pill
-                        key={r}
-                        text={r}
-                        className="bg-gray-100 text-gray-900 border border-gray-200"
-                      />
+                      <Pill key={r} className="bg-gray-100 text-gray-900 border border-gray-200">
+                        {r}
+                      </Pill>
                     ))}
                   </div>
                 </div>
