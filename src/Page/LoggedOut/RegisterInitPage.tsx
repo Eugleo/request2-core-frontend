@@ -52,7 +52,7 @@ export function RegisterInitPage(): JSX.Element {
                 <Question required>E-mail address</Question>
                 <ShortTextInput
                   name="email"
-                  autoComplete="email"
+                  autoComplete="work email"
                   errors={errors}
                   reg={register(reqRule())}
                 />

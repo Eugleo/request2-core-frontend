@@ -1,8 +1,9 @@
 import { ReactNode } from 'react';
 import { LogOut } from 'react-feather';
 import { useForm } from 'react-hook-form';
+import { useNavigate } from 'react-router';
 
-import { Primary, Secondary, Tertiary } from '../Common/Buttons';
+import { Cancel, Primary, Secondary, Tertiary, TertiaryLinked } from '../Common/Buttons';
 import { ShortTextInput } from '../Common/Form/NewTextField';
 import { Description, Question, reqRule } from '../Common/Form/Question';
 import * as Page from '../Common/Layout';
@@ -72,6 +73,7 @@ export function EditMyProfile(): JSX.Element {
 
 // TODO Add validation and better error reporting
 export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Element {
+  const navigate = useNavigate();
   const { authPost, auth } = useAuth();
   const { authPut } = useAuth<UserEdit>();
   const { register, errors, handleSubmit } = useForm<UserEdit>({
@@ -84,13 +86,15 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
 
   return (
     <Page.ContentWrapper>
-      <div className="max-w-4xl mx-auto w-full">
+      <div className="max-w-2xl mx-auto w-full">
         <Page.Header>
-          <Page.Title>{`${auth.user.name}`}</Page.Title>
+          <Page.Title>Editing your profile</Page.Title>
+          <Page.Spacer />
+          <Cancel />
         </Page.Header>
         <Page.Body>
           <div className="space-y-6">
-            <Section title="Basic information">
+            <Section>
               <form
                 className="space-y-6"
                 onSubmit={handleSubmit(async ({ name, telephone, room }) => {
@@ -101,7 +105,7 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                   });
 
                   if (r.ok) {
-                    console.log('Display name successfully updated');
+                    navigate(-1);
                   } else {
                     const js = await r.json();
                     console.log(js.error);
@@ -110,6 +114,18 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
               >
                 <div className="space-y-6 p-6">
                   <div>
+                    <Question showIcons={false}>E-mail address</Question>
+                    <ShortTextInput
+                      name="email"
+                      disabled
+                      defaultValue={user.email}
+                      autoComplete="username"
+                    />
+                    <Description>
+                      You can't change the email associated with your account
+                    </Description>
+                  </div>
+                  <div>
                     <Question required>Display name</Question>
                     <ShortTextInput
                       name="name"
@@ -117,10 +133,6 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                       errors={errors}
                       reg={register(reqRule())}
                     />
-                  </div>
-                  <div>
-                    <Question showIcons={false}>E-mail address</Question>
-                    <ShortTextInput name="email" disabled />
                   </div>
                   <div>
                     <Question required>Telephone number</Question>
@@ -154,34 +166,6 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
             </Section>
 
             <PasswordSection />
-
-            <Section title="Account details">
-              <div className="p-6">
-                <div>
-                  <Question showIcons={false}>Research groups</Question>
-                  <div className="flex flex-row space-x-2 mb-6">
-                    {user.teams.map(t => (
-                      <Pill
-                        key={t._id}
-                        className="bg-gray-100 text-gray-900 border border-gray-200"
-                      >
-                        {t.name}
-                      </Pill>
-                    ))}
-                  </div>
-                </div>
-                <div>
-                  <Question showIcons={false}>Privileges</Question>
-                  <div className="flex flex-row space-x-2">
-                    {user.roles.map(r => (
-                      <Pill key={r} className="bg-gray-100 text-gray-900 border border-gray-200">
-                        {r}
-                      </Pill>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </Section>
           </div>
         </Page.Body>
       </div>
@@ -201,20 +185,20 @@ function PasswordSection() {
       passwordCheck: '',
     },
   });
-
+  const navigate = useNavigate();
   const { authPost } = useAuth();
 
   return (
-    <Section title="Change password">
+    <Section>
       <form
         onSubmit={handleSubmit(async values => {
-          const r = await authPost('/-password', {
+          const r = await authPost('/change-password', {
             old: values.password,
             new: values.newPassword,
           });
 
           if (r.ok) {
-            console.log('Password succesfully chanegd');
+            navigate(-1);
           } else {
             const js = await r.json();
             console.log(js.error);
@@ -266,15 +250,6 @@ function Footer({ children }: { children: ReactNode }) {
   return <div className="flex justify-end w-full px-6 py-3 bg-gray-50">{children}</div>;
 }
 
-function Section({ title, children }: { title: string; children: ReactNode }) {
-  return (
-    <div className="grid grid-cols-3 gap-4">
-      <div className="col-span-1">
-        <h2 className="font-medium text-lg sticky top-3">{title}</h2>
-      </div>
-      <div className="col-span-2">
-        <Page.Card className="overflow-hidden">{children}</Page.Card>
-      </div>
-    </div>
-  );
+function Section({ children }: { children: ReactNode }) {
+  return <Page.Card className="overflow-hidden">{children}</Page.Card>;
 }

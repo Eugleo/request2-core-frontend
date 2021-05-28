@@ -171,7 +171,7 @@ function FormComponent({
               <ShortTextInput
                 name="password"
                 type="password"
-                autoComplete="new-password"
+                autoComplete="section-admin new-password"
                 errors={errors}
                 reg={register(reqRule())}
               />
