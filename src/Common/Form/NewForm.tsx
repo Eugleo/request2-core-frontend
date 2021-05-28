@@ -114,12 +114,10 @@ export function Section({ title, children }: { title: string; children: ReactNod
   }
 
   return (
-    <Card className="overflow-hidden">
-      <div>
-        <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50">
-          {title}
-        </h2>
-      </div>
+    <Card>
+      <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50 rounded-t-lg z-10">
+        {title}
+      </h2>
       <div className="px-6 pb-6 pt-4 space-y-6">{children}</div>
     </Card>
   );
