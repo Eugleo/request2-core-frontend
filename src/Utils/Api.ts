@@ -57,9 +57,7 @@ async function getResource<T>(
 }
 
 // The server returns either { error: ... } or { data: ... }
-export function useAsyncGet<T>(
-  url: string
-): {
+export function useAsyncGet<T>(url: string): {
   result: Result<T>;
   Loader: ({ children }: { children: (data: T) => JSX.Element }) => JSX.Element;
   refresh: () => void;

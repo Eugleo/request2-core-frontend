@@ -28,9 +28,7 @@ export function LinkToProfile({
   if (auth.user._id === userId) {
     return (
       <Link to="/me" className={c('inline-block', className)}>
-        <p>
-          <span className="font-medium">{auth.user.name}</span> (you)
-        </p>
+        <span className="font-medium">{auth.user.name}</span> (you)
       </Link>
     );
   }
@@ -48,7 +46,7 @@ function Descriptor({ name, children }: { name: string; children: React.ReactNod
   return (
     <div>
       <h3 className="font-semibold mb-1">{name}</h3>
-      <p className="text-gray-700">{children}</p>
+      {children}
     </div>
   );
 }
@@ -98,13 +96,13 @@ export function UserContactInfo({ Loader }: { Loader: Loader }): JSX.Element {
     <Page.Card className="p-6 mb-8">
       <div className="space-y-6">
         <Descriptor name="Email Address">
-          <Loader>{({ email }) => <>{email}</>}</Loader>
+          <Loader>{({ email }) => <p className="text-gray-700">{email}</p>}</Loader>
         </Descriptor>
         <Descriptor name="Telephone Number">
-          <Loader>{({ telephone }) => <>{telephone}</>}</Loader>
+          <Loader>{({ telephone }) => <p className="text-gray-700">{telephone}</p>}</Loader>
         </Descriptor>
         <Descriptor name="Room">
-          <Loader>{({ room }) => <>{room}</>}</Loader>
+          <Loader>{({ room }) => <p className="text-gray-700">{room}</p>}</Loader>
         </Descriptor>
       </div>
     </Page.Card>

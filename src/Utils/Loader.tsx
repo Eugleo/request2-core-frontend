@@ -18,25 +18,29 @@ function Problem() {
   return <p>Failed to load resource</p>;
 }
 
-export function useAsync<T>(
-  func: () => Promise<T>
-): {
+export function useAsync<T>(func: () => Promise<T>): {
   result: Result<T>;
   Loader: ({ children }: { children: (data: T) => JSX.Element }) => JSX.Element;
 } {
   const [result, setResult] = useState<Result<T>>({ status: 'Pending' });
 
   useEffect(() => {
+    let isMounted = true;
     const fetchData = async () => {
       const t = await func();
-      setResult({ data: t, status: 'Success' });
+      if (isMounted) {
+        setResult({ data: t, status: 'Success' });
+      }
     };
     fetchData().catch(console.log);
+    return () => {
+      isMounted = false;
+    };
   }, [func]);
 
   switch (result.status) {
     case 'Pending':
-      return { Loader: Spinner, result };
+      return { Loader: () => <Spinner />, result };
     case 'Error':
       return { Loader: () => <Problem />, result };
     default:

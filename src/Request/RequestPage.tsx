@@ -36,7 +36,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
       <div className="py-8 space-y-2">
         <div className="flex flex-row items-center gap-3">
           <Page.Title>
-            <RequestLoader>{request => <p>{request.title}</p>}</RequestLoader>
+            <RequestLoader>{request => <>{request.title}</>}</RequestLoader>
           </Page.Title>
           <h2>
             <RequestLoader>
