@@ -33,7 +33,7 @@ export function TeamForm({
 
   return (
     <ContentWrapper>
-      <div className="max-w-4xl w-full mx-auto">
+      <div className="max-w-2xl w-full mx-auto">
         <Header>
           <Title>{title}</Title>
           {headerButtons && (

@@ -8,7 +8,12 @@ import { Description, Question, reqRule } from '../Common/Form/Question';
 import * as Page from '../Common/Layout';
 import { Pill } from '../Common/Pills';
 import { UserDetails } from '../User/User';
-import { UserContactInfo, UserProfile, UserProfileHeader } from '../User/UserProfile';
+import {
+  UserContactInfo,
+  UserOtherInfo,
+  UserProfile,
+  UserProfileHeader,
+} from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
@@ -30,6 +35,7 @@ function MyProfileBase({ id }: { id: number }) {
         <UserProfileHeader Loader={Loader} result={result} />
         <Page.Body>
           <UserContactInfo Loader={Loader} />
+          <UserOtherInfo Loader={Loader} />
           <div className="flex flex-row -mt-2">
             <Secondary
               status="Danger"
@@ -105,7 +111,12 @@ export function ProfilePage({ user }: { user: WithID<UserDetails> }): JSX.Elemen
                 <div className="space-y-6 p-6">
                   <div>
                     <Question required>Display name</Question>
-                    <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
+                    <ShortTextInput
+                      name="name"
+                      autoComplete="name"
+                      errors={errors}
+                      reg={register(reqRule())}
+                    />
                   </div>
                   <div>
                     <Question showIcons={false}>E-mail address</Question>
@@ -217,6 +228,7 @@ function PasswordSection() {
             <ShortTextInput
               name="password"
               type="password"
+              autoComplete="current-password"
               errors={errors}
               reg={register(reqRule())}
             />
@@ -226,6 +238,7 @@ function PasswordSection() {
             <ShortTextInput
               name="newPassword"
               errors={errors}
+              autoComplete="new-password"
               reg={register(reqRule())}
               type="password"
             />
@@ -234,6 +247,7 @@ function PasswordSection() {
             <Question required>Repeat the new password</Question>
             <ShortTextInput
               name="newPasswordCheck"
+              autoComplete="new-password"
               errors={errors}
               reg={register(reqRule())}
               type="password"

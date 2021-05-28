@@ -94,15 +94,49 @@ export function UserProfileHeader({
 export function UserContactInfo({ Loader }: { Loader: Loader }): JSX.Element {
   return (
     <Page.Card className="p-6 mb-8">
-      <div className="space-y-6">
+      <address className="space-y-6 not-italic">
         <Descriptor name="Email Address">
-          <Loader>{({ email }) => <p className="text-gray-700">{email}</p>}</Loader>
+          <Loader>
+            {({ email }) => (
+              <a href={`mailto:${email}`} className="text-gray-700">
+                {email}
+              </a>
+            )}
+          </Loader>
         </Descriptor>
         <Descriptor name="Telephone Number">
-          <Loader>{({ telephone }) => <p className="text-gray-700">{telephone}</p>}</Loader>
+          <Loader>
+            {({ telephone }) => (
+              <a href={`tel:${telephone}`} className="text-gray-700">
+                {telephone}
+              </a>
+            )}
+          </Loader>
         </Descriptor>
         <Descriptor name="Room">
           <Loader>{({ room }) => <p className="text-gray-700">{room}</p>}</Loader>
+        </Descriptor>
+      </address>
+    </Page.Card>
+  );
+}
+
+export function UserOtherInfo({ Loader }: { Loader: Loader }): JSX.Element {
+  return (
+    <Page.Card className="p-6 mb-8">
+      <div className="space-y-6">
+        <Descriptor name="Research groups">
+          <Loader>
+            {({ teams }) => (
+              <div className="flex flex-row gap-3 py-1">
+                {teams.map(t => (
+                  <Pill key={t._id} className="bg-gray-100 text-gray-600">
+                    {t.name} ({t.code})
+                  </Pill>
+                ))}
+              </div>
+            )}
+          </Loader>
         </Descriptor>
       </div>
     </Page.Card>
@@ -118,6 +152,7 @@ export function UserProfile({ id }: { id: string }): JSX.Element {
         <UserProfileHeader Loader={Loader} result={result} />
         <Page.Body>
           <UserContactInfo Loader={Loader} />
+          <UserOtherInfo Loader={Loader} />
           <Authorized roles={['Operator', 'Admin']}>
             {result.status === 'Success' ? (
               <ShowAllRequestsLink authorName={result.data.name} />

@@ -50,7 +50,12 @@ export function RegisterInitPage(): JSX.Element {
             <>
               <div>
                 <Question required>E-mail address</Question>
-                <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+                <ShortTextInput
+                  name="email"
+                  autoComplete="email"
+                  errors={errors}
+                  reg={register(reqRule())}
+                />
               </div>
               {regState.state === 'loading' ? (
                 <div className="m-auto">

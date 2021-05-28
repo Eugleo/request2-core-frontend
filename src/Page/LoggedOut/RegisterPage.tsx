@@ -92,6 +92,7 @@ export function RegisterPage(): JSX.Element {
                 <Question required>Display name</Question>
                 <ShortTextInput
                   name="name"
+                  autoComplete="name"
                   placeholder="Arthur Dent"
                   reg={register({
                     ...reqRule(),
@@ -138,6 +139,7 @@ export function RegisterPage(): JSX.Element {
                 <ShortTextInput
                   name="password"
                   type="password"
+                  autoComplete="new-password"
                   reg={register({
                     ...reqRule(),
                     validate: val =>
@@ -151,6 +153,7 @@ export function RegisterPage(): JSX.Element {
                 <ShortTextInput
                   name="passwordCheck"
                   type="password"
+                  autoComplete="new-password"
                   reg={register({
                     ...reqRule(),
                     validate: val => val === pwd || "The passwords don't match",

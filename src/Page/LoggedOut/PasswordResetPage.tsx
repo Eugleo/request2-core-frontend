@@ -42,7 +42,12 @@ export function PasswordResetInitPage({ email }: { email?: string | undefined })
         <CenteredForm>
           <div>
             <Question required>Email address associated with your account</Question>
-            <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+            <ShortTextInput
+              name="email"
+              autoComplete="username"
+              errors={errors}
+              reg={register(reqRule())}
+            />
           </div>
           <PrimaryWithNetwork
             type="submit"

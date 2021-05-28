@@ -81,11 +81,17 @@ export function LoginPage(): JSX.Element {
               <p className="text-red-600 text-xs mb-2">Password or email is incorrect</p>
             ) : null}
             <Question required="You have to enter an email address">E-mail address</Question>
-            <ShortTextInput name="email" reg={register(reqRule())} errors={errors} />
+            <ShortTextInput
+              name="email"
+              autoComplete="username"
+              reg={register(reqRule())}
+              errors={errors}
+            />
           </div>
           <div>
             <Question required="You have to enter a password">Password</Question>
             <ShortTextInput
+              autoComplete="current-password"
               name="password"
               type="password"
               reg={register(reqRule())}

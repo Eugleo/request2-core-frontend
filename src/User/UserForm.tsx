@@ -52,7 +52,7 @@ export function UserForm({
 
   return (
     <ContentWrapper>
-      <div className="max-w-4xl w-full mx-auto">
+      <div className="max-w-2xl w-full mx-auto">
         <Header>
           <Title>{title}</Title>
           {headerButtons && (
@@ -127,11 +127,21 @@ function FormComponent({
         <div className="p-6 space-y-6">
           <div>
             <Question required>Name</Question>
-            <ShortTextInput name="name" errors={errors} reg={register(reqRule())} />
+            <ShortTextInput
+              name="name"
+              autoComplete="off"
+              errors={errors}
+              reg={register(reqRule())}
+            />
           </div>
           <div>
             <Question required>E-mail address</Question>
-            <ShortTextInput name="email" errors={errors} reg={register(reqRule())} />
+            <ShortTextInput
+              name="email"
+              errors={errors}
+              autoComplete="off"
+              reg={register(reqRule())}
+            />
           </div>
           <div>
             <Question required>Telephone number</Question>
@@ -161,6 +171,7 @@ function FormComponent({
               <ShortTextInput
                 name="password"
                 type="password"
+                autoComplete="new-password"
                 errors={errors}
                 reg={register(reqRule())}
               />
