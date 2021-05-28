@@ -52,7 +52,7 @@ function Author({ ann }: { ann: WithID<Announcement> }) {
     <Loader>
       {author => (
         <p className="text-gray-700 text-sm">
-          <LinkToProfile userId={author._id} className="hover:text-indigo-800 text-gray-700" /> ·{' '}
+          <LinkToProfile userId={author._id} className="font-medium text-gray-700" /> ·{' '}
           {moment.unix(ann.dateCreated).fromNow()}
         </p>
       )}

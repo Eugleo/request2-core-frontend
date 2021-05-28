@@ -10,6 +10,7 @@ import { Pill, RequestStatusPill } from '../../Common/Pills';
 import { SearchBar } from '../../Common/SearchBar';
 import { Cell, Row, Table } from '../../Common/Table';
 import { User, UserName } from '../../User/User';
+import { LinkToProfile } from '../../User/UserProfile';
 import * as Api from '../../Utils/Api';
 import { padWithSpace } from '../../Utils/Func';
 import { ok } from '../../Utils/Loader';
@@ -29,7 +30,6 @@ export function Requests(): JSX.Element {
 }
 
 function RequestTableItem({ request }: { request: WithID<Request> }) {
-  const { result } = Api.useAsyncGet<UserName>(`/users/${request.authorId}/name`);
   const { type, code } = idToStr(request);
 
   return (
@@ -46,7 +46,9 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
         <span className="text-gray-500">{type}/</span>
         {code}
       </Cell>
-      <Cell className="text-gray-700">{ok(result) ? result.data.name : 'Loading'}</Cell>
+      <Cell>
+        <LinkToProfile userId={request.authorId} className="text-gray-700 font-medium" />
+      </Cell>
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
         <RequestStatusPill status={request.status} />

@@ -17,7 +17,7 @@ import { UserDetails, UserName } from './User';
 
 export function LinkToProfile({
   userId,
-  className = 'hover:text-indigo-800 text-black',
+  className = 'text-black font-medium',
 }: {
   userId: number;
   className?: string;
@@ -27,15 +27,18 @@ export function LinkToProfile({
 
   if (auth.user._id === userId) {
     return (
-      <Link to="/me" className={c('inline-block', className)}>
-        <span className="font-medium">{auth.user.name}</span> (you)
+      <Link to="/me" className={c('inline-block hover:text-indigo-800', className)}>
+        <span>{auth.user.name}</span> <span className="font-normal">(you)</span>
       </Link>
     );
   }
 
   return (
-    <Link to={`/users/${userId}/profile`} className={c('inline-block', className)}>
-      <p className="font-medium">
+    <Link
+      to={`/users/${userId}/profile`}
+      className={c('inline-block hover:text-indigo-800', className)}
+    >
+      <p className="hover:text-indigo-800">
         {result.status === 'Success' ? <span>{result.data.name}</span> : 'Anonymous User'}
       </p>
     </Link>

@@ -56,10 +56,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
               <Calendar className="w-3 h-3 text-gray-700" />
               <p className="text-sm text-gray-600">
                 Created {moment.unix(request.dateCreated).fromNow()} by{' '}
-                <LinkToProfile
-                  userId={request.authorId}
-                  className="text-gray-700 hover:text-indigo-700"
-                />
+                <LinkToProfile userId={request.authorId} className="text-gray-700 font-medium" />
               </p>
             </div>
           )}

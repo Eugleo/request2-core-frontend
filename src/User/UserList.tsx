@@ -25,7 +25,7 @@ function UserTableItem({ user }: { user: WithID<User> }) {
   return (
     <Row>
       <Cell>
-        <LinkToProfile userId={user._id} />
+        <LinkToProfile userId={user._id} className="font-normal" />
       </Cell>
       <Cell className="text-gray-700">{user.email}</Cell>
       <Cell className="text-gray-700">
