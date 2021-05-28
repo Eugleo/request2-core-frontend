@@ -5,7 +5,8 @@ import { SecondaryLinked } from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { Markdown } from '../Common/MdRender';
 import { ActivityPill } from '../Common/Pills';
-import { User, UserName } from '../User/User';
+import { User, UserDetails, UserName } from '../User/User';
+import { LinkToProfile } from '../User/UserProfile';
 import * as Api from '../Utils/Api';
 import { Authorized } from '../Utils/Auth';
 import { WithID } from '../Utils/WithID';
@@ -46,12 +47,12 @@ export function AnnouncementPage(): JSX.Element {
 }
 
 function Author({ ann }: { ann: WithID<Announcement> }) {
-  const { Loader } = Api.useAsyncGet<UserName>(`/users/${ann.authorId}/name`);
+  const { Loader } = Api.useAsyncGet<UserDetails>(`/users/${ann.authorId}/profile`);
   return (
     <Loader>
       {author => (
         <p className="text-gray-700 text-sm">
-          <span className="font-semibold">{author.name}</span> ·{' '}
+          <LinkToProfile userId={author._id} className="hover:text-indigo-800 text-gray-700" /> ·{' '}
           {moment.unix(ann.dateCreated).fromNow()}
         </p>
       )}

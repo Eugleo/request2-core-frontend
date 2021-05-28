@@ -34,15 +34,15 @@ function RequestComponent({ requestId }: { requestId: number }) {
   return (
     <Page.ContentWrapper>
       <div className="py-8 space-y-2">
-        <div className="flex flex-row items-center">
-          <Page.Title className="mr-6">
+        <div className="flex flex-row items-center gap-3">
+          <Page.Title>
             <RequestLoader>{request => <p>{request.title}</p>}</RequestLoader>
           </Page.Title>
-          <h2 className="text-blue-400 font-mono">
+          <h2>
             <RequestLoader>
               {request => (
-                <Pill className="bg-blue-100 text-blue-600 font-medium text-sm">
-                  {idToStr(request).type}/{idToStr(request).code}
+                <Pill className="bg-blue-100 text-blue-600 font-mono">
+                  id: {idToStr(request).type}/{idToStr(request).code}
                 </Pill>
               )}
             </RequestLoader>
@@ -52,8 +52,8 @@ function RequestComponent({ requestId }: { requestId: number }) {
         </div>
         <RequestLoader>
           {request => (
-            <div className="flex flex-row items-center space-x-3">
-              <Calendar className="w-4 h-4 text-gray-700" />
+            <div className="flex flex-row items-center space-x-2">
+              <Calendar className="w-3 h-3 text-gray-700" />
               <p className="text-sm text-gray-600">
                 Created {moment.unix(request.dateCreated).fromNow()} by{' '}
                 <LinkToProfile
