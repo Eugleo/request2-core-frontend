@@ -101,7 +101,7 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
 function CommentComponent({ authorId, text }: { authorId: number; text: string }) {
   const { Loader, result } = useAsyncGet<UserDetails>(`/users/${authorId}/profile`);
   const { auth } = useAuth();
-  const isMine = Math.random() < 0.5; // auth.user._id === authorId;
+  const isMine = auth.user._id === authorId; // auth.user._id === authorId;
 
   function Avatar() {
     return (
