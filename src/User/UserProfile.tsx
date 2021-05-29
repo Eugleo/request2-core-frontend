@@ -9,6 +9,7 @@ import { SecondaryLinked } from '../Common/Buttons';
 import * as Page from '../Common/Layout';
 import { ActivityPill, Pill } from '../Common/Pills';
 import { MyProfilePage } from '../Page/ProfilePage';
+import { RandomAvatar } from '../Page/UserView';
 import { useAsyncGet } from '../Utils/Api';
 import { Authorized, useAuth } from '../Utils/Auth';
 import { useAuthState } from '../Utils/AuthContext';
@@ -70,26 +71,33 @@ export function UserProfileHeader({
   Loader: Loader;
 }): JSX.Element {
   return (
-    <div className="py-8 space-y-2">
-      <div className="flex flex-row space-x-4 items-center">
-        <Page.Title>{result.status === 'Success' ? result.data.name : 'User profile'}</Page.Title>
-        {result.status === 'Success' ? <ActivityPill active={result.data.active} /> : null}
-        {result.status === 'Success' && result.data.roles.filter(r => r !== 'Client').length > 0
-          ? result.data.roles.filter(r => r !== 'Client').map(r => <Pill key={r}>{r}</Pill>)
-          : null}
-        <Page.Spacer />
-        {result.status === 'Success' ? <EditButton userId={result.data._id} /> : null}
+    <div className="py-8 flex flex-row gap-4 items-center">
+      <div>
+        {result.status === 'Success' ? (
+          <RandomAvatar userEmail={result.data.email} size="3.2rem" />
+        ) : null}
       </div>
-      <Loader>
-        {({ dateCreated }) => (
-          <div className="flex flex-row items-center space-x-2">
-            <Calendar className="w-3 h-3 text-gray-700" />
-            <p className="text-sm text-gray-600">
-              Joined {moment.unix(dateCreated).format('MMM YYYY')}
-            </p>
-          </div>
-        )}
-      </Loader>
+      <div className="flex-grow space-y-1">
+        <div className="flex flex-row space-x-4 items-center">
+          <Page.Title>{result.status === 'Success' ? result.data.name : 'User profile'}</Page.Title>
+          {result.status === 'Success' ? <ActivityPill active={result.data.active} /> : null}
+          {result.status === 'Success' && result.data.roles.filter(r => r !== 'Client').length > 0
+            ? result.data.roles.filter(r => r !== 'Client').map(r => <Pill key={r}>{r}</Pill>)
+            : null}
+          <Page.Spacer />
+        </div>
+        <Loader>
+          {({ dateCreated }) => (
+            <div className="flex flex-row items-center space-x-2">
+              <Calendar className="w-3 h-3 text-gray-700" />
+              <p className="text-sm text-gray-600">
+                Joined {moment.unix(dateCreated).format('MMM YYYY')}
+              </p>
+            </div>
+          )}
+        </Loader>
+      </div>
+      {result.status === 'Success' ? <EditButton userId={result.data._id} /> : null}
     </div>
   );
 }

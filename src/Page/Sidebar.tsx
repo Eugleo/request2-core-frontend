@@ -11,6 +11,7 @@ import { LongTextInput } from '../Common/Form/NewTextField';
 import { useOnClickOutside } from '../Common/Hooks';
 import { Authentized, Authorized, useAuth } from '../Utils/Auth';
 import logoSrc from '../assets/logo2new.svg';
+import { RandomAvatar } from './UserView';
 
 export function Sidebar(): JSX.Element {
   return (
@@ -184,9 +185,7 @@ function UserButton() {
           <p className="flex-grow text-sm text-indigo-900 font-medium">{auth.user.name}</p>
           <p className="flex-grow text-xs text-indigo-400 ">View profile</p>
         </div>
-        <div className="bg-indigo-200 rounded-full p-2">
-          <Icon.User className="text-indigo-900 w-5 h-5" />
-        </div>
+        <RandomAvatar userEmail={auth.user.email} size="2.25rem" />
       </div>
     </Link>
   );

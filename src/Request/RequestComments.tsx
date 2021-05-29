@@ -1,11 +1,15 @@
 import c from 'classnames';
+import { randomInt } from 'crypto';
 import React, { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { Link } from 'react-router-dom';
 
 import * as Button from '../Common/Buttons';
 import { LongTextInput } from '../Common/Form/NewTextField';
 import { Card } from '../Common/Layout';
 import { RandomAvatar } from '../Page/UserView';
+import { UserDetails } from '../User/User';
+import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { comparing } from '../Utils/Func';
@@ -44,7 +48,7 @@ export function RequestComments({ requestId }: { requestId: number }): JSX.Eleme
                   <div className="p-6 space-y-6">
                     {comments.sort(comparing(c => c.dateAdded)).map(prop => (
                       <CommentComponent
-                        isMine={prop.authorId === auth.user._id}
+                        authorId={prop.authorId}
                         text={prop.content}
                         key={prop._id}
                       />
@@ -94,43 +98,45 @@ function CommentComposer({ requestId, refresh }: { requestId: number; refresh: (
   );
 }
 
-function CommentComponent({ isMine, text }: { isMine: boolean; text: string }) {
+function CommentComponent({ authorId, text }: { authorId: number; text: string }) {
+  const { Loader, result } = useAsyncGet<UserDetails>(`/users/${authorId}/profile`);
+  const { auth } = useAuth();
+  const isMine = Math.random() < 0.5; // auth.user._id === authorId;
+
   function Avatar() {
     return (
-      <div className={c('flex flex-col items-center h-full justify-start')}>
-        <RandomAvatar me={isMine} />
-      </div>
+      <Loader>
+        {author => (
+          <div className="flex-shrink-0">
+            <Link
+              to={`/users/${authorId}/profile`}
+              className={c(
+                'inline-block rounded-full border border-pink-100 hover:border-purple-300'
+              )}
+            >
+              <RandomAvatar userEmail={author.email} size="2.25rem" border={false} />
+            </Link>
+          </div>
+        )}
+      </Loader>
     );
   }
 
   function Body() {
     return (
-      <p
-        className={c(
-          'col-span-2 bg-gray-100 text-sm tet-gray-700 rounded-md border-gray-200 border p-3',
-          isMine ? 'text-left' : 'text-right'
-        )}
-      >
-        {text}
-      </p>
+      <div className="px-4 py-3 bg-gray-100 rounded-md">
+        <p className={c('text-sm text-gray-700')}>{text}</p>
+      </div>
     );
   }
 
   return (
-    <div className={c('grid grid-cols-5 gap-2 w-full')}>
-      {isMine ? (
-        <>
-          <Avatar />
-          <Body />
-          <div className="col-span-2" />
-        </>
-      ) : (
-        <>
-          <div className="col-span-2" />
-          <Body />
-          <Avatar />
-        </>
-      )}
+    <div>
+      <div className={c('flex gap-2', isMine ? 'flex-row' : 'flex-row-reverse')}>
+        <Avatar />
+        <Body />
+        <div className="w-24 flex-shrink-0" />
+      </div>
     </div>
   );
 }

@@ -1,9 +1,9 @@
 /* eslint-disable jsx-a11y/interactive-supports-focus */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 /* eslint-disable jsx-a11y/control-has-associated-label */
+import Avatar from 'boring-avatars';
 import c from 'classnames';
 import React, { useState } from 'react';
-import { User } from 'react-feather';
 
 import * as Button from '../Common/Buttons';
 import { useOnClickOutside } from '../Common/Hooks';
@@ -11,15 +11,23 @@ import { useAuth } from '../Utils/Auth';
 import { useAuthDispatch } from '../Utils/AuthContext';
 import { formatDate } from '../Utils/Date';
 
-export function RandomAvatar({ me }: { me: boolean }): JSX.Element {
+export function RandomAvatar({
+  userEmail,
+  size,
+  border = true,
+}: {
+  userEmail: string;
+  size: string;
+  border?: boolean;
+}): JSX.Element {
   return (
-    <div
-      className={c(
-        'rounded-full h-10 w-10 flex justify-center items-center',
-        me ? 'bg-indigo-100' : 'bg-gray-200'
-      )}
-    >
-      <User className="text-indigo-800" />
+    <div className={c(border && 'rounded-full border border-pink-200', 'p-0.5')}>
+      <Avatar
+        size={size}
+        name={userEmail}
+        variant="beam"
+        colors={['#BFDBFE', '#A5B4FC', '#C4B5FD', '#FBCFE8', '#FECACA']}
+      />
     </div>
   );
 }
@@ -30,6 +38,7 @@ export function UserView(): JSX.Element {
   const ref = useOnClickOutside<HTMLDivElement>(() => {
     setShowDetails(false);
   });
+  const { auth } = useAuth();
 
   return (
     <div>
@@ -45,9 +54,7 @@ export function UserView(): JSX.Element {
           }
         }}
       >
-        <div style={{ padding: '-1px' }} className="flex w-full h-full items-stretch">
-          <RandomAvatar me />
-        </div>
+        <RandomAvatar userEmail={auth.user.email} size="2.25rem" />
       </button>
     </div>
   );
