@@ -132,7 +132,7 @@ function CommentComponent({ authorId, text }: { authorId: number; text: string }
 
   return (
     <div>
-      <div className={c('flex gap-2', isMine ? 'flex-row' : 'flex-row-reverse')}>
+      <div className={c('flex items-start gap-2', isMine ? 'flex-row' : 'flex-row-reverse')}>
         <Avatar />
         <Body />
         <div className="w-24 flex-shrink-0" />
