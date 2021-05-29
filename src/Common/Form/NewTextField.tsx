@@ -10,12 +10,14 @@ import {
   useFieldContext,
   FieldProps,
   InputProps,
+  Description,
 } from './Question';
 
 export function ShortText({
   id,
   q,
   optional = false,
+  description,
   errorMsg = 'This field is required',
 }: QuestionProps): JSX.Element {
   const required = !optional && errorMsg;
@@ -27,6 +29,7 @@ export function ShortText({
         question={q}
         required={required}
         defaultValue={values[id] ?? null}
+        description={description}
       />
     );
   }
@@ -47,6 +50,7 @@ function ShortTextField({
   question,
   required = false,
   defaultValue,
+  description,
 }: FieldProps & { defaultValue: string }) {
   const { register, errors } = useFormContext();
 
@@ -59,6 +63,7 @@ function ShortTextField({
         reg={register(reqRule(required))}
         defaultValue={defaultValue}
       />
+      <Description>{description}</Description>
     </div>
   );
 }
@@ -95,12 +100,19 @@ export function LongText({
   q,
   optional = false,
   errorMsg = 'This field is required',
+  description,
 }: QuestionProps): JSX.Element {
   const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
     return (
-      <LongTextField name={id} question={q} required={required} defaultValue={values[id] ?? null} />
+      <LongTextField
+        name={id}
+        question={q}
+        required={required}
+        defaultValue={values[id] ?? null}
+        description={description}
+      />
     );
   }
   return (
@@ -120,6 +132,7 @@ function LongTextField({
   question,
   required = false,
   defaultValue,
+  description,
 }: FieldProps & { defaultValue: string }) {
   const { register, errors } = useFormContext();
   return (
@@ -131,6 +144,7 @@ function LongTextField({
         reg={register(reqRule(required))}
         defaultValue={defaultValue}
       />
+      <Description>{description}</Description>
     </div>
   );
 }
