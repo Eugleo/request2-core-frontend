@@ -213,7 +213,9 @@ function NumberField({
 
   return (
     <div>
-      <Question required={required}>{question}</Question>
+      <Question required={required} number>
+        {question}
+      </Question>
       <NumberInput
         errors={errors}
         name={name}

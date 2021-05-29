@@ -109,12 +109,14 @@ export function Question({
   required = false,
   multiple = false,
   showIcons = true,
+  number = false,
   children,
 }: {
   children: ReactNode;
   required?: boolean | string;
   multiple?: boolean;
   hasCustom?: boolean;
+  number?: boolean;
   showIcons?: boolean;
 }): JSX.Element {
   return (
@@ -126,6 +128,7 @@ export function Question({
           {typeof required !== 'string' && !required ? <Required /> : null}
           {hasCustom ? <Custom multiple={multiple} /> : null}
           {multiple ? <Multiple hasCustom={hasCustom} /> : null}
+          {number ? <NumberIcon /> : null}
         </>
       ) : null}
     </div>
@@ -175,6 +178,24 @@ function Multiple({ hasCustom }: { hasCustom: boolean }) {
         style={{ top: '1px' }}
         className="text-purple-400 w-3.5 relative mr-1"
         data-tip={`You can select ${hasCustom ? 'or type in ' : ''}multiple options`}
+      />
+      <ReactTooltip
+        type="light"
+        effect="solid"
+        backgroundColor="rgba(243, 244, 246, 1)"
+        className="white-tooltip"
+      />
+    </>
+  );
+}
+
+function NumberIcon() {
+  return (
+    <>
+      <Icon.PieChart
+        style={{ top: '1px' }}
+        className="text-green-600 w-3.5 relative mr-1"
+        data-tip="You have to enter a number"
       />
       <ReactTooltip
         type="light"
