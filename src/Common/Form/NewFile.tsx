@@ -117,7 +117,7 @@ export function FileInput({
     const initialValue: FileInfo[] = stringToFiles(defaultValue);
 
     setValue(name, initialValue, {
-      shouldValidate: true,
+      shouldValidate: false,
     });
     return () => unregister(name);
   }, [register, unregister, required, name, setValue, defaultValue]);
