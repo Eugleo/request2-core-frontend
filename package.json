@@ -37,7 +37,9 @@
     "tailwindcss": "npm:@tailwindcss/postcss7-compat"
   },
   "scripts": {
-    "build": "rm -r src/Request/RequestTypes ; cp -r ../RequestTypes src/Request/ ; craco build"
+    "loadforms": "rm -fr src/Request/RequestTypes ; cp -r ../RequestTypes src/Request/",
+    "start": "craco start",
+    "build": "craco build"
   },
   "browserslist": {
     "production": [
