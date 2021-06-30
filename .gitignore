@@ -2,6 +2,8 @@
 
 /public/data
 
+src/Request/RequestTypes
+
 # dependencies
 /node_modules
 /.pnp
