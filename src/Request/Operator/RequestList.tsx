@@ -73,7 +73,6 @@ function RequestList() {
             setQuery(values.query.trim());
           }}
         />
-        <Secondary className="flex-shrink-0" type="submit" title="Search" />
       </div>
       <Loader>
         {({ values }) => (
