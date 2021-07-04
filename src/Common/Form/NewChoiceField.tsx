@@ -566,7 +566,7 @@ function getVisibleChildren(
   }
 
   return showChildren && showChildren.length > 0 ? (
-    <div className="mt-6 space-y-6">{showChildren}</div>
+    <div className="mt-6 space-y-6 pl-4 border-l-4 border-gray-300">{showChildren}</div>
   ) : null;
 }
 
