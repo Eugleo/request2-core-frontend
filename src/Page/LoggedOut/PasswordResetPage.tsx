@@ -71,7 +71,7 @@ export function PasswordResetPage(): JSX.Element {
     defaultValues: { password: '', passwordCheck: '' },
   });
 
-  const pwd = watch('pwd');
+  const pwd = watch('password');
 
   return (
     <CenteredPage
