@@ -38,7 +38,7 @@ export function Warning({ children }: { children: ReactNode }): JSX.Element | nu
       <div className="bg-white rounded-md border border-yellow-300 overflow-hidden">
         <div className="flex bg-yellow-100 px-3 py-2 items-center">
           <Icon.AlertTriangle className="text-yellow-900 w-5 mr-2" />
-          <h3 className="font-medium text-sm text-yellow-900">Beware!</h3>
+          <h3 className="font-medium text-sm text-yellow-900">Important notice</h3>
         </div>
         <div className="p-4 text-sm text-gray-700">
           {typeof children === 'string' ? <p>{children}</p> : children}

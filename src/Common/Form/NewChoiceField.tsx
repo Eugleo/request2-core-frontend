@@ -235,10 +235,12 @@ export function SingleChoice({
   hasCustom = false,
   autoFillIn = false,
   children = [],
+  keepOptionOrder = false,
 }: QuestionProps &
   Omit<ChoiceProps, 'children'> & {
     children: Choice | Choice[];
     autoFillIn?: boolean;
+    keepOptionOrder?: boolean;
   }): JSX.Element {
   const required = !optional && errorMsg;
 
@@ -257,6 +259,7 @@ export function SingleChoice({
         hasCustom={hasCustom}
         isText={isText}
         defaultValue={defaultValue}
+        keepOptionOrder={keepOptionOrder}
       >
         {choices}
       </SingleChoiceField>
@@ -297,7 +300,8 @@ export function SingleChoiceField({
   required,
   isText = false,
   defaultValue,
-}: FieldProps & ChoiceProps & { defaultValue: string }): JSX.Element {
+  keepOptionOrder = false,
+}: FieldProps & ChoiceProps & { defaultValue: string; keepOptionOrder: boolean }): JSX.Element {
   const { watch, errors, register, control } = useFormContext();
   const value = watch(name, defaultValue) as string | Selection | null;
 
@@ -315,6 +319,7 @@ export function SingleChoiceField({
           errors={errors}
           control={control}
           defaultValue={defaultValue}
+          keepOptionOrder={keepOptionOrder}
         >
           {children}
         </SingleChoiceTextInput>
@@ -325,6 +330,7 @@ export function SingleChoiceField({
           errors={errors}
           reg={register(reqRule(required, 'You have to choose an option'))}
           defaultValue={defaultValue}
+          keepOptionOrder={keepOptionOrder}
         >
           {children}
         </SingleChoiceButtonsInput>
@@ -341,12 +347,17 @@ function SingleChoiceButtonsInput({
   errors,
   reg,
   defaultValue,
+  keepOptionOrder,
   ...props
-}: Omit<InputProps<'input'>, 'value'> & { children: Choice[]; value?: Maybe<Selection | string> }) {
+}: Omit<InputProps<'input'>, 'value'> & {
+  children: Choice[];
+  value?: Maybe<Selection | string>;
+  keepOptionOrder: boolean;
+}) {
   const err: Maybe<string> = errors && name && errors[name]?.message;
   return (
     <div>
-      {toOptions(children).map(({ value, label }) => (
+      {toOptions(children, keepOptionOrder).map(({ value, label }) => (
         <Fragment key={value}>
           <ChoiceField>
             <input
@@ -369,13 +380,12 @@ function SingleChoiceButtonsInput({
   );
 }
 
-function toOptions(choices: Choice[]) {
-  return choices
-    .map(ch => ({
-      label: ch.props.label ?? ch.props.value,
-      value: ch.props.value,
-    }))
-    .sort(comparing(o => o.label));
+function toOptions(choices: Choice[], keepOptionOrder: boolean) {
+  const result = choices.map(ch => ({
+    label: ch.props.label ?? ch.props.value,
+    value: ch.props.value,
+  }));
+  return keepOptionOrder ? result : result.sort(comparing(o => o.label));
 }
 
 function customOptionFormatter(str: string) {
@@ -396,6 +406,7 @@ function SingleChoiceTextInput({
   hasCustom,
   errors,
   control,
+  keepOptionOrder = false,
 }: {
   name: string;
   value?: Maybe<Selection | string>;
@@ -404,6 +415,7 @@ function SingleChoiceTextInput({
   errors: FormErrors;
   defaultValue?: string;
   required?: string | boolean;
+  keepOptionOrder: boolean;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   control: Control<Record<string, any>>;
 }) {
@@ -414,7 +426,7 @@ function SingleChoiceTextInput({
       ? { label: choice.props.label ?? choice.props.value, value: choice.props.value }
       : null;
 
-  const options = toOptions(children);
+  const options = toOptions(children, keepOptionOrder);
 
   return (
     <div>

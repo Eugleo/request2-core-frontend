@@ -70,8 +70,8 @@ function MultiFieldField({
             required,
             validate: val => {
               const n = Number.parseInt(val);
-              if (Number.isNaN(n) || n < 0 || n > 15) {
-                return 'Enter a valid whole number betweeen 0 and 15';
+              if (Number.isNaN(n) || n < 0 || n > 50) {
+                return 'Enter a valid whole number betweeen 0 and 50';
               }
               return true;
             },
@@ -82,7 +82,7 @@ function MultiFieldField({
         <div>
           <Question required={required}>Details about each sample</Question>
           <div className="space-y-2">
-            {Array.from({ length: Math.min(Math.max(count, 0), 15) })
+            {Array.from({ length: Math.min(Math.max(count, 0), 50) })
               .fill(null)
               .map((_, i) => i)
               .map(i => (

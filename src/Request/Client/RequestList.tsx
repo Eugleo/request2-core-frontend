@@ -1,7 +1,8 @@
 import { To } from 'history';
 import moment from 'moment';
-import { Info } from 'react-feather';
+import { Info, Plus } from 'react-feather';
 import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
+import { isContext } from 'vm';
 
 import { Note } from '../../Common/Form/Question';
 import { Page } from '../../Common/Layout';
@@ -12,6 +13,7 @@ import { Cell, Row, Table } from '../../Common/Table';
 import * as Api from '../../Utils/Api';
 import { Authorized, useAuth } from '../../Utils/Auth';
 import { padWithSpace } from '../../Utils/Func';
+import { Maybe } from '../../Utils/Maybe';
 import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
 import { NewRequestPage } from '../NewRequest';
@@ -96,10 +98,13 @@ function RequestList() {
 
 function NewRequestSection() {
   const { auth } = useAuth();
-  const requestTypes = [...requests.entries()].map(([key, { newRequestButtonText }]) => ({
-    type: key,
-    title: newRequestButtonText,
-  }));
+  const requestTypes = [...requests.entries()].map(
+    ([key, { newRequestButtonText, description }]) => ({
+      type: key,
+      title: newRequestButtonText,
+      description,
+    })
+  );
 
   if (auth.user.teams.length === 0) {
     return (
@@ -115,26 +120,56 @@ function NewRequestSection() {
     );
   }
 
+  // TODO Přidat možnost kompaktního zobrazení, pokud ani jeden typ nemá field description
   return (
     <div
       style={{
         gridAutoRows: '1fr',
-        gridTemplateColumns: 'repeat(auto-fill, minmax(20ch, 1fr))',
+        gridTemplateColumns: 'repeat(auto-fill, minmax(40ch, 1fr))',
       }}
       className="grid gap-6"
     >
       {requestTypes.map(rt => (
-        <NewRequestButton key={rt.title} link={`new/${rt.type}`} name={rt.title} />
+        <NewRequestButton
+          key={rt.title}
+          link={`new/${rt.type}`}
+          name={rt.title}
+          description={rt.description}
+        />
       ))}
     </div>
   );
 }
 
-function NewRequestButton({ name, link }: { name: string; link: To }) {
+function NewRequestButton({
+  name,
+  link,
+  description,
+}: {
+  name: string;
+  link: To;
+  description: Maybe<string>;
+}) {
+  if (description) {
+    return (
+      <Link to={link} className="group bg-gray-50 rounded-lg">
+        <div className="flex flex-row border-b border-gray-200 px-4 py-3 items-center justify-between">
+          <h3 className="text-lg font-medium">{name}</h3>
+          <p className="duration-150 group-hover:shadow-lg rounded-full px-3 py-3 bg-gray-200 group-hover:bg-green-400 text-white uppercase font-medium text-xs">
+            Create
+          </p>
+        </div>
+        <p className="text-sm text-gray-600 p-4">{description}</p>
+      </Link>
+    );
+  }
   return (
-    <Link to={link} className="h-full w-full">
-      <div className="h-full w-full relative duration-150 shadow-smooth hover:shadow-lg rounded-lg bg-white p-4 flex flex-col-reverse">
-        <span className="lg:mt-10 mt-6 text-lg font-medium">{name}</span>
+    <Link to={link} className="group bg-gray-50 rounded-lg">
+      <div className="flex flex-row px-4 py-3 items-center justify-between">
+        <h3 className="text-lg font-medium">{name}</h3>
+        <p className="duration-150 group-hover:shadow-lg rounded-full px-3 py-3 bg-gray-200 group-hover:bg-green-400 text-white uppercase font-medium text-xs">
+          Create
+        </p>
       </div>
     </Link>
   );
