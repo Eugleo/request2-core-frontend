@@ -1,9 +1,10 @@
 import { To } from 'history';
 import moment from 'moment';
-import { Info, Plus } from 'react-feather';
-import { Link, Navigate, Route, Routes, useSearchParams } from 'react-router-dom';
+import { Copy, Info, Plus } from 'react-feather';
+import { Link, Navigate, NavLink, Route, Routes, useSearchParams } from 'react-router-dom';
 import { isContext } from 'vm';
 
+import { Secondary, SecondaryLinked, TertiaryLinked } from '../../Common/Buttons';
 import { Note } from '../../Common/Form/Question';
 import { Page } from '../../Common/Layout';
 import { usePagination } from '../../Common/PageSwitcher';
@@ -16,7 +17,7 @@ import { padWithSpace } from '../../Utils/Func';
 import { Maybe } from '../../Utils/Maybe';
 import { WithID } from '../../Utils/WithID';
 import { EditRequestPage } from '../EditRequest';
-import { NewRequestPage } from '../NewRequest';
+import { NewRequestPage, RequestFromTemplate } from '../NewRequest';
 import { idToStr, Request } from '../Request';
 import { RequestPage } from '../RequestPage';
 import { requests } from '../RequestTypes/RequestTypes';
@@ -26,6 +27,7 @@ export function Requests(): JSX.Element {
     <Routes>
       <Route path="" element={<RequestList />} />
       <Route path="new/:requestType" element={<NewRequestPage />} />
+      <Route path="new/template/:templateId" element={<RequestFromTemplate />} />
       <Route path=":id/edit" element={<EditRequestPage />} />
       <Route path=":id" element={<RequestPage />} />
     </Routes>
@@ -51,6 +53,15 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
       <Cell className="text-gray-700">{moment.unix(request.dateCreated).fromNow()}</Cell>
       <Cell>
         <RequestStatusPill status={request.status} />
+      </Cell>
+      <Cell>
+        <Link
+          to={`new/template/${request._id}`}
+          className="flex flex-row justify-center items-center"
+        >
+          <p className="text-gray-600 text-xs mr-3 hover:text-gray-800">Use as template</p>{' '}
+          <Copy className="w-3 text-gray-500" />
+        </Link>
       </Cell>
     </Row>
   );
@@ -83,7 +94,7 @@ function RequestList() {
         <Loader>
           {({ values }) => {
             return (
-              <Table columns={['Name', 'ID code', 'Created', 'Status']}>
+              <Table columns={['Name', 'ID code', 'Created', 'Status', '']}>
                 {values.map(r => (
                   <RequestTableItem key={r._id} request={r} />
                 ))}
@@ -152,7 +163,7 @@ function NewRequestButton({
 }) {
   if (description) {
     return (
-      <Link to={link} className="group bg-gray-50 rounded-lg">
+      <Link to={link} className="group bg-white rounded-lg">
         <div className="flex flex-row border-b border-gray-200 px-4 py-3 items-center justify-between">
           <h3 className="text-lg font-medium">{name}</h3>
           <p className="duration-150 group-hover:shadow-lg rounded-full px-3 py-3 bg-gray-200 group-hover:bg-green-400 text-white uppercase font-medium text-xs">

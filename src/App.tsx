@@ -98,6 +98,7 @@ function AppBody() {
   const login = useLogin();
 
   // TODO Add timeout
+  console.log(backendState);
   switch (backendState) {
     case 'loading':
       return (
