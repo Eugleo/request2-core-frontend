@@ -11,7 +11,7 @@ import { useAuth } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
 import { Body, Card, ContentWrapper, Header, Page, Title } from '../Layout';
 import { ShortText } from './NewTextField';
-import { FieldContext, useFieldContext, Warning } from './Question';
+import { FieldContext, Note, useFieldContext, Warning } from './Question';
 import { TeamField } from './RequestInfoFields';
 
 type RequestStub = { title: string; teamId: number };
@@ -62,6 +62,8 @@ export function NewForm({
     );
   }
 
+  const requestObject = requests.get(requestType);
+
   return (
     <FieldContext.Provider value={state}>
       <ContentWrapper>
@@ -77,10 +79,20 @@ export function NewForm({
                   className="space-y-8"
                 >
                   <Section title="General information">
-                    <ShortText q="What should be this request called?" id="Title" />
+                    <ShortText
+                      q="Request Title"
+                      id="Title"
+                      description="A title for this request: simple, unique, and easy to search for"
+                    />
                     <TeamField id="TeamId" />
+                    {requestObject?.showMultipleSamplesNote ? (
+                      <Note>
+                        Please, combine samples into one request if the requested analysis follows
+                        the same logic.
+                      </Note>
+                    ) : null}
                   </Section>
-                  {requests.get(requestType)?.formComponent}
+                  {requestObject?.formComponent}
                   <div className="h-0.5 w-full bg-gray-200" />
                   <div className="flex justify-end flex-row w-full space-x-6 relative">
                     {children}
