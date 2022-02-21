@@ -15,8 +15,8 @@ export function MultiField({
 
   const { state, values } = useFieldContext();
   const countId = `${id} Count`;
-  const maybeCount = Number.parseInt(values[countId] ?? 0);
-  const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
+  const maybeCount = Number.parseInt(values[countId] ?? 1);
+  const count = Number.isNaN(maybeCount) ? 1 : maybeCount;
 
   if (state === 'edit') {
     return (
@@ -70,8 +70,8 @@ function MultiFieldField({
             required,
             validate: val => {
               const n = Number.parseInt(val);
-              if (Number.isNaN(n) || n < 0 || n > 50) {
-                return 'Enter a valid whole number betweeen 0 and 50';
+              if (Number.isNaN(n) || n <= 0 || n > 50) {
+                return 'Enter a valid whole number betweeen 1 and 50';
               }
               return true;
             },
