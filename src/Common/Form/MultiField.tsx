@@ -2,7 +2,14 @@ import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
 import { ShortText, ShortTextInput } from './NewTextField';
-import { ErrorMessage, FieldProps, Question, QuestionProps, useFieldContext } from './Question';
+import {
+  Description,
+  ErrorMessage,
+  FieldProps,
+  Question,
+  QuestionProps,
+  useFieldContext,
+} from './Question';
 
 export function MultiField({
   q,
@@ -10,6 +17,7 @@ export function MultiField({
   optional = false,
   errorMsg = 'You have to input a number',
   children,
+  description,
 }: QuestionProps & { children: (id: number) => ReactNode }): JSX.Element {
   const required = !optional && errorMsg;
 
@@ -20,7 +28,13 @@ export function MultiField({
 
   if (state === 'edit') {
     return (
-      <MultiFieldField question={q} name={countId} required={required} defaultValue={count}>
+      <MultiFieldField
+        question={q}
+        name={countId}
+        required={required}
+        defaultValue={count}
+        description={description}
+      >
         {children}
       </MultiFieldField>
     );
@@ -53,6 +67,7 @@ function MultiFieldField({
   required,
   children,
   defaultValue,
+  description,
 }: FieldProps & { children: (id: number) => ReactNode; defaultValue: number }) {
   const { watch, errors, register } = useFormContext();
   const maybeCount = Number.parseInt(watch(name, defaultValue));
@@ -91,6 +106,7 @@ function MultiFieldField({
                 </div>
               ))}
           </div>
+          <Description>{description}</Description>
         </div>
       ) : null}
     </div>
