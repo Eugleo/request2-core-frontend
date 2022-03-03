@@ -55,10 +55,7 @@ function RequestTableItem({ request }: { request: WithID<Request> }) {
         <RequestStatusPill status={request.status} />
       </Cell>
       <Cell>
-        <Link
-          to={`new/template/${request._id}`}
-          className="flex flex-row justify-center items-center"
-        >
+        <Link to={`new/template/${request._id}`} className="flex flex-row justify-end items-center">
           <p className="text-gray-600 text-xs mr-3 hover:text-gray-800">Use as template</p>{' '}
           <Copy className="w-3 text-gray-500" />
         </Link>
