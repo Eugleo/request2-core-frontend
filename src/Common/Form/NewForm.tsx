@@ -10,7 +10,7 @@ import { apiBase } from '../../Utils/ApiBase';
 import { useAuth } from '../../Utils/Auth';
 import { WithID } from '../../Utils/WithID';
 import { Body, Card, ContentWrapper, Header, Page, Title } from '../Layout';
-import { ShortText } from './NewTextField';
+import { LongText, ShortText } from './NewTextField';
 import { FieldContext, Note, useFieldContext, Warning } from './Question';
 import { TeamField } from './RequestInfoFields';
 
@@ -146,4 +146,12 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
 
 export function Form({ children }: { children: ReactNode }): JSX.Element {
   return <>{children}</>;
+}
+
+export function NotesSection(): JSX.Element {
+  return (
+    <Section title="Optional notes">
+      <LongText optional q="If you want to provide any additional notes, do so here" id="notes" />
+    </Section>
+  );
 }

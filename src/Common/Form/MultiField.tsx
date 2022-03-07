@@ -1,7 +1,7 @@
 import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { ShortText, ShortTextInput } from './NewTextField';
+import { NumberInput, ShortText, ShortTextInput } from './NewTextField';
 import {
   Description,
   ErrorMessage,
@@ -76,7 +76,9 @@ function MultiFieldField({
   return (
     <div className="space-y-6">
       <div>
-        <Question required={required}>{question}</Question>
+        <Question number required={required}>
+          {question}
+        </Question>
         <ShortTextInput
           defaultValue={defaultValue}
           name={name}
@@ -92,6 +94,7 @@ function MultiFieldField({
             },
           })}
         />
+        <Description>Enter a number between 1 and 50</Description>
       </div>
       {count > 0 ? (
         <div>
