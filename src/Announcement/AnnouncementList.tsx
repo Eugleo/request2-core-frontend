@@ -94,18 +94,18 @@ function Item({
   return (
     <div className="rounded-xl transition-all duration-150">
       <Link to={_id.toString()} className="group">
-        <ActivityPill active={active} />
-        <h2 className="text-2xl font-bold mb-4 mt-4 transition-all group-hover:underline">
-          {title}
-        </h2>
+        <div className="space-y-1 mb-4">
+          <ActivityPill active={active} />
+          <h2 className="text-2xl font-bold transition-all group-hover:underline">{title}</h2>
+        </div>
 
         <Markdown
           source={paragraphs.length > 0 ? paragraphs[0] : '_No textual content_'}
-          className={c('text-gray-700 mb-4')}
+          className={c('text-gray-700')}
         />
       </Link>
 
-      <div className={c('text-sm text-gray-600')}>
+      <div className={c('text-sm text-gray-600 mt-2')}>
         <LinkToProfile userId={authorId} />
         <p>
           {moment.unix(dateCreated).fromNow()} · {paraText}
