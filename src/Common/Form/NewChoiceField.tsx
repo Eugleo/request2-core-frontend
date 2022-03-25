@@ -76,7 +76,9 @@ export function MultipleChoice({
 
     return (
       <div>
-        <Question required={required}>{q}</Question>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
         <div className="flex flex-wrap gap-2">{selections}</div>
       </div>
     );
@@ -98,7 +100,9 @@ export function MultipleChoice({
 
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       <div className="flex flex-wrap gap-2">{selections}</div>
     </div>
   );
@@ -305,7 +309,9 @@ export function SingleChoice({
 
     return (
       <div>
-        <Question required={required}>{q}</Question>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
         {label}
         {getVisibleChildren(choice?.props.value, choices, true)}
       </div>
@@ -332,7 +338,9 @@ export function SingleChoice({
 
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       {label}
       {getVisibleChildren(choice?.props.value, choices)}
     </div>

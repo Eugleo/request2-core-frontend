@@ -134,7 +134,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
           </p>
         </div>
         <div className="rounded-lg border border-gray-300 flex-grow">
-          <div className="p-4 space-y-2">{children}</div>
+          <div className="p-4 space-y-4">{children}</div>
         </div>
       </div>
     );
@@ -162,7 +162,7 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
 export function Form({ children }: { children: ReactNode }): JSX.Element {
   const fieldContext = useFieldContext();
   if (fieldContext.state === 'print') {
-    return <div className="space-y-3">{children}</div>;
+    return <div className="space-y-4">{children}</div>;
   }
   return <>{children}</>;
 }

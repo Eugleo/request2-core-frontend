@@ -89,9 +89,9 @@ function RequestComponent({ requestId }: { requestId: number }) {
                   <>
                     <div className="hidden">
                       <div ref={printRef}>
-                        <div className="mb-6 pb-4 border-b border-gray-300 space-y-3">
-                          <div className="flex flex-row gap-3 items-center">
-                            <div className="font-mono rounded-lg border border-gray-300 py-1 px-3">
+                        <div className="mb-6 pb-4 border-b-2 border-gray-300 space-y-4">
+                          <div className="flex flex-row gap-4 items-center">
+                            <div className="font-mono rounded-lg border border-gray-300 py-1 px-4">
                               {idToStr(request).type}/{idToStr(request).code}
                             </div>
                             <h1 className="font-bold text-lg">{request.title}</h1>
@@ -118,7 +118,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
                       </div>
                     </div>
                     <div className="col-span-2 space-y-6">
-                      <Details requestType={request.requestType} properties={properties} />
+                      <PrintableRequest requestType={request.requestType} properties={properties} />
                     </div>
                   </>
                 )}

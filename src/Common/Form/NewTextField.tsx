@@ -37,7 +37,9 @@ export function ShortText({
   }
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
@@ -123,7 +125,9 @@ export function LongText({
   }
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (
@@ -199,7 +203,9 @@ export function Number({
   }
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       {values[id] && values[id].length > 0 ? (
         <p className="text-sm text-gray-800">{values[id]}</p>
       ) : (

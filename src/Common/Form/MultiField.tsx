@@ -49,10 +49,10 @@ export function MultiField({
     return (
       <div className="space-y-2 rounded-lg">
         <Question required={required}>Details about each sample</Question>
-        <div className="flex flex-row gap-2">
+        <div className="flex flex-col gap-y-4">
           {fields.length > 0 ? (
             fields.map((f, ix) => (
-              <div key={ix} className="rounded-lg border border-gray-300 py-2 px-2">
+              <div className="border-l-4 border-gray-300 pl-4" key={ix}>
                 {f}
               </div>
             ))
