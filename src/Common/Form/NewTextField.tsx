@@ -1,5 +1,5 @@
 import c from 'classnames';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, Validate } from 'react-hook-form';
 
 import { ResultWidget } from '../../Request/Operator/ResultComponent';
 import {
@@ -19,7 +19,8 @@ export function ShortText({
   optional = false,
   description,
   errorMsg = 'This field is required',
-}: QuestionProps): JSX.Element {
+  validate,
+}: QuestionProps & { validate?: Validate | Record<string, Validate> | undefined }): JSX.Element {
   const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   if (state === 'edit') {
@@ -30,6 +31,7 @@ export function ShortText({
         required={required}
         defaultValue={values[id] ?? null}
         description={description}
+        validate={validate}
       />
     );
   }
@@ -51,7 +53,11 @@ function ShortTextField({
   required = false,
   defaultValue,
   description,
-}: FieldProps & { defaultValue: string }) {
+  validate,
+}: FieldProps & {
+  defaultValue: string;
+  validate: Validate | Record<string, Validate> | undefined;
+}) {
   const { register, errors } = useFormContext();
 
   return (
@@ -60,7 +66,7 @@ function ShortTextField({
       <ShortTextInput
         errors={errors}
         name={name}
-        reg={register(reqRule(required))}
+        reg={register({ ...reqRule(required), validate })}
         defaultValue={defaultValue}
       />
       <Description>{description}</Description>

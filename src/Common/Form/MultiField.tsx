@@ -1,8 +1,15 @@
 import { ReactNode } from 'react';
 import { useFormContext } from 'react-hook-form';
 
-import { ShortText, ShortTextInput } from './NewTextField';
-import { ErrorMessage, FieldProps, Question, QuestionProps, useFieldContext } from './Question';
+import { NumberInput, ShortText, ShortTextInput } from './NewTextField';
+import {
+  Description,
+  ErrorMessage,
+  FieldProps,
+  Question,
+  QuestionProps,
+  useFieldContext,
+} from './Question';
 
 export function MultiField({
   q,
@@ -10,17 +17,24 @@ export function MultiField({
   optional = false,
   errorMsg = 'You have to input a number',
   children,
+  description,
 }: QuestionProps & { children: (id: number) => ReactNode }): JSX.Element {
   const required = !optional && errorMsg;
 
   const { state, values } = useFieldContext();
   const countId = `${id} Count`;
-  const maybeCount = Number.parseInt(values[countId] ?? 0);
-  const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
+  const maybeCount = Number.parseInt(values[countId] ?? 1);
+  const count = Number.isNaN(maybeCount) ? 1 : maybeCount;
 
   if (state === 'edit') {
     return (
-      <MultiFieldField question={q} name={countId} required={required} defaultValue={count}>
+      <MultiFieldField
+        question={q}
+        name={countId}
+        required={required}
+        defaultValue={count}
+        description={description}
+      >
         {children}
       </MultiFieldField>
     );
@@ -77,6 +91,7 @@ function MultiFieldField({
   required,
   children,
   defaultValue,
+  description,
 }: FieldProps & { children: (id: number) => ReactNode; defaultValue: number }) {
   const { watch, errors, register } = useFormContext();
   const maybeCount = Number.parseInt(watch(name, defaultValue));
@@ -85,7 +100,9 @@ function MultiFieldField({
   return (
     <div className="space-y-6">
       <div>
-        <Question required={required}>{question}</Question>
+        <Question number required={required}>
+          {question}
+        </Question>
         <ShortTextInput
           defaultValue={defaultValue}
           name={name}
@@ -94,13 +111,14 @@ function MultiFieldField({
             required,
             validate: val => {
               const n = Number.parseInt(val);
-              if (Number.isNaN(n) || n < 0 || n > 50) {
-                return 'Enter a valid whole number betweeen 0 and 50';
+              if (Number.isNaN(n) || n <= 0 || n > 50) {
+                return 'Enter a valid whole number betweeen 1 and 50';
               }
               return true;
             },
           })}
         />
+        <Description>Enter a number between 1 and 50</Description>
       </div>
       {count > 0 ? (
         <div>
@@ -115,6 +133,7 @@ function MultiFieldField({
                 </div>
               ))}
           </div>
+          <Description>{description}</Description>
         </div>
       ) : null}
     </div>
