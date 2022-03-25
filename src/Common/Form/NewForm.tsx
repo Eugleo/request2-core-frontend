@@ -113,6 +113,21 @@ export function Section({ title, children }: { title: string; children: ReactNod
     );
   }
 
+  if (state === 'print') {
+    return (
+      <div className="flex flex-row gap-2">
+        <div className="w-4">
+          <p style={{ writingMode: 'sideways-lr' }} className="text-xs text-gray-500">
+            {title}
+          </p>
+        </div>
+        <div className="rounded-lg border border-gray-300 flex-grow">
+          <div className="p-4 space-y-2">{children}</div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <Card>
       <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50 rounded-t-lg z-10">
@@ -133,5 +148,9 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
 }
 
 export function Form({ children }: { children: ReactNode }): JSX.Element {
+  const fieldContext = useFieldContext();
+  if (fieldContext.state === 'print') {
+    return <div className="space-y-3">{children}</div>;
+  }
   return <>{children}</>;
 }

@@ -1,8 +1,9 @@
 import c from 'classnames';
 import moment from 'moment';
-import React, { useMemo } from 'react';
-import { Box, Calendar, Edit3, Package } from 'react-feather';
+import React, { useMemo, useRef } from 'react';
+import { Box, Calendar, Edit3, Package, Printer } from 'react-feather';
 import { useParams } from 'react-router-dom';
+import { useReactToPrint } from 'react-to-print';
 
 import * as Button from '../Common/Buttons';
 import { FieldContext } from '../Common/Form/Question';
@@ -31,6 +32,11 @@ function RequestComponent({ requestId }: { requestId: number }) {
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
   const { Loader } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
 
+  const printRef = useRef(null);
+  const handlePrint = useReactToPrint({
+    content: () => printRef.current,
+  });
+
   return (
     <Page.ContentWrapper>
       <div className="py-8 space-y-2">
@@ -48,7 +54,19 @@ function RequestComponent({ requestId }: { requestId: number }) {
             </RequestLoader>
           </h2>
           <Page.Spacer />
-          <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
+          <div className="flex flex-row items-stretch gap-3">
+            <Button.Secondary
+              onClick={
+                handlePrint ||
+                (() => {
+                  console.log('Error');
+                })
+              }
+            >
+              <Printer className="h-4" />
+            </Button.Secondary>
+            <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
+          </div>
         </div>
         <RequestLoader>
           {request => (
@@ -62,18 +80,51 @@ function RequestComponent({ requestId }: { requestId: number }) {
           )}
         </RequestLoader>
       </div>
-
       <Page.Body>
         <div className="grid grid-cols-3 gap-6">
-          <div className="col-span-2 space-y-6">
-            <RequestLoader>
-              {({ requestType }) => (
-                <Loader>
-                  {properties => <Details requestType={requestType} properties={properties} />}
-                </Loader>
-              )}
-            </RequestLoader>
-          </div>
+          <RequestLoader>
+            {request => (
+              <Loader>
+                {properties => (
+                  <>
+                    <div className="hidden">
+                      <div ref={printRef}>
+                        <div className="mb-6 pb-4 border-b border-gray-300 space-y-3">
+                          <div className="flex flex-row gap-3 items-center">
+                            <div className="font-mono rounded-lg border border-gray-300 py-1 px-3">
+                              {idToStr(request).type}/{idToStr(request).code}
+                            </div>
+                            <h1 className="font-bold text-lg">{request.title}</h1>
+                          </div>
+                          <div className="flex flex-row items-center">
+                            <p className="text-xs text-gray-500">
+                              Created {moment.unix(request.dateCreated).fromNow()} by{' '}
+                              <LinkToProfile
+                                userId={request.authorId}
+                                className="text-gray-700 font-medium"
+                              />
+                            </p>
+                          </div>
+                        </div>
+                        <PrintableRequest
+                          requestType={request.requestType}
+                          properties={properties}
+                        />
+                        <style>{`
+                        @page {
+                          margin: 24mm 16mm 24mm 16mm;
+                        }
+                        `}</style>
+                      </div>
+                    </div>
+                    <div className="col-span-2 space-y-6">
+                      <Details requestType={request.requestType} properties={properties} />
+                    </div>
+                  </>
+                )}
+              </Loader>
+            )}
+          </RequestLoader>
 
           <div className="space-y-6 col-span-1">
             <RequestResults requestId={requestId} />
@@ -84,6 +135,22 @@ function RequestComponent({ requestId }: { requestId: number }) {
         </div>
       </Page.Body>
     </Page.ContentWrapper>
+  );
+}
+
+function PrintableRequest({
+  requestType,
+  properties,
+}: {
+  requestType: string;
+  properties: PropertyJSON[];
+}) {
+  const props = useMemo(() => getDefaultValues(properties), [properties]);
+
+  return (
+    <FieldContext.Provider value={{ state: 'print', values: props }}>
+      {requests.get(requestType)?.formComponent}
+    </FieldContext.Provider>
   );
 }
 

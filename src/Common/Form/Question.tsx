@@ -5,7 +5,7 @@ import ReactTooltip from 'react-tooltip';
 
 import { Maybe } from '../../Utils/Maybe';
 
-export type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' };
+export type FieldContext = { values: Record<string, string>; state: 'show' | 'edit' | 'print' };
 export const FieldContext = createContext<FieldContext>({ values: {}, state: 'show' });
 
 export type FieldProps = {

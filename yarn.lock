@@ -10678,6 +10678,13 @@ react-select@^3.1.0:
     react-input-autosize "^3.0.0"
     react-transition-group "^4.3.0"
 
+react-to-print@^2.13.0:
+  version "2.13.0"
+  resolved "https://registry.npmjs.org/react-to-print/-/react-to-print-2.13.0.tgz#f2422a5665e08a9186eb9f7a2fad6ad1efd9f3a0"
+  integrity sha512-JMX+HrMtBXWDh2ohPT2IeBkaGY4QpFeloXTXBA7hBK7dXJQei/UXMvQqbZHb0rqJwzAHltZ2zXevuSK/ReKI5w==
+  dependencies:
+    prop-types "^15.7.2"
+
 react-tooltip@^4.2.6:
   version "4.2.13"
   resolved "https://registry.npmjs.org/react-tooltip/-/react-tooltip-4.2.13.tgz#908db8a41dc10ae2ae9cc1864746cde939aaab0f"

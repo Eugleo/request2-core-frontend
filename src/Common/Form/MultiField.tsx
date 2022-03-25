@@ -26,6 +26,30 @@ export function MultiField({
     );
   }
 
+  if (state === 'print') {
+    const fields = Array.from({ length: count })
+      .fill(null)
+      .map((_, i) => i)
+      .map(children);
+
+    return (
+      <div className="space-y-2 rounded-lg">
+        <Question required={required}>Details about each sample</Question>
+        <div className="flex flex-row gap-2">
+          {fields.length > 0 ? (
+            fields.map((f, ix) => (
+              <div key={ix} className="rounded-lg border border-gray-300 py-2 px-2">
+                {f}
+              </div>
+            ))
+          ) : (
+            <p className="text-gray-400 text-sm">[no values have been entered]</p>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   const fields = Array.from({ length: count })
     .fill(null)
     .map((_, i) => i)
