@@ -22,7 +22,7 @@ export function MultiField({
   const required = !optional && errorMsg;
 
   const { state, values } = useFieldContext();
-  const countId = `${id} Count`;
+  const countId = `${id}`;
   const maybeCount = Number.parseInt(values[countId] ?? 1);
   const count = Number.isNaN(maybeCount) ? 1 : maybeCount;
 

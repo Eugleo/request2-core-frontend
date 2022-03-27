@@ -1,6 +1,6 @@
 import c from 'classnames';
 import moment from 'moment';
-import React, { useMemo, useRef } from 'react';
+import React, { ReactNode, useMemo, useRef } from 'react';
 import { Box, Calendar, Edit3, Package, Printer } from 'react-feather';
 import { useParams } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
@@ -10,7 +10,7 @@ import { FieldContext } from '../Common/Form/Question';
 import { useHover } from '../Common/Hooks';
 import * as Page from '../Common/Layout';
 import { Pill } from '../Common/Pills';
-import { User, UserName } from '../User/User';
+import { User, UserDetails, UserName } from '../User/User';
 import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
@@ -106,10 +106,16 @@ function RequestComponent({ requestId }: { requestId: number }) {
                             </p>
                           </div>
                         </div>
+
                         <PrintableRequest
                           requestType={request.requestType}
                           properties={properties}
                         />
+
+                        <PageBreak />
+
+                        <SampleCodes request={request} properties={properties} />
+
                         <style>{`
                         @page {
                           margin: 24mm 16mm 24mm 16mm;
@@ -118,7 +124,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
                       </div>
                     </div>
                     <div className="col-span-2 space-y-6">
-                      <PrintableRequest requestType={request.requestType} properties={properties} />
+                      <Details requestType={request.requestType} properties={properties} />
                     </div>
                   </>
                 )}
@@ -151,6 +157,62 @@ function PrintableRequest({
     <FieldContext.Provider value={{ state: 'print', values: props }}>
       {requests.get(requestType)?.formComponent}
     </FieldContext.Provider>
+  );
+}
+
+function SampleCodes({
+  request,
+  properties,
+}: {
+  request: WithID<Request>;
+  properties: PropertyJSON[];
+}) {
+  const { Loader } = useAsyncGet<UserDetails>(`/users/${request.authorId}/profile`);
+
+  const props = useMemo(() => getDefaultValues(properties), [properties]);
+  console.log(props);
+  const count = Number.parseInt(props['sample count']);
+
+  return (
+    <div>
+      <p className="text-sm text-gray-800 text-center mb-4 max-w-md mx-auto">
+        Cut out each sample code strip along the dashed lines and glue it onto the vial with the
+        respective sample.
+      </p>
+      <div className="divide-y-2 divide-dashed border-t-2 border-b-2 border-dashed">
+        <Loader>
+          {user => (
+            <>
+              {Array.from({ length: count })
+                .fill(0)
+                .map((_, i) => (
+                  <SampleCode key={i} request={request} sampleNumber={i} authorName={user.name} />
+                ))}
+            </>
+          )}
+        </Loader>
+      </div>
+    </div>
+  );
+}
+
+function SampleCode({
+  request,
+  sampleNumber,
+  authorName,
+}: {
+  request: WithID<Request>;
+  sampleNumber: number;
+  authorName: string;
+}) {
+  return (
+    <div className="py-2 px-4 font-mono">
+      ({authorName}) <span className="font-bold">{idToStr(request).type}</span>
+      <span className="text-gray-400">/</span>
+      <span className="font-bold">{idToStr(request).code}</span>
+      <span className="text-gray-400">/</span>
+      <span className="font-bold">{sampleNumber + 1}</span>
+    </div>
   );
 }
 
