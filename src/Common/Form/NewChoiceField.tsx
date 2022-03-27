@@ -19,6 +19,7 @@ import {
   useFieldContext,
   InputProps,
   FormErrors,
+  Answer,
 } from './Question';
 
 type Choice = ReactElement<
@@ -64,14 +65,13 @@ export function MultipleChoice({
     if (defaultValue.length === 0) {
       selections = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
     } else {
-      selections = defaultValue.map(v => (
-        <span
-          key={v.value}
-          className="text-sm text-gray-800 px-3 py-1 rounded-full border border-gray-300"
-        >
-          {v.label}
-        </span>
-      ));
+      selections = defaultValue
+        .map(v => (
+          <span key={v.value} className="text-sm text-gray-800">
+            {v.label}
+          </span>
+        ))
+        .intersperse(() => <span className="text-gray-400">, </span>);
     }
 
     return (
@@ -79,7 +79,9 @@ export function MultipleChoice({
         <Question required={required} showIcons={false}>
           {q}
         </Question>
-        <div className="flex flex-wrap gap-2">{selections}</div>
+        <Answer>
+          <p>{selections}</p>
+        </Answer>
       </div>
     );
   }
@@ -88,14 +90,13 @@ export function MultipleChoice({
   if (defaultValue.length === 0) {
     selections = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
   } else {
-    selections = defaultValue.map(v => (
-      <span
-        key={v.value}
-        className="text-sm text-gray-800 px-3 py-1 rounded-full bg-gray-50 border border-gray-100"
-      >
-        {v.label}
-      </span>
-    ));
+    selections = defaultValue
+      .map(v => (
+        <span key={v.value} className="text-sm text-gray-800">
+          {v.label}
+        </span>
+      ))
+      .intersperse(() => <span className="text-gray-400">, </span>);
   }
 
   return (
@@ -103,7 +104,9 @@ export function MultipleChoice({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      <div className="flex flex-wrap gap-2">{selections}</div>
+      <Answer>
+        <p>{selections}</p>
+      </Answer>
     </div>
   );
 }
@@ -312,7 +315,7 @@ export function SingleChoice({
         <Question required={required} showIcons={false}>
           {q}
         </Question>
-        {label}
+        <Answer>{label}</Answer>
         {getVisibleChildren(choice?.props.value, choices, true)}
       </div>
     );
@@ -341,7 +344,7 @@ export function SingleChoice({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      {label}
+      <Answer>{label}</Answer>
       {getVisibleChildren(choice?.props.value, choices)}
     </div>
   );
@@ -627,21 +630,14 @@ function getVisibleChildren(
       })
       .filter(ch => ch.props.children)
       .map(ch => (
-        <div className={c(isPrint ? 'space-y-3' : 'space-y-6')} key={ch.props.value}>
+        <div className={c(isPrint ? 'space-y-3' : 'space-y-4')} key={ch.props.value}>
           {ch.props.children}
         </div>
       ));
   }
 
   return showChildren && showChildren.length > 0 ? (
-    <div
-      className={c(
-        isPrint ? 'mt-3 space-y-3' : 'mt-6 space-y-6',
-        'pl-4 border-l-4 border-gray-300'
-      )}
-    >
-      {showChildren}
-    </div>
+    <div className={c(isPrint ? 'mt-3 space-y-3' : 'mt-4 space-y-4')}>{showChildren}</div>
   ) : null;
 }
 

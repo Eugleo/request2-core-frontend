@@ -11,6 +11,7 @@ import {
   FieldProps,
   InputProps,
   Description,
+  Answer,
 } from './Question';
 
 export function ShortText({
@@ -40,11 +41,13 @@ export function ShortText({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      {values[id] && values[id].length > 0 ? (
-        <p className="text-sm text-gray-800">{values[id]}</p>
-      ) : (
-        <p className="text-sm text-gray-400">[no value given]</p>
-      )}
+      <Answer>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-sm text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-sm text-gray-400">[no value given]</p>
+        )}
+      </Answer>
     </div>
   );
 }
@@ -128,11 +131,13 @@ export function LongText({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      {values[id] && values[id].length > 0 ? (
-        <p className="text-sm text-gray-800">{values[id]}</p>
-      ) : (
-        <p className="text-sm text-gray-400">[no value given]</p>
-      )}
+      <Answer>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-sm text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-sm text-gray-400">[no value given]</p>
+        )}
+      </Answer>
     </div>
   );
 }
@@ -206,11 +211,13 @@ export function Number({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      {values[id] && values[id].length > 0 ? (
-        <p className="text-sm text-gray-800">{values[id]}</p>
-      ) : (
-        <p className="text-sm text-gray-400">[no value given]</p>
-      )}
+      <Answer>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-sm text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-sm text-gray-400">[no value given]</p>
+        )}
+      </Answer>
     </div>
   );
 }

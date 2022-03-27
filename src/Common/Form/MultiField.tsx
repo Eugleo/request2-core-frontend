@@ -52,7 +52,7 @@ export function MultiField({
         <div className="flex flex-col gap-y-4">
           {fields.length > 0 ? (
             fields.map((f, ix) => (
-              <div className="border-l-4 border-gray-300 pl-4" key={ix}>
+              <div className="border-l-2 border-gray-200 pl-4" key={ix}>
                 {f}
               </div>
             ))
@@ -98,7 +98,7 @@ function MultiFieldField({
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-2">
       <div>
         <Question number required={required}>
           {question}

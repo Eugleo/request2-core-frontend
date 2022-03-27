@@ -127,14 +127,10 @@ export function Section({ title, children }: { title: string; children: ReactNod
 
   if (state === 'print') {
     return (
-      <div className="flex flex-row gap-2">
-        <div className="w-4">
-          <p style={{ writingMode: 'sideways-lr' }} className="text-xs text-gray-500">
-            {title}
-          </p>
-        </div>
+      <div className="flex flex-col gap-2">
+        <p className="text-xs text-gray-500">{title}</p>
         <div className="rounded-lg border border-gray-300 flex-grow">
-          <div className="p-4 space-y-4">{children}</div>
+          <div className="px-6 py-4 space-y-4">{children}</div>
         </div>
       </div>
     );
@@ -145,7 +141,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
       <h2 className="text-gray-600 text-sm sticky top-0 px-6 py-4 border-b border-gray-100 bg-gray-50 rounded-t-lg z-10">
         {title}
       </h2>
-      <div className="px-6 pb-6 pt-4 space-y-6">{children}</div>
+      <div className="px-6 py-4 space-y-4">{children}</div>
     </Card>
   );
 }

@@ -87,16 +87,18 @@ function RequestComponent({ requestId }: { requestId: number }) {
               <Loader>
                 {properties => (
                   <>
-                    <div className="hidden">
+                    <div className="hidden col-span-2">
                       <div ref={printRef}>
-                        <div className="mb-6 pb-4 border-b-2 border-gray-300 space-y-4">
-                          <div className="flex flex-row gap-4 items-center">
-                            <div className="font-mono rounded-lg border border-gray-300 py-1 px-4">
-                              {idToStr(request).type}/{idToStr(request).code}
+                        <div className="mb-6">
+                          <div className="mb-2 px-4 py-6 border rounded-xl border-gray-500 space-y-2">
+                            <div className="flex flex-row gap-4 items-center">
+                              <div className="font-mono rounded-lg border border-gray-300 py-1 px-4">
+                                {idToStr(request).type}/{idToStr(request).code}
+                              </div>
+                              <h1 className="font-bold text-lg align-center">{request.title}</h1>
                             </div>
-                            <h1 className="font-bold text-lg">{request.title}</h1>
                           </div>
-                          <div className="flex flex-row items-center">
+                          <div className="flex flex-row items-center justify-end">
                             <p className="text-xs text-gray-500">
                               Created {moment.unix(request.dateCreated).fromNow()} by{' '}
                               <LinkToProfile
@@ -397,4 +399,8 @@ function LogItem({ property }: { property: PropertyJSON }) {
       </div>
     </div>
   );
+}
+
+function PageBreak(): JSX.Element {
+  return <div className="page-break" />;
 }

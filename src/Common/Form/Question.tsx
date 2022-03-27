@@ -104,6 +104,15 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
 //   return <p className="text-md text-gray-900 font-semibold mb-2 text-sm">{children}</p>;
 // }
 
+export function Answer({ children }: { children: React.ReactNode }): JSX.Element {
+  return (
+    <div className="flex flex-row">
+      <p className="text-gray-300 mr-1">┗━</p>
+      {children}
+    </div>
+  );
+}
+
 export function Question({
   hasCustom = false,
   required = false,
@@ -120,8 +129,8 @@ export function Question({
   showIcons?: boolean;
 }): JSX.Element {
   return (
-    <div className="flex flex-row space-x-2 items-center mb-2 relative">
-      <p className="text-md text-gray-900 font-semibold text-sm">{children}</p>
+    <div className="flex flex-row space-x-2 items-center mb-1 relative">
+      <p className="text-sm font-medium text-gray-800">{children}</p>
 
       {showIcons ? (
         <>

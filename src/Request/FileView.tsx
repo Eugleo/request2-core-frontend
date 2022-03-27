@@ -15,7 +15,7 @@ const PLACEHOLDERS = [
 export function FilesView({ files }: { files: FileInfo[] }): JSX.Element {
   if (files.length > 0) {
     return (
-      <div className="pt-2 grid grid-cols-3 gap-4">
+      <div className="pt-2 grid grid-cols-2 gap-4">
         {files
           .map(f => ({ ...f, isImage: /image\/*/u.test(f.mime) }))
           .sort(comparing(f => f.isImage))
@@ -25,7 +25,7 @@ export function FilesView({ files }: { files: FileInfo[] }): JSX.Element {
                 key={f.hash}
                 className={c(
                   'text-gray-800 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50',
-                  f.isImage && 'col-span-3'
+                  f.isImage && 'col-span-2'
                 )}
               >
                 <a href={`${apiBase}/files/${f.hash}`} className="px-4 py-3 block">
