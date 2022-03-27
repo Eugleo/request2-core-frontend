@@ -68,3 +68,15 @@ body {
 .__react_component_tooltip::after {
   left: 46% !important;
 }
+
+@media print {
+  .page-break {
+    page-break-after: always;
+  }
+
+  img {
+    page-break-before: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
+    page-break-after: auto; /* 'always,' 'avoid,' 'left,' 'inherit,' or 'right' */
+    page-break-inside: avoid; /* or 'auto' */
+  }
+}
