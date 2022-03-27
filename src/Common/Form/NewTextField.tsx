@@ -12,6 +12,7 @@ import {
   InputProps,
   Description,
   Answer,
+  QA,
 } from './Question';
 
 export function ShortText({
@@ -37,7 +38,7 @@ export function ShortText({
     );
   }
   return (
-    <div>
+    <QA>
       <Question required={required} showIcons={false}>
         {q}
       </Question>
@@ -48,7 +49,7 @@ export function ShortText({
           <p className="text-sm text-gray-400">[no value given]</p>
         )}
       </Answer>
-    </div>
+    </QA>
   );
 }
 
@@ -127,7 +128,7 @@ export function LongText({
     );
   }
   return (
-    <div>
+    <QA>
       <Question required={required} showIcons={false}>
         {q}
       </Question>
@@ -138,7 +139,7 @@ export function LongText({
           <p className="text-sm text-gray-400">[no value given]</p>
         )}
       </Answer>
-    </div>
+    </QA>
   );
 }
 
@@ -207,7 +208,7 @@ export function Number({
     );
   }
   return (
-    <div>
+    <QA>
       <Question required={required} showIcons={false}>
         {q}
       </Question>
@@ -218,7 +219,7 @@ export function Number({
           <p className="text-sm text-gray-400">[no value given]</p>
         )}
       </Answer>
-    </div>
+    </QA>
   );
 }
 

@@ -127,8 +127,8 @@ export function Section({ title, children }: { title: string; children: ReactNod
 
   if (state === 'print') {
     return (
-      <div className="flex flex-col gap-2">
-        <p className="text-xs text-gray-500">{title}</p>
+      <div>
+        <p className="text-xs text-gray-500 mb-2">{title}</p>
         <div className="rounded-lg border border-gray-300 flex-grow">
           <div className="px-6 py-4 space-y-4">{children}</div>
         </div>

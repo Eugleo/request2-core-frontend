@@ -20,6 +20,7 @@ import {
   InputProps,
   FormErrors,
   Answer,
+  QA,
 } from './Question';
 
 type Choice = ReactElement<
@@ -75,14 +76,14 @@ export function MultipleChoice({
     }
 
     return (
-      <div>
+      <QA>
         <Question required={required} showIcons={false}>
           {q}
         </Question>
         <Answer>
           <p>{selections}</p>
         </Answer>
-      </div>
+      </QA>
     );
   }
 
@@ -100,14 +101,14 @@ export function MultipleChoice({
   }
 
   return (
-    <div>
+    <QA>
       <Question required={required} showIcons={false}>
         {q}
       </Question>
       <Answer>
         <p>{selections}</p>
       </Answer>
-    </div>
+    </QA>
   );
 }
 
@@ -312,10 +313,12 @@ export function SingleChoice({
 
     return (
       <div>
-        <Question required={required} showIcons={false}>
-          {q}
-        </Question>
-        <Answer>{label}</Answer>
+        <QA>
+          <Question required={required} showIcons={false}>
+            {q}
+          </Question>
+          <Answer>{label}</Answer>
+        </QA>
         {getVisibleChildren(choice?.props.value, choices, true)}
       </div>
     );
@@ -341,10 +344,12 @@ export function SingleChoice({
 
   return (
     <div>
-      <Question required={required} showIcons={false}>
-        {q}
-      </Question>
-      <Answer>{label}</Answer>
+      <QA>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
+        <Answer>{label}</Answer>
+      </QA>
       {getVisibleChildren(choice?.props.value, choices)}
     </div>
   );

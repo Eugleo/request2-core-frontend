@@ -104,6 +104,10 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
 //   return <p className="text-md text-gray-900 font-semibold mb-2 text-sm">{children}</p>;
 // }
 
+export function QA({ children }: { children: React.ReactNode }): JSX.Element {
+  return <div className="print-no-break">{children}</div>;
+}
+
 export function Answer({ children }: { children: React.ReactNode }): JSX.Element {
   return (
     <div className="flex flex-row">
