@@ -1,14 +1,11 @@
+import { url } from 'inspector';
 import { File } from 'react-feather';
 
+import { useAsyncGet } from '../Utils/Api';
 import { apiBase } from '../Utils/ApiBase';
+import { useAuth } from '../Utils/Auth';
 import { FileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
-
-const PLACEHOLDERS = [
-  // 'https://c.tenor.com/x8v1oNUOmg4AAAAd/rickroll-roll.gif',
-  // 'https://c.tenor.com/27-GDSe8tRkAAAAM/zolw-sobie-tanczy.gif',
-  'https://www.tom-archer.com/wp-content/uploads/2018/06/milford-sound-night-fine-art-photography-new-zealand.jpg',
-];
 
 export function FilesView({ files }: { files: FileInfo[] }): JSX.Element {
   if (files.length > 0) {
@@ -46,16 +43,16 @@ function SmallFilePreview({ file }: { file: FileInfo }) {
 }
 
 function BigImagePreview({ file }: { file: FileInfo }) {
+  const { Loader, result } = useAsyncGet<{ url: string }>(`/files/${file.hash}/url`);
+
+  console.log(result);
+
   return (
     <div className="text-gray-800 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 col-span-2">
       <a href={`${apiBase}/files/${file.hash}`} className="p-4 block">
         <p className="text-gray-800 text-sm mb-3">{file.name}</p>
         <div className="flex flex-row justify-center bg-gray-50 overflow-hidden rounded-lg">
-          <img
-            className="block"
-            alt="placeholder"
-            src={PLACEHOLDERS[Math.floor(Math.random() * PLACEHOLDERS.length)]}
-          />
+          <Loader>{data => <img className="block" alt="placeholder" src={data.url} />}</Loader>
         </div>
       </a>
     </div>
