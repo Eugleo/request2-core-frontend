@@ -1,5 +1,3 @@
-import c from 'classnames';
-import React from 'react';
 import { File } from 'react-feather';
 
 import { apiBase } from '../Utils/ApiBase';

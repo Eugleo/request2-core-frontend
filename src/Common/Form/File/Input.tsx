@@ -1,73 +1,16 @@
 /* eslint-disable jsx-a11y/control-has-associated-label */
-import { asUploadButton } from '@rpldy/upload-button';
 import UploadDropZone from '@rpldy/upload-drop-zone';
 import { useItemFinishListener, useItemStartListener } from '@rpldy/uploady';
 import c from 'classnames';
-import React, { forwardRef, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import * as Icon from 'react-feather';
-import { useFormContext } from 'react-hook-form';
 
-import { FilesView } from '../../Request/FileView';
-import { apiBase } from '../../Utils/ApiBase';
-import { useAuth } from '../../Utils/Auth';
-import { FileInfo, stringToFileInfo } from '../../Utils/File';
-import { Maybe } from '../../Utils/Maybe';
-import * as Button from '../Buttons';
-import { useHover } from '../Hooks';
-import { Spacer } from '../Layout';
-import {
-  ErrorMessage,
-  FieldProps,
-  FormErrors,
-  Question,
-  QuestionProps,
-  useFieldContext,
-} from './Question';
-
-export function Files({
-  id,
-  q,
-  optional = false,
-  errorMsg = 'You have to upload at least one file',
-}: QuestionProps): JSX.Element {
-  const required = !optional && errorMsg;
-  const { state, values } = useFieldContext();
-  const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
-
-  if (state === 'edit') {
-    return <FilesField name={id} question={q} required={required} defaultValue={values[id]} />;
-  }
-  return (
-    <div>
-      <Question required={required}>{q}</Question>
-      <FilesView files={files} />
-    </div>
-  );
-}
-
-function FilesField({
-  name,
-  question,
-  required = false,
-  defaultValue,
-}: FieldProps & { defaultValue: string }) {
-  const form = useFormContext();
-
-  const currentValue = form.watch(name, null);
-
-  return (
-    <div>
-      <Question required={required}>{question}</Question>
-      <FileInput
-        name={name}
-        {...form}
-        value={currentValue}
-        required={required}
-        defaultValue={defaultValue}
-      />
-    </div>
-  );
-}
+import { FileInfo, stringToFileInfo } from '../../../Utils/File';
+import { Maybe } from '../../../Utils/Maybe';
+import { useHover } from '../../Hooks';
+import { Spacer } from '../../Layout';
+import { ErrorMessage, FormErrors } from '../Question';
+import { PreviewButton, RemoveButton, UploadButton, UploadButton2 } from './Buttons';
 
 function stringToFiles(s: Maybe<string> | FileInfo[]) {
   switch (s) {
@@ -237,51 +180,5 @@ function FileComponent({
       <Spacer />
       {isHovered ? <SideButton /> : null}
     </div>
-  );
-}
-
-const UploadButton = asUploadButton(
-  forwardRef((props, ref) => (
-    <div ref={ref} {...props} className="cursor-pointer ">
-      <p className="text-sm text-gray-500 hover:text-gray-700">Add more files</p>
-    </div>
-  ))
-);
-
-const UploadButton2 = asUploadButton(
-  forwardRef((props, ref) => (
-    <div ref={ref} {...props}>
-      <Button.Secondary
-        title="Choose files"
-        onClick={() => {
-          console.log('Choosing files');
-        }}
-      />
-    </div>
-  ))
-);
-
-function PreviewButton({ file }: { file: FileInfo }) {
-  return (
-    <a href={`${apiBase}/files/${file.hash}`}>
-      <Icon.Eye className="stroke-2 text-gray-500 w-4 h-4 hover:text-gray-600" />
-    </a>
-  );
-}
-
-function RemoveButton({ file, onRemove }: { file: FileInfo; onRemove: (file: FileInfo) => void }) {
-  const { authDel } = useAuth<FileInfo>();
-  return (
-    <button
-      type="button"
-      onClick={async () => {
-        const r = await authDel(`/files/${file.hash}`, file);
-        if (r.ok) {
-          onRemove(file);
-        }
-      }}
-    >
-      <Icon.X className="stroke-2 text-red-800 w-4 h-4 hover:text-red-500" />
-    </button>
   );
 }
