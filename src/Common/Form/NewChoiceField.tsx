@@ -72,7 +72,11 @@ export function MultipleChoice({
             {v.label}
           </span>
         ))
-        .intersperse(() => <span className="text-gray-400">, </span>);
+        .intersperse(i => (
+          <span key={i} className="text-gray-400">
+            ,{' '}
+          </span>
+        ));
     }
 
     return (
@@ -97,7 +101,11 @@ export function MultipleChoice({
           {v.label}
         </span>
       ))
-      .intersperse(() => <span className="text-gray-400">, </span>);
+      .intersperse(i => (
+        <span key={i} className="text-gray-400">
+          ,{' '}
+        </span>
+      ));
   }
 
   return (
