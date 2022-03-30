@@ -4,6 +4,7 @@ import React, { ReactNode, useMemo, useRef } from 'react';
 import { Box, Calendar, Edit3, Package, Printer } from 'react-feather';
 import { useParams } from 'react-router-dom';
 import { useReactToPrint } from 'react-to-print';
+import ReactTooltip from 'react-tooltip';
 
 import * as Button from '../Common/Buttons';
 import { FieldContext } from '../Common/Form/Question';
@@ -15,11 +16,12 @@ import { LinkToProfile } from '../User/UserProfile';
 import { useAsyncGet } from '../Utils/Api';
 import { useAuth } from '../Utils/Auth';
 import { comparing } from '../Utils/Func';
+import { Result } from '../Utils/Loader';
 import { WithID } from '../Utils/WithID';
 import { getDefaultValues } from './FieldValue';
 import { idToStr, PropertyJSON, Request } from './Request';
 import { RequestComments } from './RequestComments';
-import { RequestResults } from './RequestResults';
+import { doesHaveResults, RequestResults } from './RequestResults';
 import { requests } from './RequestTypes/RequestTypes';
 import { getStatusColor, Status, statusToStr } from './Status';
 
@@ -30,7 +32,7 @@ export function RequestPage(): JSX.Element {
 
 function RequestComponent({ requestId }: { requestId: number }) {
   const { Loader: RequestLoader } = useAsyncGet<WithID<Request>>(`/requests/${requestId}`);
-  const { Loader } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
+  const { Loader, result } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
 
   const printRef = useRef(null);
   const handlePrint = useReactToPrint({
@@ -65,7 +67,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
             >
               <Printer className="h-4" />
             </Button.Secondary>
-            <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />
+            <EditButton requestId={requestId} properties={result} />
           </div>
         </div>
         <RequestLoader>
@@ -162,6 +164,51 @@ function PrintableRequest({
   );
 }
 
+function EditButton({
+  requestId,
+  properties,
+}: {
+  requestId: number;
+  properties: Result<WithID<PropertyJSON>[]>;
+}) {
+  if (properties.status !== 'Success' || doesHaveResults(getDefaultValues(properties.data))) {
+    return (
+      <>
+        <button
+          disabled
+          className={c(
+            'px-4',
+            'py-2',
+            'inline-flex',
+            'items-center',
+            'text-sm',
+            'focus:outline-none',
+            'font-medium',
+            'justify-center',
+            'rounded-lg',
+            'bg-white',
+            'border-gray-200',
+            'border',
+            'text-gray-300',
+            'cursor-default'
+          )}
+          data-tip="This request cannot be edited anymore."
+        >
+          Edit
+        </button>
+        <ReactTooltip
+          type="light"
+          effect="solid"
+          backgroundColor="rgba(243, 244, 246, 1)"
+          className="white-tooltip"
+        />
+      </>
+    );
+  }
+
+  return <Button.SecondaryLinked to={`/requests/${requestId}/edit`} title="Edit" />;
+}
+
 function SampleCodes({
   request,
   properties,
@@ -172,7 +219,6 @@ function SampleCodes({
   const { Loader } = useAsyncGet<UserDetails>(`/users/${request.authorId}/profile`);
 
   const props = useMemo(() => getDefaultValues(properties), [properties]);
-  console.log(props);
   const count = Number.parseInt(props['sample count']);
 
   return (
