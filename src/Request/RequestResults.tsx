@@ -1,10 +1,9 @@
 import Uploady from '@rpldy/uploady';
-import c from 'classnames';
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 
 import * as Button from '../Common/Buttons';
-import { Files } from '../Common/Form/NewFile';
+import { Files } from '../Common/Form/File/Field';
 import { Form, SubmitFunction } from '../Common/Form/NewForm';
 import { LongText, ShortText } from '../Common/Form/NewTextField';
 import { FieldContext } from '../Common/Form/Question';
@@ -26,6 +25,10 @@ function getTotalTime(human: string, machine: string) {
   return numFromString(human) + numFromString(machine);
 }
 
+export function doesHaveResults(properties: Record<string, string>): boolean {
+  return properties['Human Time'] !== undefined;
+}
+
 export function RequestResults({ requestId }: { requestId: number }): JSX.Element {
   const { result, refresh } = useAsyncGet<WithID<PropertyJSON>[]>(`/requests/${requestId}/props`);
   const results = result.status === 'Success' ? getDefaultValues(result.data) : {};
@@ -33,11 +36,23 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
   const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const [state, setState] = useState<'show' | 'edit'>('show');
 
+  console.log(
+    result.status === 'Success' ? result.data.filter(p => /[fF]ile/u.test(p.name)) : result
+  );
+  console.log('-----------');
+  console.log(results['Result Files']);
+  console.log(results['Result Description']);
+  console.log(results['Human Time']);
+  console.log(results['Machine Time']);
+  console.log('---------------------------');
+
   if (state === 'edit') {
     const totalTime = getTotalTime(
       form.watch('Human Time') ?? results['Human Time'],
       form.watch('Machine Time') ?? results['Machine Time']
     );
+    console.log(`${apiBase}/files`);
+
     return (
       <Uploady destination={{ url: `${apiBase}/files` }}>
         <FormProvider {...form}>
@@ -95,7 +110,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
         <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center justify-between">
           <h2 className="text-lg font-semibold">Results</h2>
           <Authorized roles={['Admin', 'Operator']}>
-            {results['Human Time'] ? (
+            {doesHaveResults(results) ? (
               <button
                 onClick={() => {
                   setState('edit');
@@ -116,7 +131,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
             )}
           </Authorized>
         </div>
-        {results['Human Time'] ? (
+        {doesHaveResults(results) ? (
           <form>
             <div className="p-6 space-y-6">
               <Files q="Result files" id="Result Files" />

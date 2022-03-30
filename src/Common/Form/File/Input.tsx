@@ -44,7 +44,6 @@ export function FileInput({
   unregister: Function;
   name: string;
   required?: string | boolean;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
 }): JSX.Element {
   const [inProgress, setInProgress] = useState<number>(0);
   const [removableFiles, setRemovableFiles] = useState<Set<string>>(new Set());
@@ -112,7 +111,7 @@ export function FileInput({
             {currentValue.length > 0 ? (
               currentValue.map(f => (
                 <FileComponent
-                  editable={removableFiles.has(f.hash)}
+                  removeOnServer={removableFiles.has(f.hash)}
                   onRemove={removeFile}
                   file={f}
                   key={f.hash}
@@ -146,20 +145,21 @@ export function FileInput({
 
 function FileComponent({
   file,
+  removeOnServer,
   onRemove,
-  editable,
 }: {
   file: FileInfo;
+  removeOnServer: boolean;
   onRemove: (file: FileInfo) => void;
-  editable: boolean;
 }) {
   const [hoverRef, isHovered] = useHover<HTMLDivElement>();
 
   function SideButton() {
-    return editable ? (
-      <RemoveButton file={file} onRemove={onRemove} />
-    ) : (
-      <PreviewButton file={file} />
+    return (
+      <div className="flex flex-row gap-2">
+        <PreviewButton file={file} />
+        <RemoveButton file={file} onRemove={onRemove} removeOnServer={removeOnServer} />
+      </div>
     );
   }
 
@@ -168,15 +168,8 @@ function FileComponent({
       ref={hoverRef}
       className="rounded-sm text-sm px-2 py-1 flex flex-row items-center hover:bg-gray-100"
     >
-      <Icon.File className={c('h-3 w-3 mr-2', editable ? 'text-gray-700' : 'text-gray-500')} />
-      <p
-        className={c(
-          'whitespace-nowrap overflow-hidden',
-          editable ? 'text-gray-900' : 'text-gray-600'
-        )}
-      >
-        {file.name}
-      </p>
+      <Icon.File className={c('h-3 w-3 mr-2', 'text-gray-700')} />
+      <p className={c('whitespace-nowrap overflow-hidden', 'text-gray-900')}>{file.name}</p>
       <Spacer />
       {isHovered ? <SideButton /> : null}
     </div>

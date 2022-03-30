@@ -1,13 +1,13 @@
-import { url } from 'inspector';
 import { File } from 'react-feather';
 
 import { useAsyncGet } from '../Utils/Api';
 import { apiBase } from '../Utils/ApiBase';
-import { useAuth } from '../Utils/Auth';
 import { FileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
 
 export function FilesView({ files }: { files: FileInfo[] }): JSX.Element {
+  console.log(files);
+
   if (files.length > 0) {
     return (
       <div className="pt-2 grid grid-cols-2 gap-4">
@@ -43,9 +43,7 @@ function SmallFilePreview({ file }: { file: FileInfo }) {
 }
 
 function BigImagePreview({ file }: { file: FileInfo }) {
-  const { Loader, result } = useAsyncGet<{ url: string }>(`/files/${file.hash}/url`);
-
-  console.log(result);
+  const { Loader } = useAsyncGet<{ url: string }>(`/files/${file.hash}/url`);
 
   return (
     <div className="text-gray-800 rounded-lg border border-gray-300 shadow-sm hover:bg-gray-50 col-span-2">

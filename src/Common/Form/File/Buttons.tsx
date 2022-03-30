@@ -39,8 +39,10 @@ export function PreviewButton({ file }: { file: FileInfo }): JSX.Element {
 export function RemoveButton({
   file,
   onRemove,
+  removeOnServer,
 }: {
   file: FileInfo;
+  removeOnServer: boolean;
   onRemove: (file: FileInfo) => void;
 }): JSX.Element {
   const { authDel } = useAuth<FileInfo>();
@@ -48,8 +50,12 @@ export function RemoveButton({
     <button
       type="button"
       onClick={async () => {
-        const r = await authDel(`/files/${file.hash}`, file);
-        if (r.ok) {
+        if (removeOnServer) {
+          const r = await authDel(`/files/${file.hash}`, file);
+          if (r.ok) {
+            onRemove(file);
+          }
+        } else {
           onRemove(file);
         }
       }}
