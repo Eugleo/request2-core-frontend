@@ -20,6 +20,15 @@ export function Files({
     return <FilesField name={id} question={q} required={required} defaultValue={values[id]} />;
   }
 
+  if (state === 'print') {
+    return (
+      <div>
+        <Question required={required}>{q}</Question>
+        <FilesView wide={false} files={files} />
+      </div>
+    );
+  }
+
   return (
     <div>
       <Question required={required}>{q}</Question>
