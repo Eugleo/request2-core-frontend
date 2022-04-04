@@ -81,7 +81,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
                 })}
               >
                 <div className="p-6 space-y-6">
-                  <Files q="Result files" id="result/files" optional />
+                  <Files q="Result files" id="result/files" optional wide={false} />
                   <LongText q="Result description" id="result/description" />
                   <div>
                     <div className="flex flex-row space-x-6 mb-3">
@@ -142,7 +142,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
         {doesHaveResults(results) ? (
           <form>
             <div className="p-6 space-y-6">
-              <Files q="Result files" id="result/files" />
+              <Files q="Result files" id="result/files" wide={false} />
               <LongText q="Result description" id="result/description" />
               <div>
                 <div className="grid grid-cols-2 gap-6 mb-2">

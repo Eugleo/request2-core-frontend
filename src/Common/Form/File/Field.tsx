@@ -9,8 +9,9 @@ export function Files({
   id,
   q,
   optional = false,
+  wide = true,
   errorMsg = 'You have to upload at least one file',
-}: QuestionProps): JSX.Element {
+}: QuestionProps & { wide?: boolean }): JSX.Element {
   const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
   const files = values[id] ? values[id].split(';;;').map(stringToFileInfo) : [];
@@ -18,10 +19,11 @@ export function Files({
   if (state === 'edit') {
     return <FilesField name={id} question={q} required={required} defaultValue={values[id]} />;
   }
+
   return (
     <div>
       <Question required={required}>{q}</Question>
-      <FilesView files={files} />
+      <FilesView wide={wide} files={files} />
     </div>
   );
 }
