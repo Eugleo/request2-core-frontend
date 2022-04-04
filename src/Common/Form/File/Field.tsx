@@ -23,7 +23,9 @@ export function Files({
   if (state === 'print') {
     return (
       <div>
-        <Question required={required}>{q}</Question>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
         <FilesView wide={false} files={files} />
       </div>
     );
@@ -31,7 +33,9 @@ export function Files({
 
   return (
     <div>
-      <Question required={required}>{q}</Question>
+      <Question required={required} showIcons={false}>
+        {q}
+      </Question>
       <FilesView wide={wide} files={files} />
     </div>
   );
