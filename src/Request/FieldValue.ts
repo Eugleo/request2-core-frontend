@@ -1,6 +1,4 @@
-import { useMemo } from 'react';
-
-import { FileInfo, fileInfoToString, stringToFileInfo } from '../Utils/File';
+import { FileInfo, fileInfoToString } from '../Utils/File';
 import { comparing } from '../Utils/Func';
 import { New, Property, PropertyJSON, Selection } from './Request';
 
@@ -22,11 +20,11 @@ export function fieldToProperty(
     }
 
     if ('mime' in value[0]) {
+      // The field contains file
       return [
         ...acc,
-        ...(value as FileInfo[]).map((f, i) => ({
-          // TODO This is fragile, add propertyType to the table
-          name: `${name} (${i})`,
+        ...(value as FileInfo[]).map(f => ({
+          name: `${name}/${f.hash}`,
           value: fileInfoToString(f),
         })),
       ];
@@ -44,9 +42,10 @@ function groupFiles(props: PropertyJSON[]): PropertyJSON[] {
   const properties = props
     .filter(p => p.active)
     .sort(comparing(p => p.name))
-    // TODO This is fragile, add propertyType to the table
     .map(p => {
-      const m = /^(.*) \(\d+\)$/u.exec(p.name);
+      // WARNING: This is a hack to make sure that the file properties are grouped together
+      // For this to keep working, file fields should always include the file hash in their name
+      const m = /^(.*)\/.{32}$/u.exec(p.name);
       const name = m ? m[1] : p.name;
       return { ...p, name };
     })

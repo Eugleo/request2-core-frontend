@@ -26,7 +26,8 @@ function getTotalTime(human: string, machine: string) {
 }
 
 export function doesHaveResults(properties: Record<string, string>): boolean {
-  return properties['Human Time'] !== undefined;
+  // WARNING This should be updated if human time is no linger required for results
+  return properties['result/human time'] !== undefined;
 }
 
 export function RequestResults({ requestId }: { requestId: number }): JSX.Element {
@@ -36,21 +37,28 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
   const { authPut } = useAuth<{ properties: New<Property>[] }>();
   const [state, setState] = useState<'show' | 'edit'>('show');
 
+  console.log('SERVER REQUEST RESULT: RESULT FILES');
   console.log(
-    result.status === 'Success' ? result.data.filter(p => /[fF]ile/u.test(p.name)) : result
+    result.status === 'Success' ? result.data.filter(p => p.name.includes('Result Files')) : result
   );
-  console.log('-----------');
-  console.log(results['Result Files']);
-  console.log(results['Result Description']);
-  console.log(results['Human Time']);
-  console.log(results['Machine Time']);
-  console.log('---------------------------');
 
+  console.log('-----------');
+  console.log('FILES');
+  console.log(results['result/files']);
+  console.log('DESCRIPTION');
+  console.log(results['result/description']);
+  console.log('H-TIME');
+  console.log(results['result/human time']);
+  console.log('M-TIME');
+  console.log(results['result/machine time']);
+  console.log('---------------------------');
   if (state === 'edit') {
     const totalTime = getTotalTime(
-      form.watch('Human Time') ?? results['Human Time'],
-      form.watch('Machine Time') ?? results['Machine Time']
+      form.watch('result/human time') ?? results['result/human time'],
+      form.watch('result/machine time') ?? results['result/machine time']
     );
+
+    console.log('UPLOADING TO');
     console.log(`${apiBase}/files`);
 
     return (
@@ -73,12 +81,12 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
                 })}
               >
                 <div className="p-6 space-y-6">
-                  <Files q="Result files" id="Result Files" optional />
-                  <LongText q="Result description" id="Result Description" />
+                  <Files q="Result files" id="result/files" optional />
+                  <LongText q="Result description" id="result/description" />
                   <div>
                     <div className="flex flex-row space-x-6 mb-3">
-                      <ShortText q="Human time" id="Human Time" />
-                      <ShortText q="Machine time" id="Machine Time" />
+                      <ShortText q="Human time" id="result/human time" />
+                      <ShortText q="Machine time" id="result/machine time" />
                     </div>
                     <p className="text-sm text-gray-400">
                       The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}
@@ -102,7 +110,7 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
       </Uploady>
     );
   }
-  const totalTime = getTotalTime(results['Human Time'], results['Machine Time']);
+  const totalTime = getTotalTime(results['result/human time'], results['result/machine time']);
 
   return (
     <FieldContext.Provider value={{ state, values: results }}>
@@ -134,12 +142,12 @@ export function RequestResults({ requestId }: { requestId: number }): JSX.Elemen
         {doesHaveResults(results) ? (
           <form>
             <div className="p-6 space-y-6">
-              <Files q="Result files" id="Result Files" />
-              <LongText q="Result description" id="Result Description" />
+              <Files q="Result files" id="result/files" />
+              <LongText q="Result description" id="result/description" />
               <div>
                 <div className="grid grid-cols-2 gap-6 mb-2">
-                  <ShortText q="Human time" id="Human Time" />
-                  <ShortText q="Machine time" id="Machine Time" />
+                  <ShortText q="Human time" id="result/human time" />
+                  <ShortText q="Machine time" id="result/machine time" />
                 </div>
                 <p className="text-sm text-gray-400">
                   The total time is {totalTime} {totalTime === 1 ? 'minute' : 'minutes'}

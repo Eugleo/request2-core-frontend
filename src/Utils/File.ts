@@ -6,5 +6,9 @@ export function fileInfoToString(f: FileInfo): string {
 
 export function stringToFileInfo(s: string): FileInfo {
   const fields = s.split(':');
-  return { hash: fields[0], mime: fields[1], name: fields[2] };
+  return {
+    hash: fields[0],
+    mime: fields[1],
+    name: fields[2],
+  };
 }

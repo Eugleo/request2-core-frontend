@@ -6,6 +6,7 @@ import { FileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
 
 export function FilesView({ files }: { files: FileInfo[] }): JSX.Element {
+  console.log('FILES IN FILES VIEW');
   console.log(files);
 
   if (files.length > 0) {
