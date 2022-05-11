@@ -128,9 +128,9 @@ export function Section({ title, children }: { title: string; children: ReactNod
   if (state === 'print') {
     return (
       <div>
-        <p className="text-xs text-gray-500 mb-2">{title}</p>
-        <div className="rounded-lg border border-gray-300 flex-grow">
-          <div className="px-6 py-4 space-y-4">{children}</div>
+        <p className="text-xs text-gray-500 mb-1">{title}</p>
+        <div className="border-l-2 pl-2 border-gray-300 flex-grow">
+          <div className="divide-y divide-gray-300">{children}</div>
         </div>
       </div>
     );
@@ -158,7 +158,7 @@ async function onSubmit(data: FormValues, submit: SubmitFunction) {
 export function Form({ children }: { children: ReactNode }): JSX.Element {
   const fieldContext = useFieldContext();
   if (fieldContext.state === 'print') {
-    return <div className="space-y-4">{children}</div>;
+    return <div className="space-y-2">{children}</div>;
   }
   return <>{children}</>;
 }

@@ -37,6 +37,22 @@ export function ShortText({
       />
     );
   }
+
+  if (state === 'print') {
+    return (
+      <QA>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-xs text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-xs text-gray-400">[no value given]</p>
+        )}
+      </QA>
+    );
+  }
+
   return (
     <QA>
       <Question required={required} showIcons={false}>
@@ -127,6 +143,22 @@ export function LongText({
       />
     );
   }
+
+  if (state === 'print') {
+    return (
+      <QA>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-xs text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-xs text-gray-400">[no value given]</p>
+        )}
+      </QA>
+    );
+  }
+
   return (
     <QA>
       <Question required={required} showIcons={false}>
@@ -207,6 +239,22 @@ export function Number({
       <NumberField name={id} question={q} required={required} defaultValue={values[id] ?? null} />
     );
   }
+
+  if (state === 'print') {
+    return (
+      <QA>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
+        {values[id] && values[id].length > 0 ? (
+          <p className="text-xs text-gray-800">{values[id]}</p>
+        ) : (
+          <p className="text-xs text-gray-400">[no value given]</p>
+        )}
+      </QA>
+    );
+  }
+
   return (
     <QA>
       <Question required={required} showIcons={false}>

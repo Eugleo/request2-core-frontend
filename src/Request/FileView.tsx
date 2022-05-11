@@ -6,16 +6,22 @@ import { apiBase } from '../Utils/ApiBase';
 import { FileInfo } from '../Utils/File';
 import { comparing } from '../Utils/Func';
 
-export function FilesView({ files, wide }: { files: FileInfo[]; wide: boolean }): JSX.Element {
+export function FilesView({
+  files,
+  isPrint,
+}: {
+  files: FileInfo[];
+  isPrint: boolean;
+}): JSX.Element {
   if (files.length > 0) {
     return (
-      <div className={c('pt-2 grid gap-4 items-start', wide ? 'grid-cols-4' : 'grid-cols-2')}>
+      <div className={c('pt-2 grid gap-4 items-start', isPrint ? 'grid-cols-4' : 'grid-cols-2')}>
         {files
           .map(f => ({ ...f, isImage: /image\/*/u.test(f.mime) }))
           .sort(comparing(f => f.isImage))
           .map(f =>
             f.isImage ? (
-              <BigImagePreview wide={wide} key={f.hash} file={f} />
+              <BigImagePreview wide={isPrint} key={f.hash} file={f} />
             ) : (
               <SmallFilePreview key={f.hash} file={f} />
             )
@@ -23,7 +29,11 @@ export function FilesView({ files, wide }: { files: FileInfo[]; wide: boolean })
       </div>
     );
   }
-  return <p className="text-sm text-gray-400">[no files have been uploaded]</p>;
+  return (
+    <p className={c(isPrint ? 'text-xs' : 'text-sm', 'text-gray-400')}>
+      [no files have been uploaded]
+    </p>
+  );
 }
 
 function SmallFilePreview({ file }: { file: FileInfo }) {

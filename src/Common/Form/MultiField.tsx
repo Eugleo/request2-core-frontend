@@ -47,17 +47,12 @@ export function MultiField({
       .map(children);
 
     return (
-      <div className="space-y-2 rounded-lg">
-        <Question required={required}>Details about each sample</Question>
-        <div className="flex flex-col gap-y-4">
+      <div className="space-y-1 py-1 grid grid-cols-2 auto-cols-fr gap-4">
+        <div className="flex flex-col gap-y-2">
           {fields.length > 0 ? (
-            fields.map((f, ix) => (
-              <div className="border-l-2 border-gray-200 pl-4" key={ix}>
-                {f}
-              </div>
-            ))
+            fields.map((f, ix) => <div key={ix}>{f}</div>)
           ) : (
-            <p className="text-gray-400 text-sm">[no values have been entered]</p>
+            <p className="text-gray-400 text-xs">[no values have been entered]</p>
           )}
         </div>
       </div>

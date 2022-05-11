@@ -77,6 +77,7 @@ export type QuestionProps = {
   optional?: boolean | string;
   errorMsg?: string;
   description?: string;
+  shouldNotBePrinted?: boolean;
 };
 
 export function Description({ children }: { children: React.ReactNode }): JSX.Element {
@@ -105,7 +106,7 @@ export function ErrorMessage({ error }: { error: Maybe<string> }): JSX.Element |
 // }
 
 export function QA({ children }: { children: React.ReactNode }): JSX.Element {
-  return <div className="print-no-break">{children}</div>;
+  return <div className="print-no-break py-1 grid grid-cols-2 auto-cols-fr gap-4">{children}</div>;
 }
 
 export function Answer({ children }: { children: React.ReactNode }): JSX.Element {
@@ -132,8 +133,18 @@ export function Question({
   number?: boolean;
   showIcons?: boolean;
 }): JSX.Element {
+  const { state } = useFieldContext();
+
+  if (state === 'print') {
+    return (
+      <div className="flex flex-row space-x-2 items-center relative">
+        <p className="text-xs font-medium text-gray-800">{children}</p>
+      </div>
+    );
+  }
+
   return (
-    <div className="flex flex-row space-x-2 items-center mb-1 relative">
+    <div className="flex flex-row space-x-2 items-center relative mb-1">
       <p className="text-sm font-medium text-gray-800">{children}</p>
 
       {showIcons ? (

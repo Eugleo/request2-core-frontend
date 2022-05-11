@@ -91,8 +91,8 @@ function RequestComponent({ requestId }: { requestId: number }) {
                   <>
                     <div className="hidden col-span-2">
                       <div ref={printRef}>
-                        <div className="mb-6">
-                          <div className="mb-2 px-4 py-6 border rounded-xl border-gray-500 space-y-2">
+                        <div className="mb-2">
+                          <div className="mb-1 pb-3 border-b-4 border-gray-500 space-y-2">
                             <div className="flex flex-row gap-4 items-center">
                               <div className="font-mono rounded-lg border border-gray-300 py-1 px-4">
                                 {idToStr(request).type}/{idToStr(request).code}
@@ -266,6 +266,9 @@ function SampleCode({
 
 function Details({ requestType, properties }: { requestType: string; properties: PropertyJSON[] }) {
   const props = useMemo(() => getDefaultValues(properties), [properties]);
+
+  console.log(properties);
+  console.log(props);
 
   return (
     <FieldContext.Provider value={{ state: 'show', values: props }}>
