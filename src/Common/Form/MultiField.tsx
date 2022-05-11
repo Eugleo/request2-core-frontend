@@ -65,14 +65,9 @@ export function MultiField({
     .map(children);
 
   return (
-    <div className="space-y-2 rounded-lg">
-      <Question required={required}>Details about each sample</Question>
+    <div className="space-y-4">
       {fields.length > 0 ? (
-        fields.map((f, ix) => (
-          <div key={ix} className="rounded-lg bg-gray-50 py-3 px-4">
-            {f}
-          </div>
-        ))
+        fields.map((f, ix) => <div key={ix}>{f}</div>)
       ) : (
         <p className="text-gray-400 text-sm">[no values have been entered]</p>
       )}
@@ -93,7 +88,7 @@ function MultiFieldField({
   const count = Number.isNaN(maybeCount) ? 0 : maybeCount;
 
   return (
-    <div className="space-y-2">
+    <div className="space-y-4">
       <div>
         <Question number required={required}>
           {question}
@@ -117,15 +112,12 @@ function MultiFieldField({
       </div>
       {count > 0 ? (
         <div>
-          <Question required={required}>Details about each sample</Question>
-          <div className="space-y-2">
+          <div className="space-y-4">
             {Array.from({ length: Math.min(Math.max(count, 0), 50) })
               .fill(null)
               .map((_, i) => i)
               .map(i => (
-                <div key={i} className="rounded-lg bg-gray-50 py-3 px-4">
-                  {children(i)}
-                </div>
+                <div key={i}>{children(i)}</div>
               ))}
           </div>
           <Description>{description}</Description>

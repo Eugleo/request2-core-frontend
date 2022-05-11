@@ -118,7 +118,7 @@ export function Section({ title, children }: { title: string; children: ReactNod
         </div>
         <div className="col-span-2">
           <Card>
-            <div className="p-6 space-y-6">{children}</div>
+            <div className="p-6 space-y-4">{children}</div>
           </Card>
         </div>
       </div>

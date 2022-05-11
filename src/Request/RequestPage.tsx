@@ -127,7 +127,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
                         `}</style>
                       </div>
                     </div>
-                    <div className="col-span-2 space-y-6">
+                    <div className="col-span-2 space-y-4">
                       <Details requestType={request.requestType} properties={properties} />
                     </div>
                   </>
@@ -136,7 +136,7 @@ function RequestComponent({ requestId }: { requestId: number }) {
             )}
           </RequestLoader>
 
-          <div className="space-y-6 col-span-1">
+          <div className="space-y-4 col-span-1">
             <RequestResults requestId={requestId} />
             <StatusSelect requestId={requestId} />
             <RequestComments requestId={requestId} />
@@ -286,7 +286,7 @@ function StatusSelect({ requestId }: { requestId: number }) {
       <div className="px-6 py-2 border-b border-gray-100 flex flex-row items-center">
         <h2 className="text-lg font-semibold">Status</h2>
       </div>
-      <div className="py-6 space-y-6">
+      <div className="py-6 space-y-4">
         <div className="flex flex-col space-y-6 justify-items-stretch">
           <div>
             <StatusButton
