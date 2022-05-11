@@ -4,6 +4,22 @@ import { New, Property, PropertyJSON, Selection } from './Request';
 
 export type FieldValue = string | number | Selection | Selection[] | FileInfo[] | null;
 
+export function decodeSingleChoice(content: string): Selection {
+  return { value: content, label: content };
+}
+
+export function decodeMultipleChoice(content: string): Selection[] {
+  return content.split(';;;').map(decodeSingleChoice);
+}
+
+export function decodeNumber(content: string): number {
+  return Number.parseFloat(content);
+}
+
+export function decodeText(content: string): string {
+  return content;
+}
+
 export function fieldToProperty(
   acc: New<Property>[],
   [name, value]: [string, FieldValue]

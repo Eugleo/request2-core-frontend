@@ -22,11 +22,11 @@ export function Files({
 
   if (state === 'print') {
     return (
-      <div>
+      <div className="py-1">
         <Question required={required} showIcons={false}>
           {q}
         </Question>
-        <FilesView wide={false} files={files} />
+        <FilesView isPrint={false} files={files} />
       </div>
     );
   }
@@ -36,7 +36,7 @@ export function Files({
       <Question required={required} showIcons={false}>
         {q}
       </Question>
-      <FilesView wide={wide} files={files} />
+      <FilesView isPrint={wide} files={files} />
     </div>
   );
 }

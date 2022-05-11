@@ -37,14 +37,16 @@ export function MultipleChoice({
   hasCustom = false,
   children = [],
   description,
+  shouldNotBePrinted = false,
 }: QuestionProps & Omit<ChoiceProps, 'isText'>): JSX.Element {
   const required = !optional && errorMsg;
   const { state, values } = useFieldContext();
 
   const selection = values[id] ? values[id].split(';;;') : [];
-  const defaultValue = children
-    .filter(ch => selection.includes(ch.props.value))
-    .map(ch => ({ label: ch.props.label ?? ch.props.value, value: ch.props.value }));
+  const defaultValue = selection.map(s => ({
+    label: children.find(ch => ch.props.value === s)?.props.label ?? s,
+    value: s,
+  }));
 
   if (state === 'edit') {
     return (
@@ -62,13 +64,17 @@ export function MultipleChoice({
   }
 
   if (state === 'print') {
+    if (shouldNotBePrinted) {
+      return <></>;
+    }
+
     let selections;
     if (defaultValue.length === 0) {
-      selections = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
+      selections = <p className="text-xs text-gray-400">[neither option has been chosen]</p>;
     } else {
       selections = defaultValue
         .map(v => (
-          <span key={v.value} className="text-sm text-gray-800">
+          <span key={v.value} className="text-xs text-gray-800">
             {v.label}
           </span>
         ))
@@ -80,14 +86,15 @@ export function MultipleChoice({
     }
 
     return (
-      <QA>
-        <Question required={required} showIcons={false}>
-          {q}
-        </Question>
-        <Answer>
+      <div>
+        <QA>
+          <Question required={required} showIcons={false}>
+            {q}
+          </Question>
           <p>{selections}</p>
-        </Answer>
-      </QA>
+        </QA>
+        {getVisibleChildren(defaultValue, children)}
+      </div>
     );
   }
 
@@ -109,14 +116,17 @@ export function MultipleChoice({
   }
 
   return (
-    <QA>
-      <Question required={required} showIcons={false}>
-        {q}
-      </Question>
-      <Answer>
-        <p>{selections}</p>
-      </Answer>
-    </QA>
+    <div>
+      <QA>
+        <Question required={required} showIcons={false}>
+          {q}
+        </Question>
+        <Answer>
+          <p>{selections}</p>
+        </Answer>
+      </QA>
+      {getVisibleChildren(defaultValue, children)}
+    </div>
   );
 }
 
@@ -146,7 +156,7 @@ export function MultipleChoiceField({
         required={required}
         errors={errors}
         control={control}
-        value={watch(name, [])}
+        value={watch(name, defaultValue)}
         defaultValue={defaultValue}
       >
         {children}
@@ -204,6 +214,9 @@ export function MultipleChoiceInput({
     label: ch.props.label ?? ch.props.value,
     value: ch.props.value,
   }));
+
+  console.log('FIELD', name, value);
+
   return (
     <div>
       <Controller
@@ -275,6 +288,7 @@ export function SingleChoice({
   autoFillIn = false,
   children = [],
   keepOptionOrder = false,
+  shouldNotBePrinted = false,
 }: QuestionProps &
   Omit<ChoiceProps, 'children'> & {
     children: Choice | Choice[];
@@ -308,14 +322,22 @@ export function SingleChoice({
   if (state === 'print') {
     const choice = choices.find(ch => ch.props.value === values[id]);
 
+    if (shouldNotBePrinted) {
+      const ch = getVisibleChildren(choice?.props.value, choices, true);
+      if (ch === null) {
+        return <></>;
+      }
+      return <div>{ch}</div>;
+    }
+
     let label;
     if (!values[id] || values[id] === '') {
-      label = <p className="text-sm text-gray-400">[neither option has been chosen]</p>;
+      label = <p className="text-xs text-gray-400">[neither option has been chosen]</p>;
     } else if (values[id] && values[id] !== '' && choice) {
-      label = <p className="text-sm text-gray-800">{choice.props.label ?? choice.props.value}</p>;
+      label = <p className="text-xs text-gray-800">{choice.props.label ?? choice.props.value}</p>;
     } else if (!choice) {
       label = (
-        <p className="text-sm text-gray-400">{`[ERROR]: The value ${values[id]} is invalid`}</p>
+        <p className="text-xs text-gray-400">{`[ERROR]: The value ${values[id]} is invalid`}</p>
       );
     }
 
@@ -325,7 +347,7 @@ export function SingleChoice({
           <Question required={required} showIcons={false}>
             {q}
           </Question>
-          <Answer>{label}</Answer>
+          {label}
         </QA>
         {getVisibleChildren(choice?.props.value, choices, true)}
       </div>
@@ -643,14 +665,17 @@ function getVisibleChildren(
       })
       .filter(ch => ch.props.children)
       .map(ch => (
-        <div className={c(isPrint ? 'space-y-3' : 'space-y-4')} key={ch.props.value}>
+        <div
+          className={c(isPrint ? 'space-y-1 divide-y divide-gray-300' : 'space-y-4')}
+          key={ch.props.value}
+        >
           {ch.props.children}
         </div>
       ));
   }
 
   return showChildren && showChildren.length > 0 ? (
-    <div className={c(isPrint ? 'mt-3 space-y-3' : 'mt-4 space-y-4')}>{showChildren}</div>
+    <div className={c(isPrint ? 'space-y-1' : 'mt-4 space-y-4')}>{showChildren}</div>
   ) : null;
 }
 
